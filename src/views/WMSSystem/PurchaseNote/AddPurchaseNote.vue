@@ -509,13 +509,50 @@ const TtableAxios = async () => {
 };
 
 const itemData = ref([]) as any;
+
 //弹窗表格选中
 const ThandleSelectionChange = (val: any) => {
   itemData.value = val;
 };
+
 //弹窗确认
 const Tconfirm = () => {
+  if (
+    headRef.value.ruleForm.cVendorName ||
+    headRef.value.ruleForm.cVendorCode
+  ) {
+    if (
+      itemData.value.some(
+        (item: any) =>
+          item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
+          item.cVendorName !== headRef.value.ruleForm.cVendorName
+      )
+    ) {
+      ElMessage({
+        type: 'error',
+        message: '已指定供应商，请选择该供应商的物料'
+      });
+      return;
+    }
+  } else {
+    const { cVendorCode, cVendorName } = itemData.value[0];
+    headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+  }
+  // 判断选中的数据 cVendorCode 是否一致
+  if (
+    !itemData.value.every(
+      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+    )
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '请选择同一供应商的物料'
+    });
+    return;
+  }
+
   TdialogFormVisible.value = false;
+
   // 表格添加数据
   itemData.value.forEach((item: any) => {
     tableData.value.push({ ...item, nSumQuantity: item.nQuantity });

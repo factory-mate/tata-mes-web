@@ -337,6 +337,7 @@ import router from '@/router';
 import { useRoute } from 'vue-router';
 import { localStorage, sessionStorage } from '@/utils/storage';
 import { getCurrentInstance, nextTick } from '@vue/runtime-core'; // 引入getCurrentInstance
+import dayjs from 'dayjs';
 const { tagsView, permission } = useStore();
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -805,8 +806,8 @@ const cDeviceSourceData = ref({}) as any;
 const remoteMethod = (item: any, query: any) => {
   // getData(getDataVal.value)
   let list: any = JSON.parse(
-      JSON.stringify(ruleForm.value[item.Resource.cAttributeCode + '_Data'])
-    );
+    JSON.stringify(ruleForm.value[item.Resource.cAttributeCode + '_Data'])
+  );
   if (ruleForm.value[item.Resource.cAttributeCode + '_Data'].length === 0) {
     if (query) {
       setTimeout(() => {
@@ -1317,6 +1318,8 @@ const formatDate = (date: any) => {
   if (day.length < 2) day = '0' + day;
   return [year, month, day].join('-');
 };
+
+// 处理数据默认值
 const headVal = () => {
   let obj = {};
   HeadData.value.map((item: any) => {
@@ -1344,7 +1347,12 @@ const headVal = () => {
     ruleForm.value.IsBatch = false;
     ruleForm.value.IsAuth = false;
   }
+
+  if (Route.name === 'AddPurchaseNote') {
+    ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
+  }
 };
+
 // 搜索弹框事件
 const clickModel = (obj: any, type: any) => {
   if (
@@ -2597,7 +2605,14 @@ const downFile = (v: any) => {
 const handleChangeRuleForm = (value: any) => {
   ruleForm.value = { ...ruleForm.value, ...value };
 };
-defineExpose({ ruleForm, ruleFormRef, validate, clearValidate, downFile });
+defineExpose({
+  ruleForm,
+  ruleFormRef,
+  validate,
+  clearValidate,
+  downFile,
+  handleChangeRuleForm
+});
 </script>
 
 <style scoped lang="scss">
