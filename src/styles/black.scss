@@ -1,0 +1,40 @@
+//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!暗黑系列！！！！！！！！！！！！！！！！！！！！！！！！！！！
+html.dark {
+  .my-dialog {
+    background-color: #304156;
+    color: #f6f6f6 !important;
+  }
+  .el-table .el-table__cell {
+    color: #f6f6f6 !important;
+  }
+}
+:root {
+  --theme-color: #0078d7;
+}
+html.dark {
+  --theme-color: #135fad;
+}
+.demo-class {
+  background-color: var(--theme-color);
+}
+.demo-class-one button {
+  color: var(--theme-color);
+}
+html.dark {
+  /* 覆盖element-plus默认深色背景色 */
+  // --el-bg-color: #626aef;
+  .el-button--primary {
+    --el-button-text-color: #ededed;
+  }
+}
+$menuBg: var(--menuBg);
+$menuActiveText: var(--themeColor);
+$btnColor: var(--themeColor);
+:root {
+  --themeColor: #0078d7;
+  --menuBg: #304156;
+}
+html.dark {
+  --themeColor: #46acff;
+  --menuBg: #263445;
+}
