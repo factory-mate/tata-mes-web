@@ -27,11 +27,19 @@
       fit
       class="visible"
       scrollbar-always-on
+      :max-height="props.maxHeight"
     >
       <!-- 无数据时的插槽 -->
       <slot name="empty">{{ noData }}</slot>
+
       <!-- 表格勾选框 -->
       <el-table-column v-if="props.selection" type="selection" width="55" />
+      <el-table-column width="60" fixed>
+        <template #header> 序号 </template>
+        <template #default="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <template v-for="item in tableHeader" :key="item.prop">
         <!-- 插槽 -->
         <slot v-if="item.slotName" :name="item.slotName"> </slot>
@@ -373,6 +381,10 @@ const props = defineProps({
     default: () => {
       return false;
     }
+  },
+  maxHeight: {
+    type: String as any,
+    default: () => undefined
   }
 });
 const tableHeader: any = ref(

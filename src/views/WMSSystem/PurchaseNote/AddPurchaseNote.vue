@@ -85,6 +85,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="90%"
     >
       <!-- 搜索区域 -->
 
@@ -103,6 +104,7 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        max-height="52vh"
       >
       </myTable>
       <template #footer>
