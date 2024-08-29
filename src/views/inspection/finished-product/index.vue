@@ -30,7 +30,7 @@ const queryParams = reactive({
 });
 const total = ref(0);
 const orderBy = ref('');
-const conditions = ref('');
+const conditions = ref('cVouchTypeCode in (1,2,3)');
 const selectedIds = ref([]);
 
 const filters = ref([]);
@@ -176,7 +176,7 @@ const handleChangePage = val => {
 
 // 重置搜索
 const resetSearchParams = () => {
-  conditions.value = '';
+  conditions.value = 'cVouchTypeCode in (1,2,3)';
   orderBy.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
@@ -188,7 +188,7 @@ const resetSearchParams = () => {
 // 搜索
 const handleSearch = val => {
   queryParams.PageIndex = 1;
-  conditions.value = filterModel(val.value);
+  conditions.value = `${conditions.value} && ${filterModel(val.value)}`;
   getTableData();
 };
 
