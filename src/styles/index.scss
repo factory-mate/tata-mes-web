@@ -192,3 +192,7 @@ div:focus {
 .el-dialog {
   --el-dialog-margin-top: 5vh;
 }
+
+.el-loading-mask {
+  z-index: 1 !important;
+}
