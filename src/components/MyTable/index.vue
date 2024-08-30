@@ -3,7 +3,6 @@
     <template v-if="tableHeader.length > 0">
       <el-table
         ref="myTableRef"
-        element-loading-text="加载中..."
         :data="tableDataValVVV"
         :height="props.tableHeight"
         style="width: 100%"
@@ -21,6 +20,7 @@
           margin: '0'
         }"
         scrollbar-always-on
+        v-loading="loading"
       >
         <!-- 无数据时的插槽 -->
         <slot name="empty">{{ noData }}</slot>
@@ -345,7 +345,7 @@ watch(
   newVal => {
     loading.value = newVal;
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 watch(
   () => props.tableColumns,

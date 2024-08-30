@@ -27,6 +27,7 @@
         :selection="true"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        :tableLoading="tableLoading"
       >
         <template #button>
           <el-table-column
@@ -149,6 +150,8 @@ const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
 const initType = ref(true);
+const tableLoading = ref(false);
+const firstEnter = ref(true);
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -232,6 +235,10 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -242,6 +249,7 @@ const tableAxios = async () => {
       Conditions: Conditions.value
     }
   };
+  tableLoading.value = true;
   try {
     const res = await DataApi(data);
     if (res.status == 200) {
@@ -256,6 +264,7 @@ const tableAxios = async () => {
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();
+      tableLoading.value = false;
     } else {
       console.log('请求出错');
     }
