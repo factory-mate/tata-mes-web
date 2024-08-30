@@ -188,7 +188,11 @@ const resetSearchParams = () => {
 // 搜索
 const handleSearch = val => {
   queryParams.PageIndex = 1;
-  conditions.value = `${conditions.value} && ${filterModel(val.value)}`;
+  if (filterModel(val.value)) {
+    conditions.value = `cVouchTypeCode in (1,2,3) && ${filterModel(val.value)}`;
+  } else {
+    conditions.value = 'cVouchTypeCode in (1,2,3)';
+  }
   getTableData();
 };
 
