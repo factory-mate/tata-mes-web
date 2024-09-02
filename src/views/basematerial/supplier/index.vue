@@ -123,8 +123,7 @@ import {
   ElMessageBox
 } from 'element-plus';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
-import { configApi, DataApi, delApi } from '@/api/configApi/index';
-import { sessionStorage } from '@/utils/storage';
+import { configApi, DataApi, delApi, ExportApi } from '@/api/configApi/index';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
@@ -484,22 +483,38 @@ const ExportAll = async (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: queryParams.PageIndex,
-      PageSize: queryParams.PageSize,
-      OrderByFileds: '',
-      Conditions: ''
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      console.log(res, '导出所有-----');
+  ExportApi(data).then((res: any) => {
+    if (res.status == '200') {
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
+      const fileName = decodeURI(
+        res.headers['content-disposition'] || '供应商档案-所有'
+      );
+      if ('download' in document.createElement('a')) {
+        // 非IE下载
+        const elink = document.createElement('a');
+        elink.download = fileName;
+        elink.style.display = 'none';
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click();
+        URL.revokeObjectURL(elink.href); // 释放URL 对象
+        document.body.removeChild(elink);
+      } else {
+        // IE10+下载
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        navigator.msSaveBlob(blob, fileName);
+      }
     } else {
-      console.log('请求出错');
+      ElMessage.error('请求失败');
     }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
+  });
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -509,20 +524,36 @@ const ExportOne = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
-      Conditions: ''
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      console.log(res, '导出当前页-----');
+  ExportApi(data).then((res: any) => {
+    if (res.status == '200') {
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
+      const fileName = decodeURI(
+        res.headers['content-disposition'] || '供应商档案'
+      );
+      if ('download' in document.createElement('a')) {
+        // 非IE下载
+        const elink = document.createElement('a');
+        elink.download = fileName;
+        elink.style.display = 'none';
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click();
+        URL.revokeObjectURL(elink.href); // 释放URL 对象
+        document.body.removeChild(elink);
+      } else {
+        // IE10+下载
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        navigator.msSaveBlob(blob, fileName);
+      }
     } else {
-      console.log('请求出错');
+      ElMessage.error('请求失败');
     }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
+  });
 };
 
 const data = reactive({
