@@ -52,9 +52,11 @@
                 <el-button
                   v-if="
                     (idx < (tableButton.length > 3 ? 2 : 3) &&
-                      item.Resource.cAttributeName !== '编辑') ||
-                    (scope.row.cStatusName !== '提交' &&
-                      item.Resource.cAttributeName === '编辑')
+                      !['编辑', '删除'].includes(
+                        item.Resource.cAttributeName
+                      )) ||
+                    (scope.row.cStatusName == '保存' &&
+                      ['编辑', '删除'].includes(item.Resource.cAttributeName))
                   "
                   type="primary"
                   size="small"
