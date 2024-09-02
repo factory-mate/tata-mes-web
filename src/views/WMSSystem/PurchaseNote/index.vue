@@ -49,10 +49,8 @@
               >
                 <el-button
                   v-if="
-                    (idx < (tableButton.length > 3 ? 2 : 3) &&
-                      ['详情'].includes(item.Resource.cAttributeName)) ||
-                    (scope.row.cStatusName == '提交' &&
-                      ['编辑', '删除'].includes(item.Resource.cAttributeName))
+                    idx < (tableButton.length > 3 ? 2 : 3) &&
+                    showButton(scope.row, item)
                   "
                   type="primary"
                   size="small"
@@ -226,6 +224,17 @@ const clickTableBut = (scope: any, event: any) => {
       break;
     default:
       break;
+  }
+};
+const showButton = (obj, item) => {
+  if (item.Resource.cAttributeName === '详情') {
+    return true;
+  }
+  console.log(obj);
+  if (obj.iStatusName === '提交') {
+    return false;
+  } else {
+    return true;
   }
 };
 //表格数据查询
