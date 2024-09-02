@@ -115,6 +115,28 @@
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
               />
+
+              <!-- <el-autocomplete
+                v-if="item.cControlTypeCode == 'TextBoxLink'"
+                v-model="scope.row[item.prop]"
+                :disabled="props.disabled"
+                :fetch-suggestions="querySearchAsync"
+                :placeholder="disabled ? '' : '请输入'"
+                @select="handleAutoTextSelect"
+                @change="handleAutoTextChange"
+                :style="
+                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                "
+              >
+                <template #append>
+                  <el-icon
+                    @click="clickModel(item, item.prop, scope.$index, scope)"
+                  >
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-autocomplete> -->
+
               <el-input
                 v-if="item.cControlTypeCode == 'TextBoxLink'"
                 :disabled="props.disabled"
@@ -933,6 +955,47 @@ $bus.on('tablecopy', (val: any) => {
 const clearFilter = () => {
   myTableRef.value!.clearFilter();
 };
+
+const autoText = ref('');
+const querySearchAsync = async (
+  queryString: string,
+  cb: (arg: any) => void
+) => {
+  const data = await fetchRemoteData();
+  const results = queryString ? data.filter(createFilter(queryString)) : data;
+  cb(results);
+};
+const createFilter = (queryString: string) => {
+  return (restaurant: any) => {
+    return (
+      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+    );
+  };
+};
+
+const fetchRemoteData = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve([
+        { value: 'vue', link: 'https://github.com/vuejs/vue' },
+        { value: 'element', link: 'https://github.com/ElemeFE/element' },
+        { value: 'cooking', link: 'https://github.com/ElemeFE/cooking' },
+        { value: 'mint-ui', link: 'https://github.com/ElemeFE/mint-ui' },
+        { value: 'vuex', link: 'https://github.com/vuejs/vuex' },
+        { value: 'vue-router', link: 'https://github.com/vuejs/vue-router' },
+        { value: 'babel', link: 'https://github.com/babel/babel' }
+      ]);
+    }, 1000);
+  });
+};
+
+// 自动补全选择
+const handleAutoTextSelect = (item: any) => {
+  console.log(item);
+};
+
+// 自动补全修改（移除数据）
+const handleAutoTextChange = () => {};
 
 // 暴露方法
 defineExpose({
