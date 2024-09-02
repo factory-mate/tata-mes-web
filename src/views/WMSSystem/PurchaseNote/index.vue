@@ -48,7 +48,12 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="idx < (tableButton.length > 3 ? 2 : 3)"
+                  v-if="
+                    (idx < (tableButton.length > 3 ? 2 : 3) &&
+                      ['详情'].includes(item.Resource.cAttributeName)) ||
+                    (scope.row.cStatusName == '提交' &&
+                      ['编辑', '删除'].includes(item.Resource.cAttributeName))
+                  "
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"

@@ -52,9 +52,7 @@
                 <el-button
                   v-if="
                     (idx < (tableButton.length > 3 ? 2 : 3) &&
-                      !['编辑', '删除'].includes(
-                        item.Resource.cAttributeName
-                      )) ||
+                      ['详情'].includes(item.Resource.cAttributeName)) ||
                     (scope.row.cStatusName == '保存' &&
                       ['编辑', '删除'].includes(item.Resource.cAttributeName))
                   "
