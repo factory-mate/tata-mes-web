@@ -34,7 +34,11 @@
           :selectable="selectDisableRoom"
         >
         </el-table-column>
-        <el-table-column width="45" fixed>
+        <el-table-column
+          width="45"
+          fixed
+          v-if="!['newProductionOrderChange'].includes(Route.name)"
+        >
           <template #header> 序号 </template>
           <template #default="scope">
             {{ scope.$index + 1 }}

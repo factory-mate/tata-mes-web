@@ -34,7 +34,11 @@
 
       <!-- 表格勾选框 -->
       <el-table-column v-if="props.selection" type="selection" width="55" />
-      <el-table-column width="60" fixed>
+      <el-table-column
+        width="60"
+        fixed
+        v-if="!['ProductionOrderBG'].includes(Route.name)"
+      >
         <template #header> 序号 </template>
         <template #default="scope">
           {{ scope.$index + 1 }}
