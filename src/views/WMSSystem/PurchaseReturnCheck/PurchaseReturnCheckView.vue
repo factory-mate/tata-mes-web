@@ -627,7 +627,7 @@ const clickViewXM = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'PurchaseReturnCheck',
+      pathName: 'PurchaseReturnCheckView',
       title: '箱码详情'
     }
   });
