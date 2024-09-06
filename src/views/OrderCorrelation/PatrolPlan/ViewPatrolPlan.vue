@@ -116,6 +116,7 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[20, 50, 100]"
       />
       <pop-model
         :dialogFormVisible="dialogFormVisible"
@@ -150,7 +151,7 @@
 <script setup lang="ts">
 import { ref, toRefs, reactive, onActivated, provide, onMounted } from 'vue';
 import FilterForm from '@/components/Filter/index.vue';
-import myTable from '@/components/MyFormTable/index.vue';
+import myTable from '@/components/MyTable/index.vue';
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
@@ -207,7 +208,7 @@ const objData = ref({});
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const data = reactive({
   isCollapse: false,
@@ -466,7 +467,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
 };
