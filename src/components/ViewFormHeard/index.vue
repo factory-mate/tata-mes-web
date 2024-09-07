@@ -1240,7 +1240,6 @@ const funHeadview = () => {
           'cInvClassCode',
           ruleForm.value.cInvClassCode
         );
-        ruleForm.value.cInvClassName = ruleForm.value.cInvClassCode;
       }
       if (
         Route.name == 'addProductLine' ||
