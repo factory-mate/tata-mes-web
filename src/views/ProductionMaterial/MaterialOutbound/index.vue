@@ -465,7 +465,7 @@ const ExportAll = async (obj: any) => {
         : 'cVouchSourceTypeCode = 03'
     }
   };
-  exportAnalysisHooks(data, '到货单-所有');
+  exportAnalysisHooks(data, '领料出库单-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -481,7 +481,7 @@ const ExportOne = async (obj: any) => {
         : 'cVouchSourceTypeCode = 03'
     }
   };
-  exportAnalysisHooks(data, '到货单');
+  exportAnalysisHooks(data, '领料出库单');
 };
 
 const data = reactive({
