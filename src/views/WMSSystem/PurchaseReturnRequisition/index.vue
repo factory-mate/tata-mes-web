@@ -369,7 +369,7 @@ const clickDelete = (scope: any, obj: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'PurchaseReturnCheckView',
+    name: 'PurchaseReturnRequisitionView',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -377,7 +377,7 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'PurchaseReturnCheck',
+      pathName: 'PurchaseReturnRequisition',
       title: '采购通知单物料详情'
     }
   });

@@ -42,27 +42,17 @@
         :disabled="disa"
         :disabledHide="false"
       >
-        <template #button>
-          <el-table-column
-            label="操作"
-            fixed="right"
-            width="200px"
-            align="center"
-          >
-            <template #header>
-              <span>操作</span>
-            </template>
-            <template #default="scope">
-              <el-button
-                type="primary"
-                :disabled="disabled"
-                size="small"
-                @click="clickTableHandDel(scope)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </template>
+        <!-- <template #button>
+                    <el-table-column label="操作" fixed="right" width="200px" align="center">
+                        <template #header>
+                            <span>操作</span>
+                        </template>
+                        <template #default="scope">
+                            <el-button type="primary" :disabled="disabled" size="small"
+                                @click="clickTableHandDel(scope)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </template> -->
       </myTable>
       <pagination
         v-if="total > 0"
@@ -218,9 +208,11 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -361,6 +353,8 @@ const funTable = (arr: Array<any>) => {
       }
     }
     if (item.Resource.cAttributeTypeCode == 'binddata') {
+      console.log(11);
+
       AxiosData.value = item;
       tableAxios();
     }
@@ -371,14 +365,20 @@ const funTable = (arr: Array<any>) => {
 
 //表格数据查询
 const tableAxios = async () => {
-  if (!rowId.value) {
-    return false;
-  }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  let obj = JSON.parse(
+    window.sessionStorage.getItem('PurchaseReturnRequestEdit')
+  );
+
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
-      val: rowId.value
+      uid: obj.MID,
+      cInvCode: obj.cInvCode,
+      cBatch: obj.cBatch,
+      cDefindParm03: '0'
     }
   };
   try {
