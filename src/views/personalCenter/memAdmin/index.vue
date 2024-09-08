@@ -233,6 +233,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Scheduling':
       clickScheduling(scope, event);
       break;
+    case 'Delete':
+      clickDel(scope, event);
+      break;
     default:
       break;
   }
@@ -344,18 +347,18 @@ const changPage = (val: any) => {
   tableAxios();
 };
 //按钮删除
-const clickDel = (obj: any) => {
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要删除的数据'
-    });
-    return;
-  }
+const clickDel = (scope, obj: any) => {
+  // if (sendId.value.length <= 0) {
+  //   ElMessage({
+  //     type: 'info',
+  //     message: '请勾选要删除的数据'
+  //   });
+  //   return;
+  // }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
+    data: [scope.row.UID]
   };
   ElMessageBox.confirm('确定删除数据?', '提示', {
     confirmButtonText: '确定',
