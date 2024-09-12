@@ -221,7 +221,6 @@ onUnmounted(() => {
 //调取接口
 const getData: any = async (val: string) => {
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(val);
     if (res.status == 200) {
       Filter.value = [];
@@ -247,11 +246,9 @@ const getData: any = async (val: string) => {
       });
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错了');
-    ElLoading.service().close();
   }
 };
 //分页查询参数
@@ -302,7 +299,6 @@ const tableAxios = async () => {
     }
   };
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await DataApi(data);
     if (res.status == 200) {
       loading.value = false;
@@ -316,15 +312,12 @@ const tableAxios = async () => {
       );
       total.value = res.data.dataCount;
       TabRefss.value.handleRemoveSelectionChange();
-      ElLoading.service().close();
     } else {
       loading.value = false;
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错');
-    ElLoading.service().close();
   }
 };
 provide('tableAxios', { tableAxios });
