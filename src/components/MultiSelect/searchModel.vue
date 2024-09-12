@@ -8,6 +8,7 @@
     @close="close"
     :title="propsData.titleName"
     center
+    draggable
     width="60%"
   >
     <!-- 搜索区域 -->
