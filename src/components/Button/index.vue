@@ -53,7 +53,10 @@
       </el-button>
       <!-- 下载模版 -->
       <el-button
-        v-else-if="item.Resource.cAttributeCode == 'GetTemplate'"
+        v-else-if="
+          item.Resource.cAttributeCode == 'GetTemplate' ||
+          item.Resource.cAttributeCode == 'ExportModel'
+        "
         type="primary"
         @click="clickDonwnFile(item)"
         >{{ item.Resource.cAttributeName }}</el-button
@@ -741,19 +744,22 @@ const HandExport = (command: any, event: any) => {
 // 下载模板
 const clickDonwnFile = (item: any) => {
   console.log(item, '--====item,,,,');
-  ElLoading.service({ lock: true, text: '加载中.....' });
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   let data = {
     method: item.Resource.cHttpTypeCode,
     url: item.Resource.cServerIP + item.Resource.cUrl,
     params: {}
   };
-  ParamsApi(data).then(res => {
-    if (res.status == 200) {
-      window.location.href =
-        res.data.cFilePath + res.data.cFileReName + res.data.cFileSuffix;
-    }
-    ElLoading.service().close();
-  });
+  ParamsApi(data)
+    .then(res => {
+      if (res.status == 200) {
+        window.location.href =
+          res.data.cFilePath + res.data.cFileReName + res.data.cFileSuffix;
+      }
+    })
+    .finally(() => {
+      loading.close();
+    });
 };
 
 // 事件总线
