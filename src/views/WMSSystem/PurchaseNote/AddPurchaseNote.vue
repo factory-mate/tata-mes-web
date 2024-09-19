@@ -518,6 +518,17 @@ const ThandleSelectionChange = (val: any) => {
 //弹窗确认
 const Tconfirm = () => {
   if (
+    !itemData.value.every(
+      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+    )
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '请选择同一供应商的物料'
+    });
+    return;
+  }
+  if (
     headRef.value.ruleForm.cVendorName ||
     headRef.value.ruleForm.cVendorCode
   ) {
@@ -537,18 +548,6 @@ const Tconfirm = () => {
   } else {
     const { cVendorCode, cVendorName } = itemData.value[0];
     headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-  }
-  // 判断选中的数据 cVendorCode 是否一致
-  if (
-    !itemData.value.every(
-      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '请选择同一供应商的物料'
-    });
-    return;
   }
 
   TdialogFormVisible.value = false;
