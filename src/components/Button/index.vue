@@ -270,7 +270,8 @@ const emits = defineEmits([
   'AddOrder',
   'ImportPick',
   'ImportIn',
-  'ExportDetail'
+  'ExportDetail',
+  'HangUp'
 ]);
 
 watch(
@@ -726,6 +727,9 @@ const ImportPick = (obj: any) => {
 const ExportDetail = (obj: any) => {
   emits('ExportDetail', obj);
 };
+const HangUp = (obj: any) => {
+  emits('HangUp', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1058,6 +1062,9 @@ const clickButton = (event: any) => {
       break;
     case 'ExportDetail':
       ExportDetail(event);
+      break;
+    case 'HangUp':
+      HangUp(event);
       break;
     default:
       break;

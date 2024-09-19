@@ -21,6 +21,7 @@
         @revoke="revoke"
         @ExportAll="ExportAll"
         @ImportPick="ImportPick"
+        @HangUp="HangUp"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -519,6 +520,66 @@ const ImportPick = (obj: any) => {
     }
     loading.close();
   });
+};
+
+const HangUp = (obj: any) => {
+  sendId.value = [];
+  CheckDataList.value.forEach((item: any) => {
+    sendId.value.push(item.UID);
+  });
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选挂起的数据'
+    });
+    return false;
+  }
+
+  let dataVal = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      cProjectCode: '',
+      iType: 1,
+      iDs: sendId.value
+    }
+  };
+  ElMessageBox.confirm('确定挂起?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      ElLoading.service({
+        lock: true,
+        text: '加载中.....',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      DataApi(dataVal).then(res => {
+        if (res.status == 200) {
+          ElMessage({
+            type: 'success',
+            message: res.msg || '挂起成功'
+          });
+          tableAxios();
+          TabRefss.value.handleRemoveSelectionChange();
+          sendId.value = [];
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg || '挂起失败'
+          });
+        }
+        ElLoading.service().close();
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消挂起'
+      });
+      ElLoading.service().close();
+    });
 };
 
 //生产同步上游
