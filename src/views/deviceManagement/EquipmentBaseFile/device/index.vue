@@ -42,6 +42,7 @@
     <div style="flex: 1; width: 82%">
       <!-- 搜索区域3 -->
       <FilterForm
+        ref="filterRef"
         :Filter="Filter"
         @ClickSearch="ClickSearch"
         @resetForm="resetForm"
@@ -54,6 +55,9 @@
           @clickAdd="clickAdd"
           @clickStart="Start"
           @clickDelete="clickDel"
+          @ExportFault="Export"
+          @ExportStandard="Export"
+          @ExportPerson="Export"
         ></ButtonViem>
         <!-- 表格区域 -->
         <myTable
@@ -184,6 +188,7 @@ const $bus: any =
 const Route = useRoute();
 const router = useRouter();
 let Filter = ref([]) as any;
+const filterRef = ref(null);
 let But = ref([]) as any;
 const loading = ref(false);
 // 表格配置数据
@@ -700,6 +705,36 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const Export = async (obj: any) => {
+  let conditions = filterModel(filterRef.value.FilterData);
+  let url = obj.Resource.cServerIP + obj.Resource.cUrl;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: '',
+      Conditions: conditions
+    }
+  };
+
+  let excelTitle = '';
+  switch (obj.cAttributeCode) {
+    case 'ExportFault':
+      excelTitle = '故障详情';
+      break;
+    case 'ExportStandard':
+      excelTitle = '指标详情';
+      break;
+    case 'ExportPerson':
+      excelTitle = '人员详情';
+      break;
+    default:
+      break;
+  }
 };
 </script>
 

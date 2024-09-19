@@ -44,7 +44,10 @@
           item.Resource.cAttributeCode == 'Download_DZJ' ||
           item.Resource.cAttributeCode == 'DownloadLack' ||
           item.Resource.cAttributeCode == 'DownloadS_S_S_Detail' ||
-          item.Resource.cAttributeCode == 'DownloadLX_45'
+          item.Resource.cAttributeCode == 'DownloadLX_45' ||
+          item.Resource.cAttributeCode == 'ExportFault' ||
+          item.Resource.cAttributeCode == 'ExportStandard' ||
+          item.Resource.cAttributeCode == 'ExportPerson'
         "
         type="primary"
         @click="HandExport('ExportAll', item)"
