@@ -53,10 +53,7 @@
       </el-button>
       <!-- 下载模版 -->
       <el-button
-        v-else-if="
-          item.Resource.cAttributeCode == 'GetTemplate' ||
-          item.Resource.cAttributeCode == 'ExportModel'
-        "
+        v-else-if="item.Resource.cAttributeCode == 'GetTemplate'"
         type="primary"
         @click="clickDonwnFile(item)"
         >{{ item.Resource.cAttributeName }}</el-button
