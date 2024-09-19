@@ -688,23 +688,29 @@ const BOMOperation = (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: sendId.value
   };
-  ElLoading.service({ lock: true, text: '加载中.....' });
-  DataApi(data).then(res => {
-    if (res.status == 200) {
-      tableAxios();
-      ElMessage({
-        type: 'success',
-        message: res.msg || '成功'
-      });
-      TabRefss.value.handleRemoveSelectionChange();
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg || '失败'
-      });
-      console.log('出错了');
-    }
-    ElLoading.service().close();
+  ElMessageBox.confirm('确定执行?', 'BOM运算', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.status == 200) {
+        tableAxios();
+        ElMessage({
+          type: 'success',
+          message: res.msg || '成功'
+        });
+        TabRefss.value.handleRemoveSelectionChange();
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res.msg || '失败'
+        });
+        console.log('出错了');
+      }
+      ElLoading.service().close();
+    });
   });
 };
 //分包
@@ -726,23 +732,29 @@ const SubpackageOperation = (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: sendId.value
   };
-  ElLoading.service({ lock: true, text: '加载中.....' });
-  DataApi(data).then(res => {
-    if (res.status == 200) {
-      tableAxios();
-      ElMessage({
-        type: 'success',
-        message: res.msg || '成功'
-      });
-      TabRefss.value.handleRemoveSelectionChange();
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg || '失败'
-      });
-      console.log('出错了');
-    }
-    ElLoading.service().close();
+  ElMessageBox.confirm('确定执行?', '分包运算', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.status == 200) {
+        tableAxios();
+        ElMessage({
+          type: 'success',
+          message: res.msg || '成功'
+        });
+        TabRefss.value.handleRemoveSelectionChange();
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res.msg || '失败'
+        });
+        console.log('出错了');
+      }
+      ElLoading.service().close();
+    });
   });
 };
 const timer = ref(); // 定时器
