@@ -217,12 +217,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import useStore from '@/store';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import { onUnmounted } from 'vue';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const Route = useRoute();
@@ -528,7 +524,9 @@ const generateLambda = async () => {
 
   const data = {
     method: 'post',
-    url: import.meta.env.VITE_APP_DY_100_API + '/api/SetLamda/BuildLamda',
+    url:
+      import.meta.env.VITE_APP_DY_100_API +
+      '/api/SetLamda/BuildLamdaOnRecursion',
     data: expMian.value
   };
   DataApi(data).then(res => {

@@ -214,7 +214,7 @@
             Route.name === 'newProductPlanView'
           "
         >
-          <BDS ref="bdsRef" :rule-form="ruleForm" />
+          <BDSWHERE ref="bdsRef" :rule-form="ruleForm" />
         </div>
       </el-form>
       <template #footer>
@@ -298,7 +298,7 @@ import { sessionStorage } from '@/utils/storage';
 import { getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
-import BDS from '@/components/BDS/index.vue';
+import BDSWHERE from '@/components/BDS/index_where.vue';
 const bdsRef = ref(null);
 const Route = useRoute();
 const router = useRouter();

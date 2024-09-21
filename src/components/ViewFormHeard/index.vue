@@ -282,12 +282,19 @@
     ></searchModel>
   </div>
   <div v-if="Route.name === 'AddBusineScen'">
-    <div style="margin-top: 10px" v-if="ruleForm.cLamdaTypeCode === 'Where'">
+    <!-- <div style="margin-top: 10px" v-if="ruleForm.cLamdaTypeCode === 'Where'">
       <BDS
         :Head="props.Head"
         :ruleForm="ruleForm"
         @change-rule-form="handleChangeRuleForm"
       ></BDS>
+    </div> -->
+    <div style="margin-top: 10px" v-if="ruleForm.cLamdaTypeCode === 'Where'">
+      <BDSWHERE
+        :Head="props.Head"
+        :ruleForm="ruleForm"
+        @change-rule-form="handleChangeRuleForm"
+      ></BDSWHERE>
     </div>
     <div style="margin-top: 10px" v-if="ruleForm.cLamdaTypeCode === 'Set'">
       <BDSSET
@@ -301,6 +308,7 @@
 <script setup lang="ts">
 import BDS from '@/components/BDS/index.vue';
 import BDSSET from '@/components/BDS/index_set.vue';
+import BDSWHERE from '@/components/BDS/index_where.vue';
 import {
   ref,
   toRefs,
