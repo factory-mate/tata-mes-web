@@ -93,6 +93,7 @@
           @SaveEditWMS="SaveAddWMS"
           @SaveEditExtend="SaveAddExtend"
           @InfoEdit="InfoEdit"
+          @Copy="Copy"
         ></ButtonViem>
       </div>
       <!-- 弹窗 -->
@@ -105,6 +106,7 @@
         @modelClose="modelClose"
         @clickHandAdd="clickHandAdd"
       ></pop-model>
+      <CopyModal ref="modalRef" :modal-resource="modalResource" />
     </el-card>
   </div>
 </template>
@@ -116,6 +118,7 @@ import { ElLoading } from 'element-plus';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
+import CopyModal from './components/CopyModal.vue';
 import {
   ElButton,
   ElCard,
@@ -175,6 +178,10 @@ const data = reactive({
   modelTitle: '标题',
   modelCIncludeModelCode: ''
 });
+
+const modalRef = ref(null);
+const modalResource = ref(null);
+
 const { disabled, dialogFormVisible, modelTitle, modelCIncludeModelCode } =
   toRefs(data);
 const initType = ref(true);
@@ -637,6 +644,11 @@ const newList = (val: any) => {
     tableColumns.value = val.list;
     tabType.value = true;
   });
+};
+
+const Copy = async val => {
+  modalRef.value.showModal();
+  modalResource.value = val;
 };
 </script>
 
