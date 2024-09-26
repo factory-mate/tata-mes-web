@@ -517,19 +517,19 @@ const Tconfirm = () => {
     headRef.value.ruleForm.cVendorName ||
     headRef.value.ruleForm.cVendorCode
   ) {
-    if (
-      itemData.value.some(
-        (item: any) =>
-          item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
-          item.cVendorName !== headRef.value.ruleForm.cVendorName
-      )
-    ) {
-      ElMessage({
-        type: 'error',
-        message: '已指定供应商，请选择该供应商的物料'
-      });
-      return;
-    }
+    // if (
+    //   itemData.value.some(
+    //     (item: any) =>
+    //       item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
+    //       item.cVendorName !== headRef.value.ruleForm.cVendorName
+    //   )
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '已指定供应商，请选择该供应商的物料'
+    //   });
+    //   return;
+    // }
   } else {
     const { cVendorCode, cVendorName } = itemData.value[0];
     headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
