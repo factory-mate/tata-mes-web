@@ -169,6 +169,13 @@ const handleAddChildItem = node => {
 };
 
 const handleRemoveItem = node => {
+  if (lambdaData.value.length === 1) {
+    ElMessage({
+      message: '至少保留一个条件',
+      type: 'error'
+    });
+    return;
+  }
   treeRef.value.remove(node);
 };
 
@@ -277,16 +284,6 @@ defineExpose({ resetData });
       >
         <template #default="{ node, data }">
           <div>
-            <el-switch
-              v-show="data.children?.length > 1"
-              style="margin: 0 10px"
-              v-model="data.cConditionType"
-              size="small"
-              active-text="且"
-              inactive-text="或"
-              active-value="1"
-              inactive-value="0"
-            />
             <el-select-v2
               v-model="data.cDimensionalityCode"
               clearable
@@ -327,6 +324,16 @@ defineExpose({ resetData });
                 clearable
               />
             </template>
+            <el-switch
+              v-show="data.children?.length > 1"
+              style="margin: 0 10px"
+              v-model="data.cConditionType"
+              size="small"
+              active-text="且"
+              inactive-text="或"
+              active-value="1"
+              inactive-value="0"
+            />
             <el-button
               type="primary"
               @click="() => clickSelectBtn(node)"
@@ -346,7 +353,6 @@ defineExpose({ resetData });
             <el-button
               type="primary"
               style="margin-left: 8px"
-              v-if="lambdaData.length > 1"
               @click="() => handleRemoveItem(node)"
             >
               删除
