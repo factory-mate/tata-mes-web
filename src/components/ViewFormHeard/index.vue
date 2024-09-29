@@ -11,7 +11,7 @@
         ref="ruleFormRef"
         :model="ruleForm"
         :rules="rules"
-        label-width="120px"
+        label-width="130px"
       >
         <template v-for="item in HeadData" :key="item.cAppCode">
           <el-form-item
