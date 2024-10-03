@@ -324,7 +324,8 @@ onActivated(() => {
   // if (rowId.value != Route.params.rowId) {
   //   getAddUser(Route.meta.ModelCode);
   // }
-  getAddUser(Route.meta.ModelCode);
+  getAddUser('MES.ProductionOrder.M.View');
+  getAddUser('MES.ProductionOrder.M.View.Base');
   rowId.value = Route.params.rowId;
   initType.value = false;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
