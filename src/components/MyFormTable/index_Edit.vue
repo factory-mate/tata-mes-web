@@ -159,6 +159,21 @@
                 </template>
               </el-input>
             </div>
+            <div
+              v-else-if="
+                Route.name === 'AddPurchaseNote' &&
+                item.cAttributeCode === 'cDefindParm03'
+              "
+            >
+              <el-select v-model="scope.row[item.prop]" placeholder="请选择">
+                <el-option
+                  v-for="selectItem in scope.row['cDefindParm03List']"
+                  :key="selectItem"
+                  :label="selectItem"
+                  :value="selectItem"
+                />
+              </el-select>
+            </div>
             <div v-else>
               <span>{{ scope.row[item.prop] }}</span>
             </div>
