@@ -359,9 +359,9 @@ const ClickDialog = (i: any) => {
       display: flex;
       justify-content: start;
       .name {
-        width: 7%;
+        flex-shrink: 0;
+        width: 150px;
         margin-top: 10px;
-        word-wrap: break-word;
       }
       .master-item {
         display: flex;
