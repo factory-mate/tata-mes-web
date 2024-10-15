@@ -187,24 +187,23 @@ const selectVisible = prop => {
 };
 
 const generateLambda = () => {
-  // 递归处理 lambdaData，cDimensionalityCode，cLamdaConditionTypeCode，cValueName 必须有值
-  const validData = [];
-  const recursion = data => {
-    data.forEach(item => {
-      if (
-        item.cDimensionalityCode &&
-        item.cLamdaConditionTypeCode &&
-        item.cValueName
-      ) {
-        validData.push(item);
-        if (item.list_Model.length > 0) {
-          recursion(item.list_Model);
-        }
-      }
-    });
-  };
+  // // 递归处理 lambdaData，cDimensionalityCode，cLamdaConditionTypeCode，cValueName 必须有值
+  // const recursion = data => {
+  //   data.forEach(item => {
+  //     if (
+  //       item.cDimensionalityCode &&
+  //       item.cLamdaConditionTypeCode &&
+  //       item.cValueName
+  //     ) {
+  //       if (item.children && item.children.length > 0) {
+  //         item.list_Model = item.children;
+  //         recursion(item.children);
+  //       }
+  //     }
+  //   });
+  // };
 
-  recursion(lambdaData.value);
+  // recursion(lambdaData.value);
 
   const data = {
     method: 'post',
@@ -213,7 +212,7 @@ const generateLambda = () => {
       '/api/SetLamda/BuildLamdaOnRecursion',
     data: {
       MID: route.params.rowId,
-      list_Model: validData,
+      list_Model: lambdaData.value,
       cConditionType: rootConditionType.value
     }
   };
