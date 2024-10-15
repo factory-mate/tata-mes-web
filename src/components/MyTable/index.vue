@@ -367,6 +367,17 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'PackageProgram') {
+    switch (row.label) {
+      case '规则编码':
+      case '合包类型编码':
+      case '正常基数':
+      case '超标基数':
+        return 50;
+      default:
+        return null;
+    }
+  }
   if (Route.name == 'originalOrder' || Route.name == 'productionOrder') {
     if (row.label.includes('单号') && Route.name == 'originalOrder') {
       return 90;
