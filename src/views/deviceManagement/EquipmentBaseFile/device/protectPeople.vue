@@ -588,7 +588,11 @@ const TSave = async (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      ms: itemData.value
+      ms: itemData.value.map(i => ({
+        ...i,
+        cProgramCode: row.value.cProgramCode,
+        cDeviceCode: row.value.cDeviceCode
+      }))
     }
   };
   try {
