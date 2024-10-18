@@ -455,7 +455,6 @@ const tableAxios = async () => {
       tablefilter();
       // TabRef.value.handleRemoveSelectionChange()
       ElLoading.service().close();
-      ParentCode.value = '';
     } else {
       loading.value = false;
       console.log('请求出错');
