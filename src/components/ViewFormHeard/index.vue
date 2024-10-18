@@ -1358,6 +1358,9 @@ const headVal = () => {
   if (Route.name === 'AddPurchaseNote') {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
+  if (Route.name === 'newPurchasedGoods') {
+    ruleForm.value.cArriveDate = dayjs(new Date()).format('YYYY-MM-DD');
+  }
 };
 
 // 搜索弹框事件
