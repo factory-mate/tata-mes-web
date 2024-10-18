@@ -44,7 +44,7 @@ export const constantRoutes: Array<any> = [
         path: 'home',
         component: () => import('@/views/dashboard/index.vue'),
         name: 'home',
-        meta: { title: '首页', hidden: false, affix: true }
+        meta: { title: '首页', hidden: false, affix: true, keepAlive: true }
       },
       {
         path: '401',
