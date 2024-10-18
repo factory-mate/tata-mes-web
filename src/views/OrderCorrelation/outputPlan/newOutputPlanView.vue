@@ -408,18 +408,18 @@ const DistributeRollBack = (obj: any) => {
     type: 'warning'
   })
     .then(() => {
-      ElLoading.service({ lock: true, text: '加载中.....' });
+      // ElLoading.service({ lock: true, text: '加载中.....' });
       ParamsApi(data).then(res => {
         if (res.status === 200) {
           ElMessage({
             type: 'success',
             message: '撤销成功'
           });
-          tableAxios();
+          // tableAxios();
         } else {
           ElMessage.error('撤销失败');
         }
-        ElLoading.service().close();
+        // ElLoading.service().close();
       });
     })
     .catch(() => {
@@ -546,18 +546,18 @@ const BarcodeRevoke = (obj: any) => {
       type: 'warning'
     })
       .then(() => {
-        ElLoading.service({ lock: true, text: '加载中.....' });
+        // ElLoading.service({ lock: true, text: '加载中.....' });
         ParamsApi(data).then(res => {
           if (res.status === 200) {
             ElMessage({
               type: 'success',
               message: '成功'
             });
-            tableAxios();
+            // tableAxios();
           } else {
             ElMessage.error('失败');
           }
-          ElLoading.service().close();
+          // ElLoading.service().close();
         });
       })
       .catch(() => {
