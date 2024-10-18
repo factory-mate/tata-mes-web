@@ -328,7 +328,7 @@ const SuccessFun = (response: any, uploadFile: any, uploadFiles: any) => {
   } else {
     if (response.status == 500) {
       ElMessage({
-        message: response.errmsg[0].Value,
+        message: response.errmsg?.[0].Value || '500: 导入出错！',
         type: 'error'
       });
     } else {
