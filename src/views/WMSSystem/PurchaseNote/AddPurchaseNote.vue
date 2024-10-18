@@ -524,7 +524,7 @@ const Tconfirm = () => {
   ) {
     ElMessage({
       type: 'error',
-      message: '请选择同一供应商的物料'
+      message: '必须同供应商且同交货日期才能一起选择'
     });
     return;
   }
