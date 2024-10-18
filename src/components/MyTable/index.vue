@@ -626,6 +626,9 @@ const tablefilter = () => {
   });
 };
 const formatDate = (date: any) => {
+  if (!date) {
+    return '';
+  }
   var d = new Date(date),
     month = '' + (d.getMonth() + 1),
     day = '' + d.getDate(),
