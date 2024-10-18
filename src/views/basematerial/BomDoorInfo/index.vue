@@ -813,6 +813,7 @@ const clickView = (scope: any, obj: any) => {
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
+  console.log(scope, obj);
   disabled.value = false;
   Trow.value = scope.row;
   ZZdialogFormVisible.value = true;

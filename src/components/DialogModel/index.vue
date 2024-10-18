@@ -10,13 +10,14 @@
       :close-on-click-modal="false"
       @open="open"
       @opened="openModel"
+      width="80%"
     >
       <el-form
         ref="ruleFormRef"
         v-if="FormDatas.length"
         :model="ruleForm"
         :rules="rules"
-        :label-width="Route.name=='DictionaryFile'?'250px':'120px'"
+        :label-width="Route.name == 'DictionaryFile' ? '250px' : '120px'"
         status-icon
       >
         <template v-for="item in FormDatas" :key="item.UID">
@@ -223,6 +224,14 @@
                             @change="treeChange(item.Resource.cAttributeCode)" :disabled="disabledFun(item)"/> -->
           </el-form-item>
         </template>
+        <div
+          v-if="
+            Route.name === 'BomDoorInfo' &&
+            modeCodeVal === 'MES.InvBOMSRuleS.M.Edit'
+          "
+        >
+          <BDSWHERE ref="bdsRef" :rule-form="ruleForm" />
+        </div>
         <!-- 按钮 -->
         <el-form-item>
           <el-button
@@ -397,6 +406,7 @@ import FilterForm from '@/components/Filter/index.vue';
 import myPopup from '@/components/Popup/index.vue';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import { ElLoading } from 'element-plus';
+import BDSWHERE from '@/components/BDS/index_where.vue';
 
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
@@ -435,6 +445,7 @@ const queryParams = reactive({
 const total = ref(0);
 //表格数据
 const tableData = ref([] as any);
+const bdsRef = ref(null);
 
 //弹窗组件事件
 const data = reactive({
