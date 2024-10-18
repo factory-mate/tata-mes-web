@@ -1359,7 +1359,7 @@ const headVal = () => {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
   if (Route.name === 'newPurchasedGoods') {
-    ruleForm.value.cArriveDate = dayjs(new Date()).format('YYYY-MM-DD');
+    ruleForm.value.dArriveDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
 };
 
