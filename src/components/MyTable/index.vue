@@ -367,6 +367,23 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'TaskReleaseRecord') {
+    switch (row.label) {
+      case '业务类型':
+        return 50;
+      case '是否接收':
+      case '是否成功':
+        return 40;
+      case '计划接收者编码':
+      case '计划接收者':
+      case '计划接收者名称':
+      case '实际接收者编码':
+      case '实际接收者名称':
+        return 70;
+      default:
+        return null;
+    }
+  }
   if (Route.name === 'PackageProgram') {
     switch (row.label) {
       case '规则编码':
