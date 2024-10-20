@@ -68,8 +68,8 @@
             :filters="item.filters"
           >
             <template #header v-if="item?.headerSlot">
-              <div>
-                {{ item.label }}
+              <div style="display: inline-flex; justify-items: center">
+                <div>{{ item.label }}</div>
                 <!-- <el-popover placement="top" :width="160" trigger="click" @hide="popHide"> -->
                 <!-- 列搜索 -->
                 <!-- <template #reference>
@@ -92,7 +92,7 @@
                 <!-- </el-popover> -->
                 <!-- 锁 -->
                 <div class="extra-icon">
-                  <el-icon
+                  <!-- <el-icon
                     v-if="item.lock === true"
                     @click="() => clickLock(index, false)"
                   >
@@ -100,7 +100,7 @@
                   </el-icon>
                   <el-icon v-else @click="() => clickLock(index, true)">
                     <Unlock />
-                  </el-icon>
+                  </el-icon> -->
                   <!-- 排序 升-->
                   <el-icon
                     v-if="item.slot == 'asc'"
@@ -726,9 +726,12 @@ defineExpose({ handleRemoveSelectionChange, clearFilter });
   }
 
   :hover {
-    .el-table__column-filter-trigger,
+    .el-table__column-filter-trigger {
+      width: fit-content;
+      display: inline-flex;
+    }
     .extra-icon {
-      display: inline;
+      display: block;
     }
   }
 }
