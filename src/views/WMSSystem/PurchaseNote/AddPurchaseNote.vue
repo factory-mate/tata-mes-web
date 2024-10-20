@@ -554,11 +554,11 @@ const Tconfirm = () => {
 
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    if (item.SAPCode?.includes(',')) {
-      item.cDefindParm03List = item.SAPCode.split(',');
+    if (item.cDefindParm03?.includes(',')) {
+      item.cDefindParm03List = item.cDefindParm03.split(',');
+      item.cDefindParm03 = null;
     } else {
-      item.cDefindParm03 = item.SAPCode;
-      item.cDefindParm03List = [];
+      item.cDefindParm03List = [item.cDefindParm03];
     }
 
     tableData.value.push({ ...item, nSumQuantity: item.nQuantity });

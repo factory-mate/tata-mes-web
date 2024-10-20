@@ -1212,7 +1212,10 @@ const getViewData = () => {
     Route.name == 'LogisticsAgentFile' ||
     Route.name == 'PackagingRuleAssignment' ||
     Route.name == 'NonSubcontractStructure' ||
-    Route.name == 'LogisticsCityComparison'
+    Route.name == 'LogisticsCityComparison' ||
+    Route.name == 'MaterialSupplier' ||
+    Route.name == 'Texture' ||
+    Route.name == 'ProductTag'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''

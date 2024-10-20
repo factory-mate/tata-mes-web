@@ -682,6 +682,7 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
       metadata.value.cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
     }
     if (
       AttributeCode.value == 'cInvCode' ||
