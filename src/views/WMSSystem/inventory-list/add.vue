@@ -302,7 +302,7 @@ const funTable = (arr: Array<any>) => {
           prop: item.Resource.cAttributeCode,
           headerSlot: false,
           slot: '',
-          edit: item.DefinedParm4,
+          edit: !item.DefinedParm4,
           cControlTypeCode: item.cControlTypeCode,
           cIncludeModelCode: item.cIncludeModelCode,
           cHttpTypeCode: item.Resource.cHttpTypeCode,
@@ -420,7 +420,7 @@ const SaveAdd = (obj: any) => {
   //     })
   // }else{
   // }
-  obj.pathName = 'otherInNotify';
+  obj.pathName = 'InventoryList';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

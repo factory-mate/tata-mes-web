@@ -423,6 +423,13 @@ const selectData = (val: any) => {
           }
         }
       }
+      if (titleName.value === item.Resource.cAttributeName) {
+        if (Route.name === 'InventoryList') {
+          if (item.Resource.cAttributeCode === 'cDefindParm02') {
+            item.cAttributeCodeValue = val.value[0].cWareHouseAreaCode;
+          }
+        }
+      }
     }
   );
 };

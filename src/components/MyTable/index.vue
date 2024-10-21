@@ -33,7 +33,8 @@
           :selectable="selectDisableRoom"
         >
         </el-table-column>
-        <el-table-column width="45" fixed>
+
+        <el-table-column width="45" fixed v-if="!hideIndex">
           <template #header> 序号 </template>
           <template #default="scope">
             {{ scope.$index + 1 }}
@@ -311,6 +312,10 @@ const props = defineProps({
   maxHeight: {
     type: String as any,
     default: () => 'calc(100vh - 445px)'
+  },
+  hideIndex: {
+    type: Boolean,
+    default: () => false
   }
 });
 

@@ -875,6 +875,14 @@ const selectDatas = (val: any) => {
     }
   }
 
+  if (Route.name == 'InventoryListAdd') {
+    if (AttributeCode.value == 'cInvCode') {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvstd = val.value[0].cInvstd;
+    }
+  }
+
   dialogType.value = val.type;
   // myTableRef.value.doLayout()
 };

@@ -369,7 +369,7 @@ const clickDelete = (scope: any, obj: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'otherInNotifyDetail',
+    name: 'InventoryListDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -377,15 +377,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'otherInNotify',
-      title: '其他入库通知单详情'
+      pathName: 'InventoryList',
+      title: '盘点单详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'otherInNotifyEdit',
+    name: 'InventoryListEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -393,22 +393,22 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'otherInNotify',
-      title: '其他入库通知单编辑'
+      pathName: 'InventoryList',
+      title: '盘点单编辑'
     }
   });
 };
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'otherInNotifyAdd',
+    name: 'InventoryListAdd',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '其他入库通知单新增',
+      title: '盘点单新增',
       type: 'add'
     }
   });

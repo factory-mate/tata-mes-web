@@ -35,6 +35,7 @@
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
         size="small"
+        hideIndex
       >
         <template #button>
           <el-table-column

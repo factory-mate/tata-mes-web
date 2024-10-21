@@ -1955,6 +1955,13 @@ const selectData = (val: any) => {
         ruleForm.value['cInvCode'] = val.value[0].cInvCode || '';
       }
     }
+    if (Route.name === 'InventoryListAdd') {
+      if (AttributeCode.value === 'cDefindParm02') {
+        ruleForm.value.cDefindParm02 = val.value[0].cWareHouseAreaCode || '';
+        ruleForm.value.cWareHouseCode = val.value[0].cWareHouseCode || '';
+        ruleForm.value.cWareHouseName = val.value[0].cWareHouseName || '';
+      }
+    }
   } else {
     if (Route.name == 'newOutputPlan' || Route.name == 'newOutputPlanEdit') {
       if (AttributeCode.value === 'cPreBatch') {
@@ -2343,6 +2350,10 @@ const newAdd = () => {
       arr.push(item.cLableCode);
     });
     dataValue = { cLableCodes: arr };
+  } else if (Route.name == 'InventoryListAdd') {
+    dataValue = {
+      body: validateObj.value.tableData
+    };
   } else {
     dataValue = { uNITCONVERTs: ButObjTableData.value };
   }
