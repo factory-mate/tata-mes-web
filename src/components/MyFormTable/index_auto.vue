@@ -323,7 +323,6 @@ const funWidth = (val: any, item: any) => {
         '合页',
         '锁孔',
         '磁吸代别',
-        '备注',
         '审核失败原因'
       ].includes(val)
     ) {
