@@ -188,22 +188,22 @@ const selectVisible = prop => {
 
 const generateLambda = () => {
   // // 递归处理 lambdaData，cDimensionalityCode，cLamdaConditionTypeCode，cValueName 必须有值
-  // const recursion = data => {
-  //   data.forEach(item => {
-  //     if (
-  //       item.cDimensionalityCode &&
-  //       item.cLamdaConditionTypeCode &&
-  //       item.cValueName
-  //     ) {
-  //       if (item.children && item.children.length > 0) {
-  //         item.list_Model = item.children;
-  //         recursion(item.children);
-  //       }
-  //     }
-  //   });
-  // };
+  const recursion = data => {
+    data.forEach(item => {
+      if (
+        item.cDimensionalityCode &&
+        item.cLamdaConditionTypeCode &&
+        item.cValueName
+      ) {
+        if (item.children && item.children.length > 0) {
+          item.list_Model = item.children;
+          recursion(item.children);
+        }
+      }
+    });
+  };
 
-  // recursion(lambdaData.value);
+  recursion(lambdaData.value);
 
   const data = {
     method: 'post',
@@ -265,7 +265,7 @@ defineExpose({ resetData });
     <div style="display: flex; width: 100%">
       <el-switch
         style="margin: 5px 10px"
-        v-if="lambdaData.length > 1"
+        v-if="false"
         v-model="rootConditionType"
         size="small"
         active-text="且"
@@ -324,7 +324,6 @@ defineExpose({ resetData });
               />
             </template>
             <el-switch
-              v-show="data.children?.length > 1"
               style="margin: 0 10px"
               v-model="data.cConditionType"
               size="small"
