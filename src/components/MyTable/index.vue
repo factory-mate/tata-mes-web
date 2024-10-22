@@ -128,7 +128,8 @@
                 v-if="
                   (Route.name == 'originalOrder' ||
                     Route.name == 'productionOrder') &&
-                  !item.label.includes('原因')
+                  !item.label.includes('原因') &&
+                  !item.label.includes('客户姓名')
                 "
               >
                 <p v-if="item.prop == 'dCreateTime' || item.prop == 'dDate'">
