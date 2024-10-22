@@ -308,7 +308,9 @@ const funWidth = (val: any, item: any) => {
     ) {
       return '50px';
     }
-    if (
+    if (['名称'].includes(val)) {
+      return '200px';
+    } else if (
       [
         '材质名称',
         '尺寸',
@@ -331,7 +333,6 @@ const funWidth = (val: any, item: any) => {
         '分包序号',
         '生产编号',
         '分包条码',
-        '名称',
         '成品名称',
         '包内件数',
         '分包类别',
