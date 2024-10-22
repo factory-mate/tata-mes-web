@@ -159,7 +159,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'otherInNotify') {
+    if (v.name == 'InventoryList') {
       tableAxios();
     }
   }, 300);

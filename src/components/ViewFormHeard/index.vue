@@ -1955,7 +1955,10 @@ const selectData = (val: any) => {
         ruleForm.value['cInvCode'] = val.value[0].cInvCode || '';
       }
     }
-    if (Route.name === 'InventoryListAdd') {
+    if (
+      Route.name === 'InventoryListAdd' ||
+      Route.name === 'InventoryListEdit'
+    ) {
       if (AttributeCode.value === 'cDefindParm02') {
         ruleForm.value.cDefindParm02 = val.value[0].cWareHouseAreaCode || '';
         ruleForm.value.cWareHouseCode = val.value[0].cWareHouseCode || '';

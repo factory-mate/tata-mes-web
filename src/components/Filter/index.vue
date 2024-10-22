@@ -429,6 +429,12 @@ const selectData = (val: any) => {
             item.cAttributeCodeValue = val.value[0].cWareHouseAreaCode;
           }
         }
+
+        if (Route.name === 'InventoryListResult') {
+          if (item.Resource.cAttributeCode === 'cDefindParm02') {
+            item.cAttributeCodeValue = val.value[0].cWareHouseAreaCode;
+          }
+        }
       }
     }
   );

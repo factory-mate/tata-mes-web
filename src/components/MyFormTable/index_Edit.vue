@@ -140,7 +140,6 @@
                   </el-icon>
                 </template>
               </el-autocomplete> -->
-
               <el-input
                 v-if="item.cControlTypeCode == 'TextBoxLink'"
                 :disabled="props.disabled"
@@ -875,7 +874,7 @@ const selectDatas = (val: any) => {
     }
   }
 
-  if (Route.name == 'InventoryListAdd') {
+  if (Route.name == 'InventoryListAdd' || Route.name === 'InventroyListEdit') {
     if (AttributeCode.value == 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
