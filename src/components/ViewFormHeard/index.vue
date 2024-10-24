@@ -1358,7 +1358,8 @@ const headVal = () => {
   if (
     Route.name === 'AddPurchaseNote' ||
     Route.name === 'ScrapToolInfoAdd' ||
-    Route.name === 'resizeDialAdd'
+    Route.name === 'resizeDialAdd' ||
+    Route.name === 'AddGrindOrder'
   ) {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }

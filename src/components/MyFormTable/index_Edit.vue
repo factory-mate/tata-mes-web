@@ -801,10 +801,6 @@ const selectDatas = (val: any) => {
   }
 
   if (Route.name == 'AddGrindOrder' || Route.name == 'EditGrindOrder') {
-    console.log(
-      tableDataVal.value[IndexType.value],
-      'tableDataVal.value[IndexType.value]----------'
-    );
     tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
     tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
     tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
