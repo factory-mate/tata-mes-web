@@ -1355,7 +1355,11 @@ const headVal = () => {
     ruleForm.value.IsAuth = false;
   }
 
-  if (Route.name === 'AddPurchaseNote') {
+  if (
+    Route.name === 'AddPurchaseNote' ||
+    Route.name === 'ScrapToolInfoAdd' ||
+    Route.name === 'resizeDialAdd'
+  ) {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
   if (Route.name === 'newPurchasedGoods') {
@@ -2068,6 +2072,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 // 新增保存
 const newAdd = () => {
+  if (Route.name == 'resizeDialAdd') {
+    if (ruleForm.value.cOutWareHouseCode === ruleForm.value.cInWareHouseCode) {
+      ElMessage({
+        message: '出库仓库和入库仓库不能相同',
+        type: 'error'
+      });
+      return;
+    }
+  }
   if (Route.name == 'AddPartolPlan') {
     ruleForm.value.cVouchTypeCode = '01';
   }
