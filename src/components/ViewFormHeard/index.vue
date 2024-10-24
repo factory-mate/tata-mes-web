@@ -2215,10 +2215,8 @@ const newAdd = () => {
     Route.name == 'newPurchasedGoodsEdit' ||
     Route.name == 'newPurchasedGoodsView' ||
     Route.name == 'newWorkshopMaterial' ||
-    Route.name == 'newWorkshopMaterialEdit' ||
     Route.name == 'newWorkshopMaterialView' ||
     Route.name == 'newWarehouseMaterial' ||
-    Route.name == 'newWarehouseMaterialEdit' ||
     Route.name == 'newWarehouseMaterialView' ||
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
@@ -2337,7 +2335,9 @@ const newAdd = () => {
     Route.name == 'FinishedSubPartComparisonEdit' ||
     Route.name == 'CityWarehouseArchivesAdd' ||
     Route.name == 'CityWarehouseArchivesEdit' ||
-    Route.name == 'CityWarehouseArchivesView'
+    Route.name == 'CityWarehouseArchivesView' ||
+    Route.name == 'newWorkshopMaterialEdit' ||
+    Route.name == 'warehouseMaterialEdit'
   ) {
     dataValue = { list_body: validateObj.value.tableData };
   } else if (
