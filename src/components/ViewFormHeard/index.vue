@@ -2355,7 +2355,8 @@ const newAdd = () => {
     dataValue = { cLableCodes: arr };
   } else if (Route.name == 'InventoryListAdd') {
     dataValue = {
-      body: validateObj.value.tableData
+      body: validateObj.value.tableData,
+      cVouchTypeCode: '1'
     };
   } else {
     dataValue = { uNITCONVERTs: ButObjTableData.value };
