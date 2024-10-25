@@ -92,7 +92,13 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
-import { ElButton, ElCard, ElLoading, ElTableColumn } from 'element-plus';
+import {
+  ElButton,
+  ElCard,
+  ElLoading,
+  ElTableColumn,
+  ElMessage
+} from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
@@ -391,6 +397,11 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
+  if (TABRef.value.tableDataVal.some(i => !i.cInvCode)) {
+    ElMessage.error('存在数据未填写完整');
+    return;
+  }
+
   obj.pathName = 'PurchaseRequest';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
