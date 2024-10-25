@@ -10,6 +10,7 @@
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
+          @Commit="Commit"
         ></ButtonViem>
       </div>
       <Head-View
@@ -92,7 +93,13 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
-import { ElButton, ElCard, ElLoading, ElTableColumn } from 'element-plus';
+import {
+  ElButton,
+  ElCard,
+  ElLoading,
+  ElTableColumn,
+  ElMessage
+} from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
@@ -412,6 +419,28 @@ const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
   disabled.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+};
+
+const Commit = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [rowId.value]
+  };
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '提交成功'
+      });
+      // tableAxios()
+      // TabRef.value.handleRemoveSelectionChange()
+      // sendId.value = []
+    } else {
+      console.log('提交失败');
+    }
+  });
+  console.log(obj, '提交');
 };
 </script>
 
