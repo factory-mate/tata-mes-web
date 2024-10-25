@@ -39,33 +39,50 @@
           <div class="DY-Text">
             <div class="Te-con">
               <el-row :gutter="20">
+                <el-col :span="12">
+                  <div class="grid-content ep-bg-purple">
+                    物料编码: {{ item.cInvCode }}
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content ep-bg-purple">
+                    数量：{{ item.iDefindParm13 }}{{ item.cDefindParm06 }}
+                  </div>
+                </el-col>
                 <el-col :span="21">
                   <div class="grid-content ep-bg-purple">
-                    物料名称: {{ item.clnvName }}
+                    物料名称：{{ item.cInvName }}
                   </div>
                 </el-col>
                 <el-col :span="2" style="position: relative">
                   <!-- 二维码 -->
                   <div style="position: absolute; top: 0; right: 0">
-                    <qrcode-vue :value="item.cQRCode" :size="55"></qrcode-vue>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div>
+                        <qrcode-vue
+                          :value="item.cQRCode"
+                          :size="55"
+                        ></qrcode-vue>
+                      </div>
+                      <div style="margin-top: 8px">{{ item.cQRCode }}</div>
+                    </div>
                   </div>
                 </el-col>
               </el-row>
-              <p>物料编码: {{ item.cInvCode }}</p>
-              <p>包装编码: {{ item.cBarCode }}</p>
-              <p>规格型号: {{ item.cInvStd }}</p>
-              <el-row :gutter="20">
-                <el-col :span="14">
-                  <div class="grid-content ep-bg-purple">
-                    批次号：{{ item.cDefindParm01 }}
-                  </div>
-                </el-col>
-                <el-col :span="6">
-                  <div class="grid-content ep-bg-purple">
-                    数量：{{ item.iDefindParm13 }}
-                  </div>
-                </el-col>
-              </el-row>
+              <div>物料规格: {{ item.cDefindParm03 }}</div>
+              <div>批次号: {{ item.cDefindParm01 }}</div>
+              <div>生产日期: {{ item.cDefindParm04 }}</div>
+              <div>采购订单号: {{ item.cSourceCode }}</div>
+              <div>供应商: {{ item.cVendorName }}</div>
+              <div style="margin-bottom: 20px">
+                供应商批号: {{ item.cVendorBatch }}
+              </div>
             </div>
           </div>
         </div>
@@ -350,7 +367,7 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
           ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '保存'
+            (item: any) => item.Resource.cAttributeName !== '添加'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
             (item: any) => item.Resource.cAttributeName == '添加'
