@@ -212,8 +212,8 @@ const generateLambda = () => {
       '/api/SetLamda/BuildLamdaOnRecursion',
     data: {
       MID: route.params.rowId,
-      list_Model: lambdaData.value,
-      cConditionType: rootConditionType.value
+      list_Model: lambdaData.value
+      // cConditionType: rootConditionType.value
     }
   };
 
@@ -283,6 +283,15 @@ defineExpose({ resetData });
       >
         <template #default="{ node, data }">
           <div>
+            <el-switch
+              style="margin: 0 10px"
+              v-model="data.cConditionType"
+              size="small"
+              active-text="且"
+              inactive-text="或"
+              active-value="1"
+              inactive-value="0"
+            />
             <el-select-v2
               v-model="data.cDimensionalityCode"
               clearable
@@ -323,15 +332,6 @@ defineExpose({ resetData });
                 clearable
               />
             </template>
-            <el-switch
-              style="margin: 0 10px"
-              v-model="data.cConditionType"
-              size="small"
-              active-text="且"
-              inactive-text="或"
-              active-value="1"
-              inactive-value="0"
-            />
             <el-button
               type="primary"
               @click="() => clickSelectBtn(node)"
