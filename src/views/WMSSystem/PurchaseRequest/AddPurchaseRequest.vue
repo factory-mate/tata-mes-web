@@ -397,8 +397,13 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  if (TABRef.value.tableDataVal.some(i => !i.cInvCode)) {
-    ElMessage.error('存在数据未填写完整');
+  console.log(TABRef.value.tableDataVal);
+  if (
+    TABRef.value.tableDataVal.some(
+      i => !i.cInvCode || !i.iQuantity || !i.cUnitName || !i.cDefindParm01
+    )
+  ) {
+    ElMessage.error('存在数据未填写完整，物料编码、数量、单位、交货日期必填');
     return;
   }
 
