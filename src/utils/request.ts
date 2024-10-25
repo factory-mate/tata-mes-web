@@ -70,7 +70,7 @@ service.interceptors.response.use(
     if (status == '500') {
       ElLoading.service().close();
       ElMessage({
-        message: msg || errmsg[0] || '出错！！！',
+        message: msg || errmsg[0].Value || '出错！！！',
         type: 'error'
       });
     } else if (status == '200') {
@@ -91,14 +91,6 @@ service.interceptors.response.use(
       if (response.data.errmsg === null) {
         ElMessage({
           message: response.data.msg || '',
-          type: 'error'
-        });
-        return Promise.reject(response.data);
-      } else if (response.data.errmsg[0].Value.slice(0, 1) == '[') {
-        // eslint-disable-next-line prefer-const
-        let errVal = JSON.parse(response.data.errmsg[0].Value)[0];
-        ElMessage({
-          message: errVal.name + '：' + errVal.val + '，' + errVal.msg + '!',
           type: 'error'
         });
         return Promise.reject(response.data);
