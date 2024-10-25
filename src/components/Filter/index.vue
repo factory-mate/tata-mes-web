@@ -435,6 +435,12 @@ const selectData = (val: any) => {
             item.cAttributeCodeValue = val.value[0].cWareHouseAreaCode;
           }
         }
+
+        if (Route.name === 'ToolFile') {
+          if (item.Resource.cAttributeCode === 'cInvClassCode') {
+            item.cAttributeCodeValue = val.value[0].cInvClassName;
+          }
+        }
       }
     }
   );
