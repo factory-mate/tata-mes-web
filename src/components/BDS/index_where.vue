@@ -217,9 +217,29 @@ const generateLambda = () => {
     }
   };
 
+  const models = [];
+
+  // 递归获取 cDimensionalityCode，MID
+  const recursionData = data => {
+    data.forEach(item => {
+      if (item.cDimensionalityCode) {
+        models.push({
+          cDimensionalityCode: item.cDimensionalityCode,
+          MID: route.params.rowId
+        });
+        if (item.children && item.children.length > 0) {
+          recursionData(item.children);
+        }
+      }
+    });
+  };
+
+  recursionData(lambdaData.value);
+
   DataApi(data).then(res => {
     if (res.success) {
       props.ruleForm.cLamda = res.data;
+      props.ruleForm.models = models;
     } else {
       ElMessage({
         message: res.msg || '生成失败',

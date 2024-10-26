@@ -2254,7 +2254,7 @@ const newAdd = () => {
     Route.name == 'AddBusineScenEdit' ||
     Route.name == 'AddBusineScenView'
   ) {
-    dataValue = { Mid: MID.value };
+    dataValue = { Mid: MID.value, models: ruleForm.value.models };
     //指标档案
   } else if (Route.name == 'AddTarget' || Route.name == 'EditTarget') {
     // 下拉数据------------------------
