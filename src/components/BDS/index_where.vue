@@ -304,6 +304,7 @@ defineExpose({ resetData });
         <template #default="{ node, data }">
           <div>
             <el-switch
+              v-if="node.previousSibling"
               style="margin: 0 10px"
               v-model="data.cConditionType"
               size="small"
