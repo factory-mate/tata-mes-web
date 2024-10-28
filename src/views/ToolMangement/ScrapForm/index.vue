@@ -49,7 +49,12 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i == 0 || i == 1"
+                  v-if="
+                    ((i == 0 || i == 1) &&
+                      item.Resource.cAttributeCode == 'View' &&
+                      scope.row.iStatus !== 0) ||
+                    scope.row.iStatus == 0
+                  "
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
