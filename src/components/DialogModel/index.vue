@@ -1048,6 +1048,16 @@ const selectData = (val: any) => {
           ruleForm.value.cPosCode = val.value[0].cWareHouseLocationCode;
         }
       }
+      if(Route.name === 'MaterialSupplier'){
+        if (AttributeCode.value == 'cInvName') {
+          ruleForm.value.cInvName = val.value[0].cInvName;
+          ruleForm.value.cInvCode = val.value[0].cInvCode;
+        }
+        if(AttributeCode.value == 'cVendorName'){
+          ruleForm.value.cVendorName = val.value[0].cVendorName;
+          ruleForm.value.cVendorCode = val.value[0].cVendorCode;
+        }
+      }
     }
   );
 };
