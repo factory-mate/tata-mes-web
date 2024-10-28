@@ -216,8 +216,15 @@
               </el-upload>
             </div>
             <!-- 树形结构 -->
-            <!-- <el-cascader v-if="item.cControlTypeCode == 'Tree'" v-model="ruleForm[item.Resource.cAttributeCode]"
-                            :options="optionData" :props="prop" @change="getCheckedNodes" /> -->
+            <el-cascader
+              v-if="item.cControlTypeCode == 'Tree'"
+              ref="cascader"
+              v-model="ruleForm[item.Resource.cAttributeCode]"
+              :options="optionData"
+              :props="prop"
+              @change="handleChange"
+              clearable
+            />
             <!-- <el-tree-select ref="treeRef" node-key="cFactoryUnitCode" v-if="item.cControlTypeCode == 'Tree'"
                             :props="prop" v-model="ruleForm[item.Resource.cAttributeCode]" :default-checked-keys="treeVal"
                             :data="optionData" :render-after-expand="false" show-checkbox
@@ -446,7 +453,13 @@ const total = ref(0);
 //表格数据
 const tableData = ref([] as any);
 const bdsRef = ref(null);
-
+const prop = {
+  children: 'Child',
+  label: 'cFactoryUnitName',
+  value: 'cFactoryUnitCode',
+  multiple: false,
+  checkStrictly: true
+};
 //弹窗组件事件
 const data = reactive({
   Conditions: '',
@@ -547,6 +560,8 @@ const props = defineProps({
 const { tableAxios } = inject('tableAxios') as {
   tableAxios: () => void;
 };
+const optionData = ref([]) as any;
+
 //form
 watch(
   props,
@@ -1038,6 +1053,28 @@ const selectData = (val: any) => {
 };
 //手动输入弹框数据
 const TextBoxLink = () => {};
+
+//获取级联树结构数据
+const getTreeData = (newValue: any) => {
+  newValue.forEach((item: any) => {
+    if (item.cControlTypeCode == 'Tree' && item.IsShow == true) {
+      let data = {
+        method: item.Resource.cHttpTypeCode,
+        url: item.Resource.cServerIP + item.Resource.cUrl,
+        params: {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          cDictonaryTypeCode: item.Resource.cAttributeCode
+        }
+      };
+      ParamsApi(data).then((res: any) => {
+        optionData.value = res.data;
+        // ruleForm.value = { ...ruleForm.value, ...optionData.value }
+      });
+    }
+  });
+};
+
 // FORM数据
 const getData = async (obj: any) => {
   FormDatas.value = [];
@@ -1066,6 +1103,7 @@ const getData = async (obj: any) => {
           }, 10);
           getViewData(); //form 详情数据
           getSelData(); //下拉框数据
+          getTreeData(FormDatas.value);
         }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
           BtnData.value = item[import.meta.env.VITE_APP_key].sort(
@@ -1215,7 +1253,8 @@ const getViewData = () => {
     Route.name == 'LogisticsCityComparison' ||
     Route.name == 'MaterialSupplier' ||
     Route.name == 'Texture' ||
-    Route.name == 'ProductTag'
+    Route.name == 'ProductTag' ||
+    Route.name == 'ProcessRouteLine'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
@@ -1244,6 +1283,10 @@ const getViewData = () => {
         }
 
         // ruleForm.value = res.data||rowVal.value
+
+        if (Route.name == 'ProcessRouteLine') {
+          ruleForm.value.cResourceName = rowVal.value.cResourceCode;
+        }
       } else {
         console.log('失败');
       }
@@ -1754,6 +1797,12 @@ const SaveEdit = (item: any) => {
       ruleForm.value.cProjectTypeCode = ProjectName.value[0].cDictonaryCode;
       ruleForm.value.cProjectTypeName = ProjectName.value[0].cDictonaryName;
     }
+    if (Route.name === 'ProcessRouteLine') {
+      ruleForm.value.cResourceName =
+        ruleForm.value.cFactoryUnitName || ruleForm.value.cResourceName;
+      ruleForm.value.cResourceCode =
+        ruleForm.value.cFactoryUnitCode || ruleForm.value.cResourceCode;
+    }
     let data = {
       method: item.Resource.cHttpTypeCode,
       url: item.Resource.cServerIP + item.Resource.cUrl,
@@ -1889,6 +1938,38 @@ const BtnOptimizeOK = (item: any) => {
       loading.close();
     });
 };
+const TreeItem = ref() as any;
+
+function treeToArray(tree: any) {
+  return tree.reduce((res: any, item: any) => {
+    const { children, ...i } = item;
+    return res.concat(
+      i,
+      children && children.length ? treeToArray(children) : []
+    );
+  }, []);
+}
+const cascader = ref() as any;
+
+//级联树结构选项变化
+const handleChange = (value: any) => {
+  console.log(value, '树结构选中数据');
+  console.log(cascader.value[0].getCheckedNodes(), '--pppp');
+  // TODO：
+  if (Route.name == 'ProcessRouteLine') {
+    ruleForm.value['cFactoryUnitCode'] =
+      cascader.value[0].getCheckedNodes()[0].value;
+    ruleForm.value['cFactoryUnitName'] =
+      cascader.value[0].getCheckedNodes()[0].label;
+  }
+  console.log(cascader.value);
+
+  TreeItem.value = treeToArray(cascader.value[0].getCheckedNodes()).map(
+    (i: any) => i.data
+  );
+  console.log(TreeItem.value, '---TreeItem.value');
+};
+
 const BtnCancelOK = (item: any) => {
   if (!ruleForm.value.JobName) {
     ElMessage.error('请输入数据');
