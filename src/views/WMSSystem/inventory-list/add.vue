@@ -402,13 +402,37 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  if (!TABRef.value.tableDataVal.length) {
+  // 仓库 - 0 ，库区 - 1，物料 - 2
+  // 仓库、库区不需要选择物料，库区需要选择库区
+  console.log(headRef.value.ruleForm);
+  if (!headRef.value.ruleForm.cTakeTypeCode) {
+    ElMessage({
+      type: 'info',
+      message: '请选择盘点类型'
+    });
+    return false;
+  }
+  if (
+    headRef.value.ruleForm.cTakeTypeCode == '1' &&
+    !headRef.value.ruleForm.cDefindParm02
+  ) {
+    ElMessage({
+      type: 'info',
+      message: '请选择库区'
+    });
+    return false;
+  }
+  if (
+    headRef.value.ruleForm.cTakeTypeCode == '2' &&
+    !TABRef.value.tableDataVal.length
+  ) {
     ElMessage({
       type: 'info',
       message: '请添加列表数据'
     });
     return false;
   }
+
   // let list=[]
   // list= TABRef.value.tableDataVal.filter((item:any)=>{
   //     return item.cInvCode=='' ||item.nQuantity==''
