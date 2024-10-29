@@ -60,7 +60,7 @@ service.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-const MESSAGE_LENGTH = 25;
+const MESSAGE_LENGTH = 40;
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
