@@ -34,7 +34,7 @@
         >
         </el-table-column>
 
-        <el-table-column width="45" fixed v-if="!hideIndex">
+        <el-table-column width="45" fixed v-if="showIndex">
           <template #header> 序号 </template>
           <template #default="scope">
             {{ scope.$index + 1 }}
@@ -314,7 +314,7 @@ const props = defineProps({
     type: String as any,
     default: () => 'calc(100vh - 445px)'
   },
-  hideIndex: {
+  showIndex: {
     type: Boolean,
     default: () => false
   }

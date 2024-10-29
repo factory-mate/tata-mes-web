@@ -82,7 +82,6 @@
             :selection="true"
             @tableHearData="tableHearData"
             @handleSelectionChange="handleSelectionChange"
-            hideIndex
           >
             <template #button>
               <el-table-column
