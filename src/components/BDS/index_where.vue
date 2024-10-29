@@ -4,6 +4,7 @@ import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
+import { Delete } from '@element-plus/icons-vue';
 
 const props = defineProps({
   Head: {
@@ -370,11 +371,12 @@ defineExpose({ resetData });
               添加子级条件
             </el-button>
             <el-button
-              type="primary"
+              type="danger"
               style="margin-left: 8px"
               @click="() => handleRemoveItem(node)"
+              :icon="Delete"
+              circle
             >
-              删除
             </el-button>
           </div>
         </template>
