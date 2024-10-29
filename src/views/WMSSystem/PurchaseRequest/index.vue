@@ -48,12 +48,14 @@
                 v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
+                <!-- 0: 保存，1：未审核，5:驳回，10:已审核，15：已采购 -->
                 <el-button
                   v-if="
-                    item.iIndex < 3 &&
-                    ((item.Resource.cAttributeCode === 'Edit' &&
+                    (item.Resource.cAttributeCode === 'Edit' &&
                       [0, 5].includes(scope.row.iStatus)) ||
-                      item.Resource.cAttributeCode !== 'Edit')
+                    (item.Resource.cAttributeCode === 'Delete' &&
+                      [0, 5].includes(scope.row.iStatus)) ||
+                    !['Edit', 'Delete'].includes(item.Resource.cAttributeCode)
                   "
                   type="primary"
                   size="small"
