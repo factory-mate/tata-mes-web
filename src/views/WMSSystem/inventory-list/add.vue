@@ -433,17 +433,20 @@ const SaveAdd = (obj: any) => {
     return false;
   }
 
-  // let list=[]
-  // list= TABRef.value.tableDataVal.filter((item:any)=>{
-  //     return item.cInvCode=='' ||item.nQuantity==''
-  // })
-  // if(list.length){
-  //     ElMessage({
-  //         type: 'error',
-  //         message: '编号/数量不能为空！',
-  //     })
-  // }else{
-  // }
+  // 不允许列表物料重复
+  if (TABRef.value.tableDataVal.length) {
+    const arr = TABRef.value.tableDataVal.map((item: any) => {
+      return item.cInvCode;
+    });
+    const setArr = new Set(arr);
+    if (arr.length != setArr.size) {
+      ElMessage({
+        type: 'error',
+        message: '物料不允许重复！'
+      });
+      return;
+    }
+  }
   obj.pathName = 'InventoryList';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
