@@ -886,6 +886,16 @@ const selectDatas = (val: any) => {
     }
   }
 
+  if (Route.name === 'AddGrindOrder') {
+    if (AttributeCode.value === 'cInvName') {
+      $bus.emit('AddGrindOrder:AddHeadRefData', val.value[0]);
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+    }
+  }
+
   dialogType.value = val.type;
   // myTableRef.value.doLayout()
 };

@@ -92,7 +92,13 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
-import { ElButton, ElCard, ElLoading, ElTableColumn } from 'element-plus';
+import {
+  ElButton,
+  ElCard,
+  ElLoading,
+  ElTableColumn,
+  ElMessage
+} from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
@@ -391,6 +397,32 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
+  console.log(TABRef.value.tableDataVal, headRef.value.ruleForm.cVendorCode);
+  if (!headRef.value.ruleForm.cVendorCode) {
+    ElMessage({
+      type: 'error',
+      message: '请选择供应商'
+    });
+    return;
+  }
+  if (TABRef.value.tableDataVal.length == 0) {
+    ElMessage({
+      type: 'error',
+      message: '请添加数据'
+    });
+    return;
+  }
+  if (
+    TABRef.value.tableDataVal.some(
+      i => i.cVendorCode !== headRef.value.ruleForm.cVendorCode
+    )
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '供应商不一致'
+    });
+    return;
+  }
   obj.pathName = 'GrindOrder';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -412,6 +444,14 @@ const clickEdit = (obj: any) => {
   disabled.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
 };
+
+$bus.on('AddGrindOrder:AddHeadRefData', val => {
+  console.log(val);
+  if (!headRef.value.ruleForm.cVendorCode) {
+    headRef.value.ruleForm.cVendorCode = val.cVendorCode;
+    headRef.value.ruleForm.cVendorName = val.cVendorName;
+  }
+});
 </script>
 
 <style scoped lang="scss">
