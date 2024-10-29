@@ -60,6 +60,7 @@ service.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+const MESSAGE_LENGTH = 25;
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
@@ -67,11 +68,26 @@ service.interceptors.response.use(
     // const loadingInstance = ElLoading.service()
     // loadingInstance.close()
     const { status, msg, errmsg } = response.data;
+    let isLongMessage = false;
+    let errorMsg = '';
     if (status == '500') {
       ElLoading.service().close();
+      if (msg) {
+        errorMsg = msg;
+        if (msg.length > MESSAGE_LENGTH) {
+          isLongMessage = true;
+        }
+      } else if (errmsg[0].Value) {
+        errorMsg = errmsg[0].Value;
+        if (errmsg[0].Value.length > MESSAGE_LENGTH) {
+          isLongMessage = true;
+        }
+      }
       ElMessage({
-        message: msg || errmsg[0].Value || '出错！！！',
-        type: 'error'
+        message: errorMsg || '出错！！！',
+        type: 'error',
+        showClose: true,
+        duration: isLongMessage ? 0 : 3000
       });
     } else if (status == '200') {
       return response.data;
@@ -90,14 +106,18 @@ service.interceptors.response.use(
       // 异常报错处理
       if (response.data.errmsg === null) {
         ElMessage({
-          message: response.data.msg || '',
-          type: 'error'
+          message: errorMsg || '',
+          type: 'error',
+          showClose: true,
+          duration: isLongMessage ? 0 : 3000
         });
         return Promise.reject(response.data);
       } else {
         ElMessage({
           message: response.data.errmsg[0].Value,
-          type: 'error'
+          type: 'error',
+          showClose: true,
+          duration: isLongMessage ? 0 : 3000
         });
         return Promise.reject(response.data);
       }
@@ -109,6 +129,8 @@ service.interceptors.response.use(
     // load.hide();//在这~~~~~~~
     console.log('errorinfo', error.response);
     const { status, msg } = error.response.data;
+    let isLongMessage = false;
+    let errorMsg = '';
     if (error.response.data) {
       // token 过期,重新登录
       if (status == '401' || status == '403') {
@@ -123,9 +145,17 @@ service.interceptors.response.use(
       } else if (status == '415' || status == '400' || status == '300') {
         console.log(status, 'status');
       } else {
+        if (msg) {
+          errorMsg = msg;
+          if (msg.length > MESSAGE_LENGTH) {
+            isLongMessage = true;
+          }
+        }
         ElMessage({
           message: msg || '系统出错！！！',
-          type: 'error'
+          type: 'error',
+          showClose: true,
+          duration: isLongMessage ? 0 : 3000
         });
       }
     }
