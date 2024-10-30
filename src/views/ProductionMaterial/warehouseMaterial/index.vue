@@ -51,7 +51,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="item.iIndex < 3"
+                  v-if="showBtn(item, scope.row)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -174,6 +174,13 @@ $bus.on('tableUpData', (v: any) => {
     }
   }, 300);
 });
+
+const showBtn = (item, data) => {
+  if (data.iStatus === 6 && item.cAttributeCode === 'Edit') {
+    return false;
+  }
+  return true;
+};
 //调取接口
 const getData: any = async (val: string) => {
   try {
