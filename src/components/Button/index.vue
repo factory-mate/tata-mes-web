@@ -89,7 +89,10 @@
       <!-- 单个button -->
       <template v-else>
         <el-button
-          v-if="item.Resource.cAttributeName !== '打印标签'"
+          v-if="
+            item.Resource.cAttributeName !== '打印标签' &&
+            item.Resource.cAttributeName !== '补打'
+          "
           :type="
             item.cAttributeCode == 'Add' ||
             item.cAttributeCode == 'SaveAdd' ||
@@ -275,7 +278,8 @@ const emits = defineEmits([
   'ImportIn',
   'ExportDetail',
   'HangUp',
-  'Copy'
+  'Copy',
+  'Print'
 ]);
 
 watch(
@@ -737,6 +741,9 @@ const HangUp = (obj: any) => {
 const Copy = (obj: any) => {
   emits('Copy', obj);
 };
+const Print = (obj: any) => {
+  emits('Print', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1075,6 +1082,9 @@ const clickButton = (event: any) => {
       break;
     case 'Copy':
       Copy(event);
+      break;
+    case 'Print':
+      Print(event);
       break;
     default:
       break;

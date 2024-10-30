@@ -11,12 +11,73 @@
       <!-- 按钮区域 -->
       <ButtonViem
         :ToolBut="But"
+        :printDis="printDis"
         @clickAdd="clickAdd"
         @Commit="Commit"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @Print="PrintLabel"
       >
       </ButtonViem>
+      <!-- 打印 ------------->
+      <div class="DY" id="printMe">
+        <div
+          v-for="(item, i) in printData"
+          :key="i"
+          style="width: 100%; height: 100%"
+        >
+          <div class="DY-Text">
+            <div class="Te-con">
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <div class="grid-content ep-bg-purple">
+                    物料编码: {{ item.cInvCode }}
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content ep-bg-purple">
+                    数量：{{ item.iDefindParm13 }}{{ item.cDefindParm06 }}
+                  </div>
+                </el-col>
+                <el-col :span="21">
+                  <div class="grid-content ep-bg-purple">
+                    物料名称：{{ item.cInvName }}
+                  </div>
+                </el-col>
+                <el-col :span="2" style="position: relative">
+                  <!-- 二维码 -->
+                  <div style="position: absolute; top: 0; right: 0">
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div>
+                        <qrcode-vue
+                          :value="item.cQRCode"
+                          :size="55"
+                        ></qrcode-vue>
+                      </div>
+                      <div style="margin-top: 8px">{{ item.cQRCode }}</div>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+              <div>物料规格: {{ item.cDefindParm03 }}</div>
+              <div>批次号: {{ item.cDefindParm01 }}</div>
+              <div>生产日期: {{ item.cDefindParm04 }}</div>
+              <div>采购订单号: {{ item.cSourceCode }}</div>
+              <div>供应商: {{ item.cVendorName }}</div>
+              <div style="margin-bottom: 20px">
+                供应商批号: {{ item.cVendorBatch }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 打印 -------------->
       <!-- 表格区域 -->
       <myTable
         ref="TabRef"
@@ -100,7 +161,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, nextTick, onActivated } from 'vue';
+import { ref, toRefs, reactive, nextTick, onActivated, watch } from 'vue';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
@@ -139,6 +200,23 @@ const tabType = ref(true);
 const sendId = ref([]) as any;
 const CheckDataList = ref([]) as any;
 const initType = ref(true);
+const printDis = ref(true);
+const selectArr = ref([]) as any;
+
+//监听勾选，控制打印按钮
+watch(
+  selectArr,
+  (v: any) => {
+    if (v.length) {
+      printData.value = [];
+      printajax();
+      printDis.value = false;
+    } else {
+      printDis.value = true;
+    }
+  },
+  { deep: true }
+);
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -223,6 +301,44 @@ const clickTableBut = (scope: any, event: any) => {
       break;
   }
 };
+const DYUID = ref([]) as any;
+const printData = ref([]) as any;
+
+// 打印数据
+const printajax = () => {
+  if (DYUID.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请选择打印数据'
+    });
+    return false;
+  }
+  console.log(1);
+  let data = {
+    method: 'post',
+    url: import.meta.env.VITE_APP_DY_API + '/api/ArriveVouch/PrintLabelAgain',
+    data: DYUID.value
+  };
+  // let data = {
+  //     method: obj.Resource.cHttpTypeCode,
+  //     url: obj.Resource.cServerIP + obj.Resource.cUrl,
+  //     data: DYUID.value
+  // }
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      if (res.data.length == 0) {
+        ElMessage({
+          type: 'info',
+          message: '暂无数据需要打印'
+        });
+      }
+      printData.value = res.data;
+    } else {
+      console.log('失败');
+    }
+  });
+};
+
 //表格数据查询
 const tableAxios = async () => {
   let data = {
@@ -448,8 +564,18 @@ const clickAdd = (obj: { cIncludeModelCode: any }) => {
     }
   });
 };
+
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
+  selectArr.value = arr;
+  DYUID.value = [];
+  console.log(arr);
+  arr.forEach((item: { cKeyCode: any }) => DYUID.value.push(item.cKeyCode));
+  //多选去重
+  DYUID.value = DYUID.value.filter(
+    (i: any, index: any) => DYUID.value.indexOf(i) === index
+  );
+  console.log(DYUID.value);
   CheckDataList.value = arr;
 };
 
@@ -518,6 +644,43 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+//打印参数
+const frame = ref(null);
+const printDiv = ref(null);
+//打印标签
+const PrintLabel = (obj: any, v: any) => {
+  console.log(1);
+  setTimeout(() => {
+    var printIframe = frame.value;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    var html = printDiv?.value?.innerHTML;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    printIframe.setAttribute('srcdoc', html);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    printIframe.onload = function () {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      console.log(printIframe.contentWindow);
+      // 去掉iframe里面的dom的body的padding margin的默认数值
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      printIframe.contentWindow.document.body.style.padding = '0px';
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      printIframe.contentWindow.document.body.style.margin = '0px';
+      // 开始打印
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      printIframe.contentWindow.focus();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      printIframe.contentWindow.print();
+    };
+  }, 100);
 };
 </script>
 
