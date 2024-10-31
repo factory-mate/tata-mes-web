@@ -1070,6 +1070,11 @@ const selectData = (val: any) => {
           ruleForm.value.cVendorCode = val.value[0].cVendorCode;
         }
       }
+      if (Route.name === 'UserLine') {
+        if (AttributeCode.value === 'cUserName') {
+          ruleForm.value.cLoginName = val.value[0].cLoginName;
+        }
+      }
     }
   );
 };
@@ -1190,9 +1195,13 @@ const TtableAxios = async () => {
   } catch {
     //
   }
+  let url = AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl;
+  if (Route.name === 'UserLine') {
+    url += `?val=` + ruleForm.value.cLoginName;
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
-    url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
+    url,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
@@ -1281,6 +1290,8 @@ const getViewData = () => {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
     };
+  } else if (Route.name == 'UserLine') {
+    obj = { val: rowVal.value?.cLoginName };
   } else {
     obj = {
       UID: rowVal.value?.UID || TrowVal.value?.UID || ''
@@ -1723,6 +1734,9 @@ const SaveAdd = (item: any) => {
         ? objTreeValue.value.cParmValueClassCode
         : '';
     }
+    if (Route.name == 'UserLine') {
+      ruleForm.value.list_cFactoryUnitCode = ruleForm.value.cFactoryUnitName;
+    }
     let data = {
       method: item.Resource.cHttpTypeCode,
       url: item.Resource.cServerIP + item.Resource.cUrl,
@@ -1868,6 +1882,9 @@ const SaveEdit = (item: any) => {
             DataTeam.value[0]?.cDictonaryCode || '';
         }
       }
+    }
+    if (Route.name == 'UserLine') {
+      ruleForm.value.list_cFactoryUnitCode = ruleForm.value.cFactoryUnitName;
     }
     let data = {
       method: item.Resource.cHttpTypeCode,
