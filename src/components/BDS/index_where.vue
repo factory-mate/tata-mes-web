@@ -342,7 +342,7 @@ defineExpose({ resetData });
                 v-model="data.cValueName"
                 placeholder="请选择"
                 disabled
-                style="width: 120px; margin-left: 10px"
+                style="width: 220px; margin-left: 10px"
                 clearable
               />
             </template>
@@ -350,7 +350,7 @@ defineExpose({ resetData });
               <el-input
                 v-model="data.cValueName"
                 placeholder="请输入"
-                style="width: 120px; margin-left: 10px"
+                style="width: 220px; margin-left: 10px"
                 clearable
               />
             </template>
