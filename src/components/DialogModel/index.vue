@@ -1825,16 +1825,55 @@ const SaveEdit = (item: any) => {
       ruleForm.value.cResourceCode =
         ruleForm.value.cFactoryUnitCode || ruleForm.value.cResourceCode;
     }
-    let data = {
-      method: item.Resource.cHttpTypeCode,
-      url: item.Resource.cServerIP + item.Resource.cUrl,
-      data: ruleForm.value
-    };
     if (Route.name == 'Project') {
       console.log(ProjectType.value);
       ruleForm.value.cProgramTypeName = ProjectType.value[0].cDictonaryName;
       ruleForm.value.cProgramTypeCode = ProjectType.value[0].cDictonaryCode;
     }
+    //添加项目----------设备编辑
+    if (Route.name == 'EditDevice') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      let code = JSON.parse(
+        window.sessionStorage.getItem('DeviceData')
+      )?.cDeviceCode;
+      if (TrowVal.value.cDeviceCode) {
+        ruleForm.value.cDeviceCode = TrowVal.value.cDeviceCode;
+        if (DataClass.value[0] || DataTeam.value[0]) {
+          // ruleForm.value['cProgramTypeName'] = ProgramType.value[0]?.cDictonaryName || ''
+          // ruleForm.value['cProgramTypeCode'] = ProgramType.value[0]?.cDictonaryCode || ''
+          ruleForm.value['cPeriodTypeName'] =
+            DataClass.value[0]?.cDictonaryName || '';
+          ruleForm.value['cPeriodTypeCode'] =
+            DataClass.value[0]?.cDictonaryCode || '';
+          ruleForm.value['cPeriodUnitTypeName'] =
+            DataTeam.value[0]?.cDictonaryName || '';
+          ruleForm.value['cPeriodUnitTypeCode'] =
+            DataTeam.value[0]?.cDictonaryCode || '';
+        }
+      } else {
+        ruleForm.value.cDeviceCode = code;
+        if (DataClass.value[0] || DataTeam.value[0]) {
+          ruleForm.value['cProgramTypeName'] =
+            ProgramType.value[0]?.cDictonaryName || '';
+          ruleForm.value['cProgramTypeCode'] =
+            ProgramType.value[0]?.cDictonaryCode || '';
+          ruleForm.value['cPeriodTypeName'] =
+            DataClass.value[0]?.cDictonaryName || '';
+          ruleForm.value['cPeriodTypeCode'] =
+            DataClass.value[0]?.cDictonaryCode || '';
+          ruleForm.value['cPeriodUnitTypeName'] =
+            DataTeam.value[0]?.cDictonaryName || '';
+          ruleForm.value['cPeriodUnitTypeCode'] =
+            DataTeam.value[0]?.cDictonaryCode || '';
+        }
+      }
+    }
+    let data = {
+      method: item.Resource.cHttpTypeCode,
+      url: item.Resource.cServerIP + item.Resource.cUrl,
+      data: ruleForm.value
+    };
     DataApi(data).then(res => {
       if (res.status === 200) {
         ElMessage({
