@@ -705,6 +705,7 @@ const ProgramType = ref([]) as any;
 const DataClass = ref([]) as any;
 const DataTeam = ref([]) as any;
 const ProjectName = ref([] as any);
+const ProjectType = ref([] as any);
 //下拉数据变化
 const GetSelectData = (item: any, value: any) => {
   if (Route.name == 'EditDevice' || Route.name == 'AddDevice') {
@@ -729,6 +730,13 @@ const GetSelectData = (item: any, value: any) => {
         }
       });
     }
+  }
+  if (Route.name === 'Project') {
+    ProjectType.value = item.selDataList.filter((i: any) => {
+      if (i.cDictonaryCode == value) {
+        return i;
+      }
+    });
   }
   if (Route.name == 'BomDoorInfoView') {
     ruleForm.value.cDimensionalityCode = value;
@@ -1822,6 +1830,11 @@ const SaveEdit = (item: any) => {
       url: item.Resource.cServerIP + item.Resource.cUrl,
       data: ruleForm.value
     };
+    if (Route.name == 'Project') {
+      console.log(ProjectType.value);
+      ruleForm.value.cProgramTypeName = ProjectType.value[0].cDictonaryName;
+      ruleForm.value.cProgramTypeCode = ProjectType.value[0].cDictonaryCode;
+    }
     DataApi(data).then(res => {
       if (res.status === 200) {
         ElMessage({
