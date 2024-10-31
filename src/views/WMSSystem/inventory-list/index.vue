@@ -46,11 +46,11 @@
             </template>
             <template #default="scope">
               <template
-                v-for="(item, i) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i < (tableButton.length > 3 ? 2 : 3)"
+                  v-if="showButton(scope.row, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -95,6 +95,7 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[20, 50, 100]"
       />
     </el-card>
   </div>
@@ -141,6 +142,19 @@ const tabKey = ref(0);
 const sendId = ref([]) as any;
 
 const initType = ref(true);
+
+const showButton = (obj, item) => {
+  if (item.Resource.cAttributeName === '详情') {
+    return true;
+  }
+  console.log(obj);
+  if (obj.iStatusName === '保存') {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -203,7 +217,7 @@ const getData: any = async (val: string) => {
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //总条数
 const total = ref(0);
@@ -547,7 +561,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
 };
