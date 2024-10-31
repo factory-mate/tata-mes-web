@@ -1966,7 +1966,8 @@ const selectData = (val: any) => {
       Route.name === 'InventoryListEdit'
     ) {
       if (AttributeCode.value === 'cDefindParm02') {
-        ruleForm.value.cDefindParm02 = val.value[0].cWareHouseAreaCode || '';
+        ruleForm.value.cDefindParm01 = val.value[0].cWareHouseAreaCode || '';
+        ruleForm.value.cDefindParm02 = val.value[0].cWareHouseAreaName || '';
         ruleForm.value.cWareHouseCode = val.value[0].cWareHouseCode || '';
         ruleForm.value.cWareHouseName = val.value[0].cWareHouseName || '';
       }
