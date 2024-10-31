@@ -706,6 +706,8 @@ const DataClass = ref([]) as any;
 const DataTeam = ref([]) as any;
 const ProjectName = ref([] as any);
 const ProjectType = ref([] as any);
+const PeriodType = ref([] as any);
+const PeriodUnitType = ref([] as any);
 //下拉数据变化
 const GetSelectData = (item: any, value: any) => {
   if (Route.name == 'EditDevice' || Route.name == 'AddDevice') {
@@ -732,11 +734,27 @@ const GetSelectData = (item: any, value: any) => {
     }
   }
   if (Route.name === 'Project') {
-    ProjectType.value = item.selDataList.filter((i: any) => {
-      if (i.cDictonaryCode == value) {
-        return i;
-      }
-    });
+    if (item.cAttributeName == '项目类型') {
+      ProjectType.value = item.selDataList.filter((i: any) => {
+        if (i.cDictonaryCode == value) {
+          return i;
+        }
+      });
+    }
+    if (item.cAttributeName == '周期单位') {
+      PeriodUnitType.value = item.selDataList.filter((i: any) => {
+        if (i.cDictonaryCode == value) {
+          return i;
+        }
+      });
+    }
+    if (item.cAttributeName == '周期类型') {
+      PeriodType.value = item.selDataList.filter((i: any) => {
+        if (i.cDictonaryCode == value) {
+          return i;
+        }
+      });
+    }
   }
   if (Route.name == 'BomDoorInfoView') {
     ruleForm.value.cDimensionalityCode = value;
@@ -1843,6 +1861,12 @@ const SaveEdit = (item: any) => {
       console.log(ProjectType.value);
       ruleForm.value.cProgramTypeName = ProjectType.value[0].cDictonaryName;
       ruleForm.value.cProgramTypeCode = ProjectType.value[0].cDictonaryCode;
+      ruleForm.value.cPeriodTypeCode = PeriodType.value[0].cDictonaryCode;
+      ruleForm.value.cPeriodTypeName = PeriodType.value[0].cDictonaryName;
+      ruleForm.value.cPeriodUnitTypeName =
+        PeriodUnitType.value[0].cDictonaryName;
+      ruleForm.value.cPeriodUnitTypeCode =
+        PeriodUnitType.value[0].cDictonaryCode;
     }
     //添加项目----------设备编辑
     if (Route.name == 'EditDevice') {
