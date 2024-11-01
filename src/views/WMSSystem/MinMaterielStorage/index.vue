@@ -155,6 +155,7 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[20, 50, 100]"
       />
     </el-card>
   </div>
@@ -176,6 +177,7 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
+import QrcodeVue from 'qrcode.vue';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
@@ -279,7 +281,7 @@ const getData: any = async (val: string) => {
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //总条数
 const total = ref(0);
@@ -627,7 +629,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
 };
@@ -690,6 +692,38 @@ const PrintLabel = (obj: any, v: any) => {
   height: 100%;
   box-sizing: border-box;
   padding: 20px;
+
+  .DY {
+    background: #fff;
+    width: 320px;
+    height: 200px;
+    border: 1px solid black;
+    font-size: 14px;
+    display: none;
+    .js_barcode {
+      height: 40%;
+
+      .imgs {
+        padding-top: 10px;
+        padding-left: 10px;
+      }
+    }
+
+    :deep(.el-col-12) {
+      margin: 10px 0;
+    }
+
+    .DY-Text {
+      height: 60%;
+
+      .Te-con {
+        padding: 10px;
+      }
+      .Qrcode {
+        margin-left: 30px;
+      }
+    }
+  }
 
   .maintain_card {
     width: 100%;
