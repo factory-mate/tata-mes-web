@@ -75,7 +75,7 @@ service.interceptors.response.use(
       if (msg.length > MESSAGE_LENGTH) {
         isLongMessage = true;
       }
-    } else if (errmsg[0].Value) {
+    } else if (errmsg?.[0]?.Value) {
       errorMsg = errmsg[0].Value;
       if (errmsg[0].Value.length > MESSAGE_LENGTH) {
         isLongMessage = true;

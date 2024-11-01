@@ -1883,13 +1883,13 @@ const SaveEdit = (item: any) => {
       )?.cDeviceCode;
       if (TrowVal.value.cDeviceCode) {
         ruleForm.value.cDeviceCode = TrowVal.value.cDeviceCode;
-        if (DataClass.value[0] || DataTeam.value[0]) {
-          // ruleForm.value['cProgramTypeName'] = ProgramType.value[0]?.cDictonaryName || ''
-          // ruleForm.value['cProgramTypeCode'] = ProgramType.value[0]?.cDictonaryCode || ''
+        if (DataClass.value[0]) {
           ruleForm.value['cPeriodTypeName'] =
             DataClass.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodTypeCode'] =
             DataClass.value[0]?.cDictonaryCode || '';
+        }
+        if (DataTeam.value[0]) {
           ruleForm.value['cPeriodUnitTypeName'] =
             DataTeam.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodUnitTypeCode'] =
@@ -1897,15 +1897,19 @@ const SaveEdit = (item: any) => {
         }
       } else {
         ruleForm.value.cDeviceCode = code;
-        if (DataClass.value[0] || DataTeam.value[0]) {
+        if (ProgramType.value[0]) {
           ruleForm.value['cProgramTypeName'] =
             ProgramType.value[0]?.cDictonaryName || '';
           ruleForm.value['cProgramTypeCode'] =
             ProgramType.value[0]?.cDictonaryCode || '';
+        }
+        if (DataClass.value[0]) {
           ruleForm.value['cPeriodTypeName'] =
             DataClass.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodTypeCode'] =
             DataClass.value[0]?.cDictonaryCode || '';
+        }
+        if (DataTeam.value[0]) {
           ruleForm.value['cPeriodUnitTypeName'] =
             DataTeam.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodUnitTypeCode'] =
