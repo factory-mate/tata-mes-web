@@ -149,9 +149,9 @@ const showButton = (obj, item) => {
   }
   console.log(obj);
   if (obj.iStatusName === '保存') {
-    return false;
-  } else {
     return true;
+  } else {
+    return false;
   }
 };
 
