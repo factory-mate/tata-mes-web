@@ -239,8 +239,6 @@ const tableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
-        : 'cVouchSourceTypeCode = 03'
     }
   };
   try {

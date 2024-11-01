@@ -2279,7 +2279,7 @@ const newAdd = () => {
   } else if (Route.name == 'materialEdit') {
     let list = [] as any;
     if (ruleForm.value.cDefindParm01 && ruleForm.value.cDefindParm01.length) {
-      ruleForm.value.cDefindParm01.forEach((aa: any) => {
+      ruleForm.value.cDefindParm01?.forEach((aa: any) => {
         ruleForm.value.cDefindParm01_Data.forEach((bb: any) => {
           if (aa == bb.cDictonaryCode) {
             list.push(bb);
