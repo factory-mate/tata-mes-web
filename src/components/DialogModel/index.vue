@@ -1848,8 +1848,8 @@ const SaveEdit = (item: any) => {
 
   if (Route.name !== 'File') {
     if (Route.name === 'scheme') {
-      ruleForm.value.cProjectTypeCode = ProjectName.value[0].cDictonaryCode;
-      ruleForm.value.cProjectTypeName = ProjectName.value[0].cDictonaryName;
+      ruleForm.value.cProjectTypeCode = ProjectName.value[0]?.cDictonaryCode;
+      ruleForm.value.cProjectTypeName = ProjectName.value[0]?.cDictonaryName;
     }
     if (Route.name === 'ProcessRouteLine') {
       ruleForm.value.cResourceName =
@@ -1859,14 +1859,20 @@ const SaveEdit = (item: any) => {
     }
     if (Route.name == 'Project') {
       console.log(ProjectType.value);
-      ruleForm.value.cProgramTypeName = ProjectType.value[0].cDictonaryName;
-      ruleForm.value.cProgramTypeCode = ProjectType.value[0].cDictonaryCode;
-      ruleForm.value.cPeriodTypeCode = PeriodType.value[0].cDictonaryCode;
-      ruleForm.value.cPeriodTypeName = PeriodType.value[0].cDictonaryName;
-      ruleForm.value.cPeriodUnitTypeName =
-        PeriodUnitType.value[0].cDictonaryName;
-      ruleForm.value.cPeriodUnitTypeCode =
-        PeriodUnitType.value[0].cDictonaryCode;
+      if (ProjectType.value[0]) {
+        ruleForm.value.cProgramTypeName = ProjectType.value[0]?.cDictonaryName;
+        ruleForm.value.cProgramTypeCode = ProjectType.value[0]?.cDictonaryCode;
+      }
+      if (PeriodType.value[0]) {
+        ruleForm.value.cPeriodTypeCode = PeriodType.value[0]?.cDictonaryCode;
+        ruleForm.value.cPeriodTypeName = PeriodType.value[0]?.cDictonaryName;
+      }
+      if (PeriodUnitType.value[0]) {
+        ruleForm.value.cPeriodUnitTypeName =
+          PeriodUnitType.value[0]?.cDictonaryName;
+        ruleForm.value.cPeriodUnitTypeCode =
+          PeriodUnitType.value[0]?.cDictonaryCode;
+      }
     }
     //添加项目----------设备编辑
     if (Route.name == 'EditDevice') {
