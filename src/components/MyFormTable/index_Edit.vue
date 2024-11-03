@@ -44,7 +44,7 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <template v-for="item in tableHeader" :key="item.prop">
+      <template v-for="(item, index) in tableHeader" :key="item.prop">
         <!-- 插槽 -->
         <slot v-if="item.slotName" :name="item.slotName"> </slot>
         <!-- 表格主体内容 -->
@@ -54,12 +54,36 @@
           v-bind="item"
           :sortable="item.sortable"
           :min-width="calcWidth(item)"
+          filter-multiple
+          :filter-method="filterMethod"
+          filter-placement="top-start"
+          :filters="item?.filters"
         >
-          <template #header v-if="item?.headerSlot">
+          <template #header>
             <!-- <template #header > -->
-            <span>
-              {{ item.label }}
-            </span>
+            <div style="display: inline-flex; justify-items: center">
+              <div>{{ item.label }}</div>
+              <div class="extra-icon">
+                <!-- 排序 升-->
+                <el-icon
+                  v-if="item?.slot == 'asc'"
+                  @click="() => clickSort(index, 'desc')"
+                >
+                  <CaretTop />
+                </el-icon>
+                <!-- 排序 降-->
+                <el-icon
+                  v-else-if="item?.slot == 'desc'"
+                  @click="() => clickSort(index, '')"
+                >
+                  <CaretBottom />
+                </el-icon>
+                <!-- 排序 默认-->
+                <el-icon v-else @click="() => clickSort(index, 'asc')">
+                  <DCaret />
+                </el-icon>
+              </div>
+            </div>
           </template>
           <template #default="scope">
             <!-- item.edit== 0||item.edit== 1 -->
@@ -220,7 +244,12 @@ import {
 import { useRouter, useRoute } from 'vue-router';
 import ElSelectLoading from '@/components/ElSelectLoading/index.vue';
 import { ParamsApi } from '@/api/configApi/index';
-import { MoreFilled } from '@element-plus/icons-vue';
+import {
+  MoreFilled,
+  DCaret,
+  CaretTop,
+  CaretBottom
+} from '@element-plus/icons-vue';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import { styleType } from 'element-plus/es/components/table-v2/src/common';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
@@ -499,6 +528,13 @@ const clickTableAdd = () => {
   console.log('🚀🚀 增行后新增的数据');
   console.table(tableDataVal.value);
 };
+
+const filterMethod = (value: string, row: any, column: any) => {
+  const property = column['property'];
+  return row[property] === value; //绝对匹配
+  // return row[property].includes(value)  //模糊匹配
+};
+
 const calcWidth = (row: { label: any }) => {
   let flexWidth = 50;
   if (row.cControlTypeCode == 'TextBoxLink') {
@@ -935,6 +971,12 @@ const handleRemoveSelectionChange = () => {
 const rowInt = ref('');
 const colInt = ref('');
 
+const clickSort = (i: number, val: string) => {
+  tableHeader.value[i].slot = val;
+  const prop = tableHeader.value[i].prop;
+  emit('tableHearData', { prop, val });
+};
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const cellStyle = ({ row, column, rowIndex, columnIndex }) => {
@@ -1083,4 +1125,27 @@ defineExpose({
 // ::v-deep .el-table__header {
 //     table-layout: auto !important;
 // }
+::v-deep .el-table__cell {
+  p {
+    margin: 0;
+    margin-block-start: 2px;
+    margin-block-end: 2px;
+  }
+}
+:deep(.el-table__cell) {
+  .extra-icon,
+  .el-table__column-filter-trigger {
+    display: none;
+  }
+
+  :hover {
+    .el-table__column-filter-trigger {
+      width: fit-content;
+      display: inline-flex;
+    }
+    .extra-icon {
+      display: block;
+    }
+  }
+}
 </style>

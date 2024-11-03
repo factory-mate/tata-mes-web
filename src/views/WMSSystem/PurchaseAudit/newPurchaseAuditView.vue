@@ -45,6 +45,7 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="true"
+        @tableHearData="tableHearData"
       >
         <!-- <template #button>
                     <el-table-column label="操作" fixed="right" width="160px" align="center">
@@ -419,6 +420,7 @@ const tableAxios = async () => {
     const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
+      tablefilter();
       ElLoading.service().close();
     } else {
       console.log('请求出错');
@@ -552,6 +554,42 @@ const clickEdit = (obj: any) => {
   disabled.value = false;
   BtnDisable.value = true;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购审核编辑' });
+};
+
+// table filters
+const tablefilter = () => {
+  tableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    tableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop]) {
+        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
+        aItem.filters = filData;
+      }
+    });
+    if (aItem.filters && aItem.filters.length) {
+      aItem.filters = aItem.filters.filter(
+        (item: { text: any }, index: any, self: any[]) => {
+          const i = self.findIndex((t: { text: any }) => t.text === item.text);
+          return i === index;
+        }
+      );
+    }
+  });
+};
+
+const tableHearData = (value: any) => {
+  const { prop, val } = value;
+  // 排序
+  if (val === 'asc') {
+    tableData.value.sort((a: any, b: any) => {
+      return a[prop] - b[prop];
+    });
+  }
+  if (val === 'desc') {
+    tableData.value.sort((a: any, b: any) => {
+      return b[prop] - a[prop];
+    });
+  }
 };
 </script>
 
