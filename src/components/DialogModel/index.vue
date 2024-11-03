@@ -1755,6 +1755,23 @@ const SaveAdd = (item: any) => {
     if (Route.name == 'UserLine') {
       ruleForm.value.list_cFactoryUnitCode = ruleForm.value.cFactoryUnitName;
     }
+    if (Route.name == 'Project') {
+      console.log(ProjectType.value);
+      if (ProjectType.value[0]) {
+        ruleForm.value.cProgramTypeName = ProjectType.value[0]?.cDictonaryName;
+        ruleForm.value.cProgramTypeCode = ProjectType.value[0]?.cDictonaryCode;
+      }
+      if (PeriodType.value[0]) {
+        ruleForm.value.cPeriodTypeCode = PeriodType.value[0]?.cDictonaryCode;
+        ruleForm.value.cPeriodTypeName = PeriodType.value[0]?.cDictonaryName;
+      }
+      if (PeriodUnitType.value[0]) {
+        ruleForm.value.cPeriodUnitTypeName =
+          PeriodUnitType.value[0]?.cDictonaryName;
+        ruleForm.value.cPeriodUnitTypeCode =
+          PeriodUnitType.value[0]?.cDictonaryCode;
+      }
+    }
     let data = {
       method: item.Resource.cHttpTypeCode,
       url: item.Resource.cServerIP + item.Resource.cUrl,
