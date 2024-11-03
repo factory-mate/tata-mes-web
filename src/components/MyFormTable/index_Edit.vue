@@ -172,6 +172,7 @@
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
+                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
               >
                 <template #append>
                   <el-icon
@@ -243,7 +244,7 @@ import {
 } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import ElSelectLoading from '@/components/ElSelectLoading/index.vue';
-import { ParamsApi } from '@/api/configApi/index';
+import { ParamsApi, InventoryInfoGetForPage } from '@/api/configApi/index';
 import {
   MoreFilled,
   DCaret,
@@ -726,6 +727,32 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
       metadata.value.cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
+
+      // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
+      if (val.value.length > 1) {
+        for (let i = 0; i < val.value.length - 1; i++) {
+          const emptyRow = tableDataVal.value.find(
+            (item: any) => !item.cInvCode
+          );
+          if (emptyRow) {
+            emptyRow.cInvCode = val.value[i + 1].cInvCode;
+            emptyRow.cInvName = val.value[i + 1].cInvName;
+            emptyRow.cInvStd = val.value[i + 1].cInvstd;
+            emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
+            emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
+            emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
+          } else {
+            tableDataVal.value.push({
+              cInvCode: val.value[i + 1].cInvCode,
+              cInvName: val.value[i + 1].cInvName,
+              cInvStd: val.value[i + 1].cInvstd,
+              cUnitCode: val.value[i + 1].CG_UnitCode,
+              cUnitName: val.value[i + 1].CG_UnitName,
+              cDefindParm03: val.value[i + 1].SAPCode
+            });
+          }
+        }
+      }
     }
     if (
       AttributeCode.value == 'cInvCode' ||
@@ -935,11 +962,50 @@ const selectDatas = (val: any) => {
   dialogType.value = val.type;
   // myTableRef.value.doLayout()
 };
+
+const onKeyPressEnter = async (e, item, scope) => {
+  console.log(e.target.value, item, scope);
+  if (
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+  ) {
+    if (!e.target.value) {
+      return;
+    }
+    const {
+      data: { data }
+    } = await InventoryInfoGetForPage(e.target.value);
+    if (data[0]) {
+      ElMessage.success('录入成功');
+      tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
+      tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
+      tableDataVal.value[scope.$index].cUnitCode = data[0].cUnitCode;
+      tableDataVal.value[scope.$index].cUnitName = data[0].cUnitName;
+      tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
+    } else {
+      // 提示错误：未找到物料
+      ElMessage.error('未找到数据');
+      tableDataVal.value[scope.$index].cInvCode = '';
+      tableDataVal.value[scope.$index].cInvName = '';
+      tableDataVal.value[scope.$index].cInvStd = '';
+      tableDataVal.value[scope.$index].cUnitCode = '';
+      tableDataVal.value[scope.$index].cUnitName = '';
+      tableDataVal.value[scope.$index].cDefindParm03 = '';
+    }
+  }
+};
 // 搜索弹框事件
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
   ajax.value = obj.ajax;
   IndexType.value = i;
-  MulitChoose.value = false;
+  MulitChoose.value =
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+      ? true
+      : false;
   titleName.value = obj.label;
   AttributeCode.value = obj.prop;
   dialogType.value = true;
