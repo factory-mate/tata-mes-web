@@ -459,8 +459,8 @@ const ExportAll = async (obj: any) => {
       PageSize: 0,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
-        : 'cVouchSourceTypeCode = 03'
+      // ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
+      // : 'cVouchSourceTypeCode = 03'
     }
   };
   exportAnalysisHooks(data, '领料出库单-所有');
@@ -475,8 +475,8 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
-        : 'cVouchSourceTypeCode = 03'
+      // ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
+      // : 'cVouchSourceTypeCode = 03'
     }
   };
   exportAnalysisHooks(data, '领料出库单');
