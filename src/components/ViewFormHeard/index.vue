@@ -2234,9 +2234,6 @@ const newAdd = () => {
     Route.name == 'newWorkshopMaterialView' ||
     Route.name == 'newWarehouseMaterial' ||
     Route.name == 'newWarehouseMaterialView' ||
-    Route.name == 'AddPurchaseRequest' ||
-    Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView' ||
     Route.name == 'newPurchaseAuditEdit'
   ) {
     ruleForm.value.IsAuth = true;
@@ -2249,6 +2246,25 @@ const newAdd = () => {
         ...i,
         nQuantity: i.nQuantity2 ?? i.nQuantity
       }))
+    };
+  } else if (
+    Route.name == 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+  ) {
+    ruleForm.value.IsAuth = true;
+    console.log(ButObjTableData.value);
+    ButObjTableData.value.forEach((item: any) => {
+      item.IsAuth = true;
+    });
+    // #1799
+    dataValue = {
+      Items: ButObjTableData.value
+        .filter(i => i.cInvCode)
+        .map(i => ({
+          ...i,
+          nQuantity: i.nQuantity2 ?? i.nQuantity
+        }))
     };
   } else if (
     Route.name == 'AddBusineScen' ||

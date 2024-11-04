@@ -727,6 +727,10 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
       metadata.value.cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
 
       // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
       if (val.value.length > 1) {
@@ -741,6 +745,8 @@ const selectDatas = (val: any) => {
             emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
             emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
             emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
+            emptyRow.cVendorName = val.value[i + 1].cVendorName;
+            emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
           } else {
             tableDataVal.value.push({
               cInvCode: val.value[i + 1].cInvCode,
@@ -748,16 +754,15 @@ const selectDatas = (val: any) => {
               cInvStd: val.value[i + 1].cInvstd,
               cUnitCode: val.value[i + 1].CG_UnitCode,
               cUnitName: val.value[i + 1].CG_UnitName,
-              cDefindParm03: val.value[i + 1].SAPCode
+              cDefindParm03: val.value[i + 1].SAPCode,
+              cVendorName: val.value[0].cVendorName,
+              cVendorCode: val.value[0].cVendorCode
             });
           }
         }
       }
     }
-    if (
-      AttributeCode.value == 'cInvCode' ||
-      AttributeCode.value == 'cVendorName'
-    ) {
+    if (AttributeCode.value == 'cVendorName') {
       tableDataVal.value[IndexType.value].cVendorName =
         val.value[0].cVendorName;
       tableDataVal.value[IndexType.value].cVendorCode =
@@ -984,6 +989,8 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cUnitCode = data[0].cUnitCode;
       tableDataVal.value[scope.$index].cUnitName = data[0].cUnitName;
       tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
+      tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
+      tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
     } else {
       // 提示错误：未找到物料
       ElMessage.error('未找到数据');
@@ -993,6 +1000,8 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cUnitCode = '';
       tableDataVal.value[scope.$index].cUnitName = '';
       tableDataVal.value[scope.$index].cDefindParm03 = '';
+      tableDataVal.value[scope.$index].cVendorName = '';
+      tableDataVal.value[scope.$index].cVendorCode = '';
     }
   }
 };
