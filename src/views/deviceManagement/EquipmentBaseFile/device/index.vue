@@ -494,6 +494,7 @@ const tableHearData = (val: any) => {
 };
 //页码变化
 const changPage = (val: any) => {
+  TabRef.value.handleRemoveSelectionChange();
   queryParams.PageIndex = val.page;
   queryParams.PageSize = val.limit;
   tableAxios();
