@@ -374,8 +374,8 @@ const tableAxios = async () => {
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
       uid: obj?.MID ?? rowId.value,
-      cInvCode: obj?.cInvCode,
-      cBatch: obj?.cBatch
+      cInvCode: row.value?.cInvCode,
+      cBatch: row.value?.cBatch
     }
   };
   try {

@@ -68,3 +68,13 @@ export function ExportApi(data: any) {
     data: data.data
   });
 }
+
+export function InventoryInfoGetForPage(cInvCode) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + `/api/Inentory_info/GetForPage`,
+    method: 'POST',
+    data: {
+      conditions: `cInvCode = ${cInvCode}`
+    }
+  });
+}

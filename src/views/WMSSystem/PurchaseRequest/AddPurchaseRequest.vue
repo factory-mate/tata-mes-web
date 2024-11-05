@@ -399,9 +399,9 @@ const modelClose = (val: any) => {
 const SaveAdd = (obj: any) => {
   console.log(TABRef.value.tableDataVal);
   if (
-    TABRef.value.tableDataVal.some(
-      i => !i.cInvCode || !i.nQuantity || !i.cUnitName || !i.cDefindParm01
-    )
+    TABRef.value.tableDataVal
+      .filter(i => i.cInvCode)
+      .some(i => !i.nQuantity || !i.cUnitName || !i.cDefindParm01)
   ) {
     ElMessage.error('存在数据未填写完整，物料编码、数量、单位、交货日期必填');
     return;

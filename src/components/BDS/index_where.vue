@@ -4,7 +4,7 @@ import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
-import { Delete } from '@element-plus/icons-vue';
+import { Delete, Edit, Search, Plus } from '@element-plus/icons-vue';
 
 const props = defineProps({
   Head: {
@@ -28,7 +28,7 @@ const rowId = ref('');
 const lambdaData = ref([
   {
     cDimensionalityCode: '', // 维度
-    cLamdaConditionTypeCode: '', //条件
+    cLamdaConditionTypeCode: '', // 条件
     cValueCode: '',
     cValueName: '',
     cConditionType: '1',
@@ -358,14 +358,23 @@ defineExpose({ resetData });
               type="primary"
               @click="() => clickSelectBtn(node)"
               style="margin-left: 10px"
+              :icon="Search"
+              circle
             >
-              选择
             </el-button>
-            <el-button type="primary" @click="() => handleClickInput(node)">
-              输入
+            <el-button
+              type="primary"
+              @click="() => handleClickInput(node)"
+              :icon="Edit"
+              circle
+            >
             </el-button>
-            <el-button type="primary" @click="() => handleAddItem(node)">
-              添加条件
+            <el-button
+              type="primary"
+              @click="() => handleAddItem(node)"
+              :icon="Plus"
+              circle
+            >
             </el-button>
             <el-button type="primary" @click="() => handleAddChildItem(node)">
               添加子级条件

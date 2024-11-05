@@ -44,7 +44,7 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <template v-for="item in tableHeader" :key="item.prop">
+      <template v-for="(item, index) in tableHeader" :key="item.prop">
         <!-- 插槽 -->
         <slot v-if="item.slotName" :name="item.slotName"> </slot>
         <!-- 表格主体内容 -->
@@ -54,12 +54,36 @@
           v-bind="item"
           :sortable="item.sortable"
           :min-width="calcWidth(item)"
+          filter-multiple
+          :filter-method="filterMethod"
+          filter-placement="top-start"
+          :filters="item?.filters"
         >
-          <template #header v-if="item?.headerSlot">
+          <template #header>
             <!-- <template #header > -->
-            <span>
-              {{ item.label }}
-            </span>
+            <div style="display: inline-flex; justify-items: center">
+              <div>{{ item.label }}</div>
+              <div class="extra-icon">
+                <!-- 排序 升-->
+                <el-icon
+                  v-if="item?.slot == 'asc'"
+                  @click="() => clickSort(index, 'desc')"
+                >
+                  <CaretTop />
+                </el-icon>
+                <!-- 排序 降-->
+                <el-icon
+                  v-else-if="item?.slot == 'desc'"
+                  @click="() => clickSort(index, '')"
+                >
+                  <CaretBottom />
+                </el-icon>
+                <!-- 排序 默认-->
+                <el-icon v-else @click="() => clickSort(index, 'asc')">
+                  <DCaret />
+                </el-icon>
+              </div>
+            </div>
           </template>
           <template #default="scope">
             <!-- item.edit== 0||item.edit== 1 -->
@@ -148,6 +172,7 @@
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
+                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
               >
                 <template #append>
                   <el-icon
@@ -219,8 +244,13 @@ import {
 } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import ElSelectLoading from '@/components/ElSelectLoading/index.vue';
-import { ParamsApi } from '@/api/configApi/index';
-import { MoreFilled } from '@element-plus/icons-vue';
+import { ParamsApi, InventoryInfoGetForPage } from '@/api/configApi/index';
+import {
+  MoreFilled,
+  DCaret,
+  CaretTop,
+  CaretBottom
+} from '@element-plus/icons-vue';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import { styleType } from 'element-plus/es/components/table-v2/src/common';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
@@ -499,6 +529,13 @@ const clickTableAdd = () => {
   console.log('🚀🚀 增行后新增的数据');
   console.table(tableDataVal.value);
 };
+
+const filterMethod = (value: string, row: any, column: any) => {
+  const property = column['property'];
+  return row[property] === value; //绝对匹配
+  // return row[property].includes(value)  //模糊匹配
+};
+
 const calcWidth = (row: { label: any }) => {
   let flexWidth = 50;
   if (row.cControlTypeCode == 'TextBoxLink') {
@@ -690,11 +727,42 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
       metadata.value.cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+
+      // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
+      if (val.value.length > 1) {
+        for (let i = 0; i < val.value.length - 1; i++) {
+          const emptyRow = tableDataVal.value.find(
+            (item: any) => !item.cInvCode
+          );
+          if (emptyRow) {
+            emptyRow.cInvCode = val.value[i + 1].cInvCode;
+            emptyRow.cInvName = val.value[i + 1].cInvName;
+            emptyRow.cInvStd = val.value[i + 1].cInvstd;
+            emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
+            emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
+            emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
+            emptyRow.cVendorName = val.value[i + 1].cVendorName;
+            emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
+          } else {
+            tableDataVal.value.push({
+              cInvCode: val.value[i + 1].cInvCode,
+              cInvName: val.value[i + 1].cInvName,
+              cInvStd: val.value[i + 1].cInvstd,
+              cUnitCode: val.value[i + 1].CG_UnitCode,
+              cUnitName: val.value[i + 1].CG_UnitName,
+              cDefindParm03: val.value[i + 1].SAPCode,
+              cVendorName: val.value[0].cVendorName,
+              cVendorCode: val.value[0].cVendorCode
+            });
+          }
+        }
+      }
     }
-    if (
-      AttributeCode.value == 'cInvCode' ||
-      AttributeCode.value == 'cVendorName'
-    ) {
+    if (AttributeCode.value == 'cVendorName') {
       tableDataVal.value[IndexType.value].cVendorName =
         val.value[0].cVendorName;
       tableDataVal.value[IndexType.value].cVendorCode =
@@ -899,11 +967,54 @@ const selectDatas = (val: any) => {
   dialogType.value = val.type;
   // myTableRef.value.doLayout()
 };
+
+const onKeyPressEnter = async (e, item, scope) => {
+  console.log(e.target.value, item, scope);
+  if (
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+  ) {
+    if (!e.target.value) {
+      return;
+    }
+    const {
+      data: { data }
+    } = await InventoryInfoGetForPage(e.target.value);
+    if (data[0]) {
+      ElMessage.success('录入成功');
+      tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
+      tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvstd;
+      tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
+      tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
+      tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
+      tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
+      tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
+    } else {
+      // 提示错误：未找到物料
+      ElMessage.error('未找到数据');
+      tableDataVal.value[scope.$index].cInvCode = '';
+      tableDataVal.value[scope.$index].cInvName = '';
+      tableDataVal.value[scope.$index].cInvStd = '';
+      tableDataVal.value[scope.$index].cUnitCode = '';
+      tableDataVal.value[scope.$index].cUnitName = '';
+      tableDataVal.value[scope.$index].cDefindParm03 = '';
+      tableDataVal.value[scope.$index].cVendorName = '';
+      tableDataVal.value[scope.$index].cVendorCode = '';
+    }
+  }
+};
 // 搜索弹框事件
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
   ajax.value = obj.ajax;
   IndexType.value = i;
-  MulitChoose.value = false;
+  MulitChoose.value =
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+      ? true
+      : false;
   titleName.value = obj.label;
   AttributeCode.value = obj.prop;
   dialogType.value = true;
@@ -934,6 +1045,12 @@ const handleRemoveSelectionChange = () => {
 };
 const rowInt = ref('');
 const colInt = ref('');
+
+const clickSort = (i: number, val: string) => {
+  tableHeader.value[i].slot = val;
+  const prop = tableHeader.value[i].prop;
+  emit('tableHearData', { prop, val });
+};
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -1083,4 +1200,27 @@ defineExpose({
 // ::v-deep .el-table__header {
 //     table-layout: auto !important;
 // }
+::v-deep .el-table__cell {
+  p {
+    margin: 0;
+    margin-block-start: 2px;
+    margin-block-end: 2px;
+  }
+}
+:deep(.el-table__cell) {
+  .extra-icon,
+  .el-table__column-filter-trigger {
+    display: none;
+  }
+
+  :hover {
+    .el-table__column-filter-trigger {
+      width: fit-content;
+      display: inline-flex;
+    }
+    .extra-icon {
+      display: block;
+    }
+  }
+}
 </style>

@@ -1966,7 +1966,8 @@ const selectData = (val: any) => {
       Route.name === 'InventoryListEdit'
     ) {
       if (AttributeCode.value === 'cDefindParm02') {
-        ruleForm.value.cDefindParm02 = val.value[0].cWareHouseAreaCode || '';
+        ruleForm.value.cDefindParm01 = val.value[0].cWareHouseAreaCode || '';
+        ruleForm.value.cDefindParm02 = val.value[0].cWareHouseAreaName || '';
         ruleForm.value.cWareHouseCode = val.value[0].cWareHouseCode || '';
         ruleForm.value.cWareHouseName = val.value[0].cWareHouseName || '';
       }
@@ -2233,9 +2234,6 @@ const newAdd = () => {
     Route.name == 'newWorkshopMaterialView' ||
     Route.name == 'newWarehouseMaterial' ||
     Route.name == 'newWarehouseMaterialView' ||
-    Route.name == 'AddPurchaseRequest' ||
-    Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView' ||
     Route.name == 'newPurchaseAuditEdit'
   ) {
     ruleForm.value.IsAuth = true;
@@ -2248,6 +2246,25 @@ const newAdd = () => {
         ...i,
         nQuantity: i.nQuantity2 ?? i.nQuantity
       }))
+    };
+  } else if (
+    Route.name == 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+  ) {
+    ruleForm.value.IsAuth = true;
+    console.log(ButObjTableData.value);
+    ButObjTableData.value.forEach((item: any) => {
+      item.IsAuth = true;
+    });
+    // #1799
+    dataValue = {
+      Items: ButObjTableData.value
+        .filter(i => i.cInvCode)
+        .map(i => ({
+          ...i,
+          nQuantity: i.nQuantity2 ?? i.nQuantity
+        }))
     };
   } else if (
     Route.name == 'AddBusineScen' ||
@@ -2278,7 +2295,7 @@ const newAdd = () => {
   } else if (Route.name == 'materialEdit') {
     let list = [] as any;
     if (ruleForm.value.cDefindParm01 && ruleForm.value.cDefindParm01.length) {
-      ruleForm.value.cDefindParm01.forEach((aa: any) => {
+      ruleForm.value.cDefindParm01?.forEach((aa: any) => {
         ruleForm.value.cDefindParm01_Data.forEach((bb: any) => {
           if (aa == bb.cDictonaryCode) {
             list.push(bb);

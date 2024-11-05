@@ -169,7 +169,6 @@ import {
   onActivated,
   getCurrentInstance
 } from 'vue';
-
 import {
   ArrowDownBold,
   ArrowUpBold,
@@ -191,6 +190,7 @@ import { DataApi, ParamsApi } from '@/api/configApi/index';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import { useRoute } from 'vue-router';
 import useStore from '@/store';
+import dayjs from 'dayjs';
 
 const Route = useRoute();
 const props = defineProps({
@@ -426,7 +426,7 @@ const selectData = (val: any) => {
       if (titleName.value === item.Resource.cAttributeName) {
         if (Route.name === 'InventoryList') {
           if (item.Resource.cAttributeCode === 'cDefindParm02') {
-            item.cAttributeCodeValue = val.value[0].cWareHouseAreaCode;
+            item.cAttributeCodeValue = val.value[0].cWareHouseAreaName;
           }
         }
 
@@ -450,6 +450,17 @@ const funHeadData = () => {
   FilterData.value = FilterData.value.filter(
     (item: any) => item.cAttributeCode != 'Data' && item.IsShow
   );
+  FilterData.value.forEach(item => {
+    if (
+      Route.name === 'ScheduleMaterialSeq' &&
+      item.cAttributeCode === 'dPlanDateStart'
+    ) {
+      item.cAttributeCodeValue = [
+        dayjs(new Date()).format('YYYY-MM-DD'),
+        dayjs(new Date()).format('YYYY-MM-DD')
+      ];
+    }
+  });
   getTreeData(FilterData.value);
 };
 const checkname = ref('') as any;

@@ -1,5 +1,5 @@
 <template>
-  <!-- 采购订单页面 -->
+  <!-- 采购单单页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
@@ -12,8 +12,11 @@
       <ButtonViem
         :ToolBut="But"
         @clickAdd="clickAdd"
-        @clickDelete="clickDel"
-      ></ButtonViem>
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
+        @Commit="Commit"
+      >
+      </ButtonViem>
       <!-- 表格区域 -->
       <myTable
         ref="TabRef"
@@ -46,6 +49,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
+                  v-if="item.iIndex < 3"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -53,25 +57,33 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <!-- <el-dropdown style="margin-left: 10px;" v-if="tableButton.length > 3">
-                                <el-button type="primary" size="small">
-                                    <el-icon>
-                                        <MoreFilled />
-                                    </el-icon>
-                                    <el-icon class="el-icon--right"><arrow-down /></el-icon>
-                                </el-button>
-                                <template #dropdown>
-                                    <el-dropdown-menu>
-                                        <el-dropdown-item
-                                            v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1)"
-                                            :key="item.Resource.cAttributeName">
-                                            <el-button type="primary" size="small" @click="clickTableBut(scope, item)">
-                                                {{ item.Resource.cAttributeName }}
-                                            </el-button>
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </template>
-                            </el-dropdown> -->
+              <el-dropdown
+                style="margin-left: 10px"
+                v-if="tableButton.length > 3"
+              >
+                <el-button type="primary" size="small">
+                  <el-icon>
+                    <MoreFilled />
+                  </el-icon>
+                  <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1)"
+                      :key="item.Resource.cAttributeName"
+                    >
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="clickTableBut(scope, item)"
+                      >
+                        {{ item.Resource.cAttributeName }}
+                      </el-button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
         </template>
@@ -82,14 +94,21 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
-        :page-sizes="[20, 50, 100]"
       />
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, nextTick, onActivated } from 'vue';
+import {
+  ref,
+  toRefs,
+  reactive,
+  nextTick,
+  computed,
+  watch,
+  onActivated
+} from 'vue';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
@@ -124,7 +143,7 @@ const tableColumns = ref([]) as any;
 const tableButton = ref([]) as any;
 const AxiosData = ref({}) as any;
 const tabType = ref(true);
-const CheckDataList = ref([]) as any;
+const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
 
@@ -147,7 +166,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'inspectionScheme') {
+    if (v.name == 'MaterialOutbound') {
       tableAxios();
     }
   }, 300);
@@ -155,7 +174,6 @@ $bus.on('tableUpData', (v: any) => {
 //调取供应商接口
 const getData: any = async (val: string) => {
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(val);
     if (res.status == 200) {
       Filter.value = [];
@@ -181,17 +199,15 @@ const getData: any = async (val: string) => {
       });
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错了');
-    ElLoading.service().close();
   }
 };
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 20
+  PageSize: 10
 });
 //总条数
 const total = ref(0);
@@ -199,8 +215,6 @@ const total = ref(0);
 const tableData = ref([] as any);
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
-  console.log(event.cAttributeCode, '--event.cAttributeCode');
-
   switch (event.cAttributeCode) {
     case 'View':
       clickView(scope, event);
@@ -228,7 +242,6 @@ const tableAxios = async () => {
     }
   };
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await DataApi(data);
     if (res.status == 200) {
       tableData.value = res.data.data.map(
@@ -242,14 +255,11 @@ const tableAxios = async () => {
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();
-      ElLoading.service().close();
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错');
-    ElLoading.service().close();
   }
 };
 // table filters
@@ -320,56 +330,14 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   tableAxios();
 };
-//按钮删除
-const clickDel = (obj: any) => {
-  sendId.value = [];
-  CheckDataList.value.forEach((item: { UID: any }) =>
-    sendId.value.push(item.UID)
-  );
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要删除的数据'
-    });
-    return;
-  }
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
-  };
-  ElMessageBox.confirm('确定删除数据?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(() => {
-      delApi(data).then(res => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '删除数据成功'
-          });
-          tableAxios();
-          TabRef.value.handleRemoveSelectionChange();
-          sendId.value = [];
-        } else {
-          console.log('删除失败');
-        }
-      });
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除'
-      });
-    });
-};
+
+//表格按钮删除
 const clickDelete = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [scope.row.UID]
+    data: [senid]
   };
   ElMessageBox.confirm('确定删除数据?', '提示', {
     confirmButtonText: '确定',
@@ -377,17 +345,15 @@ const clickDelete = (scope: any, obj: any) => {
     type: 'warning'
   })
     .then(() => {
-      delApi(data).then(res => {
+      DataApi(data).then(res => {
         if (res.status === 200) {
           ElMessage({
             type: 'success',
-            message: '删除数据成功'
+            message: '删除成功'
           });
           tableAxios();
-          TabRef.value.handleRemoveSelectionChange();
-          sendId.value = [];
         } else {
-          console.log('删除失败');
+          ElMessage.error('删除失败');
         }
       });
     })
@@ -401,7 +367,7 @@ const clickDelete = (scope: any, obj: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'inspectionSchemeView',
+    name: 'newMaterialOutbound',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -409,21 +375,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'inspectionScheme',
-      title: '检验方案详情'
+      pathName: 'MaterialOutbound',
+      title: '领料出库详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  window.sessionStorage.setItem(
-    'inspectionScheme',
-    JSON.stringify(scope.row.UID)
-  );
   router.push({
-    name: 'inspectionSchemeEdit',
+    name: 'newMaterialOutbound',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -431,22 +391,23 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'inspectionScheme',
-      title: '检验方案编辑'
+      pathName: 'MaterialOutbound',
+      title: '领料出库编辑'
     }
   });
 };
+
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'inspectionSchemeAdd',
+    name: 'newMaterialOutbound',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '检验方案新增',
+      title: '领料出库新增',
       type: 'add'
     }
   });
@@ -458,8 +419,6 @@ const handleSelectionChange = (arr: any) => {
   //         sendId.value.push(item.UID)
   //     }
   // })
-  CheckDataList.value = arr;
-  sendId.value = [];
   arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
 };
 //按钮提交
@@ -476,7 +435,6 @@ const Commit = (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: sendId.value
   };
-  ElLoading.service({ lock: true, text: '加载中.....' });
   DataApi(data).then(res => {
     if (res.status === 200) {
       ElMessage({
@@ -486,10 +444,8 @@ const Commit = (obj: any) => {
       tableAxios();
       TabRef.value.handleRemoveSelectionChange();
       sendId.value = [];
-      ElLoading.service().close();
     } else {
       console.log('提交失败');
-      ElLoading.service().close();
     }
   });
 };
@@ -503,13 +459,11 @@ const ExportAll = async (obj: any) => {
       PageSize: 0,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+      // ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
+      // : 'cVouchSourceTypeCode = 03'
     }
   };
-  ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单-所有');
-  ElLoading.service().close();
+  exportAnalysisHooks(data, '领料出库单-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -521,13 +475,11 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+      // ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
+      // : 'cVouchSourceTypeCode = 03'
     }
   };
-  ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单');
-  ElLoading.service().close();
+  exportAnalysisHooks(data, '领料出库单');
 };
 
 const data = reactive({
@@ -540,7 +492,8 @@ const data = reactive({
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = (val: any) => {
-  Conditions.value = filterModel(val.value);
+  let searchData = JSON.parse(JSON.stringify(val.value));
+  Conditions.value = filterModel(searchData);
   tableAxios();
 };
 // 重置
@@ -549,7 +502,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 20;
+  queryParams.PageSize = 10;
   tableAxios();
   TabRef.value.clearFilter();
 };

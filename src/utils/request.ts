@@ -70,19 +70,19 @@ service.interceptors.response.use(
     const { status, msg, errmsg } = response.data;
     let isLongMessage = false;
     let errorMsg = '';
+    if (msg) {
+      errorMsg = msg;
+      if (msg.length > MESSAGE_LENGTH) {
+        isLongMessage = true;
+      }
+    } else if (errmsg?.[0]?.Value) {
+      errorMsg = errmsg[0].Value;
+      if (errmsg[0].Value.length > MESSAGE_LENGTH) {
+        isLongMessage = true;
+      }
+    }
     if (status == '500') {
       ElLoading.service().close();
-      if (msg) {
-        errorMsg = msg;
-        if (msg.length > MESSAGE_LENGTH) {
-          isLongMessage = true;
-        }
-      } else if (errmsg[0].Value) {
-        errorMsg = errmsg[0].Value;
-        if (errmsg[0].Value.length > MESSAGE_LENGTH) {
-          isLongMessage = true;
-        }
-      }
       ElMessage({
         message: errorMsg || '出错！！！',
         type: 'error',
@@ -131,6 +131,12 @@ service.interceptors.response.use(
     const { status, msg } = error.response.data;
     let isLongMessage = false;
     let errorMsg = '';
+    if (msg) {
+      errorMsg = msg;
+      if (msg.length > MESSAGE_LENGTH) {
+        isLongMessage = true;
+      }
+    }
     if (error.response.data) {
       // token 过期,重新登录
       if (status == '401' || status == '403') {
@@ -145,12 +151,6 @@ service.interceptors.response.use(
       } else if (status == '415' || status == '400' || status == '300') {
         console.log(status, 'status');
       } else {
-        if (msg) {
-          errorMsg = msg;
-          if (msg.length > MESSAGE_LENGTH) {
-            isLongMessage = true;
-          }
-        }
         ElMessage({
           message: msg || '系统出错！！！',
           type: 'error',

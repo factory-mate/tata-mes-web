@@ -18,7 +18,7 @@ import PopupArea from '@/components/Popup/index.vue';
 import { configApi, DataApi, delApi, ExportApi } from '@/api/configApi/index';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import useStore from '@/store';
-
+import dayjs from 'dayjs';
 const { cache } = useStore();
 const $bus = getCurrentInstance()?.appContext.config.globalProperties.mittBus;
 const route = useRoute();
@@ -105,6 +105,8 @@ const getData = async () => {
     });
   }
   if (tableQueryConfig.value.Resource) {
+    const today = dayjs(new Date()).format('YYYY-MM-DD');
+    conditions.value = `dPlanDateStart>=${today}T00:00:00 && dPlanDateStart<=${today}T23:59:59`;
     getTableData();
   }
 };

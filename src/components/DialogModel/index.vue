@@ -285,6 +285,7 @@
             >
               <template #header>
                 <span>操作</span>
+
                 <myPopup
                   :list="tableColumns"
                   @newList="newList"
@@ -297,7 +298,6 @@
                   :key="item.Resource.cAttributeName"
                 >
                   <el-button
-                    v-if="item.iIndex < 3"
                     type="primary"
                     size="small"
                     @click="clickTableBut(scope, item)"
@@ -699,7 +699,36 @@ const clickModel = (
 const ModelClose = (val: any) => {
   dialogType.value = val.type;
 };
-const clickTableBut = (scope: any, item: any) => {};
+const clickTableBut = (scope: any, item: any) => {
+  console.log(scope, item);
+  const loading = ElLoading.service({ lock: true });
+  let data = {
+    method: item.Resource.cHttpTypeCode,
+    url: item.Resource.cServerIP + item.Resource.cUrl
+  } as any;
+  switch (item.cAttributeCode) {
+    case 'DeleteBody':
+      data.data = scope.row.UID;
+      DataApi(data)
+        .then(res => {
+          if (res.status === 200) {
+            ElMessage({
+              type: 'success',
+              message: '操作成功'
+            });
+            TtableAxios();
+          } else {
+            ElMessage.error('操作失败');
+          }
+        })
+        .finally(() => {
+          loading.close();
+        });
+      break;
+    default:
+      break;
+  }
+};
 const TableArr = ref([]) as any;
 const ProgramType = ref([]) as any;
 const DataClass = ref([]) as any;
@@ -1215,7 +1244,7 @@ const TtableAxios = async () => {
   }
   let url = AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl;
   if (Route.name === 'UserLine') {
-    url += `?val=` + ruleForm.value.cLoginName;
+    url += `?val=` + rowVal.value.cLoginName;
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -1236,7 +1265,7 @@ const TtableAxios = async () => {
 
   const res = await DataApi(data);
   if (res.status == 200) {
-    tableData.value = res.data.data.map(
+    tableData.value = (res.data ?? res.data.data).map(
       (item: { IsValid: string | boolean }) => {
         return {
           ...item,
@@ -1755,6 +1784,23 @@ const SaveAdd = (item: any) => {
     if (Route.name == 'UserLine') {
       ruleForm.value.list_cFactoryUnitCode = ruleForm.value.cFactoryUnitName;
     }
+    if (Route.name == 'Project') {
+      console.log(ProjectType.value);
+      if (ProjectType.value[0]) {
+        ruleForm.value.cProgramTypeName = ProjectType.value[0]?.cDictonaryName;
+        ruleForm.value.cProgramTypeCode = ProjectType.value[0]?.cDictonaryCode;
+      }
+      if (PeriodType.value[0]) {
+        ruleForm.value.cPeriodTypeCode = PeriodType.value[0]?.cDictonaryCode;
+        ruleForm.value.cPeriodTypeName = PeriodType.value[0]?.cDictonaryName;
+      }
+      if (PeriodUnitType.value[0]) {
+        ruleForm.value.cPeriodUnitTypeName =
+          PeriodUnitType.value[0]?.cDictonaryName;
+        ruleForm.value.cPeriodUnitTypeCode =
+          PeriodUnitType.value[0]?.cDictonaryCode;
+      }
+    }
     let data = {
       method: item.Resource.cHttpTypeCode,
       url: item.Resource.cServerIP + item.Resource.cUrl,
@@ -1848,8 +1894,8 @@ const SaveEdit = (item: any) => {
 
   if (Route.name !== 'File') {
     if (Route.name === 'scheme') {
-      ruleForm.value.cProjectTypeCode = ProjectName.value[0].cDictonaryCode;
-      ruleForm.value.cProjectTypeName = ProjectName.value[0].cDictonaryName;
+      ruleForm.value.cProjectTypeCode = ProjectName.value[0]?.cDictonaryCode;
+      ruleForm.value.cProjectTypeName = ProjectName.value[0]?.cDictonaryName;
     }
     if (Route.name === 'ProcessRouteLine') {
       ruleForm.value.cResourceName =
@@ -1859,14 +1905,20 @@ const SaveEdit = (item: any) => {
     }
     if (Route.name == 'Project') {
       console.log(ProjectType.value);
-      ruleForm.value.cProgramTypeName = ProjectType.value[0].cDictonaryName;
-      ruleForm.value.cProgramTypeCode = ProjectType.value[0].cDictonaryCode;
-      ruleForm.value.cPeriodTypeCode = PeriodType.value[0].cDictonaryCode;
-      ruleForm.value.cPeriodTypeName = PeriodType.value[0].cDictonaryName;
-      ruleForm.value.cPeriodUnitTypeName =
-        PeriodUnitType.value[0].cDictonaryName;
-      ruleForm.value.cPeriodUnitTypeCode =
-        PeriodUnitType.value[0].cDictonaryCode;
+      if (ProjectType.value[0]) {
+        ruleForm.value.cProgramTypeName = ProjectType.value[0]?.cDictonaryName;
+        ruleForm.value.cProgramTypeCode = ProjectType.value[0]?.cDictonaryCode;
+      }
+      if (PeriodType.value[0]) {
+        ruleForm.value.cPeriodTypeCode = PeriodType.value[0]?.cDictonaryCode;
+        ruleForm.value.cPeriodTypeName = PeriodType.value[0]?.cDictonaryName;
+      }
+      if (PeriodUnitType.value[0]) {
+        ruleForm.value.cPeriodUnitTypeName =
+          PeriodUnitType.value[0]?.cDictonaryName;
+        ruleForm.value.cPeriodUnitTypeCode =
+          PeriodUnitType.value[0]?.cDictonaryCode;
+      }
     }
     //添加项目----------设备编辑
     if (Route.name == 'EditDevice') {
@@ -1877,13 +1929,13 @@ const SaveEdit = (item: any) => {
       )?.cDeviceCode;
       if (TrowVal.value.cDeviceCode) {
         ruleForm.value.cDeviceCode = TrowVal.value.cDeviceCode;
-        if (DataClass.value[0] || DataTeam.value[0]) {
-          // ruleForm.value['cProgramTypeName'] = ProgramType.value[0]?.cDictonaryName || ''
-          // ruleForm.value['cProgramTypeCode'] = ProgramType.value[0]?.cDictonaryCode || ''
+        if (DataClass.value[0]) {
           ruleForm.value['cPeriodTypeName'] =
             DataClass.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodTypeCode'] =
             DataClass.value[0]?.cDictonaryCode || '';
+        }
+        if (DataTeam.value[0]) {
           ruleForm.value['cPeriodUnitTypeName'] =
             DataTeam.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodUnitTypeCode'] =
@@ -1891,15 +1943,19 @@ const SaveEdit = (item: any) => {
         }
       } else {
         ruleForm.value.cDeviceCode = code;
-        if (DataClass.value[0] || DataTeam.value[0]) {
+        if (ProgramType.value[0]) {
           ruleForm.value['cProgramTypeName'] =
             ProgramType.value[0]?.cDictonaryName || '';
           ruleForm.value['cProgramTypeCode'] =
             ProgramType.value[0]?.cDictonaryCode || '';
+        }
+        if (DataClass.value[0]) {
           ruleForm.value['cPeriodTypeName'] =
             DataClass.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodTypeCode'] =
             DataClass.value[0]?.cDictonaryCode || '';
+        }
+        if (DataTeam.value[0]) {
           ruleForm.value['cPeriodUnitTypeName'] =
             DataTeam.value[0]?.cDictonaryName || '';
           ruleForm.value['cPeriodUnitTypeCode'] =
@@ -1908,7 +1964,9 @@ const SaveEdit = (item: any) => {
       }
     }
     if (Route.name == 'UserLine') {
-      ruleForm.value.list_cFactoryUnitCode = ruleForm.value.cFactoryUnitName;
+      ruleForm.value.list_cFactoryUnitCode = [
+        ruleForm.value.cFactoryUnitName.at(-1)
+      ];
     }
     let data = {
       method: item.Resource.cHttpTypeCode,
