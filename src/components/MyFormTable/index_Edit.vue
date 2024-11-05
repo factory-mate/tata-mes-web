@@ -985,9 +985,9 @@ const onKeyPressEnter = async (e, item, scope) => {
       ElMessage.success('录入成功');
       tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
       tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
-      tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
-      tableDataVal.value[scope.$index].cUnitCode = data[0].cUnitCode;
-      tableDataVal.value[scope.$index].cUnitName = data[0].cUnitName;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvstd;
+      tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
+      tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
       tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
       tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
