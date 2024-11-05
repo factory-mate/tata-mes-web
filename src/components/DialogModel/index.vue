@@ -285,6 +285,7 @@
             >
               <template #header>
                 <span>操作</span>
+
                 <myPopup
                   :list="tableColumns"
                   @newList="newList"
@@ -297,7 +298,6 @@
                   :key="item.Resource.cAttributeName"
                 >
                   <el-button
-                    v-if="item.iIndex < 3"
                     type="primary"
                     size="small"
                     @click="clickTableBut(scope, item)"
@@ -699,7 +699,36 @@ const clickModel = (
 const ModelClose = (val: any) => {
   dialogType.value = val.type;
 };
-const clickTableBut = (scope: any, item: any) => {};
+const clickTableBut = (scope: any, item: any) => {
+  console.log(scope, item);
+  const loading = ElLoading.service({ lock: true });
+  let data = {
+    method: item.Resource.cHttpTypeCode,
+    url: item.Resource.cServerIP + item.Resource.cUrl
+  } as any;
+  switch (item.cAttributeCode) {
+    case 'DeleteBody':
+      data.data = scope.row.UID;
+      DataApi(data)
+        .then(res => {
+          if (res.status === 200) {
+            ElMessage({
+              type: 'success',
+              message: '操作成功'
+            });
+            TtableAxios();
+          } else {
+            ElMessage.error('操作失败');
+          }
+        })
+        .finally(() => {
+          loading.close();
+        });
+      break;
+    default:
+      break;
+  }
+};
 const TableArr = ref([]) as any;
 const ProgramType = ref([]) as any;
 const DataClass = ref([]) as any;
@@ -1215,7 +1244,7 @@ const TtableAxios = async () => {
   }
   let url = AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl;
   if (Route.name === 'UserLine') {
-    url += `?val=` + ruleForm.value.cLoginName;
+    url += `?val=` + rowVal.value.cLoginName;
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -1236,7 +1265,7 @@ const TtableAxios = async () => {
 
   const res = await DataApi(data);
   if (res.status == 200) {
-    tableData.value = res.data.data.map(
+    tableData.value = (res.data ?? res.data.data).map(
       (item: { IsValid: string | boolean }) => {
         return {
           ...item,
@@ -1935,7 +1964,9 @@ const SaveEdit = (item: any) => {
       }
     }
     if (Route.name == 'UserLine') {
-      ruleForm.value.list_cFactoryUnitCode = ruleForm.value.cFactoryUnitName;
+      ruleForm.value.list_cFactoryUnitCode = [
+        ruleForm.value.cFactoryUnitName.at(-1)
+      ];
     }
     let data = {
       method: item.Resource.cHttpTypeCode,
