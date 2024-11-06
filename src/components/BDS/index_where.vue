@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import { Delete, Edit, Search, Plus } from '@element-plus/icons-vue';
-
+import ChildSVG from './child.svg';
 const props = defineProps({
   Head: {
     required: false,
@@ -376,8 +376,24 @@ defineExpose({ resetData });
               circle
             >
             </el-button>
-            <el-button type="primary" @click="() => handleAddChildItem(node)">
-              添加子级条件
+            <el-button
+              type="primary"
+              @click="() => handleAddChildItem(node)"
+              circle
+            >
+              <el-icon style="vertical-align: middle">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z"
+                  />
+                </svg>
+              </el-icon>
             </el-button>
             <el-button
               type="danger"
