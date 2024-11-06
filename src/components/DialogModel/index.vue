@@ -1265,7 +1265,7 @@ const TtableAxios = async () => {
 
   const res = await DataApi(data);
   if (res.status == 200) {
-    tableData.value = (res.data ?? res.data.data).map(
+    tableData.value = (res.data.data ?? res.data).map(
       (item: { IsValid: string | boolean }) => {
         return {
           ...item,
