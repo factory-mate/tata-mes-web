@@ -359,9 +359,38 @@ const clickTableBut = (
     case 'ViewFile':
       ViewFile(scope, event);
       break;
+    case 'DownLoad':
+      download(scope, event);
+      break;
     default:
       break;
   }
+};
+const download = (scope, event) => {
+  const { cFileRoteUrl, cActName, cFileType, cFileName } = scope.row;
+  const url = `${cFileRoteUrl}${cActName}${cFileType}`;
+  // fetch(url)
+  //   .then(response => response.blob())
+  //   .then(blob => {
+  //     const url = window.URL.createObjectURL(blob);
+  //     const a = document.createElement('a');
+  //     a.href = url;
+  //     a.download = `${cFileName}${cFileType}`;
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     a.remove();
+  //   })
+  //   .catch(error => {
+  //     console.error('Error:', error);
+  //   });
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.setAttribute('download', `${cFileName}${cFileType}`);
+  downloadLink.setAttribute('target', '_blank');
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+  console.log(`${cFileName}${cFileType}`);
 };
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
