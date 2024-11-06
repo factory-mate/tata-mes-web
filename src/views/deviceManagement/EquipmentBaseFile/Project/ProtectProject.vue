@@ -288,6 +288,8 @@ const getAddUser = async (code: any) => {
 
 // table 数据整合
 const funTable = (arr: Array<any>) => {
+  tableColumns.value = [];
+  tableButton.value = [];
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
