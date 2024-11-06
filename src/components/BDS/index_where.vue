@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import { Delete, Edit, Search, Plus } from '@element-plus/icons-vue';
-import ChildSVG from './child.svg';
+
 const props = defineProps({
   Head: {
     required: false,
