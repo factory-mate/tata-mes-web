@@ -85,6 +85,7 @@
       title="添加"
       draggable
       :modal="false"
+      width="80%"
       :close-on-click-modal="false"
     >
       <!-- 搜索区域 -->
