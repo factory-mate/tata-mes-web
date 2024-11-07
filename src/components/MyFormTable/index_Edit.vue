@@ -231,6 +231,7 @@ import {
   reactive,
   toRefs,
   onMounted,
+  onActivated,
   onBeforeMount
 } from 'vue';
 import {
@@ -504,6 +505,13 @@ onMounted(() => {
     BGTableDataObj.value = BGTableData.value[0];
   }
 });
+onActivated(() => {
+  if (Route.name === 'AddPurchaseRequest' && tableDataVal.value.length === 0) {
+    for (let i = 0; i < 10; i++) {
+      tableDataVal.value.push(tableFunObj());
+    }
+  }
+});
 /**
  * 加载更多数据
  * https://www.jianshu.com/p/b685ed997a64
@@ -515,14 +523,14 @@ const handloadMore = async (newPage: number) => {
 };
 //增加行
 const clickTableAdd = () => {
-  if (Route.name === 'AddPurchaseRequest') {
-    for (let i = 0; i < 10; i++) {
-      tableDataVal.value.push(tableFunObj());
-    }
-    console.log('🚀🚀 增行后新增的数据');
-    console.table(tableDataVal.value);
-    return;
-  }
+  // if (Route.name === 'AddPurchaseRequest') {
+  //   for (let i = 0; i < 10; i++) {
+  //     tableDataVal.value.push(tableFunObj());
+  //   }
+  //   console.log('🚀🚀 增行后新增的数据');
+  //   console.table(tableDataVal.value);
+  //   return;
+  // }
   if (!Route.meta.title.match(/详情/gi)) {
     tableDataVal.value.push(tableFunObj());
   }
