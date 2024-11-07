@@ -221,7 +221,7 @@ const dialogEnd = () => {
   const data = selectData.value.length <= 0 ? [{}] : selectData.value;
 
   if (propsData.MulitChoose) {
-    emit('selectData', { value: data, type: false });
+    emit('selectData', { value: data, type: true });
     return;
   }
   if (selectData.value.length > 1) {
