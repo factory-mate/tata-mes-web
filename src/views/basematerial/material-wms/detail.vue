@@ -1,0 +1,101 @@
+<script setup>
+import { ref, onActivated } from 'vue';
+import { useRoute } from 'vue-router';
+import { getMaterial } from '@/api/material';
+
+const route = useRoute();
+
+const detail = ref({});
+const infoData = ref({});
+const extendData = ref({});
+const unitData = ref([]);
+const wmsData = ref({});
+
+onActivated(async () => {
+  const { rowId } = route.params;
+  getMaterial({ cInvCode: rowId }).then(res => {
+    detail.value = res.data;
+    infoData.value = res.data.iNENTORY_INFO ?? {};
+    extendData.value = res.data.iNENTORY_EXTEND ?? {};
+    unitData.value = res.data.iNENTORY_UNIT ?? [];
+    wmsData.value = res.data.iNENTORY_WMS ?? {};
+  });
+});
+</script>
+
+<template>
+  <div style="padding: 20px; display: flex; flex-direction: column; gap: 8px">
+    <el-card>
+      <el-tag type="primary" size="large">基本信息</el-tag>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6"> 存货分类：{{ infoData.cInvClassName }} </el-col>
+        <el-col :span="6"> 存货编号：{{ infoData.cInvClassCode }} </el-col>
+        <el-col :span="6"> 存货名称：{{ infoData.cInvName }} </el-col>
+        <el-col :span="6"> 存货规格：{{ infoData.cInvstd }} </el-col>
+      </el-row>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6">
+          保质期管理：{{ infoData.IsPeriod ? '是' : '否' }}
+        </el-col>
+        <el-col :span="6"> 质保天数：{{ infoData.iPeriodDay }} </el-col>
+        <el-col :span="6">
+          批次管理：{{ infoData.IsBatch ? '是' : '否' }}
+        </el-col>
+        <el-col :span="6">
+          库存管理：{{ infoData.IsStore ? '是' : '否' }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6"> 供应商名称：{{ infoData.cVendorName }} </el-col>
+      </el-row>
+    </el-card>
+
+    <el-card>
+      <el-tag type="primary" size="large">库管信息</el-tag>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6">
+          是否库存预警：{{ wmsData.IsWarn ? '是' : '否' }}
+        </el-col>
+        <el-col :span="6"> 安全库存量：{{ wmsData.nSafeQuinity }} </el-col>
+        <el-col :span="6"> 最高库存量：{{ wmsData.nMaxQuinity }} </el-col>
+        <el-col :span="6"> 最低库存量：{{ wmsData.nMinQuinity }} </el-col>
+      </el-row>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6"> 预警规则：{{ wmsData.cWarnRuleCode }} </el-col>
+        <el-col :span="6"> 出入库方式：{{ wmsData.cInOutTypeCode }} </el-col>
+        <el-col :span="6"> 默认仓库：{{ wmsData.cWareHouseCode }} </el-col>
+        <el-col :span="6"> 默认库区：{{ wmsData.cWareHouseAreaCode }} </el-col>
+      </el-row>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6">
+          默认库位：{{ wmsData.cWareHouseLocationCode }}
+        </el-col>
+      </el-row>
+    </el-card>
+
+    <el-card>
+      <el-tag type="primary" size="large">扩展信息</el-tag>
+      <el-row :gutter="24" style="margin-top: 12px">
+        <el-col :span="6"> 标签：{{ extendData.cDefindParm01 }} </el-col>
+        <el-col :span="6">
+          BOM 模型名称：{{ extendData.cDefindParm03 }}
+        </el-col>
+        <el-col :span="6">
+          SAP 物料编码：{{ extendData.cDefindParm04 }}
+        </el-col>
+        <el-col :span="6"> 每包数量：{{ extendData.iDefindParm12 }} </el-col>
+      </el-row>
+    </el-card>
+
+    <el-card>
+      <el-tag type="primary" size="large">单位信息</el-tag>
+      <el-table :data="unitData" style="width: 100%; margin-top: 20px">
+        <el-table-column prop="cUnitTypeName" label="计量单位应用类型" />
+        <el-table-column prop="cUnitCode" label="主计量单位名称" />
+        <el-table-column prop="cAssUnitCode" label="辅计量单位名称" />
+        <el-table-column prop="iChangeRate" label="换算率" />
+        <el-table-column prop="IsDefault" label="是否默认" />
+      </el-table>
+    </el-card>
+  </div>
+</template>

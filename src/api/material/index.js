@@ -35,3 +35,13 @@ export function getTags() {
     }
   });
 }
+
+export function getInOutTypes() {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + '/api/Dictonary/GetForList',
+    method: 'get',
+    params: {
+      Conditions: 'cDictonaryTypeCode=cInOutTypeCode'
+    }
+  });
+}
