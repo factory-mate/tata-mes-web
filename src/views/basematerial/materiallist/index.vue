@@ -380,7 +380,7 @@ const clickView = (scope: any, obj: any) => {
     name: 'materialView',
     params: {
       t: Date.now(),
-      rowId: scope.row.UID
+      rowId: scope.row.cInvCode
     },
     state: {
       modelCode: obj.cIncludeModelCode,
