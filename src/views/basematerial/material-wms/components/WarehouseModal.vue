@@ -1,10 +1,10 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
-import { inventoryClassGetForPage } from '@/api/material';
+import { warehouseGetForPage } from '@/api/material';
 
 const searchParams = ref({
-  cInvClassCode: '',
-  cInvClassName: ''
+  cWareHouseCode: '',
+  cWareHouseName: ''
 });
 const queryParams = reactive({
   PageIndex: 1,
@@ -28,21 +28,21 @@ watch(
 
 function fetchList() {
   let Conditions = [];
-  if (searchParams.value.cInvClassCode) {
+  if (searchParams.value.cWareHouseCode) {
     Conditions.push({
-      Field: 'cInvClassCode',
+      Field: 'cWareHouseCode',
       Operator: 'like',
-      Value: searchParams.value.cInvClassCode
+      Value: searchParams.value.cWareHouseCode
     });
   }
-  if (searchParams.value.cInvClassName) {
+  if (searchParams.value.cWareHouseName) {
     Conditions.push({
-      Field: 'cInvClassName',
+      Field: 'cWareHouseName',
       Operator: 'like',
-      Value: searchParams.value.cInvClassName
+      Value: searchParams.value.cWareHouseName
     });
   }
-  inventoryClassGetForPage({
+  warehouseGetForPage({
     PageIndex: queryParams.PageIndex,
     PageSize: queryParams.PageSize,
     Conditions: Conditions.map(i => `${i.Field} ${i.Operator} ${i.Value}`).join(
@@ -71,8 +71,8 @@ function handleConfirm() {
 }
 
 function handleReset() {
-  searchParams.value.cInvClassCode = '';
-  searchParams.value.cInvClassName = '';
+  searchParams.value.cWareHouseCode = '';
+  searchParams.value.cWareHouseName = '';
 }
 
 function handleSearch() {
@@ -85,16 +85,16 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="showDialog" title="存货分类" width="80%">
+  <el-dialog v-model="showDialog" title="仓库" width="80%">
     <el-row :gutter="24" style="margin-top: 12px">
       <el-col :span="8">
-        <el-form-item label="存货分类编号" label-width="150">
-          <el-input v-model="searchParams.cInvClassCode" autocomplete="off" />
+        <el-form-item label="仓库编号" label-width="150">
+          <el-input v-model="searchParams.cWareHouseCode" autocomplete="off" />
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="存货分类" label-width="150">
-          <el-input v-model="searchParams.cInvClassName" autocomplete="off" />
+        <el-form-item label="仓库名称" label-width="150">
+          <el-input v-model="searchParams.cWareHouseName" autocomplete="off" />
         </el-form-item>
       </el-col>
       <el-col :span="8">
@@ -108,8 +108,8 @@ defineExpose({
       border
       @current-change="handleCurrentChange"
     >
-      <el-table-column property="cInvClassName" label="存货分类" />
-      <el-table-column property="cInvClassCode" label="存货分类编号" />
+      <el-table-column property="cWareHouseName" label="仓库名称" />
+      <el-table-column property="cWareHouseCode" label="仓库编号" />
     </el-table>
     <pagination
       v-if="total > 0"

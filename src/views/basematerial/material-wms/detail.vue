@@ -12,7 +12,7 @@ const unitData = ref([]);
 const wmsData = ref({});
 
 onActivated(async () => {
-  const { rowId } = route.param0s;
+  const { rowId } = route.params;
   getMaterial({ cInvCode: rowId }).then(res => {
     detail.value = res.data;
     infoData.value = res.data.iNENTORY_INFO ?? {};

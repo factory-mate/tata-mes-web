@@ -1,10 +1,10 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
-import { inventoryClassGetForPage } from '@/api/material';
+import { vendorGetForPage } from '@/api/material';
 
 const searchParams = ref({
-  cInvClassCode: '',
-  cInvClassName: ''
+  cVendorCode: '',
+  cVendorName: ''
 });
 const queryParams = reactive({
   PageIndex: 1,
@@ -28,21 +28,21 @@ watch(
 
 function fetchList() {
   let Conditions = [];
-  if (searchParams.value.cInvClassCode) {
+  if (searchParams.value.cVendorCode) {
     Conditions.push({
-      Field: 'cInvClassCode',
+      Field: 'cVendorCode',
       Operator: 'like',
-      Value: searchParams.value.cInvClassCode
+      Value: searchParams.value.cVendorCode
     });
   }
-  if (searchParams.value.cInvClassName) {
+  if (searchParams.value.cVendorName) {
     Conditions.push({
-      Field: 'cInvClassName',
+      Field: 'cVendorName',
       Operator: 'like',
-      Value: searchParams.value.cInvClassName
+      Value: searchParams.value.cVendorName
     });
   }
-  inventoryClassGetForPage({
+  vendorGetForPage({
     PageIndex: queryParams.PageIndex,
     PageSize: queryParams.PageSize,
     Conditions: Conditions.map(i => `${i.Field} ${i.Operator} ${i.Value}`).join(
@@ -70,46 +70,21 @@ function handleConfirm() {
   emit('confirm', currentSelected.value);
 }
 
-function handleReset() {
-  searchParams.value.cInvClassCode = '';
-  searchParams.value.cInvClassName = '';
-}
-
-function handleSearch() {
-  fetchList();
-}
-
 defineExpose({
   showDialog
 });
 </script>
 
 <template>
-  <el-dialog v-model="showDialog" title="存货分类" width="80%">
-    <el-row :gutter="24" style="margin-top: 12px">
-      <el-col :span="8">
-        <el-form-item label="存货分类编号" label-width="150">
-          <el-input v-model="searchParams.cInvClassCode" autocomplete="off" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="存货分类" label-width="150">
-          <el-input v-model="searchParams.cInvClassName" autocomplete="off" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-button @click="handleReset">重置</el-button>
-        <el-button type="primary" @click="handleSearch">搜索</el-button>
-      </el-col>
-    </el-row>
+  <el-dialog v-model="showDialog" title="供应商名称" width="80%">
     <el-table
       :data="listData"
       highlight-current-row
       border
       @current-change="handleCurrentChange"
     >
-      <el-table-column property="cInvClassName" label="存货分类" />
-      <el-table-column property="cInvClassCode" label="存货分类编号" />
+      <el-table-column property="cVendorCode" label="供货商编号" />
+      <el-table-column property="cVendorName" label="供货商名称" />
     </el-table>
     <pagination
       v-if="total > 0"

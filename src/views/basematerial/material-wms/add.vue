@@ -1,14 +1,24 @@
 <script setup>
-import { getTags, getInOutTypes, addMaterial } from '@/api/material';
+import {
+  getTags,
+  getInOutTypes,
+  addMaterial,
+  getUnitTypes
+} from '@/api/material';
 import { ref, onActivated } from 'vue';
 import { useRouter } from 'vue-router';
 import { MoreFilled } from '@element-plus/icons-vue';
 import CInvClassNameModal from './components/CInvClassNameModal.vue';
+import CVendorNameModal from './components/CVendorNameModal.vue';
+import UnitModal from './components/UnitModal.vue';
+import WarehouseModal from './components/WarehouseModal.vue';
+import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
+import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
 
 const router = useRouter();
 const ruleFormRef = ref(null);
 const formData = ref({
-  cInvClassCode: '',
+  cInvCode: '',
   cInvName: '',
   IsPeriod: false,
   iPeriodDay: 0,
@@ -20,13 +30,18 @@ const unitItemData = ref({});
 const showAddUnitDialog = ref(false);
 const tagOptions = ref([]);
 const inOutOptions = ref([]);
+const unitTypeOptions = ref([]);
 
 const cInvClassNameModalRef = ref();
+const cVendorNameModalRef = ref();
+const mainUnitModalRef = ref();
+const secondUnitModalRef = ref();
+const warehouseModalRef = ref();
+const warehouseAreaModalRef = ref();
+const warehouseLocationModalRef = ref();
 
 const rules = ref({
-  cInvClassCode: [
-    { required: true, message: '请输入存货编号', trigger: 'change' }
-  ],
+  cInvCode: [{ required: true, message: '请输入存货编号', trigger: 'change' }],
   cInvName: [{ required: true, message: '请输入存货名称', trigger: 'change' }],
   IsBatch: [{ required: true, message: '请选择批次管理', trigger: 'blur' }],
   IsStore: [{ required: true, message: '请选择库存管理', trigger: 'blur' }]
@@ -51,6 +66,15 @@ function fetchInOutTypes() {
   });
 }
 
+function fetchUnitTypes() {
+  getUnitTypes().then(res => {
+    unitTypeOptions.value = res.data.map(item => ({
+      label: item.cDictonaryName,
+      value: item.cDictonaryCode
+    }));
+  });
+}
+
 async function handleSubmit() {
   const data = {
     ...formData.value,
@@ -59,7 +83,7 @@ async function handleSubmit() {
   try {
     const res = await addMaterial(data);
     if (res.success) {
-      router.push('/basematerial/materiallist');
+      router.push('/basematerial/WMSMaterial');
     }
   } catch {
     //
@@ -80,13 +104,86 @@ function handleSaveAddData() {
   showAddUnitDialog.value = false;
 }
 
+function handleUnitTypeNameChange(data) {
+  unitItemData.value.cUnitTypeName = unitTypeOptions.value.find(
+    item => item.value == data
+  )?.label;
+}
+
 function handleClickcInvClassNameModal() {
   cInvClassNameModalRef.value.showDialog = true;
+}
+
+function handleCInvClassNameModalConfirm(data) {
+  console.log(data);
+  formData.value.cInvClassName = data?.cInvClassName;
+  formData.value.cInvClassCode = data?.cInvClassCode;
+}
+
+function handleClickcVendorNameModal() {
+  cVendorNameModalRef.value.showDialog = true;
+}
+
+function handleCVendorNameModalConfirm(data) {
+  console.log(data);
+  formData.value.cVendorName = data?.cVendorName;
+  formData.value.cVendorCode = data?.cVendorCode;
+}
+
+function handleClickMainUnitModal() {
+  mainUnitModalRef.value.showDialog = true;
+}
+
+function handleMainUnitModalConfirm(data) {
+  console.log(data);
+  unitItemData.value.cUnitCode = data?.cUnitCode;
+  unitItemData.value.cUnitName = data?.cUnitName;
+}
+
+function handleClickSecondUnitModal() {
+  secondUnitModalRef.value.showDialog = true;
+}
+
+function handleSecondUnitModalConfirm(data) {
+  console.log(data);
+  unitItemData.value.cAssUnitCode = data?.cUnitCode;
+  unitItemData.value.cAssUnitName = data?.cUnitName;
+}
+
+function handleClickWarehouseModal() {
+  warehouseModalRef.value.showDialog = true;
+}
+
+function handleWarehouseModalConfirm(data) {
+  console.log(data);
+  formData.value.cWareHouseCode = data?.cWareHouseCode;
+  formData.value.cWareHouseName = data?.cWareHouseName;
+}
+
+function handleClickWarehouseAreaModal() {
+  warehouseAreaModalRef.value.showDialog = true;
+}
+
+function handleWarehouseAreaModalConfirm(data) {
+  console.log(data);
+  formData.value.cWareHouseAreaCode = data?.cWareHouseAreaCode;
+  formData.value.cWareHouseAreaName = data?.cWareHouseAreaName;
+}
+
+function handleClickWarehouseLocationModal() {
+  warehouseLocationModalRef.value.showDialog = true;
+}
+
+function handleWarehouseLocationModalConfirm(data) {
+  console.log(data);
+  formData.value.cWareHouseLocationCode = data?.cWareHouseLocationCode;
+  formData.value.cWareHouseLocationName = data?.cWareHouseLocationName;
 }
 
 onActivated(() => {
   // fetchTags();
   fetchInOutTypes();
+  fetchUnitTypes();
 });
 </script>
 
@@ -122,12 +219,8 @@ onActivated(() => {
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              label="存货编号"
-              label-width="150"
-              prop="cInvClassCode"
-            >
-              <el-input v-model="formData.cInvClassCode" autocomplete="off" />
+            <el-form-item label="存货编号" label-width="150" prop="cInvCode">
+              <el-input v-model="formData.cInvCode" autocomplete="off" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -185,7 +278,17 @@ onActivated(() => {
               label-width="150"
               prop="cVendorName"
             >
-              <el-input v-model="formData.cVendorName" autocomplete="off" />
+              <el-input
+                v-model="formData.cVendorName"
+                style="width: 100%"
+                clearable
+              >
+                <template #append>
+                  <el-icon @click="handleClickcVendorNameModal">
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -262,9 +365,20 @@ onActivated(() => {
               label-width="150"
               prop="cWareHouseCode"
             >
-              <el-input v-model="formData.cWareHouseCode" autocomplete="off" />
+              <el-input
+                v-model="formData.cWareHouseCode"
+                style="width: 100%"
+                clearable
+              >
+                <template #append>
+                  <el-icon @click="handleClickWarehouseModal">
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
+
           <el-col :span="6">
             <el-form-item
               label="默认库区"
@@ -273,8 +387,15 @@ onActivated(() => {
             >
               <el-input
                 v-model="formData.cWareHouseAreaCode"
-                autocomplete="off"
-              />
+                style="width: 100%"
+                clearable
+              >
+                <template #append>
+                  <el-icon @click="handleClickWarehouseAreaModal">
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -283,12 +404,19 @@ onActivated(() => {
             <el-form-item
               label="默认库位"
               label-width="150"
-              prop="cWareHouseLocationCode"
+              prop="cWareHouseAreaCode"
             >
               <el-input
                 v-model="formData.cWareHouseLocationCode"
-                autocomplete="off"
-              />
+                style="width: 100%"
+                clearable
+              >
+                <template #append>
+                  <el-icon @click="handleClickWarehouseLocationModal">
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -378,17 +506,42 @@ onActivated(() => {
   <el-dialog v-model="showAddUnitDialog" title="添加" width="600">
     <el-form :model="unitItemData">
       <el-form-item label="计量单位应用类型" label-width="150">
-        <el-select v-model="unitItemData.cUnitTypeName" placeholder="请选择">
-          <el-option label="Zone No.1" value="shanghai" />
-          <el-option label="Zone No.2" value="beijing" />
-        </el-select>
+        <el-select-v2
+          v-model="unitItemData.cUnitTypeCode"
+          placeholder="请选择"
+          :options="unitTypeOptions"
+          @change="handleUnitTypeNameChange"
+        />
       </el-form-item>
+
       <el-form-item label="主计量单位名称" label-width="150">
-        <el-input v-model="unitItemData.name" autocomplete="off" />
+        <el-input
+          v-model="unitItemData.cUnitName"
+          style="width: 100%"
+          clearable
+        >
+          <template #append>
+            <el-icon @click="handleClickMainUnitModal">
+              <MoreFilled />
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
+
       <el-form-item label="辅计量单位名称" label-width="150">
-        <el-input v-model="unitItemData.name" autocomplete="off" />
+        <el-input
+          v-model="unitItemData.cAssUnitName"
+          style="width: 100%"
+          clearable
+        >
+          <template #append>
+            <el-icon @click="handleClickSecondUnitModal">
+              <MoreFilled />
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
+
       <el-form-item label="换算率" label-width="150">
         <el-input-number v-model="unitItemData.iChangeRate" />
       </el-form-item>
@@ -409,5 +562,26 @@ onActivated(() => {
     </template>
   </el-dialog>
 
-  <CInvClassNameModal ref="cInvClassNameModalRef" />
+  <CInvClassNameModal
+    ref="cInvClassNameModalRef"
+    @confirm="handleCInvClassNameModalConfirm"
+  />
+  <CVendorNameModal
+    ref="cVendorNameModalRef"
+    @confirm="handleCVendorNameModalConfirm"
+  />
+  <UnitModal ref="mainUnitModalRef" @confirm="handleMainUnitModalConfirm" />
+  <UnitModal ref="secondUnitModalRef" @confirm="handleSecondUnitModalConfirm" />
+  <WarehouseModal
+    ref="warehouseModalRef"
+    @confirm="handleWarehouseModalConfirm"
+  />
+  <WarehouseAreaModal
+    ref="warehouseAreaModalRef"
+    @confirm="handleWarehouseAreaModalConfirm"
+  />
+  <WarehouseLocationModal
+    ref="warehouseLocationModalRef"
+    @confirm="handleWarehouseLocationModalConfirm"
+  />
 </template>

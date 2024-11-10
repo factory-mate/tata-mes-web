@@ -218,7 +218,7 @@ const clickTableBut = (scope: any, event: any) => {
     case 'View':
       clickView(scope, event);
       break;
-    case 'Edit':
+    case 'SaveEdit':
       clickEditTable(scope, event);
       break;
     case 'Stop':
@@ -396,7 +396,7 @@ const clickEditTable = (scope: any, obj: any) => {
     name: 'WMSMaterialEdit',
     params: {
       t: Date.now(),
-      rowId: scope.row.UID
+      rowId: scope.row.cInvCode
     },
     state: {
       modelCode: obj.cIncludeModelCode,
