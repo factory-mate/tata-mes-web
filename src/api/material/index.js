@@ -45,3 +45,11 @@ export function getInOutTypes() {
     }
   });
 }
+
+export function inventoryClassGetForPage(data) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + '/api/InentoryClass/GetForPage',
+    method: 'post',
+    data
+  });
+}

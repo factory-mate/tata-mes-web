@@ -11,7 +11,7 @@
       <!-- 按钮区域 -->
       <ButtonViem
         :ToolBut="But"
-        @clickAdd="clickAdd"
+        @SaveAdd="clickAdd"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
         @clickStart="Start"
@@ -52,7 +52,6 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="item.iIndex < 3"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -377,7 +376,7 @@ const clickDel = (obj: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'materialView',
+    name: 'WMSMaterialDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.cInvCode
@@ -394,7 +393,7 @@ const clickView = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'materialEdit',
+    name: 'WMSMaterialEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -432,7 +431,7 @@ const clickStop = (scope: any, obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'material',
+    name: 'WMSMaterialAdd',
     params: {
       t: Date.now(),
       rowId: ' '

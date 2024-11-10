@@ -12,7 +12,7 @@ const unitData = ref([]);
 const wmsData = ref({});
 
 onActivated(async () => {
-  const { rowId } = route.params;
+  const { rowId } = route.param0s;
   getMaterial({ cInvCode: rowId }).then(res => {
     detail.value = res.data;
     infoData.value = res.data.iNENTORY_INFO ?? {};
@@ -76,10 +76,10 @@ onActivated(async () => {
     <el-card>
       <el-tag type="primary" size="large">扩展信息</el-tag>
       <el-row :gutter="24" style="margin-top: 12px">
-        <el-col :span="6"> 标签：{{ extendData.cDefindParm01 }} </el-col>
+        <!-- <el-col :span="6"> 标签：{{ extendData.cDefindParm01 }} </el-col>
         <el-col :span="6">
           BOM 模型名称：{{ extendData.cDefindParm03 }}
-        </el-col>
+        </el-col> -->
         <el-col :span="6">
           SAP 物料编码：{{ extendData.cDefindParm04 }}
         </el-col>

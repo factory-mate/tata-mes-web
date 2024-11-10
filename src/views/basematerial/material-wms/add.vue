@@ -2,6 +2,8 @@
 import { getTags, getInOutTypes, addMaterial } from '@/api/material';
 import { ref, onActivated } from 'vue';
 import { useRouter } from 'vue-router';
+import { MoreFilled } from '@element-plus/icons-vue';
+import CInvClassNameModal from './components/CInvClassNameModal.vue';
 
 const router = useRouter();
 const ruleFormRef = ref(null);
@@ -19,14 +21,16 @@ const showAddUnitDialog = ref(false);
 const tagOptions = ref([]);
 const inOutOptions = ref([]);
 
+const cInvClassNameModalRef = ref();
+
 const rules = ref({
   cInvClassCode: [
     { required: true, message: '请输入存货编号', trigger: 'change' }
   ],
   cInvName: [{ required: true, message: '请输入存货名称', trigger: 'change' }],
   IsBatch: [{ required: true, message: '请选择批次管理', trigger: 'blur' }],
-  IsStore: [{ required: true, message: '请选择库存管理', trigger: 'blur' }],
-  cDefindParm01: [{ required: true, message: '请选择标签', trigger: 'change' }]
+  IsStore: [{ required: true, message: '请选择库存管理', trigger: 'blur' }]
+  // cDefindParm01: [{ required: true, message: '请选择标签', trigger: 'change' }]
 });
 
 function fetchTags() {
@@ -76,10 +80,13 @@ function handleSaveAddData() {
   showAddUnitDialog.value = false;
 }
 
-function clickModel(obj, type) {}
+function handleClickcInvClassNameModal() {
+  cInvClassNameModalRef.value.showDialog = true;
+}
 
 onActivated(() => {
-  fetchTags();
+  // fetchTags();
+  fetchInOutTypes();
 });
 </script>
 
@@ -101,21 +108,13 @@ onActivated(() => {
               label-width="150"
               prop="cInvClassName"
             >
-              <el-input v-model="formData.cInvClassName" autocomplete="off" />
               <el-input
-                @change="TextBoxLink"
                 v-model="formData.cInvClassName"
                 style="width: 100%"
                 clearable
               >
                 <template #append>
-                  <el-icon
-                    v-if="!props.disabled"
-                    @click="clickModel(item, false)"
-                  >
-                    <MoreFilled />
-                  </el-icon>
-                  <el-icon v-else>
+                  <el-icon @click="handleClickcInvClassNameModal">
                     <MoreFilled />
                   </el-icon>
                 </template>
@@ -251,7 +250,6 @@ onActivated(() => {
             >
               <el-select-v2
                 v-model="formData.cInOutTypeCode"
-                multiple
                 placeholder="请选择"
                 style="width: 240px"
                 :options="inOutOptions"
@@ -299,6 +297,7 @@ onActivated(() => {
       <el-card>
         <el-tag type="primary" size="large">扩展信息</el-tag>
         <el-row :gutter="24" style="margin-top: 12px">
+          <!--
           <el-col :span="6">
             <el-form-item label="标签" label-width="150" prop="cDefindParm01">
               <el-select-v2
@@ -310,7 +309,9 @@ onActivated(() => {
               />
             </el-form-item>
           </el-col>
+          -->
 
+          <!--
           <el-col :span="6">
             <el-form-item
               label="BOM 模型名称"
@@ -320,6 +321,7 @@ onActivated(() => {
               <el-input v-model="formData.cDefindParm03" autocomplete="off" />
             </el-form-item>
           </el-col>
+          -->
 
           <el-col :span="6">
             <el-form-item
@@ -406,4 +408,6 @@ onActivated(() => {
       </div>
     </template>
   </el-dialog>
+
+  <CInvClassNameModal ref="cInvClassNameModalRef" />
 </template>
