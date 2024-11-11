@@ -224,6 +224,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Stop':
       clickStop(scope, event);
       break;
+    case 'Delete':
+      clickDelete(scope, event);
+      break;
     default:
       break;
   }
@@ -428,6 +431,28 @@ const clickStop = (scope: any, obj: any) => {
     }
   });
 };
+
+const clickDelete = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [senid]
+  };
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '删除成功'
+      });
+      tableAxios();
+      sendId.value = [];
+    } else {
+      ElMessage.error('删除失败');
+    }
+  });
+};
+
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
