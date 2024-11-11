@@ -379,10 +379,10 @@ onActivated(() => {
             <el-form-item
               label="默认仓库"
               label-width="150"
-              prop="cWareHouseCode"
+              prop="cWareHouseName"
             >
               <el-input
-                v-model="formData.cWareHouseCode"
+                v-model="formData.cWareHouseName"
                 style="width: 100%"
                 clearable
               >
@@ -399,10 +399,10 @@ onActivated(() => {
             <el-form-item
               label="默认库区"
               label-width="150"
-              prop="cWareHouseAreaCode"
+              prop="cWareHouseAreaName"
             >
               <el-input
-                v-model="formData.cWareHouseAreaCode"
+                v-model="formData.cWareHouseAreaName"
                 style="width: 100%"
                 clearable
               >
@@ -420,10 +420,10 @@ onActivated(() => {
             <el-form-item
               label="默认库位"
               label-width="150"
-              prop="cWareHouseAreaCode"
+              prop="cWareHouseLocationName"
             >
               <el-input
-                v-model="formData.cWareHouseLocationCode"
+                v-model="formData.cWareHouseLocationName"
                 style="width: 100%"
                 clearable
               >
@@ -476,6 +476,16 @@ onActivated(() => {
               <el-input v-model="formData.cDefindParm04" autocomplete="off" />
             </el-form-item>
           </el-col>
+
+          <el-col :span="6">
+            <el-form-item
+              label="每包数量"
+              label-width="150"
+              prop="iDefindParm12"
+            >
+              <el-input-number v-model="formData.iDefindParm12" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-card>
 
@@ -492,8 +502,8 @@ onActivated(() => {
             </template>
           </el-table-column>
           <el-table-column prop="cUnitTypeName" label="计量单位应用类型" />
-          <el-table-column prop="cUnitCode" label="主计量单位名称" />
-          <el-table-column prop="cAssUnitCode" label="辅计量单位名称" />
+          <el-table-column prop="cUnitName" label="主计量单位名称" />
+          <el-table-column prop="cAssUnitName" label="辅计量单位名称" />
           <el-table-column prop="iChangeRate" label="换算率" />
           <el-table-column label="是否默认">
             <template #default="scope">
