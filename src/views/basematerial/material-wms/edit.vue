@@ -191,7 +191,7 @@ onActivated(() => {
     const infoData = res.data.iNENTORY_INFO ?? {};
     const extendData = res.data.iNENTORY_EXTEND ?? {};
     const wmsData = res.data.iNENTORY_WMS ?? {};
-    formData.value = { ...infoData, ...extendData, ...wmsData };
+    formData.value = { ...extendData, ...wmsData, ...infoData };
     unitData.value = res.data.iNENTORY_UNIT ?? [];
   });
 });
