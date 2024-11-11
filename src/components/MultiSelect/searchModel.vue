@@ -146,7 +146,7 @@ watch(
       Route.name == 'AddPurchaseRequestView'
     ) {
       if (newValue.metadata?.cInvCode) {
-        Conditions.value = `cInvCode=${newValue.metadata.cInvCode}`;
+        // Conditions.value = `cInvCode=${newValue.metadata.cInvCode}`;
       }
     } else if (
       (Route.name === 'AddBusineScen' ||

@@ -972,7 +972,7 @@ const selectDatas = (val: any) => {
     }
   }
 
-  dialogType.value = val.type;
+  dialogType.value = false;
   // myTableRef.value.doLayout()
 };
 
