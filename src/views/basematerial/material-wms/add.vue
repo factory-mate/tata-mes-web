@@ -220,7 +220,11 @@ onActivated(() => {
           </el-col>
           <el-col :span="6">
             <el-form-item label="存货编号" label-width="150" prop="cInvCode">
-              <el-input v-model="formData.cInvCode" autocomplete="off" />
+              <el-input
+                v-model="formData.cInvCode"
+                autocomplete="off"
+                disabled
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
