@@ -327,7 +327,11 @@ onActivated(() => {
               label-width="150"
               prop="nSafeQuinity"
             >
-              <el-input v-model="formData.nSafeQuinity" autocomplete="off" />
+              <el-input
+                v-model="formData.nSafeQuinity"
+                autocomplete="off"
+                type="number"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -336,7 +340,11 @@ onActivated(() => {
               label-width="150"
               prop="nMaxQuinity"
             >
-              <el-input v-model="formData.nMaxQuinity" autocomplete="off" />
+              <el-input
+                v-model="formData.nMaxQuinity"
+                autocomplete="off"
+                type="number"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -345,7 +353,11 @@ onActivated(() => {
               label-width="150"
               prop="nMinQuinity"
             >
-              <el-input v-model="formData.nMinQuinity" autocomplete="off" />
+              <el-input
+                v-model="formData.nMinQuinity"
+                autocomplete="off"
+                type="number"
+              />
             </el-form-item>
           </el-col>
         </el-row>

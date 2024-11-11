@@ -70,6 +70,15 @@ function handleConfirm() {
   emit('confirm', currentSelected.value);
 }
 
+function handleReset() {
+  searchParams.value.cVendorCode = '';
+  searchParams.value.cVendorName = '';
+}
+
+function handleSearch() {
+  fetchList();
+}
+
 defineExpose({
   showDialog
 });
@@ -77,6 +86,22 @@ defineExpose({
 
 <template>
   <el-dialog v-model="showDialog" title="供应商名称" width="80%">
+    <el-row :gutter="24" style="margin-top: 12px">
+      <el-col :span="8">
+        <el-form-item label="供应商编码" label-width="150">
+          <el-input v-model="searchParams.cVendorCode" autocomplete="off" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item label="供应商名称" label-width="150">
+          <el-input v-model="searchParams.cVendorName" autocomplete="off" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="handleReset">重置</el-button>
+        <el-button type="primary" @click="handleSearch">搜索</el-button>
+      </el-col>
+    </el-row>
     <el-table
       :data="listData"
       highlight-current-row
