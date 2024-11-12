@@ -16,6 +16,7 @@ import WarehouseModal from './components/WarehouseModal.vue';
 import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
 import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
 import useStore from '@/store';
+import { ElMessage } from 'element-plus';
 
 const { tagsView } = useStore();
 const route = useRoute();
@@ -105,6 +106,10 @@ function handleDeleteUnitItem(index) {
 }
 
 function handleSaveAddData() {
+  if (!unitItemData.value.cUnitTypeCode) {
+    ElMessage.error('请选择计量单位应用类型');
+    return;
+  }
   unitData.value.push(unitItemData.value);
   showAddUnitDialog.value = false;
 }
@@ -548,7 +553,7 @@ onActivated(() => {
 
   <el-dialog v-model="showAddUnitDialog" title="添加" width="600">
     <el-form :model="unitItemData">
-      <el-form-item label="计量单位应用类型" label-width="150">
+      <el-form-item label="计量单位应用类型" label-width="150" required>
         <el-select-v2
           v-model="unitItemData.cUnitTypeCode"
           placeholder="请选择"
