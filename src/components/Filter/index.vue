@@ -130,7 +130,7 @@
               v-if="item.cControlTypeCode == 'Tree'"
               v-model="item.cAttributeCodeValue"
               :options="options"
-              :props="prop"
+              :props="Route.name === 'WMSMaterial' ? wmsMaterialProp : prop"
               @change="(value:any) => handleChange(item, value)"
               @visible-change="getTreeDAata"
               clearable
@@ -259,6 +259,13 @@ watch(
 const prop = {
   label: 'cFactoryUnitName',
   value: 'cFactoryUnitCode',
+  children: 'Child',
+  checkStrictly: true
+};
+
+const wmsMaterialProp = {
+  label: 'cInvClassName',
+  value: 'cInvClassCode',
   children: 'Child',
   checkStrictly: true
 };
@@ -694,7 +701,11 @@ const getTreeData = (newValue: any) => {
         }
       };
       ParamsApi(data).then((res: any) => {
-        options.value = res.data;
+        options.value = res.data.map(i => ({
+          ...i,
+          label: i.cInvClassName,
+          value: i.cInvClassCode
+        }));
         item.optionsDataList = res.data;
       });
     }
