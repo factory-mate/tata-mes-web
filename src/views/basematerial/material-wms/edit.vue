@@ -15,7 +15,9 @@ import UnitModal from './components/UnitModal.vue';
 import WarehouseModal from './components/WarehouseModal.vue';
 import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
 import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
+import useStore from '@/store';
 
+const { tagsView } = useStore();
 const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
@@ -85,6 +87,7 @@ async function handleSubmit() {
   try {
     const res = await updateMaterial(data);
     if (res.success) {
+      closeSelectedTag(route);
       router.push('/basematerial/WMSMaterial');
     }
   } catch {
@@ -180,6 +183,10 @@ function handleWarehouseLocationModalConfirm(data) {
   console.log(data);
   formData.value.cWareHouseLocationCode = data?.cWareHouseLocationCode;
   formData.value.cWareHouseLocationName = data?.cWareHouseLocationName;
+}
+
+function closeSelectedTag(view) {
+  tagsView.delVisitedView(view);
 }
 
 onActivated(() => {

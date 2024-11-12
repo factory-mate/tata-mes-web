@@ -6,7 +6,7 @@ import {
   getUnitTypes
 } from '@/api/material';
 import { ref, onActivated } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { MoreFilled } from '@element-plus/icons-vue';
 import CInvClassNameModal from './components/CInvClassNameModal.vue';
 import CVendorNameModal from './components/CVendorNameModal.vue';
@@ -14,7 +14,10 @@ import UnitModal from './components/UnitModal.vue';
 import WarehouseModal from './components/WarehouseModal.vue';
 import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
 import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
+import useStore from '@/store';
 
+const { tagsView } = useStore();
+const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
 const formData = ref({
@@ -83,6 +86,7 @@ async function handleSubmit() {
   try {
     const res = await addMaterial(data);
     if (res.success) {
+      closeSelectedTag(route);
       router.push('/basematerial/WMSMaterial');
     }
   } catch {
@@ -178,6 +182,10 @@ function handleWarehouseLocationModalConfirm(data) {
   console.log(data);
   formData.value.cWareHouseLocationCode = data?.cWareHouseLocationCode;
   formData.value.cWareHouseLocationName = data?.cWareHouseLocationName;
+}
+
+function closeSelectedTag(view) {
+  tagsView.delVisitedView(view);
 }
 
 onActivated(() => {
