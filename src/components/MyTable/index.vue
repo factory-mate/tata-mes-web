@@ -321,7 +321,11 @@ const props = defineProps({
 });
 
 const tableRowClassName: any = ({ row, rowIndex }) => {
-  if (selectData.value.map(i => i.UID).includes(row.UID)) {
+  let uniqueField = 'UID';
+  if (Route.name === 'MinMaterielStorage') {
+    uniqueField = 'cKeyCode';
+  }
+  if (selectData.value.map(i => i[uniqueField]).includes(row[uniqueField])) {
     return 'hover-row';
   }
   if (Route.name == 'TaskListQuery') {
