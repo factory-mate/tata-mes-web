@@ -619,7 +619,7 @@ const clickViewXM = (scope: any, obj: any) => {
     name: 'InventoryResult',
     params: {
       t: Date.now(),
-      rowId: scope.row.MID
+      rowId: scope.row.UID
     },
     state: {
       modelCode: obj.cIncludeModelCode,

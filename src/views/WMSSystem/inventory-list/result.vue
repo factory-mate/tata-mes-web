@@ -117,7 +117,7 @@ import {
 } from 'element-plus';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
-import { configApi, DataApi, delApi } from '@/api/configApi/index';
+import { configApi, DataApi, delApi, ParamsApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
@@ -151,9 +151,10 @@ onActivated(() => {
     initType.value = false;
     getData(Route.meta.ModelCode);
   }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (initType.value) {
+  //   getData(Route.meta.ModelCode);
+  // }
+  getData(Route.meta.ModelCode);
   initType.value = false;
 });
 // 新增/编辑后的刷新
@@ -230,16 +231,17 @@ const tableAxios = async () => {
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
-    data: {
+    params: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: Conditions.value,
+      MID: Route.params.rowId
     }
   };
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
-    const res = await DataApi(data);
+    const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data.data.map(
         (item: { IsValid: string | boolean }) => {
