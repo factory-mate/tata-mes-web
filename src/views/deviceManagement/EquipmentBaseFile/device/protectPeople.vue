@@ -88,7 +88,7 @@
       :close-on-click-modal="false"
     >
       <!-- 搜索区域 -->
-      <div v-if="TFilter.length">
+      <div>
         <FilterForm
           :Filter="TFilter"
           @ClickSearch="TClickSearch"
