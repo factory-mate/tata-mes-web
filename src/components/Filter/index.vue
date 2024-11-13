@@ -130,7 +130,12 @@
               v-if="item.cControlTypeCode == 'Tree'"
               v-model="item.cAttributeCodeValue"
               :options="options"
-              :props="Route.name === 'WMSMaterial' ? wmsMaterialProp : prop"
+              :props="
+                Route.name === 'WMSMaterial' ||
+                Route.name === 'AddPurchaseRequest'
+                  ? wmsMaterialProp
+                  : prop
+              "
               @change="(value:any) => handleChange(item, value)"
               @visible-change="getTreeDAata"
               clearable
