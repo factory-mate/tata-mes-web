@@ -338,6 +338,7 @@ const funTable = (arr: Array<any>) => {
           cControlTypeCode: item.cControlTypeCode,
           cAttributeCode: item.Resource.cAttributeCode,
           headerSlot: false,
+          cIncludeModelCode: item.cIncludeModelCode,
           slot: ''
         };
         tableColumns.value.push(itemData);
