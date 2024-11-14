@@ -16,6 +16,7 @@
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
         @ImportIn="ImportIn"
+        @ImportInOnKF="ImportInOnKF"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -427,6 +428,51 @@ const ExportOne = async (obj: any) => {
 };
 
 const ImportIn = async (obj: any) => {
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+
+  const formData = new FormData();
+  formData.append('cfile', obj.files[0].raw);
+
+  let url = obj.Resource.cServerIP + obj.Resource.cUrl;
+
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url,
+    data: formData
+  };
+
+  DataApi(data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+    .then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: res.msg || '操作成功'
+        });
+        close();
+        tableAxios();
+      } else {
+        ElMessage({
+          message: res.msg || '操作失败',
+          type: 'error'
+        });
+      }
+    })
+    .catch(err => {
+      ElMessage({
+        message: '操作失败',
+        type: 'error'
+      });
+    })
+    .finally(() => {
+      loading.close();
+    });
+};
+
+const ImportInOnKF = async (obj: any) => {
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
 
   const formData = new FormData();

@@ -4,7 +4,10 @@
     <div class="butItem" v-for="item in ToolButVal" :key="item.cAttributeCode">
       <!-- 导出 -->
       <el-upload
-        v-if="item.cAttributeCode === 'ImportIn'"
+        v-if="
+          item.cAttributeCode === 'ImportIn' ||
+          item.cAttributeCode === 'ImportInOnKF'
+        "
         ref="importUploadRef"
         v-model:file-list="importFileList"
         :limit="1"
@@ -276,6 +279,7 @@ const emits = defineEmits([
   'AddOrder',
   'ImportPick',
   'ImportIn',
+  'ImportInOnKF',
   'ExportDetail',
   'HangUp',
   'Copy',
@@ -1099,7 +1103,7 @@ function handleImport(uploadFiles, obj) {
     });
     return;
   }
-  emits('ImportIn', { ...obj, files: [...uploadFiles] });
+  emits(obj.cAttributeCode, { ...obj, files: [...uploadFiles] });
   importFileList.value = [];
 }
 </script>
