@@ -236,13 +236,13 @@ const resetSearchParams = () => {
 
 // 搜索
 const handleSearch = val => {
-  // dPlanDateStart.value = val.value.filter(
-  //   i => i.cAttributeCode === 'dPlanDateStart'
-  // )[0].cAttributeCodeValue;
-  // if (!dPlanDateStart.value) {
-  //   ElMessage.error('请选择生产日期');
-  //   return;
-  // }
+  dPlanDateStart.value = val.value.filter(
+    i => i.cAttributeCode === 'dPlanDateStart'
+  )[0].cAttributeCodeValue;
+  if (!dPlanDateStart.value) {
+    ElMessage.error('请选择生产日期');
+    return;
+  }
   queryParams.PageIndex = 1;
   conditions.value = filterModel(val.value);
   getTableData();
@@ -281,13 +281,13 @@ const newList = val => {
 };
 
 const exportAll = async obj => {
-  // dPlanDateStart.value = filterRef.value.FilterData.filter(
-  //   i => i.cAttributeCode === 'dPlanDateStart'
-  // )[0].cAttributeCodeValue;
-  // if (!dPlanDateStart.value) {
-  //   ElMessage.error('请选择生产日期');
-  //   return;
-  // }
+  dPlanDateStart.value = filterRef.value.FilterData.filter(
+    i => i.cAttributeCode === 'dPlanDateStart'
+  )[0].cAttributeCodeValue;
+  if (!dPlanDateStart.value) {
+    ElMessage.error('请选择生产日期');
+    return;
+  }
   conditions.value = filterModel(filterRef.value.FilterData);
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   const params = {
@@ -304,7 +304,7 @@ const exportAll = async obj => {
     const { data, headers } = await ExportApi(params);
     const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
     const fileName =
-      decodeURI(headers['content-disposition'] || 'L线裁切领料') + '.xlsx';
+      decodeURI(headers['content-disposition'] || '窗垭包覆统计') + '.xlsx';
     if ('download' in document.createElement('a')) {
       const elink = document.createElement('a');
       elink.download = fileName;
@@ -324,13 +324,13 @@ const exportAll = async obj => {
 };
 
 const exportOne = async obj => {
-  // dPlanDateStart.value = filterRef.value.FilterData.filter(
-  //   i => i.cAttributeCode === 'dPlanDateStart'
-  // )[0].cAttributeCodeValue;
-  // if (!dPlanDateStart.value) {
-  //   ElMessage.error('请选择生产日期');
-  //   return;
-  // }
+  dPlanDateStart.value = filterRef.value.FilterData.filter(
+    i => i.cAttributeCode === 'dPlanDateStart'
+  )[0].cAttributeCodeValue;
+  if (!dPlanDateStart.value) {
+    ElMessage.error('请选择生产日期');
+    return;
+  }
   conditions.value = filterModel(filterRef.value.FilterData);
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   const params = {
@@ -351,7 +351,7 @@ const exportOne = async obj => {
     const { data, headers } = await ExportApi(params);
     const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
     const fileName =
-      decodeURI(headers['content-disposition'] || 'L线裁切领料') + '.xlsx';
+      decodeURI(headers['content-disposition'] || '窗垭包覆统计') + '.xlsx';
     if ('download' in document.createElement('a')) {
       const elink = document.createElement('a');
       elink.download = fileName;
