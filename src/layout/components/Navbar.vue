@@ -51,6 +51,9 @@
             <el-dropdown-item divided @click="clickPwa">
               修改密码
             </el-dropdown-item>
+            <el-dropdown-item divided @click="downloadAPK">
+              下载APK
+            </el-dropdown-item>
             <!-- <a target="_blank" href="https://github.com/hxrui">
               <el-dropdown-item>Github</el-dropdown-item>
             </a>
@@ -118,6 +121,11 @@ onMounted(() => {
 const clickPwa = () => {
   $bus.emit('clickPwa', true);
 };
+
+const downloadAPK = () => {
+  window.open(import.meta.env.VITE_APK_URL);
+};
+
 function logout() {
   ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
     confirmButtonText: '确定',
@@ -185,6 +193,8 @@ ul {
 
   .right-menu {
     // float: right;
+    display: flex;
+    align-items: center;
     height: 100%;
     line-height: 50px;
 
