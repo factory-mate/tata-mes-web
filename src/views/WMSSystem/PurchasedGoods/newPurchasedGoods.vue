@@ -544,6 +544,10 @@ const Tconfirm = () => {
       type: 'error',
       message: '请选择同一供应商的物料'
     });
+    // NOTE: #2853 清除不同供应商物料的数据勾选
+    itemData.value = itemData.value.filter(
+      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+    );
     return;
   }
 
