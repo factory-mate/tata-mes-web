@@ -43,6 +43,7 @@
           :tableColumns="tableColumns"
           :tableBorder="true"
           :selection="true"
+          @tableHearData="tableHearData"
         >
           <template #button>
             <el-table-column
@@ -236,7 +237,7 @@ import { sessionStorage } from '@/utils/storage';
 import ImgPreview from '@/components/ImgPrive/index.vue'; //图片预览
 import type { UploadInstance, UploadUserFile } from 'element-plus';
 import { useRoute } from 'vue-router';
-import { compare, filterModel, tableSortInit } from '@/utils';
+import { compare, filterModel, tableSortInit, tableSortModel } from '@/utils';
 import router from '@/router';
 import { fa } from 'element-plus/es/locale';
 import useStore from '@/store';
@@ -381,6 +382,11 @@ const clickTabs = (val: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.clearValidate();
+};
+const tableHearData = (val: any) => {
+  OrderByFileds.value = tableSortModel(val.value);
+  tableColumns.value = val.value;
+  tableAxios();
 };
 // 权限按钮
 const RoleBut = (v: any) => {
