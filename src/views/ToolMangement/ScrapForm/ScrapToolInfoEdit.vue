@@ -415,28 +415,16 @@ const clickTablBut = (scope: any, obj: any) => {
   }
 };
 const DeleteBody = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
-  };
   ElMessageBox.confirm('确定删除数据?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(() => {
-      delApi(data).then(res => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功'
-          });
-          tableAxios();
-        } else {
-          ElMessage.error('删除失败');
-        }
+      tableData.value.splice(scope.$index, 1);
+      ElMessage({
+        type: 'success',
+        message: '删除成功'
       });
     })
     .catch(() => {
@@ -444,8 +432,38 @@ const DeleteBody = (scope: any, obj: any) => {
         type: 'info',
         message: '取消删除'
       });
-      ElLoading.service().close();
     });
+  // const senid = scope.row.UID;
+  // let data = {
+  //   method: obj.Resource.cHttpTypeCode,
+  //   url: obj.Resource.cServerIP + obj.Resource.cUrl,
+  //   data: [senid]
+  // };
+  // ElMessageBox.confirm('确定删除数据?', '提示', {
+  //   confirmButtonText: '确定',
+  //   cancelButtonText: '取消',
+  //   type: 'warning'
+  // })
+  //   .then(() => {
+  //     delApi(data).then(res => {
+  //       if (res.status === 200) {
+  //         ElMessage({
+  //           type: 'success',
+  //           message: '删除成功'
+  //         });
+  //         tableAxios();
+  //       } else {
+  //         ElMessage.error('删除失败');
+  //       }
+  //     });
+  //   })
+  //   .catch(() => {
+  //     ElMessage({
+  //       type: 'info',
+  //       message: '取消删除'
+  //     });
+  //     ElLoading.service().close();
+  //   });
 };
 
 const clickHandAdd = (data: any) => {
