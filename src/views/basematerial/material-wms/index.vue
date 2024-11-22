@@ -15,6 +15,7 @@
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
         @clickStart="Start"
+        @Stop="Stop"
         @clickDelete="clickDel"
       ></ButtonViem>
       <!-- 表格区域 -->
@@ -515,6 +516,38 @@ const Start = (obj: any) => {
       TabRef.value.handleRemoveSelectionChange();
     } else {
       console.log('启用出错了');
+    }
+  });
+};
+
+//停用按钮
+const Stop = (obj: any) => {
+  sendId.value = [];
+  CheckDataList.value.forEach((item: { UID: any }) =>
+    sendId.value.push(item.UID)
+  );
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要停用的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      tableAxios();
+      ElMessage({
+        type: 'success',
+        message: '停用成功'
+      });
+      TabRef.value.handleRemoveSelectionChange();
+    } else {
+      console.log('停用出错了');
     }
   });
 };
