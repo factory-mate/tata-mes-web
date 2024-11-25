@@ -7,9 +7,10 @@
     <!-- vue3 的正确写法 -->
     <router-view v-slot="{ Component }">
       <!-- <transition name="fade" mode="out-in" appear> -->
-      <keep-alive>
+      <keep-alive v-if="route.name !== 'newProductionOrder'">
         <component :is="Component"></component>
       </keep-alive>
+      <component :is="Component" v-else></component>
       <!-- </transition> -->
     </router-view>
   </el-config-provider>
@@ -25,11 +26,12 @@ import useStore from '@/store';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import en from 'element-plus/es/locale/lang/en';
 import { ENV } from '@/utils/env';
+import { useRoute } from 'vue-router';
 const { app } = useStore();
 
 const language = computed(() => app.language);
 const size: any = computed(() => app.size);
-
+const route = useRoute();
 const locale = ref();
 
 watch(

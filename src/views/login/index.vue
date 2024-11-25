@@ -6,6 +6,7 @@
         <!-- <img src="../../assets/bg_logo.png" alt=""> -->
         <!-- <p></p> -->
       </div>
+      <el-button @click="downloadAPK">下载 APK</el-button>
       <div
         v-if="ENV.isYL()"
         style="display: flex; align-items: center; gap: 10px"
@@ -196,6 +197,9 @@ function showPwd() {
   });
 }
 
+const downloadAPK = () => {
+  window.open(import.meta.env.VITE_APK_URL);
+};
 /**
  *  登录处理
  */
