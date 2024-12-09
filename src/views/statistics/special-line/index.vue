@@ -105,8 +105,8 @@ const getData = async () => {
     });
   }
   if (tableQueryConfig.value.Resource) {
-    const today = dayjs(new Date()).format('YYYY-MM-DD');
-    conditions.value = `dPlanDateStart>=${today}T00:00:00 && dPlanDateStart<=${today}T23:59:59`;
+    // const today = dayjs(new Date()).format('YYYY-MM-DD');
+    // conditions.value = `dPlanDateStart>=${today}T00:00:00 && dPlanDateStart<=${today}T23:59:59`;
     getTableData();
   }
 };
@@ -286,7 +286,7 @@ const exportAll = async obj => {
     const { data, headers } = await ExportApi(params);
     const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
     const fileName =
-      decodeURI(headers['content-disposition'] || '排产材质顺序') + '.xlsx';
+      decodeURI(headers['content-disposition'] || '线条特殊包装统计') + '.xlsx';
     if ('download' in document.createElement('a')) {
       const elink = document.createElement('a');
       elink.download = fileName;
@@ -322,7 +322,7 @@ const exportOne = async obj => {
     const { data, headers } = await ExportApi(params);
     const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
     const fileName =
-      decodeURI(headers['content-disposition'] || '排产材质顺序') + '.xlsx';
+      decodeURI(headers['content-disposition'] || '线条特殊包装统计') + '.xlsx';
     if ('download' in document.createElement('a')) {
       const elink = document.createElement('a');
       elink.download = fileName;
