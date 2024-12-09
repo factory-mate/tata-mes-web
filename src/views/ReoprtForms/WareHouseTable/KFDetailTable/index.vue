@@ -324,7 +324,7 @@ const funTable = (arr: Array<any>) => {
     }
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       AxiosData.value = item;
-      tableAxios();
+      // tableAxios();
     }
   });
 };
@@ -531,7 +531,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: 'PDate,cCode,PType'
+  OrderByFileds: 'PDate,cCode,PType,ProductIndex'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -543,7 +543,7 @@ const ClickSearch = (val: any) => {
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = 'PDate,cCode,PType';
+  OrderByFileds.value = 'PDate,cCode,PType,ProductIndex';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 10;
