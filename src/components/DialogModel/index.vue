@@ -1254,7 +1254,7 @@ const TtableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds:
         Route.name == 'WareMangeReportViewiew'
-          ? 'InType,OutType'
+          ? 'InType,OutType,cCode,PosTypeCode,ProductIndex'
           : OrderByFileds.value,
       Conditions:
         Route.name == 'WareMangeReportViewiew'
