@@ -1,4 +1,5 @@
 <script setup>
+import request from '@/utils/request';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { onActivated, ref } from 'vue';
 
@@ -20,14 +21,15 @@ const getCurrentMonthAndDay = () => {
 };
 
 const getData = () => {
-  const data = {
+  request({
     method: 'post',
     url: import.meta.env.VITE_APP_DY_100_API + '/api/WLTJ/GetForPage_Year',
-    params: {}
-  };
-  ParamsApi(data).then(res => {
+    data: {
+      Conditions: 'dDate = 2024-12-08'
+    }
+  }).then(res => {
     if (res.success) {
-      listData.value = res.data;
+      listData.value = res.data.data;
     }
   });
 };
@@ -38,24 +40,12 @@ onActivated(() => {
 </script>
 
 <template>
-  <div>{{ getCurrentYear() }}</div>
-  <div>{{ getCurrentMonth() }}</div>
-  <div>{{ getCurrentMonthAndDay() }}</div>
-  <el-descriptions direction="vertical" :column="4" border>
-    <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-    <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-    <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-    <el-descriptions-item label="Remarks">
-      <el-tag size="small">School</el-tag>
-    </el-descriptions-item>
-    <el-descriptions-item label="Address">
-      No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-    </el-descriptions-item>
-
-    <div v-for="(item, index) in listData" :key="index">
-      <el-descriptions-item :label="item.cType">
-        {{ item.a }}
-      </el-descriptions-item>
-    </div>
-  </el-descriptions>
+  <div style="padding: 20px">
+    <el-table :data="listData">
+      <el-table-column prop="cType" label="名称" />
+      <el-table-column prop="CurrentDay" :label="getCurrentMonthAndDay()" />
+      <el-table-column prop="CurrentMonth" :label="getCurrentMonth()" />
+      <el-table-column prop="CurrentYear" :label="getCurrentYear()" />
+    </el-table>
+  </div>
 </template>
