@@ -228,6 +228,8 @@ const tableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
+        ? 'cLineReName like 包装 && ' + Conditions.value
+        : 'cLineReName like 包装'
     }
   };
   try {
@@ -430,7 +432,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'WSScanData desc,cFactoryUnitCode'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
