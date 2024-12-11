@@ -464,8 +464,9 @@ const funHeadData = () => {
   );
   FilterData.value.forEach(item => {
     if (
-      Route.name === 'ScheduleMaterialSeq' &&
-      item.cAttributeCode === 'dPlanDateStart'
+      (Route.name === 'ScheduleMaterialSeq' &&
+        item.cAttributeCode === 'dPlanDateStart') ||
+      (Route.name === 'SpecialLine' && item.cAttributeCode === 'dPlanDateStart')
     ) {
       item.cAttributeCodeValue = [
         dayjs(new Date()).format('YYYY-MM-DD'),

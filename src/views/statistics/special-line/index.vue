@@ -105,8 +105,8 @@ const getData = async () => {
     });
   }
   if (tableQueryConfig.value.Resource) {
-    // const today = dayjs(new Date()).format('YYYY-MM-DD');
-    // conditions.value = `dPlanDateStart>=${today}T00:00:00 && dPlanDateStart<=${today}T23:59:59`;
+    const today = dayjs(new Date()).format('YYYY-MM-DD');
+    conditions.value = `dPlanDateStart>=${today}T00:00:00 && dPlanDateStart<=${today}T23:59:59`;
     getTableData();
   }
 };

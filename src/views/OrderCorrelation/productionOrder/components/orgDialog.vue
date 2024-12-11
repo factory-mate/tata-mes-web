@@ -35,6 +35,20 @@
               format="YYYY-MM-DD"
               value-format="YYYY-MM-DD"
               :default-value="new Date()"
+              :disabled-date="
+                date => {
+                  if (
+                    Route.name === 'productionOrder' &&
+                    item.Resource.cAttributeCode === 'dPlanDateStart'
+                  ) {
+                    // 今天之前的日期不可选
+                    console.log(date);
+                    return date.getTime() < Date.now() - 8.64e7;
+                  } else {
+                    return false;
+                  }
+                }
+              "
             />
             <el-date-picker
               v-if="item.cControlTypeCode == 'DatePicker2'"
@@ -127,6 +141,7 @@ import {
 } from 'element-plus';
 import { ParamsApi, DataApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
+import { useRoute } from 'vue-router';
 const ruleFormRef = ref<FormInstance>();
 const ruleForm: any = ref({});
 const RdialogFormVisible = ref(false);
@@ -140,6 +155,7 @@ const isLoading = ref(false);
 const selDataList = ref([]) as any;
 const uploadRef = ref<any>();
 const fileList = ref<any>([]);
+const Route = useRoute();
 const { tableAxios } = inject('tableAxios') as {
   tableAxios: () => void;
 };
