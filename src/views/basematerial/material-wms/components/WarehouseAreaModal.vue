@@ -9,7 +9,7 @@ const searchParams = ref({
 });
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const showDialog = ref(false);
 const listData = ref([]);

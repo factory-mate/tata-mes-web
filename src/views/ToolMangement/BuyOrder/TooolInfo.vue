@@ -182,7 +182,7 @@ const Filter = ref<any>([]);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const data = reactive({
   isCollapse: false,
@@ -581,7 +581,7 @@ const FilresetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   TtableAxios();
   TABRef.value.clearFilter();
 };

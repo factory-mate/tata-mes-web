@@ -58,7 +58,7 @@ const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //总条数
 const total = ref(0);

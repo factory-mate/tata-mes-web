@@ -148,7 +148,7 @@ const data = reactive({
   OrderByFileds: '',
   queryParams: {
     PageIndex: 1,
-    PageSize: 10
+    PageSize: 20
   }
 });
 const { tableData, queryParams, total, Conditions, OrderByFileds } =
@@ -363,18 +363,20 @@ const clickTableBut = (scopeItem: any, butItem: any) => {
   }
 };
 const butAxios = (DelData: { method: any; url: any; data: any[] }) => {
-  DataApi(DelData).then((res: any) => {
-    if (res.status == 200) {
-      ElMessage({
-        message: res.msg,
-        type: 'success'
-      });
-    } else {
-      ElMessage.error(res.msg);
-    }
-  }).finally(() => {
-    tableAxios();
-  });
+  DataApi(DelData)
+    .then((res: any) => {
+      if (res.status == 200) {
+        ElMessage({
+          message: res.msg,
+          type: 'success'
+        });
+      } else {
+        ElMessage.error(res.msg);
+      }
+    })
+    .finally(() => {
+      tableAxios();
+    });
 };
 
 // table  排序
@@ -402,7 +404,7 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.value = {
     PageIndex: 1,
-    PageSize: 10
+    PageSize: 20
   };
   tableAxios();
 };

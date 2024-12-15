@@ -26,7 +26,7 @@ const router = useRouter();
 
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const total = ref(0);
 const orderBy = ref('');
@@ -180,7 +180,7 @@ const resetSearchParams = () => {
   orderBy.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   getTableData();
   tableRef.value.clearFilter();
 };

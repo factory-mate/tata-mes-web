@@ -182,7 +182,7 @@ const data = reactive({
   OrderByFileds: '',
   queryParams: {
     PageIndex: 1,
-    PageSize: 10
+    PageSize: 20
   }
 });
 const {
@@ -435,7 +435,7 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.value = {
     PageIndex: 1,
-    PageSize: 10
+    PageSize: 20
   };
   myTableRefs.value.clearFilter();
   tableAxios();

@@ -151,7 +151,7 @@ const modelGridType = ref(true);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //启用传递的UID
 let head = ref([]) as any;

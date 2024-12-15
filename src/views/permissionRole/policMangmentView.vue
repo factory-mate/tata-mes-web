@@ -181,7 +181,7 @@ const View1val = ref('');
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const data = reactive({
   isCollapse: false,
@@ -536,7 +536,7 @@ const TresetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   TtableAxios();
   TTABRef.value.clearFilter();
 };

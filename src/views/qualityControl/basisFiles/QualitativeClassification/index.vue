@@ -209,7 +209,7 @@ const TreeAxiosData = ref({}) as any;
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //总条数
 const total = ref(0);
@@ -275,7 +275,7 @@ const clickTree = (node: any) => {
   Conditions.value = '';
   OrderByFileds.value = '';
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   TreeType.value = false;
   // code有数据才显示
   if (treeNodeValue.value.cModelCode) {
@@ -321,7 +321,7 @@ const treeClickSearch = async (v: any) => {
     Conditions.value = '';
     OrderByFileds.value = '';
     queryParams.PageIndex = 1;
-    queryParams.PageSize = 10;
+    queryParams.PageSize = 20;
     treeAxios();
     BothDelay();
   }
@@ -334,7 +334,7 @@ const treeresetForm = async (v: any) => {
   Conditions.value = '';
   OrderByFileds.value = '';
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   ClickSearchVal.value = [];
   treeNodeValue.value = '';
   treeAxios();
@@ -866,7 +866,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   ClickSearchVal.value = [];
   treeNodeValue.value = '';
   treeRef.value.clearTree();

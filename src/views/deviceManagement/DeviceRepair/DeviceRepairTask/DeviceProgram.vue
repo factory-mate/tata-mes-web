@@ -214,7 +214,7 @@ const tableIndex = ref(null);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //弹窗数据
 const TTABRef = ref();
@@ -533,7 +533,7 @@ const TresetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
 };

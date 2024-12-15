@@ -138,7 +138,7 @@ const modelGridType = ref(true);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 100
+  PageSize: 200
 });
 const data = reactive({
   isCollapse: false,
@@ -827,7 +827,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 100;
+  queryParams.PageSize = 200;
   tableAxios();
 };
 // table 按钮 集合

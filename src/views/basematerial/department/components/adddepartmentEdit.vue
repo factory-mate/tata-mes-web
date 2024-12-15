@@ -101,7 +101,7 @@ const AxiosData = ref({}) as any;
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //启用传递的UID
 const sendId = ref([]) as any;

@@ -838,7 +838,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   TabRefss.value!.clearFilter();
   tableAxios();
 };

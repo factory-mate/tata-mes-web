@@ -239,19 +239,19 @@ const roletotal = ref(0);
 //分页查询参数
 const queryParams = ref({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const userqueryParams = ref({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const rolequeryParams = ref({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const clqueryParams = ref({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 // 表格配置数据
 const tableButton = ref([]) as any;

@@ -517,7 +517,7 @@ const resetForm = (val: any) => {
     'cFactoryUnitCode,S_S_S_iIndex,PRODUCT_VOUCH_S_S_S_iIndex';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
 };

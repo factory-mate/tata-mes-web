@@ -256,7 +256,7 @@ const roletotal = ref(0);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 // 表格配置数据
 const tableButton = ref([]) as any;
@@ -339,7 +339,8 @@ const funTable = (arr: Array<any>) => {
   arr.forEach(item => {
     if (
       (item.cFormPropertyCode == 'ManageCenter.User.M.Add.Policy.Grid' &&
-        item.Resource.cAttributeTypeCode == 'property' && item.IsShow) ||
+        item.Resource.cAttributeTypeCode == 'property' &&
+        item.IsShow) ||
       (item.cFormPropertyCode == 'ManageCenter.User.M.Edit.Policy.Grid' &&
         item.Resource.cAttributeTypeCode == 'property' &&
         item.IsShow)
@@ -358,7 +359,8 @@ const funTable = (arr: Array<any>) => {
     }
     if (
       (item.cFormPropertyCode === 'ManageCenter.User.M.Add.Role.Grid' &&
-        item.Resource.cAttributeTypeCode == 'property' && item.IsShow) ||
+        item.Resource.cAttributeTypeCode == 'property' &&
+        item.IsShow) ||
       (item.cFormPropertyCode === 'ManageCenter.User.M.Edit.Role.Grid' &&
         item.Resource.cAttributeTypeCode == 'property' &&
         item.IsShow)

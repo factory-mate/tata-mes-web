@@ -179,7 +179,7 @@ const data = reactive({
   Conditions: '',
   OrderByFileds: '',
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const {
   tableData,

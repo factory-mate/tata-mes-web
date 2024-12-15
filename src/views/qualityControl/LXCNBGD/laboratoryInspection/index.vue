@@ -201,7 +201,7 @@ const getData: any = async (val: string) => {
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //总条数
 const total = ref(0);
@@ -225,11 +225,11 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
-  const conditions = 'cVouchTypeCode=7'
-  if(Conditions.value){
-    Conditions.value = conditions + ' && ' + Conditions.value
-  }else{
-    Conditions.value = conditions
+  const conditions = 'cVouchTypeCode=7';
+  if (Conditions.value) {
+    Conditions.value = conditions + ' && ' + Conditions.value;
+  } else {
+    Conditions.value = conditions;
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -517,7 +517,7 @@ const resetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
 };

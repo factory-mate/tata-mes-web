@@ -24,7 +24,7 @@ const router = useRouter();
 
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const total = ref(0);
 

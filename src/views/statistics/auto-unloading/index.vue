@@ -223,7 +223,7 @@ const resetSearchParams = () => {
   orderBy.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   getTableData();
   tableRef.value.clearFilter();
 };
