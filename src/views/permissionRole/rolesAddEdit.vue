@@ -164,11 +164,11 @@ const itemData = ref([]) as any;
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const TqueryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //启用传递的UID
 const sendId = ref([]) as any;
@@ -639,7 +639,7 @@ const TresetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   TtableAxios();
   TTABRef.value.clearFilter();
 };

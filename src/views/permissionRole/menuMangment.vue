@@ -132,7 +132,7 @@ const { Conditions, OrderByFileds } = toRefs(data);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 //树结构配置数据
 const isCheck = ref(false);
@@ -474,7 +474,7 @@ const resetForm = (val: any) => {
   Conditions.value = '';
   OrderByFileds.value = '';
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
+  queryParams.PageSize = 20;
   tableAxios();
   Tref.value.clearFilter();
 };
