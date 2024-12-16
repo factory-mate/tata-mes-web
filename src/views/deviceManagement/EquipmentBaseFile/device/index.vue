@@ -55,9 +55,7 @@
           @clickAdd="clickAdd"
           @clickStart="Start"
           @clickDelete="clickDel"
-          @ExportFault="Export"
-          @ExportStandard="Export"
-          @ExportPerson="Export"
+          @export-all="Export"
         ></ButtonViem>
         <!-- 表格区域 -->
         <myTable
@@ -162,6 +160,7 @@ import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
 import Odialog from '@/components/DialogModel/index.vue';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import {
   ElButton,
   ElCard,
@@ -709,6 +708,7 @@ const renew = () => {
 };
 
 const Export = async (obj: any) => {
+  console.log(obj);
   let conditions = filterModel(filterRef.value.FilterData);
   let url = obj.Resource.cServerIP + obj.Resource.cUrl;
   let data = {
@@ -736,6 +736,7 @@ const Export = async (obj: any) => {
     default:
       break;
   }
+  exportAnalysisHooks(data, excelTitle);
 };
 </script>
 
