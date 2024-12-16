@@ -450,8 +450,8 @@ const tableAxios = async () => {
 };
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
   let searchData = JSON.parse(JSON.stringify(val.value));
-
   Conditions.value = filterModel(searchData);
   tableAxios();
 };

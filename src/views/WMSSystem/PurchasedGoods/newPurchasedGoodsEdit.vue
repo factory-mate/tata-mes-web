@@ -485,6 +485,7 @@ const tableAxios = async () => {
 };
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
   Conditions.value = filterModel(val.value);
   TtableAxios();
 };

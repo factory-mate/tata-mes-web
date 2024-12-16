@@ -499,6 +499,7 @@ const data = reactive({
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
   Conditions.value = filterModel(val.value);
   tableAxios();
 };

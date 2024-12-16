@@ -408,6 +408,7 @@ const { Conditions, OrderByFileds } = toRefs(data);
 
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
   Conditions.value = 'nQuantity>0' + filterModel(val.value);
   tableAxios();
 };

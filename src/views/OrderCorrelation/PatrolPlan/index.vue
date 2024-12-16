@@ -624,8 +624,8 @@ const data = reactive({
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
   let searchData = JSON.parse(JSON.stringify(val.value));
-
   Conditions.value = filterModel(searchData);
   tableAxios();
 };

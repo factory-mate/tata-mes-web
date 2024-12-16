@@ -94,7 +94,6 @@
         v-model:limit="queryParams.PageSize"
         @pagination="handleSizeChange"
         :page-sizes="[20, 50, 100]"
-
       />
     </el-card>
   </div>

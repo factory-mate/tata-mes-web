@@ -932,6 +932,7 @@ const AddrolefunTable = (arr: Array<any>) => {
 };
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.value.PageIndex = 1;
   Conditions.value = filterModel(val.value);
   TCRtableAxios();
 };

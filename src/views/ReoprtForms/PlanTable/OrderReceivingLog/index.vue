@@ -407,6 +407,7 @@ const data = reactive({
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = val => {
+  queryParams.PageIndex = 1;
   let searchData = JSON.parse(JSON.stringify(val.value));
   Conditions.value = filterModel(searchData);
   tableAxios();

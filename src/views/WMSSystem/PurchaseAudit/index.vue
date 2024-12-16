@@ -572,6 +572,7 @@ const ExportOne = async (obj: any) => {
 };
 // 搜索
 const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
   Conditions.value = filterModel(val.value);
   tableAxios();
 };
