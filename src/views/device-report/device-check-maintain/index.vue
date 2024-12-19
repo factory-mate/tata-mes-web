@@ -223,7 +223,7 @@ const tableAxios = async () => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value + ' cFactoryUnitName asc',
+      OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
   };
