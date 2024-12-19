@@ -803,6 +803,32 @@ const getData = (newValue: any) => {
         ruleFormData.value[keyVal] = res.data;
         ruleFormData.value[extraKey] = res.data;
         ruleForm.value = { ...ruleForm.value, ...ruleFormData.value };
+        console.log('ruleForm.value', ruleForm.value);
+        if (Route.name === 'ProDeviceProjectView') {
+          const data = {
+            method: 'get',
+            url:
+              import.meta.env.VITE_APP_DY_700_API +
+              '/api/device_vouch_file/GetForList',
+            params: {
+              Conditions: 'mid=' + Route.params.rowId
+            }
+          };
+          ParamsApi(data).then(res => {
+            if (res.status == 200) {
+              if (res.data[0]) {
+                ruleForm.value.VouchFileName =
+                  res.data[0].cFileReName +
+                  '&' +
+                  res.data[0].cFilePath +
+                  res.data[0].cFileReName +
+                  res.data[0].cFileSuffix;
+              }
+            } else {
+              console.log('请求出错');
+            }
+          });
+        }
       });
     });
 };
