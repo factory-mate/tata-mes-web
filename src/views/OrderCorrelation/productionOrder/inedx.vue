@@ -285,9 +285,9 @@ const tableAxios = async () => {
   let valDat: any = '';
   if (Route.name == 'productionOrder') {
     valDat = Conditions.value
-      ? 'cVouchTypeCode in (0,1,2,3,4,5) && iStatus >= 30 && iDefindParm13 = 0 && ' +
+      ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && iStatus >= 30 && iDefindParm13 = 0 && ' +
         Conditions.value
-      : 'cVouchTypeCode in (0,1,2,3,4,5) && iStatus >= 30 && iDefindParm13 = 0';
+      : 'cVouchTypeCode in (0,1,2,3,4,5,10) && iStatus >= 30 && iDefindParm13 = 0';
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
