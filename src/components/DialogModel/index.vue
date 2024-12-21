@@ -850,6 +850,20 @@ const GetSelectData = (item: any, value: any) => {
       }
     }
   }
+  if (Route.name === 'PackagingRuleAssignment') {
+    if (item.cAttributeName === '订单类型名称') {
+      let list = [];
+      list = item.selDataList.filter((i: any) => {
+        if (i.cDictonaryCode == value) {
+          return i;
+        }
+      });
+      if (list.length) {
+        ruleForm.value.cVouchType = list[0].cDictonaryCode;
+        ruleForm.value.cVouchTypeName = list[0].cDictonaryName;
+      }
+    }
+  }
 
   // 处理联动
   if (Route.name === 'InspectionPlanComparison') {
