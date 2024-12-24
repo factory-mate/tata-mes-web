@@ -230,6 +230,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Stop':
       clickStop(scope, event);
       break;
+    case 'ModifyDevProPerson':
+      clickModifyDevProPerson(scope, event);
+      break;
     default:
       break;
   }
@@ -463,6 +466,23 @@ const clickAdd = (obj: { cIncludeModelCode: any }) => {
     }
   });
 };
+
+const clickModifyDevProPerson = (scope: any, obj: any) => {
+  router.push({
+    name: 'ProjectMaintain',
+    params: {
+      t: Date.now(),
+      rowId: scope.row.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(scope.row),
+      pathName: 'PersonTeam',
+      title: '项目维护'
+    }
+  });
+};
+
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
   CheckDataList.value = arr;
