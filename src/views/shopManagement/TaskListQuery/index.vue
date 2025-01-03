@@ -501,7 +501,8 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: 'cFactoryUnitCode,S_S_S_iIndex,PRODUCT_VOUCH_S_S_S_iIndex'
+  OrderByFileds:
+    'dPlanDateStart,cFactoryUnitCode,S_S_S_iIndex,PRODUCT_VOUCH_S_S_S_iIndex'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -515,7 +516,7 @@ const ClickSearch = (val: any) => {
 const resetForm = (val: any) => {
   Conditions.value = '';
   OrderByFileds.value =
-    'cFactoryUnitCode,S_S_S_iIndex,PRODUCT_VOUCH_S_S_S_iIndex';
+    'dPlanDateStart,cFactoryUnitCode,S_S_S_iIndex,PRODUCT_VOUCH_S_S_S_iIndex';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
