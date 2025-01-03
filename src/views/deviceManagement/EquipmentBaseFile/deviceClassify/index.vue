@@ -32,7 +32,6 @@
         show-checkbox
         ref="treeRef"
         node-key="UID"
-        check-strictly
         :highlight-current="true"
         :props="defaultProps"
         :default-expanded-keys="checkedData"
@@ -378,16 +377,16 @@ const ParentCode = ref('');
 const treeChange = (datas: any, checked: any, indeterminate: any) => {
   //树结构单选处理
   // if (checked && checkedD.value !== datas.UID) {
-  checkedD.value = datas.UID;
-  treeRef.value.setCheckedNodes([datas]);
+  // checkedD.value = datas.UID;
+  // treeRef.value.setCheckedNodes([datas]);
   //拿取code,调接口，表格数据
   let data = treeRef.value.getCheckedNodes();
-  console.log(data, 'tree-data');
 
-  ParentCode.value = data[0].cDeviceClassCode;
-  if (ParentCode.value) {
-    tableAxios();
-  }
+  // ParentCode.value = data[0].cDeviceClassCode;
+  ParentCode.value = data.map((i: any) => i.cDeviceClassCode).join(',');
+  // if (ParentCode.value) {
+  tableAxios();
+  //}
   // } else {
   //     //取消选中
   //     checkedD.value = null
@@ -448,7 +447,8 @@ const tableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: ParentCode.value
-        ? `cParentCode=${ParentCode.value}`
+        ? // ? `cParentCode=${ParentCode.value}`
+          `cDeviceClassCode in (${ParentCode.value})`
         : Conditions.value
         ? Conditions.value
         : ''
@@ -681,6 +681,8 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
+  treeRef.value.setCheckedNodes([]);
+  ParentCode.value = '';
   tableAxios();
   TabRef.value.clearFilter();
 };

@@ -362,9 +362,6 @@ let checkedD = ref(null as any);
 // 树变化
 const ParentCode = ref('');
 const treeChange = (datas: any, checked: any, indeterminate: any) => {
-  console.log(datas, '--dd');
-  console.log(checked, '-checked');
-
   //树结构单选处理
   // if (checked && checkedD.value !== datas.UID) {
   console.log(11);
@@ -674,6 +671,8 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
+  treeRef.value.setCheckedNodes([]);
+  ParentCode.value = '';
   tableAxios();
   TabRef.value.clearFilter();
 };

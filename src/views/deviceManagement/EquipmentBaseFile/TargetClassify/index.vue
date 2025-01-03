@@ -665,6 +665,8 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
+  treeRef.value.setCheckedNodes([]);
+  ParentCode.value = '';
   tableAxios();
   TabRef.value.clearFilter();
 };
