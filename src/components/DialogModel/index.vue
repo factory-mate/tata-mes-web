@@ -2094,7 +2094,8 @@ const BtnOptimizeOK = (item: any) => {
     url: item.Resource.cServerIP + item.Resource.cUrl,
     data: {
       dProductDate: ruleForm.value.dProductDate,
-      OptimizeType: ruleForm.value.OptimizeType
+      OptimizeType: ruleForm.value.OptimizeType,
+      S_S_S_cBatch: ruleForm.value.S_S_S_cBatch
     }
   };
   DataApi(data)
