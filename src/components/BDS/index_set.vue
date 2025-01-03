@@ -1,7 +1,30 @@
 <template>
   <div class="bdsSty">
     <!-- set -->
-    <div style="display: flex">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div>
+        <div>
+          <el-select-v2
+            v-model="wdvalue"
+            value-key="UID"
+            placeholder="选择维度"
+            style="width: 200px"
+            clearable
+            filterable
+            :options="WDoptions"
+          >
+          </el-select-v2>
+          <el-button type="" @click="clickWD" style="margin-left: 4px">
+            添加维度
+          </el-button>
+        </div>
+        <div style="margin-top: 10px">
+          <el-input v-model="clvalue" style="width: 200px" placeholder="" />
+          <el-button type="" @click="clickCL" style="margin-left: 4px">
+            添加常量
+          </el-button>
+        </div>
+      </div>
       <el-input
         v-model="textarea"
         style="width: 80%; height: 80px; display: inline-block"
@@ -9,25 +32,6 @@
         placeholder=""
         disabled
       />
-      <div>
-        <div>
-          <el-select-v2
-            v-model="wdvalue"
-            value-key="UID"
-            placeholder="选择维度"
-            style="width: 100px"
-            clearable
-            filterable
-            :options="WDoptions"
-          >
-          </el-select-v2>
-          <el-button type="" @click="clickWD">添加维度</el-button>
-        </div>
-        <div style="margin-top: 10px">
-          <el-input v-model="clvalue" style="width: 100px" placeholder="" />
-          <el-button type="" @click="clickCL">添加常量</el-button>
-        </div>
-      </div>
     </div>
     <div style="display: flex; margin-top: 20px">
       <el-button type="" @click="clickstr('+')">加+</el-button>
