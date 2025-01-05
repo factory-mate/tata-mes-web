@@ -1708,6 +1708,9 @@ const SaveAdd = (item: any) => {
       ruleForm.value.MID = TrowVal.value.UID;
       ruleForm.value.cInvCode = PartCode.value;
     }
+    if (Route.name === 'ProductTag') {
+      ruleForm.value.cDictonaryTypeCode = 'InventoryClass';
+    }
     if (Route.name == 'ProcReleaseCaseCompaire') {
       ruleForm.value.cConfigTypeCode = '00274';
       ruleForm.value.cResourceTypeCode = '00274';
@@ -1820,52 +1823,54 @@ const SaveAdd = (item: any) => {
       url: item.Resource.cServerIP + item.Resource.cUrl,
       data: ruleForm.value
     };
-    DataApi(data).then(res => {
-      if (res.status === 200) {
-        ElMessage({
-          type: 'success',
-          message: '新增成功'
-        });
-        tableAxios();
-        // TabRef.value.handleRemoveSelectionChange()
-        // 再次调用tree
-        if (
-          Route.name == 'scheme' ||
-          Route.name == 'TroubleClassify' ||
-          Route.name == 'equipmentError' ||
-          Route.name == 'schemeClassify' ||
-          Route.name == 'FileClassify' ||
-          Route.name == 'File' ||
-          Route.name == 'Project' ||
-          Route.name == 'TargetClassify' ||
-          Route.name == 'deviceClassify'
-        ) {
-          if (props.treeMethod) {
-            props.treeMethod();
-          }
-        }
-        if (Route.name == 'BomDoorInfo') {
-          if (objTreeValue.value.Level == 12) {
+    DataApi(data)
+      .then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '新增成功'
+          });
+          tableAxios();
+          // TabRef.value.handleRemoveSelectionChange()
+          // 再次调用tree
+          if (
+            Route.name == 'scheme' ||
+            Route.name == 'TroubleClassify' ||
+            Route.name == 'equipmentError' ||
+            Route.name == 'schemeClassify' ||
+            Route.name == 'FileClassify' ||
+            Route.name == 'File' ||
+            Route.name == 'Project' ||
+            Route.name == 'TargetClassify' ||
+            Route.name == 'deviceClassify'
+          ) {
             if (props.treeMethod) {
               props.treeMethod();
             }
           }
+          if (Route.name == 'BomDoorInfo') {
+            if (objTreeValue.value.Level == 12) {
+              if (props.treeMethod) {
+                props.treeMethod();
+              }
+            }
+          } else {
+            // if(Route.name!=='TroubleClassify'||Route.name!=='equipmentError'||Route.name!=='schemeClassify'||Route.name!=='scheme'||Route.name!=='FileClassify'||Route.name!=='File'||Route.name!=='ProjectClassify'||Route.name!=='Project'||Route.name!=='TargetClassify'||Route.name!=='Target'||Route.name!=='PersonTeam'||Route.name!=='deviceClassify'|| Route.name!=='device'){
+            //     if(props.treeMethod){
+            //         props.treeMethod()
+            //     }
+            // }
+          }
+          dialogFormVisible.value = false;
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          resetForm();
+          $bus.emit('tableUpData', { name: Route.name });
         } else {
-          // if(Route.name!=='TroubleClassify'||Route.name!=='equipmentError'||Route.name!=='schemeClassify'||Route.name!=='scheme'||Route.name!=='FileClassify'||Route.name!=='File'||Route.name!=='ProjectClassify'||Route.name!=='Project'||Route.name!=='TargetClassify'||Route.name!=='Target'||Route.name!=='PersonTeam'||Route.name!=='deviceClassify'|| Route.name!=='device'){
-          //     if(props.treeMethod){
-          //         props.treeMethod()
-          //     }
-          // }
+          ElMessage.error('新增失败');
         }
-        dialogFormVisible.value = false;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        resetForm();
-        $bus.emit('tableUpData', { name: Route.name });
-      } else {
-        ElMessage.error('新增失败');
-      }
-    });
+      })
+      .catch(() => {});
   } else {
     //上传文件保存
     let fd = new FormData();
