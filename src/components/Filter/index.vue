@@ -464,14 +464,19 @@ const funHeadData = () => {
   );
   FilterData.value.forEach(item => {
     if (
-      (Route.name === 'ScheduleMaterialSeq' &&
-        item.cAttributeCode === 'dPlanDateStart') ||
-      (Route.name === 'SpecialLine' && item.cAttributeCode === 'dPlanDateStart')
+      item.cAttributeCode === 'dPlanDateStart' &&
+      ['ScheduleMaterialSeq', 'SpecialLine', 'StaticTable'].includes(Route.name)
     ) {
       item.cAttributeCodeValue = [
         dayjs(new Date()).format('YYYY-MM-DD'),
         dayjs(new Date()).format('YYYY-MM-DD')
       ];
+    }
+    if (
+      item.cAttributeCode === 'dPlanDateStart' &&
+      ['AutoUnloading'].includes(Route.name)
+    ) {
+      item.cAttributeCodeValue = dayjs(new Date()).format('YYYY-MM-DD');
     }
   });
   getTreeData(FilterData.value);

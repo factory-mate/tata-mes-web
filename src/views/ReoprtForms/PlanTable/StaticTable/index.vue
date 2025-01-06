@@ -86,6 +86,7 @@ import {
   onActivated,
   provide
 } from 'vue';
+import dayjs from 'dayjs';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
@@ -159,6 +160,8 @@ $bus.on('tableUpData', (v: any) => {
 });
 //调取用户管理接口
 const getData: any = async (val: string) => {
+  const today = dayjs(new Date()).format('YYYY-MM-DD');
+  Conditions.value = `dPlanDateStart>=${today}T00:00:00 && dPlanDateStart<=${today}T23:59:59`;
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(val);
