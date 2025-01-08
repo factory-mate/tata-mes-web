@@ -9,7 +9,7 @@
         :definePropsData="defaultProps"
       ></myTree>
     </el-card>
-    <div style="flex: 1">
+    <div style="flex: 1; width: 100%">
       <!-- 搜索区域 -->
       <FilterForm
         :Filter="Filter"
