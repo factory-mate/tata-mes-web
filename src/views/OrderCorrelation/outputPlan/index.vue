@@ -249,8 +249,8 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value
-        ? OrderByFileds.value + 'dProductDate desc'
-        : 'dProductDate desc',
+        ? OrderByFileds.value + 'dCreateTime desc'
+        : 'dCreateTime desc',
       Conditions: Conditions.value
         ? 'cVouchTypeCode= 02 &&' + Conditions.value
         : 'cVouchTypeCode= 02'
@@ -562,8 +562,8 @@ const ExportAll = async (obj: any) => {
       PageIndex: 0,
       PageSize: 0,
       OrderByFileds: OrderByFileds.value
-        ? OrderByFileds.value + 'dProductDate desc'
-        : 'dProductDate desc',
+        ? OrderByFileds.value + 'dCreateTime desc'
+        : 'dCreateTime desc',
       Conditions: Conditions.value
     }
   };
@@ -578,8 +578,8 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value
-        ? OrderByFileds.value + 'dProductDate desc'
-        : 'dProductDate desc',
+        ? OrderByFileds.value + 'dCreateTime desc'
+        : 'dCreateTime desc',
       Conditions: Conditions.value
     }
   };
