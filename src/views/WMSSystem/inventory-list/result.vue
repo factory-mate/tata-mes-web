@@ -235,8 +235,9 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value,
-      MID: Route.params.rowId
+      Conditions: Conditions.value
+        ? `MID=${Route.params.rowId} && ${Conditions.value}`
+        : `MID=${Route.params.rowId}`
     }
   };
   try {
