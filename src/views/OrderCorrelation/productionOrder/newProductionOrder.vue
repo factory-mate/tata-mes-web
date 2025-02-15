@@ -59,11 +59,12 @@
           @ClickSearch="ClickSearchItem"
           @resetForm="resetFormItem"
         ></FilterForm> -->
-        <tableItem
+        <!-- <tableItem
           :tableData="tableDataVal"
           :rowId="rowId"
           :autoType="autoType"
-        ></tableItem>
+        ></tableItem> -->
+        <TreeArea :data="tableDataVal" />
       </div>
       <div v-if="!autoType">
         <!-- 主题 -->
@@ -159,6 +160,7 @@ import ButtonViem from '@/components/Button/index.vue';
 import FilterForm from '@/components/Filter/index.vue';
 import Odialogs from './components/orgDialog.vue';
 import tableItem from './components/table.vue';
+import TreeArea from './components/TreeArea.vue';
 import {
   ElButton,
   ElCard,
@@ -418,14 +420,14 @@ const clickTabs = (val: any) => {
 const getTableAxios = () => {
   let data = {
     method: 'post',
-    url: import.meta.env.VITE_APP_DY_100_API + '/api/ProductBOM/getBOM',
+    url: import.meta.env.VITE_APP_DY_100_API + '/api/ProductBOM/getBOMTree',
     // method: BomAxiosData.value.Resource.cHttpTypeCode,
     // url: BomAxiosData.value.Resource.cServerIP + BomAxiosData.value.Resource.cUrl,
     data: {
       OrderByFileds: '',
       Conditions: Conditions.value
-        ? 'product_uid=' + rowId.value + ' &&' + Conditions.value
-        : 'product_uid=' + rowId.value
+        ? 'MID=' + rowId.value + ' &&' + Conditions.value
+        : 'MID=' + rowId.value
     }
   };
   // let data =  {

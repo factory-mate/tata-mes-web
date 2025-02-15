@@ -141,7 +141,6 @@
               </div>
               <el-tooltip
                 v-else
-                class="box-item"
                 effect="light"
                 :content="funContent(scope.row[item.prop], item)"
                 placement="top"
@@ -663,6 +662,7 @@ const formatImage = (text: string) => {
 };
 const funContent = (val: any, item: any) => {
   let str = '';
+  console.log(val);
   if (item.label?.includes('文件') && val?.includes('&')) {
     str = formatImage(val);
   } else if (typeof val == 'number') {
@@ -745,4 +745,11 @@ defineExpose({ handleRemoveSelectionChange, clearFilter });
     }
   }
 }
+
+// :deep(.el-popper) {
+//   span {
+//     max-width: 400px;
+//     display: flex;
+//   }
+// }
 </style>
