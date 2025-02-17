@@ -1,6 +1,5 @@
 <template>
   <el-tree
-    style="max-width: 600px"
     :data="props.data"
     :props="{
       children: 'Childs',
