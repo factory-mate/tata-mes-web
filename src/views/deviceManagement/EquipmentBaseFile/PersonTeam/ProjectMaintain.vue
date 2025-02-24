@@ -64,10 +64,15 @@
         draggable
         :modal="false"
         :close-on-click-modal="false"
+        width="80%"
       >
         <!-- 搜索区域 -->
-        <div v-if="TFilter.length">
-          <FilterForm :Filter="TFilter"></FilterForm>
+        <div>
+          <FilterForm
+            :Filter="TFilter"
+            @ClickSearch="ClickSearch"
+            @resetForm="FilresetForm"
+          ></FilterForm>
         </div>
         <myTable
           ref="TTABRef"
@@ -79,6 +84,13 @@
           :disabledHide="false"
         >
         </myTable>
+        <pagination
+          v-if="total > 0"
+          :total="total"
+          v-model:page="queryParams.PageIndex"
+          v-model:limit="queryParams.PageSize"
+          @pagination="TchangPage"
+        />
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="TdialogFormVisible = false">取消</el-button>
@@ -95,12 +107,6 @@
             </el-button>
           </span>
         </template>
-        <pagination
-          v-if="total > 0"
-          :total="total"
-          v-model:page="queryParams.PageIndex"
-          v-model:limit="queryParams.PageSize"
-        />
       </el-dialog>
     </div>
     <!-- 弹窗 -->
@@ -133,9 +139,10 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
+import FilterForm from '@/components/Filter/index.vue';
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
-import { compare, filterModel } from '@/utils';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import useStore from '@/store';
 import { useRouter } from 'vue-router';
 const Route = useRoute();
@@ -251,6 +258,7 @@ const RoleBut = (v: any) => {
     });
   }
 };
+
 const getAddUser = async (code: any) => {
   try {
     if (!code) {
@@ -328,18 +336,18 @@ const tableAxios = async () => {
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
-    data: {
+    params: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      // "Conditions": `cProgramCode=${FalutCode.value}`,
-      Conditions: ''
+      Conditions: `cPersonGroupCode=${row.value.cPersonGroupCode}`
     }
   };
   try {
     const res = await DataApi(data);
     if (res.status == 200) {
-      tableData.value = res.data.data;
+      // tableData.value = res.data.data;
+      tableData.value = res.data;
       total.value = res.data.dataCount;
     } else {
       console.log('请求出错');
@@ -510,7 +518,11 @@ const Save = async (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
       // cProgramCode: FalutCode.value,
-      ms: itemData.value
+      ms: itemData.value.map(i => ({
+        ...i,
+        cPersonGroupCode: row.value?.cPersonGroupCode,
+        cPersonGroupName: row.value?.cPersonGroupName
+      }))
     }
   };
   try {
@@ -605,6 +617,23 @@ const newList = (val: any) => {
     tableColumns.value = val.list;
     tabType.value = true;
   });
+};
+
+// 搜索
+const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+// 重置
+const FilresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TabRef.value.clearFilter();
 };
 </script>
 
