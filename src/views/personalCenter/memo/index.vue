@@ -51,7 +51,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i < 2"
+                  v-if="i < 3"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
