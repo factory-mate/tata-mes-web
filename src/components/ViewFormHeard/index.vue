@@ -883,6 +883,14 @@ const GetTreeRoad = (item: any, value: any) => {
     window.sessionStorage.setItem('policyCode', value);
     emits('GetTreeRoad', value);
   }
+  if (Route.name === 'AddproductionCellEdit') {
+    let valData: any = [];
+    valData = ruleForm.value[item.cAttributeCode + '_Data'].filter(
+      (v: any) => v.cDictonaryCode == value
+    );
+    ruleForm.value.cNodeTypeCode = valData[0].cDictonaryCode;
+    ruleForm.value.cNodeTypeName = valData[0].cDictonaryName;
+  }
   // WMS 调拨单
   if (
     Route.name === 'TransferRecordAdd' ||
