@@ -123,8 +123,21 @@
                                     @loadMore="handloadMore"
                                     ></ElSelectLoading> -->
               </el-select>
+              <el-input-number
+                :disabled="props.disabled"
+                v-if="
+                  item.cControlTypeCode == 'TextBox' &&
+                  item.cDataTypeCode == 'Int'
+                "
+                v-model="scope.row[item.prop]"
+                onmousewheel="return false;"
+                :placeholder="disabled ? '' : '请输入'"
+                :style="
+                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                "
+              />
               <el-input
-                v-if="item.cControlTypeCode == 'TextBox'"
+                v-else-if="item.cControlTypeCode == 'TextBox'"
                 v-model="scope.row[item.prop]"
                 placeholder="请输入"
                 @change="changeTextBox(scope.$index, scope.row)"
@@ -133,17 +146,6 @@
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
               />
-              <el-input-number
-                :disabled="props.disabled"
-                v-if="item.cControlTypeCode == 'Int'"
-                v-model="scope.row[item.prop]"
-                onmousewheel="return false;"
-                :placeholder="disabled ? '' : '请输入'"
-                :style="
-                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
-                "
-              />
-
               <!-- <el-autocomplete
                 v-if="item.cControlTypeCode == 'TextBoxLink'"
                 v-model="scope.row[item.prop]"
