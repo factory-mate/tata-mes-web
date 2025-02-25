@@ -412,17 +412,29 @@ const SaveAdd = (obj: any) => {
     });
     return;
   }
+  // 数量 nQuantity 和含税单价 nTaxPrice 必填
   if (
-    TABRef.value.tableDataVal.some(
-      i => i.cVendorCode !== headRef.value.ruleForm.cVendorCode
-    )
+    TABRef.value.tableDataVal.some((item: any) => {
+      return item.nQuantity == '' || item.nTaxPrice == '';
+    })
   ) {
     ElMessage({
       type: 'error',
-      message: '供应商不一致'
+      message: '数量和含税单价必填'
     });
     return;
   }
+  // if (
+  //   TABRef.value.tableDataVal.some(
+  //     i => i.cVendorCode !== headRef.value.ruleForm.cVendorCode
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '供应商不一致'
+  //   });
+  //   return;
+  // }
   obj.pathName = 'GrindOrder';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
