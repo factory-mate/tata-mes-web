@@ -576,6 +576,18 @@ const handleSelectionChange = (v: any) => {
 
 //修改保存
 const SaveEdit = (obj: any) => {
+  // 数量 nQuantity 和单价 nTaxPrice 必填
+  if (
+    TABRef.value.tableDataVal.some(
+      (item: any) => !item.nQuantity || !item.nTaxPrice
+    )
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '数量和含税单价必填'
+    });
+    return;
+  }
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'BuyOrder';
   obj.tableData = TABRef.value.tableDataVal;
