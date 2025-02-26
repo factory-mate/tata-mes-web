@@ -379,6 +379,7 @@ onActivated(() => {
               label="出入库方式"
               label-width="150"
               prop="cInOutTypeCode"
+              style="font-weight: 700"
             >
               <el-select-v2
                 v-model="formData.cInOutTypeCode"
