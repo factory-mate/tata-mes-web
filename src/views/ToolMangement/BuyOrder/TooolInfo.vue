@@ -590,15 +590,19 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  // 数量 nQuantity 和单价 nTaxPrice 必填
+  // 数量 nQuantity 和单价 nTaxPrice 必填且大于 0
   if (
     TABRef.value.tableDataVal.some(
-      (item: any) => !item.nQuantity || !item.nTaxPrice
+      (item: any) =>
+        !item.nQuantity ||
+        !item.nTaxPrice ||
+        item.nQuantity <= 0 ||
+        item.nTaxPrice <= 0
     )
   ) {
     ElMessage({
       type: 'error',
-      message: '数量和含税单价必填'
+      message: '数量和含税单价必填且大于 0'
     });
     return;
   }

@@ -302,7 +302,8 @@ const funTable = (arr: Array<any>) => {
           cHttpTypeCode: item.Resource.cHttpTypeCode,
           cServerIP: item.Resource.cServerIP,
           cUrl: item.Resource.cUrl,
-          cAttributeCode: item.Resource.cAttributeCode
+          cAttributeCode: item.Resource.cAttributeCode,
+          cDataTypeCode: item.cDataTypeCode
         };
         tableColumns.value.push(itemData);
         tableColumns.value.push({
