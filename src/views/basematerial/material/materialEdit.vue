@@ -73,12 +73,12 @@
           </template>
         </myTable>
       </div>
-      <pagination
+      <!-- <pagination
         v-if="total > 0"
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
-      />
+      /> -->
       <div class="bot-btn-cen">
         <!-- 按钮区域 -->
         <ButtonViem
@@ -93,6 +93,7 @@
           @SaveEditWMS="SaveEditWMS"
           @SaveEditExtend="SaveAddExtend"
           @InfoEdit="InfoEdit"
+          @Copy="Copy"
         ></ButtonViem>
       </div>
       <!-- 弹窗 -->
@@ -105,6 +106,44 @@
         @modelClose="modelClose"
         @clickHandAdd="clickHandAdd"
       ></pop-model>
+
+      <el-dialog
+        v-model="TdialogFormVisible"
+        title="复制"
+        :draggable="false"
+        :modal="false"
+        :close-on-click-modal="false"
+        width="80%"
+      >
+        <FilterForm
+          :Filter="Filter"
+          @ClickSearch="ClickSearch"
+          @resetForm="FilresetForm"
+        />
+        <EditTable
+          ref="TTABRef"
+          :tableData="TtableData"
+          :tableColumns="TtableColumns"
+          :tableBorder="true"
+          :selection="true"
+          :EditType="false"
+          @handleSelectionChange="ThandleSelectionChange"
+          :disabledHide="false"
+        />
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="TdialogFormVisible = false">取消</el-button>
+            <el-button type="primary" @click="Tconfirm"> 确认 </el-button>
+          </span>
+        </template>
+        <pagination
+          v-if="total > 0"
+          :total="total"
+          v-model:page="queryParams.PageIndex"
+          v-model:limit="queryParams.PageSize"
+          @pagination="changPage"
+        />
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -112,10 +151,12 @@
 <script setup lang="ts">
 import { ref, toRefs, reactive, nextTick, onActivated } from 'vue';
 import myTable from '@/components/MyFormTable/index.vue';
+import EditTable from '@/components/MyFormTable/index_Edit.vue';
 import { ElLoading } from 'element-plus';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
+import FilterForm from '@/components/Filter/index.vue';
 import {
   ElButton,
   ElCard,
@@ -128,7 +169,7 @@ import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
 import { useRoute } from 'vue-router';
-import { compare } from '@/utils';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import router from '@/router';
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -140,6 +181,12 @@ const tabValBol = ref(true);
 const rowId = ref('') as any;
 const Route = useRoute();
 const headRef = ref(null);
+const TdialogFormVisible = ref(false);
+const Filter = ref<any>([]);
+const TTABRef = ref();
+const TAxiosData = ref({}) as any;
+const TtableData = ref([]) as any;
+const TtableColumns = ref([]) as any;
 let But = ref([]) as any;
 //表格数据
 const tableData = ref([] as any);
@@ -175,8 +222,14 @@ const data = reactive({
   modelTitle: '标题',
   modelCIncludeModelCode: ''
 });
-const { disabled, dialogFormVisible, modelTitle, modelCIncludeModelCode } =
-  toRefs(data);
+const {
+  disabled,
+  dialogFormVisible,
+  modelTitle,
+  modelCIncludeModelCode,
+  Conditions,
+  OrderByFileds
+} = toRefs(data);
 const initType = ref(true);
 onActivated(() => {
   tabValBol.value = true;
@@ -655,6 +708,151 @@ const newList = (val: any) => {
     tableColumns.value = val.list;
     tabType.value = true;
   });
+};
+
+//表格数据查询
+const TtableAxios = async () => {
+  let data = {
+    method: TAxiosData.value.Resource.cHttpTypeCode,
+    url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  try {
+    const res = await DataApi(data);
+    if (res.status == 200) {
+      TtableData.value = res.data.data;
+      total.value = res.data.dataCount;
+    } else {
+      console.log('请求出错');
+    }
+  } catch (error) {
+    console.log(error, '程序出错');
+  }
+};
+
+const Copy = async obj => {
+  TdialogFormVisible.value = true;
+  try {
+    const res = await configApi(obj.cIncludeModelCode);
+    if (res.status == 200) {
+      res.data.forEach((item: any) => {
+        if (item.cPropertyClassTypeCode == 'Grid') {
+          funTables(
+            item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
+          );
+        }
+        if (item.cPropertyClassTypeCode === 'Filter') {
+          Filter.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+      });
+    } else {
+      console.log('请求出错');
+    }
+  } catch (error) {
+    console.log(error, '程序出错了');
+  }
+};
+
+// TTTtable 数据整合
+const funTables = (arr: Array<any>) => {
+  modelGrid.value = arr;
+  arr.forEach(item => {
+    if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
+      let itemData = {
+        checkType: true,
+        label: item.Resource.cAttributeName,
+        prop: item.Resource.cAttributeCode,
+        edit: item.DefinedParm4,
+        cControlTypeCode: item.cControlTypeCode,
+        headerSlot: false,
+        slot: ''
+      };
+      TtableColumns.value.push(itemData);
+      TtableColumns.value.push({
+        checkType: true,
+        label: '操作',
+        slotName: 'button'
+      });
+      TtableColumns.value = TtableColumns.value.filter(
+        (item: { label: any }, index: any, self: any[]) => {
+          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
+          const i = self.findIndex(
+            (t: { label: any }) => t.label === item.label
+          );
+          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
+          return i === index;
+        }
+      );
+    }
+    if (item.Resource.cAttributeTypeCode == 'binddata') {
+      TAxiosData.value = item;
+      TtableAxios();
+    }
+  });
+};
+
+// 搜索
+const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+
+// 重置
+const FilresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TTABRef.value.clearFilter();
+};
+const itemData = ref([]) as any;
+
+//弹窗表格选中
+const ThandleSelectionChange = (val: any) => {
+  itemData.value = val;
+};
+
+//弹窗确认
+const Tconfirm = () => {
+  TdialogFormVisible.value = false;
+  // 表格添加数据
+  itemData.value.forEach((item: any) => {
+    tableData.value.push(item);
+  });
+  console.log(itemData.value, '---itemData.value');
+  console.log(headRef.value.ruleForm);
+  // 向 cDefindParm01List 添加数据，去重复根据 cDictonaryCode,使用 vue 修改方式
+  const filteredData = itemData.value.filter(
+    i =>
+      !headRef.value.ruleForm.cDefindParm01List.some(
+        j => j.cDictonaryCode === i.cDictonaryCode
+      )
+  );
+  const resultData = [
+    ...headRef.value.ruleForm.cDefindParm01List,
+    ...filteredData
+  ];
+  headRef.value.ruleForm.cDefindParm01List = [...resultData];
+  headRef.value.ruleForm.cDefindParm01 = resultData.map(i => i.cDictonaryCode);
+
+  TTABRef.value.handleRemoveSelectionChange();
+};
+
+//页码变化
+const changPage = (val: any) => {
+  queryParams.PageIndex = val.page;
+  queryParams.PageSize = val.limit;
+  TtableAxios();
 };
 </script>
 
