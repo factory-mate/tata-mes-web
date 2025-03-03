@@ -56,11 +56,11 @@
               </template>
               <template #default="scope">
                 <template
-                  v-for="item in tableButton"
+                  v-for="(item, i) in tableButton"
                   :key="item.Resource.cAttributeName"
                 >
                   <el-button
-                    v-if="item.iIndex == 10 || item.iIndex == 20"
+                    v-if="i == 0 || i == 1"
                     type="primary"
                     size="small"
                     @click="clickTableBut(scope, item)"
@@ -81,7 +81,7 @@
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item
-                        v-for="item in tableButton.filter((v: any) => [10, 20].indexOf(v.iIndex) == -1)"
+                        v-for="item in tableButton.slice(2)"
                         :key="item.Resource.cAttributeName"
                       >
                         <el-button
