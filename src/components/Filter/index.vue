@@ -340,6 +340,13 @@ const selectData = (val: any) => {
         item.cAttributeCodeValue = val.value[0].cPersonName;
       }
       if (
+        Route.name == 'RepairRecord' &&
+        item.Resource.cAttributeName === '指派人名称' &&
+        titleName.value === item.Resource.cAttributeName
+      ) {
+        item.cAttributeCodeValue = val.value[0].cPersonName;
+      }
+      if (
         Route.name == 'ProcReleaseCaseCompaire' &&
         item.Resource.cAttributeName == '产品名称' &&
         titleName.value === item.Resource.cAttributeName
