@@ -354,7 +354,9 @@ const clickView = async (scope: any, obj: any) => {
         item[import.meta.env.VITE_APP_key].map((item: any) => {
           item.Resource[item.Resource.cAttributeCode] = '';
         });
-        ZZFormData.value = item[import.meta.env.VITE_APP_key];
+        ZZFormData.value = item[import.meta.env.VITE_APP_key].sort(
+          compare('iIndex', true)
+        );
       }
       if (item.cPropertyClassTypeCode == 'ToolBut') {
         ZZBut.value = item[import.meta.env.VITE_APP_key];
@@ -376,7 +378,9 @@ const clickEditTable = async (scope: any, obj: any) => {
         item[import.meta.env.VITE_APP_key].map((item: any) => {
           item.Resource[item.Resource.cAttributeCode] = '';
         });
-        ZZFormData.value = item[import.meta.env.VITE_APP_key];
+        ZZFormData.value = item[import.meta.env.VITE_APP_key].sort(
+          compare('iIndex', true)
+        );
       }
       if (item.cPropertyClassTypeCode == 'ToolBut') {
         ZZBut.value = item[import.meta.env.VITE_APP_key];
@@ -415,7 +419,9 @@ const clickAdd = async (obj: { cIncludeModelCode: any }) => {
         item[import.meta.env.VITE_APP_key].map((item: any) => {
           item.Resource[item.Resource.cAttributeCode] = '';
         });
-        ZZFormData.value = item[import.meta.env.VITE_APP_key];
+        ZZFormData.value = item[import.meta.env.VITE_APP_key].sort(
+          compare('iIndex', true)
+        );
       }
       if (item.cPropertyClassTypeCode == 'ToolBut') {
         ZZBut.value = item[import.meta.env.VITE_APP_key];
