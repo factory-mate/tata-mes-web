@@ -425,6 +425,12 @@ const selectData = (val: any) => {
         ) {
           item.cAttributeCodeValue = val.value[0]?.cEmployeeName;
         }
+        if (
+          item.Resource.cAttributeName === '指派人' &&
+          titleName.value === item.Resource.cAttributeName
+        ) {
+          item.cAttributeCodeValue = val.value[0].cPersonName;
+        }
       }
 
       if (titleName.value === item.Resource.cAttributeName) {
