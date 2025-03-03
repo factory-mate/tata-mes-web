@@ -28,8 +28,10 @@ const formData = ref({
   IsPeriod: false,
   iPeriodDay: 0,
   IsBatch: false,
-  IsStore: false
+  IsStore: false,
+  IsQC: false
 });
+const sAPInfos = ref([{ cSAPCode: '', cPackageNumber: 0 }]);
 const unitData = ref([]);
 const unitItemData = ref({});
 const showAddUnitDialog = ref(false);
@@ -49,7 +51,8 @@ const rules = ref({
   cInvCode: [{ required: true, message: '请输入存货编号', trigger: 'change' }],
   cInvName: [{ required: true, message: '请输入存货名称', trigger: 'change' }],
   IsBatch: [{ required: true, message: '请选择批次管理', trigger: 'blur' }],
-  IsStore: [{ required: true, message: '请选择库存管理', trigger: 'blur' }]
+  IsStore: [{ required: true, message: '请选择库存管理', trigger: 'blur' }],
+  IsQC: [{ required: true, message: '请选择质检', trigger: 'blur' }]
   // cDefindParm01: [{ required: true, message: '请选择标签', trigger: 'change' }]
 });
 
@@ -83,7 +86,8 @@ function fetchUnitTypes() {
 async function handleSubmit() {
   const data = {
     ...formData.value,
-    singerModels: unitData.value
+    singerModels: unitData.value,
+    sAPInfos: sAPInfos.value
   };
   try {
     const res = await updateMaterial(data);
@@ -317,6 +321,16 @@ onActivated(() => {
               </el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="质检" label-width="150" prop="IsQC">
+              <el-switch
+                v-model="formData.IsQC"
+                inline-prompt
+                active-text="是"
+                inactive-text="否"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-card>
 
@@ -457,6 +471,20 @@ onActivated(() => {
               </el-input>
             </el-form-item>
           </el-col>
+
+          <el-col :span="6">
+            <el-form-item
+              label="最小包装量"
+              label-width="150"
+              prop="iMinPackage"
+            >
+              <el-input
+                v-model="formData.iMinPackage"
+                autocomplete="off"
+                type="number"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-card>
 
@@ -489,26 +517,43 @@ onActivated(() => {
           </el-col>
           -->
 
-          <el-col :span="6">
-            <el-form-item
-              label="SAP 物料编码"
-              label-width="150"
-              prop="cDefindParm04"
-            >
-              <el-input v-model="formData.cDefindParm04" autocomplete="off" />
-            </el-form-item>
-          </el-col>
+          <template v-for="(item, index) in sAPInfos" :key="index">
+            <el-col :span="6">
+              <el-form-item
+                label="SAP 物料编码"
+                label-width="150"
+                prop="cDefindParm04"
+              >
+                <el-input v-model="item.cSAPCode" autocomplete="off" />
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="6">
-            <el-form-item
-              label="每包数量"
-              label-width="150"
-              prop="iDefindParm12"
-            >
-              <el-input-number v-model="formData.iDefindParm12" />
-            </el-form-item>
-          </el-col>
+            <el-col :span="18">
+              <div style="display: flex">
+                <el-form-item
+                  label="每包数量"
+                  label-width="150"
+                  prop="iDefindParm12"
+                >
+                  <el-input-number v-model="item.cPackageNumber" />
+                </el-form-item>
+                <el-button
+                  v-if="sAPInfos.length > 1"
+                  @click="() => sAPInfos.splice(index, 1)"
+                  style="margin-left: 40px"
+                >
+                  删除
+                </el-button>
+              </div>
+            </el-col>
+          </template>
         </el-row>
+        <el-button
+          style="margin-left: 40px"
+          @click="sAPInfos.push({ cSAPCode: '', cPackageNumber: 0 })"
+        >
+          添加
+        </el-button>
       </el-card>
 
       <el-card>

@@ -10,6 +10,7 @@ const infoData = ref({});
 const extendData = ref({});
 const unitData = ref([]);
 const wmsData = ref({});
+const sAPInfos = ref([]);
 
 onActivated(async () => {
   const { rowId } = route.params;
@@ -19,6 +20,7 @@ onActivated(async () => {
     extendData.value = res.data.iNENTORY_EXTEND ?? {};
     unitData.value = res.data.iNENTORY_UNIT ?? [];
     wmsData.value = res.data.iNENTORY_WMS ?? {};
+    sAPInfos.value = res.data.sAPInfos ?? [];
   });
 });
 </script>
@@ -80,10 +82,10 @@ onActivated(async () => {
         <el-col :span="6">
           BOM 模型名称：{{ extendData.cDefindParm03 }}
         </el-col> -->
-        <el-col :span="6">
-          SAP 物料编码：{{ extendData.cDefindParm04 }}
-        </el-col>
-        <el-col :span="6"> 每包数量：{{ extendData.iDefindParm12 }} </el-col>
+        <template v-for="(item, index) in sAPInfos" :key="index">
+          <el-col :span="6"> SAP 物料编码：{{ item.cSAPCode }} </el-col>
+          <el-col :span="18"> 每包数量：{{ item.cPackageNumber }} </el-col>
+        </template>
       </el-row>
     </el-card>
 
