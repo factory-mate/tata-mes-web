@@ -604,6 +604,7 @@ const validateObj = ref();
 let url = ref('');
 const srcList = ref([]) as any;
 const PriveImg = (obj: any) => {
+  srcList.value = [];
   if (!obj) return;
   if (Route.name === 'CheckOderView') {
     srcList.value.push(ruleForm.value.cFilePath);
