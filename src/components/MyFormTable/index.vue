@@ -37,7 +37,14 @@
         <el-table-column
           width="45"
           fixed
-          v-if="!['newProductionOrderChange'].includes(Route.name)"
+          v-if="
+            ![
+              'newProductionOrderChange',
+              'addProductLine',
+              'addProductLineEdit',
+              'addProductLineView'
+            ].includes(Route.name)
+          "
         >
           <template #header> 序号 </template>
           <template #default="scope">
