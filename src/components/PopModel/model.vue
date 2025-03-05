@@ -728,7 +728,6 @@ const treeChange = (valKey: any) => {
 
   joinnameData.value = name.value.join('.');
   joincodeData.value = code.value.join('.');
-  // TODO：
   if (
     Route.name == 'addProductLine' ||
     Route.name == 'addProductLineEdit' ||
@@ -1023,6 +1022,10 @@ const selectData = (val: any) => {
       titleName.value == '辅计量单位编码'
     ) {
       ruleForm.value[AttributeCode.value] = val.value[0].cUnitCode;
+    } else if (['addProductLine', 'addProductLineEdit'].includes(Route.name)) {
+      if (AttributeCode.value == 'cProcessName') {
+        ruleForm.value[AttributeCode.value] = val.value[0].cProcessName;
+      }
     } else if (
       titleName.value == '换算单位名称' ||
       titleName.value == '辅计量单位名称'
