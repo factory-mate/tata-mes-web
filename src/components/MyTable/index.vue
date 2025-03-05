@@ -146,7 +146,8 @@
                 placement="top"
               >
                 <p v-if="item.prop == 'dCreateTime' || item.prop == 'dDate'">
-                  {{ formatDate(scope.row[item.prop]) }}
+                  <!-- {{ formatDate(scope.row[item.prop]) }} -->
+                  {{ scope.row[item.prop] }}
                 </p>
                 <p v-else class="tableTextSty" @click="DownLoad(scope, item)">
                   {{ formatImage(scope.row[item.prop]) }}
@@ -426,7 +427,7 @@ const calcWidth = (row: { label: any }) => {
     }
     return null;
   } else {
-    let flexWidth = 50;
+    let flexWidth = 65;
     for (const char of row.label) {
       if ((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z')) {
         // 如果是英文字符，为字符分配8个单位宽度
@@ -441,7 +442,7 @@ const calcWidth = (row: { label: any }) => {
     }
     if (flexWidth < 50) {
       // 设置最小宽度
-      flexWidth = 200;
+      flexWidth = 250;
     }
     if (flexWidth > 250) {
       // 设置最大宽度
