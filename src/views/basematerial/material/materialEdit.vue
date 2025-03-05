@@ -136,13 +136,13 @@
             <el-button type="primary" @click="Tconfirm"> 确认 </el-button>
           </span>
         </template>
-        <pagination
+        <!-- <pagination
           v-if="total > 0"
           :total="total"
           v-model:page="queryParams.PageIndex"
           v-model:limit="queryParams.PageSize"
           @pagination="changPage"
-        />
+        /> -->
       </el-dialog>
     </el-card>
   </div>
@@ -717,7 +717,8 @@ const TtableAxios = async () => {
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
-      PageSize: queryParams.PageSize,
+      //  PageSize: queryParams.PageSize,
+      PageSize: 1000,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
