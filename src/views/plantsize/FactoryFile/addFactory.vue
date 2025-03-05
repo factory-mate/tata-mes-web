@@ -157,6 +157,8 @@ onActivated(() => {
   // @ts-ignore
   if (Route.meta.title.match(/详情/gi)) {
     disabled.value = true;
+  } else {
+    disabled.value = false;
   }
 });
 // 权限按钮
