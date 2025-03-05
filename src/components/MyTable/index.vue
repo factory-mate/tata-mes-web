@@ -662,7 +662,7 @@ const formatImage = (text: string) => {
 };
 const funContent = (val: any, item: any) => {
   let str = '';
-  console.log(val);
+  // console.log(val);
   if (item.label?.includes('文件') && val?.includes('&')) {
     str = formatImage(val);
   } else if (typeof val == 'number') {

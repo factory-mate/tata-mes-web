@@ -294,8 +294,8 @@ const exportAll = async obj => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: 0,
-      PageSize: 0,
+      PageIndex: 1,
+      PageSize: 9999,
       OrderByFileds: orderBy.value,
       Conditions: conditions.value
     }

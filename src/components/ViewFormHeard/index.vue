@@ -1237,6 +1237,8 @@ const funHeadview = () => {
       // paramsData = { val: props.rowId || props.row.UID ||Route.params.rowId}
       paramsData = { val: Route.params.rowId };
     }
+    console.log(Route.params.rowId)
+    console.log(paramsData);
     let dataVal = {
       method: AxiosData.Resource.cHttpTypeCode,
       url: AxiosData.Resource.cServerIP + AxiosData.Resource.cUrl,

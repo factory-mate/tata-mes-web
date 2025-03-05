@@ -372,8 +372,9 @@ const clickDelete = (scope: any, obj: any) => {
 };
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
+  console.log(scope.row.UID);
   router.push({
-    name: 'xx',
+    name: 'ScrapToolInfoView',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -381,8 +382,8 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'xx',
-      title: '采购单详情'
+      pathName: 'ScrapForm',
+      title: '报废单详情'
     }
   });
 };
@@ -497,8 +498,8 @@ const ExportAll = async (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: 0,
-      PageSize: 0,
+      PageIndex: 1,
+      PageSize: 9999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
         ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value

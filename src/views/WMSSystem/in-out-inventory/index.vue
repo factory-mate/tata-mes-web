@@ -455,15 +455,15 @@ const ExportAll = async (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: 0,
-      PageSize: 0,
+      PageIndex: 1,
+      PageSize: 9999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
       // ? 'cVouchSourceTypeCode = 03 && ' + Conditions.value
       // : 'cVouchSourceTypeCode = 03'
     }
   };
-  exportAnalysisHooks(data, '领料出库单-所有');
+  exportAnalysisHooks(data, '出入库查询-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -479,7 +479,7 @@ const ExportOne = async (obj: any) => {
       // : 'cVouchSourceTypeCode = 03'
     }
   };
-  exportAnalysisHooks(data, '领料出库单');
+  exportAnalysisHooks(data, '出入库查询');
 };
 
 const data = reactive({

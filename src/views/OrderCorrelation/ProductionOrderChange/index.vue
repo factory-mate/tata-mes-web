@@ -518,8 +518,8 @@ const ExportAll = async (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: 0,
-      PageSize: 0,
+      PageIndex: 1,
+      PageSize: 9999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
         ? 'cVouchTypeCode = 8 && ' + Conditions.value
