@@ -424,7 +424,7 @@ const resetForm = (val: any) => {
 const clickAdd = (val: any) => {
   console.log(val, 'clickAdd');
   router.push({
-    name: 'processFileGY',
+    name: 'processFileGYAdd',
     params: {
       t: Date.now(),
       rowId: ' '
