@@ -1237,7 +1237,6 @@ const funHeadview = () => {
       // paramsData = { val: props.rowId || props.row.UID ||Route.params.rowId}
       paramsData = { val: Route.params.rowId };
     }
-    console.log(Route.params.rowId)
     console.log(paramsData);
     let dataVal = {
       method: AxiosData.Resource.cHttpTypeCode,
@@ -1553,6 +1552,11 @@ const selectData = (val: any) => {
     // 用户管理
     if (Route.name == 'UserAdd' || Route.name == 'UserAddEdit') {
       ruleForm.value['PersonUID'] = val.value[0]['cEmployeeCode'];
+    }
+    if (Route.name == 'memAdminAdd' || Route.name == 'memAdminEdit') {
+      if (AttributeCode.value == 'cDefindParm02') {
+        ruleForm.value['cDefindParm02'] = val.value[0].cDictonaryName;
+      }
     }
     // 班次
     if (
