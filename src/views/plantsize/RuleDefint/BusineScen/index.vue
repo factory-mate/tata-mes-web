@@ -310,11 +310,12 @@ const treeChange = (datas: any, checked: any, indeterminate: any) => {
   }
   console.log(rootParent);
   if (rootParent.data.cDataCode) {
+    window.sessionStorage.setItem(
+      'Where:cDataCode',
+      rootParent.data.cDataCode ?? ''
+    );
     router.replace({
-      name: 'BusineScen',
-      query: {
-        cDataCode: rootParent.data.cDataCode
-      }
+      name: 'BusineScen'
     });
   }
   treeObj.value = datas;

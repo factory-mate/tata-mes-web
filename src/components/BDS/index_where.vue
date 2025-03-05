@@ -48,8 +48,9 @@ const getWDList = () => {
   if (route.name === 'newProductPlan' || route.name === 'newProductPlanView') {
     conditions = 'cModelCode=TD001';
   }
-  if (route.name === 'AddBusineScen') {
-    conditions = 'cModelCode=' + route.query.cDataCode;
+  const cDataCode = window.sessionStorage.getItem('Where:cDataCode');
+  if (route.name === 'AddBusineScen' && cDataCode) {
+    conditions = 'cModelCode=' + cDataCode;
   }
   const data = {
     method: 'get',
