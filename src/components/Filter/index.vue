@@ -139,6 +139,7 @@
               @change="(value:any) => handleChange(item, value)"
               @visible-change="getTreeDAata"
               clearable
+              ref="cascaderRef"
             />
           </el-form-item>
         </el-form>
@@ -208,7 +209,7 @@ const props = defineProps({
 const { tagsView } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
-
+const cascaderRef = ref(null);
 //弹窗组件事件
 const data = reactive({
   dialogType: false,
@@ -743,11 +744,29 @@ const getTreeData = (newValue: any) => {
 
 //级联树结构选项变化
 const handleChange = (item: any, value: any) => {
-  console.log(item, 'ii');
   console.log(value, '树结构选中数据');
+  console.log(item.optionsDataList);
+
+  const currentNode = cascaderRef.value[0].getCheckedNodes();
+  const selectedNodeValue = [];
+  getSelectedNodeValue(currentNode, selectedNodeValue);
+
+  console.log(selectedNodeValue);
   item.cAttributeCodeValue =
     value.length > 1 ? value[value.length - 1] : value[0];
+  item.treeSelectedValues = selectedNodeValue;
 };
+
+// 递归将节点的value值存入数组
+const getSelectedNodeValue = (nodes: any, arr: any) => {
+  nodes.forEach((node: any) => {
+    arr.push(node.value);
+    if (node.children) {
+      getSelectedNodeValue(node.children, arr);
+    }
+  });
+};
+
 // 搜索
 const ClickSearch = () => emits('ClickSearch', { value: FilterData.value });
 

@@ -61,6 +61,15 @@ export function filterModel(Arr: Array<any>) {
           `${item.cAttributeCode} >= ${item.cAttributeCodeValue[0]}T00:00:00`,
           `${item.cAttributeCode} <= ${item.cAttributeCodeValue[1]}T23:59:59`
         );
+      } else if (
+        item.cConditions === 'in' &&
+        item.treeSelectedValues?.length > 0
+      ) {
+        arrObj.push(
+          `${item.cAttributeCode} ${
+            item.cConditions
+          } (${item.treeSelectedValues?.join(',')})`
+        );
       } else {
         arrObj.push(
           `${item.cAttributeCode} ${item.cConditions} ${item.cAttributeCodeValue}`
