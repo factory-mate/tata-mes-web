@@ -372,7 +372,6 @@ const clickDelete = (scope: any, obj: any) => {
 };
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
-  console.log(scope.row.UID);
   router.push({
     name: 'ScrapToolInfoView',
     params: {
@@ -383,7 +382,8 @@ const clickView = (scope: any, obj: any) => {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
       pathName: 'ScrapForm',
-      title: '报废单详情'
+      title: '报废单详情',
+      pageType: 'view'
     }
   });
 };
