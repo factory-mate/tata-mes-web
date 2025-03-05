@@ -7,10 +7,12 @@
     <!-- vue3 的正确写法 -->
     <router-view v-slot="{ Component }">
       <!-- <transition name="fade" mode="out-in" appear> -->
-      <keep-alive v-if="route.name !== 'newProductionOrder'">
+      <!-- <keep-alive v-if="route.name !== 'newProductionOrder'">
+        <component :is="Component"></component>
+      </keep-alive> -->
+      <keep-alive>
         <component :is="Component"></component>
       </keep-alive>
-      <component :is="Component" v-else></component>
       <!-- </transition> -->
     </router-view>
   </el-config-provider>
