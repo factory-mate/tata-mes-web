@@ -305,7 +305,7 @@ const {
 const initType = ref(true);
 const UIDss = ref([]) as any;
 onActivated(() => {
-  tabVal.value = 'MES.ProductionOrder.M.View.Base';
+  clickTabs({ props: { label: '主单信息' } });
   tabValBol.value = true;
   modelCode.value = history.state.modelCode
     ? history.state.modelCode
@@ -327,7 +327,7 @@ onActivated(() => {
   //   getAddUser(Route.meta.ModelCode);
   // }
   getAddUser('MES.ProductionOrder.M.View');
-  getAddUser('MES.ProductionOrder.M.View.Base');
+  // getAddUser('MES.ProductionOrder.M.View.Base');
   rowId.value = Route.params.rowId;
   initType.value = false;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -415,7 +415,7 @@ const clickTabs = (val: any) => {
   }
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  headRef.value.clearValidate();
+  headRef.value?.clearValidate();
 };
 const getTableAxios = () => {
   let data = {
