@@ -54,6 +54,7 @@
               remote-show-suffix
               :remote-method="(query:any)=>remoteMethod(item,query)"
               @visible-change="(value:any) => selectVisible(value,ruleForm[item.Resource.cAttributeCode + '_Data'],item)"
+              @change="(value:any)=>GetTreeRoad(item,value)"
               style="width: 100%"
             >
               <template
@@ -129,6 +130,7 @@ import {
   ElInput,
   FormInstance
 } from 'element-plus';
+import { useRoute } from 'vue-router';
 import { MoreFilled } from '@element-plus/icons-vue';
 import { ParamsApi, DataApi } from '@/api/configApi/index';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
@@ -148,6 +150,8 @@ const selectItem = ref('') as any;
 const { tableAxios } = inject('tableAxios') as {
   tableAxios: () => void;
 };
+const Route = useRoute();
+
 const props = defineProps({
   FormData: {
     required: true,
@@ -345,6 +349,39 @@ const rules = computed(() => {
   return obj;
 });
 
+const GetTreeRoad = (item: any, value: any) => {
+  if (Route.name === 'cargo') {
+    if (item.cAttributeCode === 'cDefindParm01Name') {
+      let valData: any = [];
+      if (ruleForm.value[item.cAttributeCode + '_Data'].length) {
+        valData = ruleForm.value[item.cAttributeCode + '_Data'].filter(
+          (v: any) => {
+            if (ruleForm.value[item.cAttributeCode] == v.cDictonaryCode) {
+              return v;
+            }
+          }
+        );
+      }
+      ruleForm.value.cDefindParm01 = valData[0].cDictonaryCode;
+      ruleForm.value.cDefindParm01Name = valData[0].cDictonaryName;
+    }
+    if (item.cAttributeCode === 'cDefindParm02Name') {
+      let valData: any = [];
+      if (ruleForm.value[item.cAttributeCode + '_Data'].length) {
+        valData = ruleForm.value[item.cAttributeCode + '_Data'].filter(
+          (v: any) => {
+            if (ruleForm.value[item.cAttributeCode] == v.cDictonaryCode) {
+              return v;
+            }
+          }
+        );
+      }
+      ruleForm.value.cDefindParm02 = valData[0].cDictonaryCode;
+      ruleForm.value.cDefindParm02Name = valData[0].cDictonaryName;
+    }
+  }
+};
+
 //提交
 const submitForm = async (formEl: FormInstance | undefined, item: any) => {
   if (!formEl) return;
@@ -418,9 +455,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 const remoteMethod = (item: any, query: any) => {
   // getData(getDataVal.value)
   let list: any = JSON.parse(
-    JSON.stringify(ruleForm.value[item.Resource.cAttributeCode + '_Data'])
+    JSON.stringify(ruleForm.value[item.Resource.cAttributeCode + '_Data'] ?? [])
   );
-  if (ruleForm.value[item.Resource.cAttributeCode + '_Data'].length === 0) {
+  if (ruleForm.value[item.Resource.cAttributeCode + '_Data']?.length === 0) {
     if (query) {
       setTimeout(() => {
         ruleForm.value[item.Resource.cAttributeCode + '_Data'] = list.filter(
@@ -451,6 +488,26 @@ const remoteMethod = (item: any, query: any) => {
 };
 const selectVisible = (v: any, obj: any, item: any) => {
   selectItem.value = item;
+  if (v) {
+    let obj = {
+      Conditions: 'cDictonaryTypeCode=' + item.Resource.cAttributeCode
+    };
+
+    let data = {
+      method: item.Resource.cHttpTypeCode,
+      url: item.Resource.cServerIP + item.Resource.cUrl,
+      params: obj
+    };
+    ParamsApi(data).then(res => {
+      if (res.status == 200) {
+        ruleForm.value[item.Resource.cAttributeCode + '_Data'] = res.data;
+        ruleForm.value[item.Resource.cAttributeCode + '_Current_Data'] =
+          res.data;
+      } else {
+        console.log('失败');
+      }
+    });
+  }
 };
 </script>
 
