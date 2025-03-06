@@ -390,6 +390,10 @@ const props = defineProps({
   row: {
     type: Object,
     default: () => {}
+  },
+  currentEditRowData: {
+    type: Object,
+    default: () => {}
   }
 });
 //form
@@ -434,7 +438,8 @@ watch(props, (newValue, oldValue) => {
   //     })
   // }
   if (title.value == '编辑') {
-    ruleForm.value = rowId.value;
+    // ruleForm.value = rowId.value;
+    ruleForm.value = { ...props.currentEditRowData };
   }
 });
 

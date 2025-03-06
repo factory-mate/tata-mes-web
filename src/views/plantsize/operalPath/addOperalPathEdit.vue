@@ -51,6 +51,13 @@
                 type="primary"
                 :disabled="disabled"
                 size="small"
+                @click="clickTableEdit(scope)"
+                >编辑</el-button
+              >
+              <el-button
+                type="primary"
+                :disabled="disabled"
+                size="small"
                 @click="clickTableHandDel(scope)"
                 >删除</el-button
               >
@@ -72,6 +79,8 @@
         :modelGrid="modelGrid"
         @modelClose="modelClose"
         @clickHandAdd="clickHandAdd"
+        @clickHandEdit="clickHandEdit"
+        :current-edit-row-data="currentEditRowData"
       ></pop-model>
     </el-card>
   </div>
@@ -101,6 +110,8 @@ const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
 const headRef = ref(null);
+const currentEditRowIndex = ref(-1);
+const currentEditRowData = ref({});
 let But = ref([]) as any;
 //表格数据
 const tableData = ref([] as any);
@@ -288,6 +299,12 @@ const clickTableHandDel = (val: any) => {
   tableData.value.splice(val.$index, 1);
   // total.value=total.value-1
 };
+const clickTableEdit = data => {
+  currentEditRowIndex.value = data.$index;
+  currentEditRowData.value = data.row;
+  dialogFormVisible.value = true;
+  modelTitle.value = '编辑';
+};
 const clickTableAdd = () => {
   dialogFormVisible.value = true;
   modelTitle.value = '新增';
@@ -297,6 +314,15 @@ const clickHandAdd = (data: any) => {
   dialogFormVisible.value = data.type;
   tableData.value.push(itemData);
   // total.value=total.value+1
+};
+const clickHandEdit = (data: any) => {
+  dialogFormVisible.value = data.type;
+  tableData.value = tableData.value.map((item: any, index: any) => {
+    if (index === currentEditRowIndex.value) {
+      return data.val;
+    }
+    return item;
+  });
 };
 const clickTableBut = (val: string) => {
   switch (val) {
