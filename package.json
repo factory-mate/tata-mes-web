@@ -6,7 +6,7 @@
     "build:prod": "vite build --mode production",
     "dev:yl": "vite --mode yl.development",
     "build:prod:yl": "vite build --mode yl.production",
-    "build:stag": "vite build --mode staging",
+    "build:staging": "vite build --mode staging",
     "serve": "vite preview",
     "lint": "eslint src/**/*.{ts,js,vue} --fix --cache",
     "prepare": "husky install",
