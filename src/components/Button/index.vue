@@ -228,6 +228,7 @@ const emits = defineEmits([
   'ImportOrder',
   'Commit',
   'ItemAdd',
+  'ItemAddOnMaterial',
   'clickPick',
   'ChangeProductionDate',
   'cDefindParm07',
@@ -548,6 +549,9 @@ const Commit = (obj: any) => {
 //添加
 const ItemAdd = (obj: any) => {
   emits('ItemAdd', obj);
+};
+const ItemAddOnMaterial = obj => {
+  emits('ItemAddOnMaterial', obj);
 };
 //打印标签
 const PrintLabel = (obj: any) => {
@@ -888,6 +892,9 @@ const clickButton = (event: any) => {
       break;
     case 'ItemAdd':
       ItemAdd(event);
+      break;
+    case 'ItemAddOnMaterial':
+      ItemAddOnMaterial(event);
       break;
     case 'PrintLabel':
       PrintLabel(event);

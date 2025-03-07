@@ -29,7 +29,11 @@
         @RoleBut="RoleBut"
       ></Head-View>
       <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
+        <ButtonViem
+          :ToolBut="Buttwo"
+          @ItemAdd="ItemAdd"
+          @ItemAddOnMaterial="ItemAddOnMaterial"
+        ></ButtonViem>
       </div>
       <myTable
         ref="TABRef"
@@ -447,6 +451,11 @@ const ItemAdd = async (obj: any) => {
     console.log(error, '程序出错了');
   }
 };
+
+const ItemAddOnMaterial = async obj => {
+  console.log(obj);
+};
+
 // TTTtable 数据整合
 const funTables = (arr: Array<any>) => {
   modelGrid.value = arr;
