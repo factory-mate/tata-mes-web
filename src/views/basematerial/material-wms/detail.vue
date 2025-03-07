@@ -31,7 +31,7 @@ onActivated(async () => {
       <el-tag type="primary" size="large">基本信息</el-tag>
       <el-row :gutter="24" style="margin-top: 12px">
         <el-col :span="6"> 存货分类：{{ infoData.cInvClassName }} </el-col>
-        <el-col :span="6"> 存货编号：{{ infoData.cInvClassCode }} </el-col>
+        <el-col :span="6"> 存货编号：{{ infoData.cInvCode }} </el-col>
         <el-col :span="6"> 存货名称：{{ infoData.cInvName }} </el-col>
         <el-col :span="6"> 存货规格：{{ infoData.cInvstd }} </el-col>
       </el-row>

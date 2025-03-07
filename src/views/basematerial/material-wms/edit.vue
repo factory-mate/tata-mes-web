@@ -209,6 +209,7 @@ onActivated(() => {
     const wmsData = res.data.iNENTORY_WMS ?? {};
     formData.value = { ...extendData, ...wmsData, ...infoData };
     unitData.value = res.data.iNENTORY_UNIT ?? [];
+    sAPInfos.value = res.data.sAPInfos ?? [];
   });
 });
 </script>
