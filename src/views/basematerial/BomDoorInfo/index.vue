@@ -167,6 +167,7 @@
       :viewdata="viewdata"
       :treeMethod="treeAxios"
       @FmodelClose="modelClose"
+      width="50%"
     ></Odialog>
   </div>
 </template>
