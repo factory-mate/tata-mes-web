@@ -166,7 +166,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'materiallist') {
+    if (v.name == 'WMSMaterial') {
       tableAxios();
     }
   }, 300);
@@ -440,17 +440,23 @@ const clickDelete = (scope: any, obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: [senid]
   };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      });
-      tableAxios();
-      sendId.value = [];
-    } else {
-      ElMessage.error('删除失败');
-    }
+  ElMessageBox.confirm('确认删除？', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        });
+        tableAxios();
+        sendId.value = [];
+      } else {
+        ElMessage.error('删除失败');
+      }
+    });
   });
 };
 
@@ -636,7 +642,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cInvClassCode,cInvCode'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索

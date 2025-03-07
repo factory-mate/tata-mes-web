@@ -144,6 +144,7 @@ defineExpose({
       highlight-current-row
       border
       @current-change="handleCurrentChange"
+      height="600"
     >
       <el-table-column property="cWareHouseLocationName" label="库位名称" />
       <el-table-column property="cWareHouseLocationCode" label="库位编号" />

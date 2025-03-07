@@ -61,6 +61,7 @@ defineExpose({
       highlight-current-row
       border
       @current-change="handleCurrentChange"
+      height="600"
     >
       <el-table-column property="cUnitCode" label="单位编号" />
       <el-table-column property="cUnitName" label="单位名称" />

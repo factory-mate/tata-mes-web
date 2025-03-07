@@ -29,13 +29,19 @@ onActivated(async () => {
   <div style="padding: 20px; display: flex; flex-direction: column; gap: 8px">
     <el-card>
       <el-tag type="primary" size="large">基本信息</el-tag>
-      <el-row :gutter="24" style="margin-top: 12px">
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
         <el-col :span="6"> 存货分类：{{ infoData.cInvClassName }} </el-col>
         <el-col :span="6"> 存货编号：{{ infoData.cInvCode }} </el-col>
         <el-col :span="6"> 存货名称：{{ infoData.cInvName }} </el-col>
         <el-col :span="6"> 存货规格：{{ infoData.cInvstd }} </el-col>
       </el-row>
-      <el-row :gutter="24" style="margin-top: 12px">
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
         <el-col :span="6">
           保质期管理：{{ infoData.IsPeriod ? '是' : '否' }}
         </el-col>
@@ -47,14 +53,22 @@ onActivated(async () => {
           库存管理：{{ infoData.IsStore ? '是' : '否' }}
         </el-col>
       </el-row>
-      <el-row :gutter="24" style="margin-top: 12px">
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
         <el-col :span="6"> 供应商名称：{{ infoData.cVendorName }} </el-col>
+        <el-col :span="6"> 质检：{{ infoData.IsQCName }} </el-col>
+        <el-col :span="6"> 物料类型：{{ infoData.cMaterialTypeName }} </el-col>
       </el-row>
     </el-card>
 
     <el-card>
       <el-tag type="primary" size="large">库管信息</el-tag>
-      <el-row :gutter="24" style="margin-top: 12px">
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
         <el-col :span="6">
           是否库存预警：{{ wmsData.IsWarn ? '是' : '否' }}
         </el-col>
@@ -62,31 +76,34 @@ onActivated(async () => {
         <el-col :span="6"> 最高库存量：{{ wmsData.nMaxQuinity }} </el-col>
         <el-col :span="6"> 最低库存量：{{ wmsData.nMinQuinity }} </el-col>
       </el-row>
-      <el-row :gutter="24" style="margin-top: 12px">
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
         <el-col :span="6"> 预警规则：{{ wmsData.cWarnRuleCode }} </el-col>
         <el-col :span="6"> 出入库方式：{{ wmsData.cInOutTypeCode }} </el-col>
         <el-col :span="6"> 默认仓库：{{ wmsData.cWareHouseCode }} </el-col>
         <el-col :span="6"> 默认库区：{{ wmsData.cWareHouseAreaCode }} </el-col>
       </el-row>
-      <el-row :gutter="24" style="margin-top: 12px">
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
         <el-col :span="6">
           默认库位：{{ wmsData.cWareHouseLocationCode }}
         </el-col>
+        <el-col :span="6"> 最小包装量：{{ wmsData.iMinPackage }} </el-col>
       </el-row>
     </el-card>
 
     <el-card>
       <el-tag type="primary" size="large">扩展信息</el-tag>
-      <el-row :gutter="24" style="margin-top: 12px">
-        <!-- <el-col :span="6"> 标签：{{ extendData.cDefindParm01 }} </el-col>
-        <el-col :span="6">
-          BOM 模型名称：{{ extendData.cDefindParm03 }}
-        </el-col> -->
-        <template v-for="(item, index) in sAPInfos" :key="index">
-          <el-col :span="6"> SAP 物料编码：{{ item.cSAPCode }} </el-col>
-          <el-col :span="18"> 每包数量：{{ item.cPackageNumber }} </el-col>
-        </template>
-      </el-row>
+      <el-table :data="sAPInfos" style="width: 100%; margin-top: 20px">
+        <el-table-column prop="cSAPCode" label="SAP 物料编码" />
+        <el-table-column prop="cVendorCode" label="供应商编码" />
+        <el-table-column prop="cVendorName" label="供应商名称" />
+        <el-table-column prop="cPackageNumber" label="每包数量" />
+      </el-table>
     </el-card>
 
     <el-card>
@@ -96,7 +113,7 @@ onActivated(async () => {
         <el-table-column prop="cUnitCode" label="主计量单位名称" />
         <el-table-column prop="cAssUnitCode" label="辅计量单位名称" />
         <el-table-column prop="iChangeRate" label="换算率" />
-        <el-table-column prop="IsDefault" label="是否默认" />
+        <el-table-column prop="IsDefaultName" label="是否默认" />
       </el-table>
     </el-card>
   </div>

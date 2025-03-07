@@ -107,6 +107,7 @@ defineExpose({
       highlight-current-row
       border
       @current-change="handleCurrentChange"
+      height="500"
     >
       <el-table-column property="cVendorCode" label="供货商编号" />
       <el-table-column property="cVendorName" label="供货商名称" />

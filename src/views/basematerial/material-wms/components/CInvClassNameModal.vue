@@ -107,6 +107,7 @@ defineExpose({
       highlight-current-row
       border
       @current-change="handleCurrentChange"
+      height="600"
     >
       <el-table-column property="cInvClassName" label="存货分类" />
       <el-table-column property="cInvClassCode" label="存货分类编号" />

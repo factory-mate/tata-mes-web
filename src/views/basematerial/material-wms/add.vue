@@ -1,6 +1,7 @@
 <script setup>
 import {
   getTags,
+  getCMaterialTypes,
   getInOutTypes,
   addMaterial,
   getUnitTypes
@@ -16,6 +17,9 @@ import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
 import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
 import useStore from '@/store';
 import { ElMessage } from 'element-plus';
+import { getCurrentInstance } from '@vue/runtime-core';
+
+const $bus = getCurrentInstance()?.appContext.config.globalProperties.mittBus;
 
 const { tagsView } = useStore();
 const route = useRoute();
@@ -30,16 +34,20 @@ const formData = ref({
   IsStore: false,
   IsQC: false
 });
-const sAPInfos = ref([{ cSAPCode: '', cPackageNumber: 0 }]);
+const sAPInfos = ref([]);
+const extensionItemData = ref({});
 const unitData = ref([]);
 const unitItemData = ref({});
+const showAddExtensionDialog = ref(false);
 const showAddUnitDialog = ref(false);
 const tagOptions = ref([]);
+const cMaterialTypeOptions = ref([]);
 const inOutOptions = ref([]);
 const unitTypeOptions = ref([]);
 
 const cInvClassNameModalRef = ref();
 const cVendorNameModalRef = ref();
+const extensionCVendorNameModalRef = ref();
 const mainUnitModalRef = ref();
 const secondUnitModalRef = ref();
 const warehouseModalRef = ref();
@@ -61,6 +69,18 @@ function fetchTags() {
       label: item.cDictonaryName,
       value: item.cDictonaryCode
     }));
+  });
+}
+
+function fetchCMaterialTypes() {
+  getCMaterialTypes().then(res => {
+    cMaterialTypeOptions.value = res.data.map(item => ({
+      label: item.cDictonaryName,
+      value: item.cDictonaryCode
+    }));
+    formData.value.cMaterialType = cMaterialTypeOptions.value.find(
+      item => item.label === '原材料'
+    )?.value;
   });
 }
 
@@ -92,14 +112,52 @@ async function handleSubmit() {
     const res = await addMaterial(data);
     if (res.success) {
       closeSelectedTag(route);
+      // 清空数据
+      formData.value = {
+        cInvCode: '',
+        cInvName: '',
+        IsPeriod: false,
+        iPeriodDay: 0,
+        IsBatch: false,
+        IsStore: false,
+        IsQC: false
+      };
+      unitData.value = [];
+      sAPInfos.value = [];
+      ElMessage.success('添加成功');
       router.push('/basematerial/WMSMaterial');
+      $bus.emit('tableUpData', { name: 'WMSMaterial' });
     }
   } catch {
     //
   }
 }
 
-function onClickAddBtn() {
+function handleClickExtensioncVendorNameModal() {
+  extensionCVendorNameModalRef.value.showDialog = true;
+}
+
+function handleExtensionCVendorNameModalConfirm(data) {
+  console.log(data);
+  extensionItemData.value.cVendorName = data?.cVendorName;
+  extensionItemData.value.cVendorCode = data?.cVendorCode;
+}
+
+function onClickAddExtensionBtn() {
+  showAddExtensionDialog.value = true;
+  extensionItemData.value = {};
+}
+
+function handleDeleteExtensionItem(index) {
+  sAPInfos.value.splice(index, 1);
+}
+
+function handleSaveAddExtensionData() {
+  sAPInfos.value.push(extensionItemData.value);
+  showAddExtensionDialog.value = false;
+}
+
+function onClickAddUnitBtn() {
   showAddUnitDialog.value = true;
   unitItemData.value = {};
 }
@@ -108,7 +166,7 @@ function handleDeleteUnitItem(index) {
   unitData.value.splice(index, 1);
 }
 
-function handleSaveAddData() {
+function handleSaveAddUnitData() {
   if (!unitItemData.value.cUnitTypeCode) {
     ElMessage.error('请选择计量单位应用类型');
     return;
@@ -201,6 +259,7 @@ onActivated(() => {
   // fetchTags();
   fetchInOutTypes();
   fetchUnitTypes();
+  fetchCMaterialTypes();
 });
 </script>
 
@@ -319,6 +378,21 @@ onActivated(() => {
                 inline-prompt
                 active-text="是"
                 inactive-text="否"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              label="物料类型"
+              label-width="150"
+              prop="cMaterialType"
+              style="font-weight: 700"
+            >
+              <el-select-v2
+                v-model="formData.cMaterialType"
+                placeholder="请选择"
+                style="width: 240px"
+                :options="cMaterialTypeOptions"
               />
             </el-form-item>
           </el-col>
@@ -481,76 +555,40 @@ onActivated(() => {
       </el-card>
 
       <el-card>
-        <el-tag type="primary" size="large">扩展信息</el-tag>
-        <el-row :gutter="24" style="margin-top: 12px">
-          <!--
-          <el-col :span="6">
-            <el-form-item label="标签" label-width="150" prop="cDefindParm01">
-              <el-select-v2
-                v-model="formData.cDefindParm01"
-                multiple
-                placeholder="请选择标签"
-                style="width: 240px"
-                :options="tagOptions"
-              />
-            </el-form-item>
-          </el-col>
-          -->
-
-          <!--
-          <el-col :span="6">
-            <el-form-item
-              label="BOM 模型名称"
-              label-width="150"
-              prop="cDefindParm03"
-            >
-              <el-input v-model="formData.cDefindParm03" autocomplete="off" />
-            </el-form-item>
-          </el-col>
-          -->
-          <template v-for="(item, index) in sAPInfos" :key="index">
-            <el-col :span="6">
-              <el-form-item
-                label="SAP 物料编码"
-                label-width="150"
-                prop="cDefindParm04"
+        <div style="display: flex; justify-content: space-between">
+          <el-tag type="primary" size="large">扩展信息</el-tag>
+          <el-button type="primary" @click="onClickAddExtensionBtn"
+            >添加</el-button
+          >
+        </div>
+        <el-table :data="sAPInfos" style="width: 100%; margin-top: 20px">
+          <el-table-column width="60" fixed>
+            <template #header> 序号 </template>
+            <template #default="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="cSAPCode" label="SAP 物料编码" />
+          <el-table-column prop="cVendorCode" label="供应商编码" />
+          <el-table-column prop="cVendorName" label="供应商名称" />
+          <el-table-column prop="cPackageNumber" label="每包数量" />
+          <el-table-column label="操作" width="100">
+            <template #default="scope">
+              <el-button
+                type="primary"
+                @click="handleDeleteExtensionItem(scope.$index)"
               >
-                <el-input v-model="item.cSAPCode" autocomplete="off" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="18">
-              <div style="display: flex">
-                <el-form-item
-                  label="每包数量"
-                  label-width="150"
-                  prop="iDefindParm12"
-                >
-                  <el-input-number v-model="item.cPackageNumber" />
-                </el-form-item>
-                <el-button
-                  v-if="sAPInfos.length > 1"
-                  @click="() => sAPInfos.splice(index, 1)"
-                  style="margin-left: 40px"
-                >
-                  删除
-                </el-button>
-              </div>
-            </el-col>
-          </template>
-        </el-row>
-        <el-button
-          style="margin-left: 40px"
-          @click="sAPInfos.push({ cSAPCode: '', cPackageNumber: 0 })"
-        >
-          添加
-        </el-button>
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-card>
 
       <el-card>
         <div style="display: flex; justify-content: space-between">
           <el-tag type="primary" size="large">单位信息</el-tag>
-          <el-button type="primary" @click="onClickAddBtn">添加</el-button>
+          <el-button type="primary" @click="onClickAddUnitBtn">添加</el-button>
         </div>
         <el-table :data="unitData" style="width: 100%; margin-top: 20px">
           <el-table-column width="60" fixed>
@@ -586,6 +624,44 @@ onActivated(() => {
       </div>
     </div>
   </el-form>
+
+  <el-dialog v-model="showAddExtensionDialog" title="添加" width="600">
+    <el-form :model="extensionItemData">
+      <el-form-item label="SAP 物料编码" label-width="150">
+        <el-input v-model="extensionItemData.cSAPCode" />
+      </el-form-item>
+
+      <el-form-item label="供应商名称" label-width="150">
+        <el-input
+          v-model="extensionItemData.cVendorName"
+          style="width: 100%"
+          clearable
+        >
+          <template #append>
+            <el-icon @click="handleClickExtensioncVendorNameModal">
+              <MoreFilled />
+            </el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+
+      <el-form-item label="供应商编码" label-width="150">
+        <el-input v-model="extensionItemData.cVendorCode" disabled />
+      </el-form-item>
+
+      <el-form-item label="每包数量" label-width="150">
+        <el-input-number v-model="extensionItemData.cPackageNumber" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div>
+        <el-button @click="showAddExtensionDialog = false">取消</el-button>
+        <el-button type="primary" @click="handleSaveAddExtensionData">
+          确定
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 
   <el-dialog v-model="showAddUnitDialog" title="添加" width="600">
     <el-form :model="unitItemData">
@@ -641,7 +717,9 @@ onActivated(() => {
     <template #footer>
       <div>
         <el-button @click="showAddUnitDialog = false">取消</el-button>
-        <el-button type="primary" @click="handleSaveAddData"> 确定 </el-button>
+        <el-button type="primary" @click="handleSaveAddUnitData">
+          确定
+        </el-button>
       </div>
     </template>
   </el-dialog>
@@ -653,6 +731,10 @@ onActivated(() => {
   <CVendorNameModal
     ref="cVendorNameModalRef"
     @confirm="handleCVendorNameModalConfirm"
+  />
+  <CVendorNameModal
+    ref="extensionCVendorNameModalRef"
+    @confirm="handleExtensionCVendorNameModalConfirm"
   />
   <UnitModal ref="mainUnitModalRef" @confirm="handleMainUnitModalConfirm" />
   <UnitModal ref="secondUnitModalRef" @confirm="handleSecondUnitModalConfirm" />

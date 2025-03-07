@@ -106,3 +106,14 @@ export function warehouseLocationGetForPage(data) {
     data
   });
 }
+
+export function getCMaterialTypes(data) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + '/api/Dictonary/GetDicType',
+    method: 'get',
+    params: {
+      cTableCode: 'FM_INENTORY_INFO',
+      cAttributeCode: 'cMaterialType'
+    }
+  });
+}

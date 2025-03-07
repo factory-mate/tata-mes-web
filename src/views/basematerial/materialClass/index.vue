@@ -519,8 +519,8 @@ const ExportAll = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
-      Conditions: ''
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
     }
   };
   try {
@@ -542,8 +542,8 @@ const ExportOne = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
-      Conditions: ''
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
     }
   };
   try {
@@ -563,7 +563,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cInvClassCode'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
