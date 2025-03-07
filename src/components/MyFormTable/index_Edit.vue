@@ -319,33 +319,10 @@ const data = reactive({
   titleName: '标题',
   AttributeCode: '',
   MulitChoose: false, //判断弹框组件单选或多选
-  codeType: '',
-  ButObjData: {} as any, //按钮配置数据
-  form: {
-    name: '',
-    date: null,
-    optVal: '',
-    project: ''
-  },
-  options: [
-    {
-      value: '1',
-      label: '是'
-    },
-    {
-      value: '2',
-      label: '否'
-    }
-  ]
+  codeType: ''
 });
-const {
-  dialogType,
-  titleName,
-  codeType,
-  ButObjData,
-  MulitChoose,
-  AttributeCode
-} = toRefs(data);
+const { dialogType, titleName, codeType, MulitChoose, AttributeCode } =
+  toRefs(data);
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 const BGTableData = ref(
   window.sessionStorage.getItem('BGTableData')
