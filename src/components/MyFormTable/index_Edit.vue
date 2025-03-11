@@ -86,7 +86,6 @@
             </div>
           </template>
           <template #default="scope">
-            <!-- item.edit== 0||item.edit== 1 -->
             <div v-if="funEdit(item.edit)">
               <el-date-picker
                 v-if="item.cControlTypeCode == 'DatePicker'"
@@ -553,26 +552,10 @@ const calcWidth = (row: { label: any }) => {
   return flexWidth + 'px';
 };
 const funEdit = (v: any) => {
-  if (Route.name.includes('YL')) {
-    if (!v) {
-      return true;
-    } else {
-      return false;
-    }
+  if (!v) {
+    return true;
   }
-  if (Route.name == 'ReturnQualityInfo') {
-    if (v == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  } else {
-    if (v == 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  return false;
 };
 //添加数据的处理 added  edit
 const tableFunObj = () => {

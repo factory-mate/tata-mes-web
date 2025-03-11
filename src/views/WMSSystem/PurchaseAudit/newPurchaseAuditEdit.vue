@@ -46,7 +46,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
       >
         <!-- <template #button>
                     <el-table-column label="操作" fixed="right" width="160px" align="center">
@@ -240,7 +240,7 @@ onActivated(() => {
   initType.value = false;
   if (history.state.row) {
     //拆分没保存，进页面重新获取数据
-    getAddUser(Route.meta.ModelCode);
+    // getAddUser(Route.meta.ModelCode);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
