@@ -319,6 +319,7 @@ const printajax = () => {
   let data = {
     method: 'post',
     url: import.meta.env.VITE_APP_DY_API + '/api/ArriveVouch/PrintLabelAgain',
+    // url: import.meta.env.VITE_APP_DY_API + '/api/Stock/GetStockBarCodeForPage',
     data: DYUID.value
   };
   // let data = {

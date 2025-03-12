@@ -339,7 +339,7 @@ const funTable = (arr: Array<any>) => {
           checkType: true,
           label: item.Resource.cAttributeName,
           prop: item.Resource.cAttributeCode,
-          edit: !item.DefinedParm4,
+          edit: item.DefinedParm4,
           cIncludeModelCode: item.cIncludeModelCode,
           cServerIP: item.Resource.cServerIP,
           cUrl: item.Resource.cUrl,
