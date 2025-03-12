@@ -527,7 +527,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cCode desc'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
