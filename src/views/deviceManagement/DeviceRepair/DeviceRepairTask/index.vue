@@ -508,7 +508,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cPARM06 desc'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
