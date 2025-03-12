@@ -52,6 +52,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       }
     },
     build: {
+      outDir: `dist/${mode}`,
       rollupOptions: {
         external: [],
         output: {
