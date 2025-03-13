@@ -110,8 +110,8 @@ onActivated(async () => {
       <el-tag type="primary" size="large">单位信息</el-tag>
       <el-table :data="unitData" style="width: 100%; margin-top: 20px">
         <el-table-column prop="cUnitTypeName" label="计量单位应用类型" />
-        <el-table-column prop="cUnitCode" label="主计量单位名称" />
-        <el-table-column prop="cAssUnitCode" label="辅计量单位名称" />
+        <el-table-column prop="cUnitName" label="主计量单位名称" />
+        <el-table-column prop="cAssUnitName" label="辅计量单位名称" />
         <el-table-column prop="iChangeRate" label="换算率" />
         <el-table-column prop="IsDefaultName" label="是否默认" />
       </el-table>
