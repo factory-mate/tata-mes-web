@@ -96,7 +96,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="false"
+        :selection="true"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"

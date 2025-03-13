@@ -292,6 +292,7 @@ const getComboBoxFun = async () => {
 };
 // table 数据整合
 const funTable = (arr: Array<any>) => {
+  tableColumns.value = [];
   modelGrid.value = arr;
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
