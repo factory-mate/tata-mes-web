@@ -879,6 +879,7 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
     tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
     tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+    tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
   }
   if (Route.name == 'otherOutNotifyAdd' || Route.name == 'otherOutNotifyEdit') {
     tableDataVal.value[IndexType.value].state =
