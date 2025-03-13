@@ -525,17 +525,31 @@ const refuseItem = val => {
       val: val.row.UID
     }
   };
-  DataApi(data).then(res => {
-    if (res.success) {
-      ElMessage({
-        type: 'success',
-        message: '操作成功'
+  // 确认弹框
+  ElMessageBox.confirm('是否确认拒收', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      DataApi(data).then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+        } else {
+          console.log('操作失败');
+        }
       });
-      tableAxios();
-    } else {
-      console.log('操作失败');
-    }
-  });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消'
+      });
+    });
 };
 
 const clickHandAdd = (data: any) => {
