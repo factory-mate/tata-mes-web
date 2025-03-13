@@ -43,7 +43,9 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
+        :setWidth="setWidth"
+        custom-width
       >
         <template #button>
           <el-table-column
@@ -408,6 +410,24 @@ const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
   disabled.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '物料编码':
+      return 100;
+    case '物料名称':
+      return 250;
+    case '规格型号':
+      return 120;
+    case '数量':
+    case '单位':
+      return 60;
+    case '交货日期':
+      return 100;
+    default:
+      return 200;
+  }
 };
 </script>
 

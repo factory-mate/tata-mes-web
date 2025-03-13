@@ -95,6 +95,7 @@
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
+                style="width: auto"
               />
               <el-select
                 :disabled="props.disabled || item.DefinedParm4 === '1'"
