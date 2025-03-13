@@ -24,7 +24,6 @@
             :label="item.Resource.cAttributeName + '：'"
             :prop="item.Resource.cAttributeCode"
           >
-            <!-- {{ item.Resource.cAttributeCode }} -->
             <el-input
               v-if="item.cControlTypeCode == 'TextBox'"
               v-model="ruleForm[item.cAttributeCode]"
@@ -246,6 +245,12 @@ watch(props, (newValue, oldValue) => {
       }
     );
   }
+  // 显示 Select 文本值
+  FormData.value
+    .filter(i => i.cControlTypeCode === 'ComboBox')
+    .map(i =>
+      selectVisible(true, ruleForm[i.Resource.cAttributeCode + '_Data'], i)
+    );
 });
 const disabledFun = (item: any) => {
   if (props.disabled) {
@@ -487,6 +492,7 @@ const remoteMethod = (item: any, query: any) => {
   }
 };
 const selectVisible = (v: any, obj: any, item: any) => {
+  console.log(v, obj, item);
   selectItem.value = item;
   if (v) {
     let obj = {
