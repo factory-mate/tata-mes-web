@@ -3,7 +3,7 @@
   <div class="maintain">
     <el-card>
       <!-- 按钮区域 -->
-      <div class="bot-btn1">
+      <div class="bot-btn1" v-if="showBtnArea">
         <ButtonViem
           :ToolBut="But"
           @SaveAdd="SaveAdd"
@@ -134,6 +134,7 @@ const tableColumns = ref(dataVal);
 const AxiosData = ref({}) as any;
 const modelGrid = ref([]) as any;
 const modelGridType = ref(true);
+const showBtnArea = ref(false);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
@@ -197,6 +198,11 @@ onActivated(() => {
 });
 // 权限按钮
 const RoleBut = (v: any) => {
+  if (v.iStatus !== 10) {
+    showBtnArea.value = true;
+  } else {
+    showBtnArea.value = false;
+  }
   let ToolData = head.value.filter((BItem: any) => {
     return BItem.cAttributeCode == 'Tool';
   });
