@@ -96,11 +96,13 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         :disabledHide="false"
+        :setWidth="setWidth"
+        custom-width
       >
         <template #button>
           <el-table-column
@@ -802,6 +804,34 @@ const clickEdit = (obj: any) => {
   disabled.value = false;
   disa.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '到货单编辑' });
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '物料编码':
+      return 120;
+    case '质检':
+      return 60;
+    case '物料名称':
+      return 250;
+    case '订单号':
+      return 170;
+    case '规格型号':
+      return 120;
+    case '未到货数量':
+    case '到货数量':
+    case '每包数量':
+    case '箱数':
+    case '打印状态':
+    case '到货确认':
+      return 90;
+    case '单位':
+      return 80;
+    case '生产日期':
+      return 150;
+    default:
+      return 200;
+  }
 };
 </script>
 
