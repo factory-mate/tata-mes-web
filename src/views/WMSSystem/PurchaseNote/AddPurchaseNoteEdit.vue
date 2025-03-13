@@ -86,6 +86,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="80%"
     >
       <myTable
         ref="TTABRef"
@@ -96,6 +97,7 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        max-height="500"
       >
       </myTable>
       <template #footer>
@@ -110,6 +112,7 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[10, 20, 50]"
       />
     </el-dialog>
   </div>

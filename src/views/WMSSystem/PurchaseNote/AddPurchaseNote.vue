@@ -105,7 +105,7 @@
         :tableData="TtableData"
         :tableColumns="TtableColumns"
         :tableBorder="true"
-        :selection="false"
+        :selection="true"
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
