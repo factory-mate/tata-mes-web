@@ -2281,11 +2281,11 @@ const newAdd = () => {
     ButObjTableData.value.forEach((item: any) => {
       item.IsAuth = true;
     });
-    // #1799
+    // #1799 #3229
     dataValue = {
       Items: ButObjTableData.value.map(i => ({
-        ...i,
-        nQuantity: i.nQuantity2 ?? i.nQuantity
+        ...i
+        // nQuantity: i.nQuantity2 ?? i.nQuantity
       }))
     };
   } else if (
@@ -2298,13 +2298,13 @@ const newAdd = () => {
     ButObjTableData.value.forEach((item: any) => {
       item.IsAuth = true;
     });
-    // #1799
+    // #1799 #3229
     dataValue = {
       Items: ButObjTableData.value
         .filter(i => i.cInvCode)
         .map(i => ({
-          ...i,
-          nQuantity: i.nQuantity2 ?? i.nQuantity
+          ...i
+          // nQuantity: i.nQuantity2 ?? i.nQuantity
         }))
     };
   } else if (
