@@ -44,10 +44,13 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
+        :disabledHide="false"
+        :setWidth="setWidth"
+        custom-width
       >
-        <template #button>
+        <!-- <template #button>
           <el-table-column
             label="操作"
             fixed="right"
@@ -67,7 +70,7 @@
               >
             </template>
           </el-table-column>
-        </template>
+        </template> -->
       </myTable>
       <pagination
         v-if="total > 0"
@@ -479,6 +482,24 @@ const tableHearData = (value: any) => {
     tableData.value.sort((a: any, b: any) => {
       return b[prop] - a[prop];
     });
+  }
+};
+const setWidth = row => {
+  switch (row.label) {
+    case '物料编码':
+      return 80;
+    case '物料名称':
+      return 250;
+    case '规格型号':
+      return 80;
+    case '数量':
+    case '原始数量':
+    case '单位':
+      return 50;
+    case '交货日期':
+      return 70;
+    default:
+      return 200;
   }
 };
 </script>
