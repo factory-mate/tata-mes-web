@@ -44,10 +44,11 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :disabled="disabled"
+        :show-index="false"
       >
-        <template #button>
+        <!-- <template #button>
           <el-table-column
             label="操作"
             fixed="right"
@@ -67,7 +68,7 @@
               >
             </template>
           </el-table-column>
-        </template>
+        </template> -->
       </myTable>
       <pagination
         v-if="total > 0"
