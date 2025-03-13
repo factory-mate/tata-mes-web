@@ -83,13 +83,12 @@
     <el-dialog
       v-model="TdialogFormVisible"
       title="添加"
-      draggable
       :modal="false"
       width="80%"
       :close-on-click-modal="false"
     >
       <!-- 搜索区域 -->
-      <div v-if="TFilter.length">
+      <div>
         <FilterForm
           :Filter="TFilter"
           @ClickSearch="TClickSearch"
