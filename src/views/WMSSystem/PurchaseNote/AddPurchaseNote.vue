@@ -112,6 +112,7 @@
         max-height="52vh"
         :setWidth="setWidth"
         custom-width
+        :show-index="false"
       >
       </myTable>
       <template #footer>
@@ -198,7 +199,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: '',
+  OrderByFileds: 'cDefindParm01 desc',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
