@@ -85,6 +85,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="80%"
     >
       <!-- 搜索区域 -->
       <FilterForm
@@ -101,6 +102,7 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        :showIndex="false"
       >
       </myTable>
       <template #footer>
