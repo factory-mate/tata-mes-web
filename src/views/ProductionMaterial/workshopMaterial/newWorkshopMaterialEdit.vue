@@ -44,7 +44,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :disabled="disabled"
       >
         <template #button>
