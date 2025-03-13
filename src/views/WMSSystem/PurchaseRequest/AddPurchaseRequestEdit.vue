@@ -46,6 +46,7 @@
         :selection="false"
         :setWidth="setWidth"
         custom-width
+        :disabledHide="!(tabVal === 'WMS.PlanPurchaseVouch.M.Edit.ApprovalLog')"
       >
         <template #button>
           <el-table-column
