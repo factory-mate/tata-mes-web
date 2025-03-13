@@ -191,7 +191,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: '',
+  OrderByFileds: 'cCode desc',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
@@ -577,7 +577,7 @@ const TClickSearch = (val: any) => {
 // 重置
 const TresetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'cCode desc';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
