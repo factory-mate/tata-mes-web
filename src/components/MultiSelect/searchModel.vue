@@ -37,8 +37,8 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
-        :pagerCount="5"
         @pagination="changPage"
+        :page-sizes="[20, 50, 100]"
       />
     </el-card>
     <template #footer>
@@ -125,7 +125,7 @@ const tableItemData = ref(null) as any;
 const total = ref(0);
 const queryParams = ref({
   PageIndex: 1,
-  PageSize: 5
+  PageSize: 20
 }) as any;
 const dialogTypeVal: Ref<boolean> = ref(false);
 watch(
@@ -172,7 +172,7 @@ watch(
       total.value = 0;
       queryParams.value = {
         PageIndex: 1,
-        PageSize: 5
+        PageSize: 20
       };
     }
   },
@@ -187,7 +187,7 @@ const handleSelectionChange = (val: any) => {
 const clickOpen = () => {
   queryParams.value = {
     PageIndex: 1,
-    PageSize: 5
+    PageSize: 20
   };
 };
 // 关闭
