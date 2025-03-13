@@ -64,6 +64,7 @@
           :tableHB="tableHB"
           :tableHeight="600"
           :disabledHide="disabledHide"
+          :show-index="false"
         >
           <template #button>
             <el-table-column

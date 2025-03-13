@@ -34,11 +34,7 @@
 
       <!-- 表格勾选框 -->
       <el-table-column v-if="props.selection" type="selection" width="55" />
-      <el-table-column
-        width="60"
-        fixed
-        v-if="!['ProductionOrderBG'].includes(Route.name)"
-      >
+      <el-table-column width="60" fixed v-if="showIndex">
         <template #header> 序号 </template>
         <template #default="scope">
           {{ scope.$index + 1 }}
@@ -53,7 +49,7 @@
           v-else
           v-bind="item"
           :sortable="item.sortable"
-          :min-width="calcWidth(item)"
+          :min-width="customWidth ? setWidth(item) : calcWidth(item)"
           filter-multiple
           :filter-method="filterMethod"
           filter-placement="top-start"
@@ -434,6 +430,18 @@ const props = defineProps({
   maxHeight: {
     type: String as any,
     default: () => undefined
+  },
+  showIndex: {
+    type: Boolean,
+    default: () => true
+  },
+  setWidth: {
+    type: Function,
+    default: () => {}
+  },
+  customWidth: {
+    type: Boolean,
+    default: () => false
   }
 });
 const tableHeader: any = ref(
@@ -551,6 +559,7 @@ const calcWidth = (row: { label: any }) => {
   }
   return flexWidth + 'px';
 };
+
 const funEdit = (v: any) => {
   if (!v) {
     return true;
