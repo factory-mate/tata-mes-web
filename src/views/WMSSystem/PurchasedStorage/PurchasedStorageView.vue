@@ -542,7 +542,7 @@ const ExportAll = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'dCreateTime',
       Conditions: ''
     }
   };
@@ -565,7 +565,7 @@ const ExportOne = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'dCreateTime',
       Conditions: ''
     }
   };
