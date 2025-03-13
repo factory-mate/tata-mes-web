@@ -47,6 +47,8 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="false"
+        :setWidth="setWidth"
+        custom-width
       >
         <!-- <template #button>
                     <el-table-column label="操作" fixed="right" width="160px" align="center">
@@ -608,6 +610,24 @@ const Reject = (obj: any) => {
       ElMessage.error('驳回失败');
     }
   });
+};
+const setWidth = row => {
+  switch (row.label) {
+    case '物料编码':
+      return 70;
+    case '物料名称':
+      return 250;
+    case '规格型号':
+      return 80;
+    case '数量':
+    case '原始数量':
+    case '单位':
+      return 50;
+    case '交货日期':
+      return 100;
+    default:
+      return 200;
+  }
 };
 </script>
 
