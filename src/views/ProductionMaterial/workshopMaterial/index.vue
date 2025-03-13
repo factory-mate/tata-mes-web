@@ -342,65 +342,91 @@ const changPage = (val: any) => {
 };
 //驳回
 const clickReject = (obj: any) => {
-  console.log(obj, '--===clickReject');
   if (!selectList.value.length) {
     ElMessage.error('请选择数据');
     return false;
   }
-  let UIDS: any = [];
-  selectList.value.forEach((element: any) => {
-    UIDS.push(element.UID);
-  });
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: {
-      UIDs: UIDS,
-      iStatus: 50
-    }
-  };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '成功'
+  // 确认弹窗
+  ElMessageBox.confirm('确定驳回数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      let UIDS: any = [];
+      selectList.value.forEach((element: any) => {
+        UIDS.push(element.UID);
       });
-      tableAxios();
-    } else {
-      ElMessage.error('失败');
-    }
-  });
+      let data = {
+        method: obj.Resource.cHttpTypeCode,
+        url: obj.Resource.cServerIP + obj.Resource.cUrl,
+        data: {
+          UIDs: UIDS,
+          iStatus: 0
+        }
+      };
+      DataApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '成功'
+          });
+          tableAxios();
+        } else {
+          ElMessage.error('失败');
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消驳回'
+      });
+    });
 };
 //审核
 const clickAudit = (obj: any) => {
-  console.log(obj, '--===clickAudit');
   if (!selectList.value.length) {
     ElMessage.error('请选择数据');
     return false;
   }
-  let UIDS: any = [];
-  selectList.value.forEach((element: any) => {
-    UIDS.push(element.UID);
-  });
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: {
-      UIDs: UIDS,
-      iStatus: 5
-    }
-  };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '成功'
+  // 确认弹窗
+  ElMessageBox.confirm('确定审核数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      let UIDS: any = [];
+      selectList.value.forEach((element: any) => {
+        UIDS.push(element.UID);
       });
-      tableAxios();
-    } else {
-      ElMessage.error('失败');
-    }
-  });
+      let data = {
+        method: obj.Resource.cHttpTypeCode,
+        url: obj.Resource.cServerIP + obj.Resource.cUrl,
+        data: {
+          UIDs: UIDS,
+          iStatus: 5
+        }
+      };
+      DataApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '成功'
+          });
+          tableAxios();
+        } else {
+          ElMessage.error('失败');
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消审核'
+      });
+    });
 };
 //表格按钮删除
 const clickDelete = (scope: any, obj: any) => {
