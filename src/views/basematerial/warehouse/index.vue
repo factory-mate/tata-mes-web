@@ -139,6 +139,17 @@ const tabType = ref(true);
 const SelectionData = ref([]);
 const myTableRefs = ref();
 
+const $bus: any =
+  getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
+// 新增/编辑后的刷新
+$bus.on('tableUpData', (v: any) => {
+  setTimeout(() => {
+    if (v.name == 'warehouse') {
+      tableAxios();
+    }
+  }, 300);
+});
+
 const data = reactive({
   dialogV: false,
   dialogTitle: '新增',
