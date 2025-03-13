@@ -652,25 +652,29 @@ const BtnDAel = (v: any) => {
 };
 //提交
 const Commit = (obj: any) => {
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [rowId.value]
-  };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '提交成功'
+  DataApi({
+    method: 'post',
+    url: import.meta.env.VITE_APP_DY_API + '/api/ArriveVouch/Edit',
+    data: { ...headRef.value.ruleForm, Items: tableData.value }
+  }).then(res => {
+    if (res.success) {
+      DataApi({
+        method: obj.Resource.cHttpTypeCode,
+        url: obj.Resource.cServerIP + obj.Resource.cUrl,
+        data: [rowId.value]
+      }).then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '提交成功'
+          });
+          // tableAxios()
+          // TabRef.value.handleRemoveSelectionChange()
+          // sendId.value = []
+        }
       });
-      // tableAxios()
-      // TabRef.value.handleRemoveSelectionChange()
-      // sendId.value = []
-    } else {
-      console.log('提交失败');
     }
   });
-  console.log(obj, '提交');
 };
 
 const DYUID = ref([]) as any;
