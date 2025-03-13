@@ -508,7 +508,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'dCreateTime desc'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
