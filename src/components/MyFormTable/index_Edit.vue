@@ -104,6 +104,7 @@
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
+                placeholder=""
                 @change="(value:any)=>tableSelect(value,item.prop,scope.$index,item.PullData)"
               >
                 <el-option
