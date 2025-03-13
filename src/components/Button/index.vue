@@ -119,7 +119,11 @@
           effect="light"
         >
           <el-button
-            v-print="'#printMe'"
+            v-print="{
+              id: 'printMe',
+              previewTitle: '',
+              popTitle: ''
+            }"
             :disabled="props.printDis"
             @click="clickButton(item)"
             >{{ item.Resource.cAttributeName }}</el-button
