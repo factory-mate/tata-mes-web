@@ -226,14 +226,16 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  getAddUser(Route.meta.ModelCode);
+
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
   rowId.value = Route.params.rowId;
   initType.value = false;
-  if (rowId.value !== JSON.parse(history.state.row).UID) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value !== JSON.parse(history.state.row).UID) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
   if (history.state.row) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
