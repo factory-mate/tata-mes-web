@@ -2140,8 +2140,10 @@ const newAdd = () => {
   }
   //策略管理
   if (Route.name == 'policMangmentAdd' || Route.name == 'policMangmentEdit') {
-    ruleForm.value['cPolicyTypeName'] = Idata.value[0].cDictonaryName;
-    ruleForm.value['cPolicyTypeCode'] = Idata.value[0].cDictonaryCode;
+    if (Idata.value[0]) {
+      ruleForm.value['cPolicyTypeName'] = Idata.value[0].cDictonaryName;
+      ruleForm.value['cPolicyTypeCode'] = Idata.value[0].cDictonaryCode;
+    }
   }
   //设备档案编辑(下拉框数据)-----------------------------
   if (Route.name == 'EditDevice' || Route.name == 'AddDevice') {
