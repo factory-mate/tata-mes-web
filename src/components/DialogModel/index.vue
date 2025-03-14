@@ -1716,8 +1716,10 @@ const SaveAdd = (item: any) => {
       ruleForm.value.cResourceTypeCode = '00274';
     }
     if (Route.name === 'scheme') {
-      ruleForm.value.cProjectTypeCode = ProjectName.value[0].cDictonaryCode;
-      ruleForm.value.cProjectTypeName = ProjectName.value[0].cDictonaryName;
+      if (ProjectName.value[0]) {
+        ruleForm.value.cProjectTypeCode = ProjectName.value[0].cDictonaryCode;
+        ruleForm.value.cProjectTypeName = ProjectName.value[0].cDictonaryName;
+      }
     }
     //添加项目----------设备编辑
     if (Route.name == 'EditDevice') {
