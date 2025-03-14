@@ -19,15 +19,7 @@
             :prop="item.Resource.cAttributeCode"
             v-if="item.IsShow && item.Resource.cAttributeTypeCode != 'binddata'"
             :style="{
-              width:
-                item.DefinedParm0 ||
-                ((Route.name == 'AddBusineScen' ||
-                  Route.name == 'AddBusineScenEdit' ||
-                  Route.name == 'AddBusineScenView') &&
-                  (item.cAttributeName === '条件表达式' ||
-                    item.cAttributeName === '描述'))
-                  ? '100%'
-                  : '340px'
+              width: getFormItemLength(item)
             }"
           >
             <!-- {{ item.Resource.cAttributeCode }} -->
@@ -85,7 +77,7 @@
                 item.cControlTypeCode == 'RichText' &&
                 item.cDataTypeCode == 'Nvarchar'
               "
-              :rows="2"
+              :rows="1"
               type="textarea"
               v-model="ruleForm[item.Resource.cAttributeCode]"
               :placeholder="disabled ? '' : '请输入'"
@@ -2704,6 +2696,21 @@ const downFile = (v: any) => {
 
 const handleChangeRuleForm = (value: any) => {
   ruleForm.value = { ...ruleForm.value, ...value };
+};
+
+const getFormItemLength = item => {
+  if (
+    Route.name == 'AddBusineScen' ||
+    Route.name == 'AddBusineScenEdit' ||
+    (Route.name == 'AddBusineScenView' &&
+      (item.cAttributeName === '条件表达式' || item.cAttributeName === '描述'))
+  ) {
+    return '100%';
+  }
+  if (item.DefinedParm0) {
+    return '640px';
+  }
+  return '340px';
 };
 defineExpose({
   ruleForm,
