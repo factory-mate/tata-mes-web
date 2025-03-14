@@ -266,14 +266,16 @@ const prop = {
   label: 'cFactoryUnitName',
   value: 'cFactoryUnitCode',
   children: 'Child',
-  checkStrictly: true
+  checkStrictly: true,
+  expandTrigger: 'hover'
 };
 
 const wmsMaterialProp = {
   label: 'cInvClassName',
   value: 'cInvClassCode',
   children: 'Child',
-  checkStrictly: true
+  checkStrictly: true,
+  expandTrigger: 'hover'
 };
 const clickFil = (val: any) => {
   fileType.value = !fileType.value;
@@ -755,6 +757,7 @@ const handleChange = (item: any, value: any) => {
   item.cAttributeCodeValue =
     value.length > 1 ? value[value.length - 1] : value[0];
   item.treeSelectedValues = selectedNodeValue;
+  cascaderRef.value[0].togglePopperVisible();
 };
 
 // 递归将节点的value值存入数组
