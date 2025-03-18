@@ -19,7 +19,7 @@
               :tableData="tableData"
               :tableColumns="tableColumns"
               :tableBorder="true"
-              :selection="true"
+              :selection="false"
               @handleSelectionChange="handleSelectionChange"
             >
             </Table>
