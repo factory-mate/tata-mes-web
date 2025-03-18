@@ -532,17 +532,17 @@ const ThandleSelectionChange = (val: any) => {
 
 //弹窗确认
 const Tconfirm = () => {
-  if (
-    !itemData.value.every(
-      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '必须同供应商且同交货日期才能一起选择'
-    });
-    return;
-  }
+  // if (
+  //   !itemData.value.every(
+  //     (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '必须同供应商且同交货日期才能一起选择'
+  //   });
+  //   return;
+  // }
   if (
     headRef.value.ruleForm.cVendorName ||
     headRef.value.ruleForm.cVendorCode
