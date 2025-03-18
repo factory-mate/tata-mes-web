@@ -9,11 +9,11 @@
     ></FilterForm>
     <el-card>
       <!-- 按钮区域 -->
-      <ButtonViem
+      <!-- <ButtonViem
         :ToolBut="But"
         @clickAdd="clickAdd"
         @clickDelete="clickDel"
-      ></ButtonViem>
+      ></ButtonViem> -->
       <!-- 表格区域 -->
       <myTable
         ref="TabRef"
@@ -21,7 +21,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -105,7 +105,7 @@ import {
 } from 'element-plus';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
-import { configApi, DataApi, delApi } from '@/api/configApi/index';
+import { configApi, DataApi, delApi, ParamsApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
@@ -135,13 +135,14 @@ onActivated(() => {
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (val == Route.name) {
+  //   initType.value = false;
+  //   getData(Route.meta.ModelCode);
+  // }
+  // if (initType.value) {
+  //   getData(Route.meta.ModelCode);
+  // }
+  getData(Route.meta.ModelCode);
   initType.value = false;
 });
 // 新增/编辑后的刷新
@@ -225,20 +226,21 @@ const tableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
+    },
+    params: {
+      UID: Route.params.rowId
     }
   };
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
-    const res = await DataApi(data);
+    const res = await ParamsApi(data);
     if (res.status == 200) {
-      tableData.value = res.data.data.map(
-        (item: { IsValid: string | boolean }) => {
-          return {
-            ...item,
-            IsValid: item.IsValid ? '是' : '否'
-          };
-        }
-      );
+      tableData.value = res.data.map((item: { IsValid: string | boolean }) => {
+        return {
+          ...item,
+          IsValid: item.IsValid ? '是' : '否'
+        };
+      });
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();

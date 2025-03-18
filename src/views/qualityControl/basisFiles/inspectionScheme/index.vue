@@ -202,7 +202,7 @@ const clickTableBut = (scope: any, event: any) => {
   console.log(event.cAttributeCode, '--event.cAttributeCode');
 
   switch (event.cAttributeCode) {
-    case 'View':
+    case 'ViewBody':
       clickView(scope, event);
       break;
     case 'Edit':
