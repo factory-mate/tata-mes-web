@@ -1845,7 +1845,22 @@ const selectData = (val: any) => {
     }
     //设备档案
     if (Route.name == 'EditDevice' || Route.name == 'AddDevice') {
-      ruleForm.value['cDeviceClassCode'] = val.value[0].cDeviceClassCode || '';
+      if (AttributeCode.value === 'cDeviceClassName') {
+        ruleForm.value['cDeviceClassCode'] =
+          val.value[0].cDeviceClassCode || '';
+      }
+      if (AttributeCode.value === 'cPARM03') {
+        ruleForm.value.cPARM02 = val.value[0].cWorkCode;
+        ruleForm.value.cPARM03 = val.value[0].cWorkName;
+      }
+      if (AttributeCode.value === 'cPARM06') {
+        ruleForm.value.cPARM05 = val.value[0].cEmployeeCode;
+        ruleForm.value.cPARM06 = val.value[0].cEmployeeName;
+      }
+      if (AttributeCode.value === 'cPARM08') {
+        ruleForm.value.cPARM07 = val.value[0].cEmployeeCode;
+        ruleForm.value.cPARM08 = val.value[0].cEmployeeName;
+      }
     }
     if (
       Route.name == 'AddClientClassify' ||

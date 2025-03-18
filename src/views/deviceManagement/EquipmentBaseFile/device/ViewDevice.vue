@@ -2,10 +2,10 @@
   <!-- 设备详情 -->
   <div class="maintain">
     <!-- 按钮区域 -->
-    <div style="display: flex">
+    <!-- <div style="display: flex">
       <ButtonViem :ToolBut="But" @SaveEdit="SaveEdit" @clickAdd="clickAdd">
       </ButtonViem>
-    </div>
+    </div> -->
     <el-card>
       <!-- tab切换 -->
       <el-tabs
