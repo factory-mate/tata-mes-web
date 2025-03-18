@@ -784,9 +784,11 @@ const setWidth = row => {
     case '质检':
       return 60;
     case '物料名称':
-      return 250;
+      return 240;
     case '规格型号':
       return 120;
+    case '订单号':
+      return 160;
     case '未到货数量':
     case '到货数量':
     case '每包数量':
