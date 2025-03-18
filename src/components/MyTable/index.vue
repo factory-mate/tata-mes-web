@@ -377,6 +377,14 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'IncomingInspectionMaterialsView') {
+    switch (row.label) {
+      case '包号':
+        return 200;
+      default:
+        break;
+    }
+  }
   if (Route.name === 'TaskReleaseRecord') {
     switch (row.label) {
       case '业务类型':
