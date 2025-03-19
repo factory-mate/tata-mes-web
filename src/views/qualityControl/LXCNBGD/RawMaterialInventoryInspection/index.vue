@@ -23,7 +23,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -31,7 +31,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
