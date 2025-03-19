@@ -132,6 +132,7 @@ import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
+import FilterForm from '@/components/Filter/index.vue';
 import { compare, filterModel, tableSortInit } from '@/utils';
 import {
   ElButton,
