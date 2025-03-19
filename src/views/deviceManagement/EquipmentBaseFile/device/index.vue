@@ -56,6 +56,7 @@
           @clickStart="Start"
           @clickDelete="clickDel"
           @export-all="Export"
+          @export-one="ExportOne"
         ></ButtonViem>
         <!-- 表格区域 -->
         <myTable
@@ -735,10 +736,30 @@ const Export = async (obj: any) => {
     case 'ExportPerson':
       excelTitle = '人员详情';
       break;
+    case 'Export':
+      excelTitle = '设备档案';
+      break;
     default:
       break;
   }
   exportAnalysisHooks(data, excelTitle);
+};
+
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '设备档案');
+  loading.close();
 };
 </script>
 

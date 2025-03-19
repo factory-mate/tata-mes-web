@@ -199,7 +199,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: 'cDefindParm01 desc',
+  OrderByFileds: 'cVendorCode,cDefindParm01,cInvCode',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
