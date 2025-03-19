@@ -86,8 +86,14 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
-      width="80%"
+      width="90%"
     >
+      <FilterForm
+        :Filter="TFilter"
+        @ClickSearch="TClickSearch"
+        @resetForm="TresetForm"
+      ></FilterForm>
+
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
@@ -126,7 +132,7 @@ import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare } from '@/utils';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import {
   ElButton,
   ElCard,
@@ -168,6 +174,8 @@ const tableData = ref([] as any);
 const total = ref(0);
 // 表格配置数据
 const disa = ref(false);
+const TFilter = ref([]) as any;
+
 let dataVal = ref([] as any[]);
 const tableColumns = ref(dataVal);
 const AxiosData = ref({}) as any;
@@ -428,6 +436,9 @@ const ItemAdd = async (obj: any) => {
             item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
           );
         }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          TFilter.value = item[import.meta.env.VITE_APP_key];
+        }
       });
     } else {
       console.log('请求出错');
@@ -618,6 +629,23 @@ const setWidth = row => {
     default:
       return 200;
   }
+};
+
+// T弹窗搜索
+const TClickSearch = (val: any) => {
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+
+// 重置
+const TresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TTABRef.value.clearFilter();
 };
 </script>
 
