@@ -563,8 +563,11 @@ const funTable = (arr: Array<any>) => {
 
 //表格数据查询
 const tableAxios = async () => {
-  console.log(codess.value, 'codess.value------------');
-  console.log(row.value, 'row.value-------------');
+  console.log(tabVal.value, 'tabVal.value');
+  let OrderByFileds = OrderByFileds.value;
+  if (tabVal.value === 'Device.device_dev_pro_config.M.List') {
+    OrderByFileds = 'cProgramTypeCode,cProgramCode';
+  }
 
   let dataVal = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -572,7 +575,7 @@ const tableAxios = async () => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value,
+      OrderByFileds,
       Conditions: row.value?.cDeviceCode
         ? `cDeviceCode=${rowVal.value.cDeviceCode}`
         : `cDeviceCode=${codess.value}`
