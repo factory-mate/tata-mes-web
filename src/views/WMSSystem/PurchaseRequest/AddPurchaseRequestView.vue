@@ -192,17 +192,17 @@ onActivated(() => {
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
   }
+  if (row.value.iStatus !== 10) {
+    showBtnArea.value = true;
+  } else {
+    showBtnArea.value = false;
+  }
   if (history.state.title == '采购申请详情') {
     disabled.value = true;
   }
 });
 // 权限按钮
 const RoleBut = (v: any) => {
-  if (v.iStatus !== 10) {
-    showBtnArea.value = true;
-  } else {
-    showBtnArea.value = false;
-  }
   let ToolData = head.value.filter((BItem: any) => {
     return BItem.cAttributeCode == 'Tool';
   });
