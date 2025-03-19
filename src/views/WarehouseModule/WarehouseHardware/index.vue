@@ -19,6 +19,14 @@ import { configApi, DataApi } from '@/api/configApi/index';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import useStore from '@/store';
 import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
+import { useVueToPrint } from 'vue-to-print';
+import QrcodeVue from 'qrcode.vue';
+
+const componentRef = ref();
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: '任务单'
+});
 
 const { cache } = useStore();
 const $bus = getCurrentInstance()?.appContext.config.globalProperties.mittBus;
@@ -41,6 +49,7 @@ const tableColumns = ref([]);
 const tableButtons = ref([]);
 const tableData = ref([]);
 const tableQueryConfig = ref({});
+const printData = ref([]);
 
 // 获取数据
 const getData = async () => {
@@ -262,6 +271,35 @@ const newList = val => {
 // 恢复
 const renew = () => getData();
 
+function PrintRWQD() {
+  if (selectedIds.value.length == 0) {
+    ElMessage({
+      message: '请选择数据',
+      type: 'warning'
+    });
+    return;
+  }
+  const data = {
+    method: 'POST',
+    url:
+      import.meta.env.VITE_APP_DY_100_API + '/api/Package/GetRWD_KFWJAllData',
+    data: selectedIds.value
+  };
+  DataApi(data).then(res => {
+    if (res.success) {
+      printData.value = res.data ?? [];
+      if (printData.value.length == 0) {
+        ElMessage({
+          message: '无数据',
+          type: 'warning'
+        });
+        return;
+      }
+      setTimeout(() => handlePrint(), 16);
+    }
+  });
+}
+
 onMounted(() => getData());
 
 onActivated(async () => {
@@ -286,12 +324,23 @@ $bus.on('tableUpData', v => {
       @reset-form="resetSearchParams"
     />
     <el-card>
-      <ButtonArea
-        :ToolBut="toolButtons"
-        @click-add="handleAdd"
-        @ExportAll="ExportAll"
-        @ExportOne="ExportOne"
-      />
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <ElButton @click="PrintRWQD" style="margin-bottom: 10px">
+          打印任务单
+        </ElButton>
+        <ButtonArea
+          :ToolBut="toolButtons"
+          @click-add="handleAdd"
+          @ExportAll="ExportAll"
+          @ExportOne="ExportOne"
+        />
+      </div>
       <TableArea
         ref="tableRef"
         :table-data="tableData"
@@ -370,6 +419,141 @@ $bus.on('tableUpData', v => {
         v-model:limit="queryParams.PageSize"
         @pagination="handleChangePage"
       />
+
+      <div ref="componentRef" class="print-content">
+        <div
+          :class="printData.length > 1 && 'per-page'"
+          v-for="(item, index) in printData"
+          :key="index"
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div style="font-size: 48px; font-weight: 900">TATA</div>
+            <div style="font-size: 30px">包装任务单（五金）</div>
+            <div
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <qrcode-vue
+                :value="item.list_bodys?.[0]?.WJPBarcode"
+                :size="90"
+              />
+              <span style="margin-top: 4px">
+                {{ item.list_bodys?.[0]?.WJPBarcode }}
+              </span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column">
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 43%">P订单号：{{ item?.cCode ?? '' }}</div>
+              <div style="width: 23%">
+                产品：{{ item.list_bodys?.[0]?.cDefindParm08 ?? '' }}
+              </div>
+              <div style="width: 33%">
+                城市：{{
+                  `${item?.cProvinceCode ?? ''}${item?.cCityCode ?? ''}`
+                }}
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 43%">
+                门店：{{ item?.cDefindParm04 ?? '' }}
+              </div>
+              <div style="width: 16%">客户：{{ item?.cCusName ?? '' }}</div>
+              <div style="width: 40%">工厂：兰考闼闼同创工贸有限公司(25厂)</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 43%">
+                生产批次：{{
+                  `${item?.cBatch ?? ''}-000${item?.iDefindParm13 ?? ''}-${
+                    item.list_bodys?.[0]?.cDefindParm09 ?? ''
+                  }`
+                }}
+              </div>
+              <div style="width: 23%">
+                包装完成日期：{{ item?.dPlanDateStartStr ?? '' }}
+              </div>
+              <div style="width: 33%">
+                D订单号：{{ item?.cDefindParm05 ?? '' }}
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 66%">
+                子订单号：{{
+                  `${item?.cDefindParm30 ?? ''}-${item?.cCode ?? ''}-${
+                    item?.cProvinceCode ?? ''
+                  }-${item?.cCityCode ?? ''}-000${item?.iDefindParm13 ?? ''}-${
+                    item.list_bodys?.[0]?.cDefindParm09 ?? ''
+                  }`
+                }}
+              </div>
+              <div style="width: 33%">五金组柜</div>
+            </div>
+          </div>
+
+          <table
+            style="
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 10px;
+              font-size: 14px;
+            "
+          >
+            <thead>
+              <tr>
+                <th style="border: 1px solid #000; padding: 5px">序号</th>
+                <th style="border: 1px solid #000; padding: 5px">五金名称</th>
+                <th style="border: 1px solid #000; padding: 5px">五金ID</th>
+                <th style="border: 1px solid #000; padding: 5px">规格</th>
+                <th style="border: 1px solid #000; padding: 5px">单位</th>
+                <th style="border: 1px solid #000; padding: 5px">品牌</th>
+                <th style="border: 1px solid #000; padding: 5px">数量</th>
+                <th style="border: 1px solid #000; padding: 5px">备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(item, index) in item.list_bodys"
+                :key="index"
+                style="text-align: center"
+              >
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ index + 1 }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.cInvName }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.cInvCode }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.cInvStd }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.cUnitCode }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.cDefindParm25 }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.nQuantity }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ item.cMemo }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </el-card>
   </div>
 </template>
@@ -380,5 +564,27 @@ $bus.on('tableUpData', v => {
   height: 100%;
   box-sizing: border-box;
   padding: 20px;
+}
+
+.print-content {
+  display: none;
+
+  @media print {
+    display: block;
+
+    .per-page {
+      page-break-after: always;
+      break-after: page;
+      padding: 20px;
+    }
+  }
+
+  html,
+  body {
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
 }
 </style>

@@ -17,6 +17,14 @@ import PopupArea from '@/components/Popup/index.vue';
 import { configApi, DataApi } from '@/api/configApi/index';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import useStore from '@/store';
+import { useVueToPrint } from 'vue-to-print';
+import QrcodeVue from 'qrcode.vue';
+
+const componentRef = ref();
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: '任务单'
+});
 
 const { cache } = useStore();
 const route = useRoute();
@@ -37,7 +45,9 @@ const tableRef = ref(null);
 const tableColumns = ref([]);
 const tableButtons = ref([]);
 const tableData = ref([]);
+const groupedData = ref([]);
 const tableQueryConfig = ref({});
+const printData = ref([]);
 
 // 获取数据
 const getData = async () => {
@@ -122,13 +132,32 @@ const getTableData = async () => {
   const { success, data: resData } = await DataApi(params);
   if (success) {
     const { data, dataCount } = resData;
-    tableData.value = resData.map(i => ({
-      ...i,
-      IsValid: i.IsValid ? '是' : '否'
-    }));
+    // resData 根据组柜序号cDefindParm09 分组
+    tableData.value = resData;
+    groupedData.value = (resData ?? []).reduce((acc, item) => {
+      // 查找当前 cDefindParm09 是否已经在 acc 中
+      let group = acc.find(g => g.cDefindParm09 === item.cDefindParm09);
+
+      // 如果没有，创建一个新的分组
+      if (!group) {
+        group = {
+          cDefindParm09: item.cDefindParm09,
+          cDefindParm08: item.cDefindParm08,
+          UID: item.VID,
+          list: [],
+          selected: false
+        };
+        acc.push(group);
+      }
+
+      // 将当前项添加到对应分组的 list 中
+      group.list.push(item);
+
+      return acc;
+    }, []);
     total.value = dataCount;
     filterTable();
-    tableRef.value.handleRemoveSelectionChange();
+    // tableRef.value.handleRemoveSelectionChange();
   }
   loading.close();
 };
@@ -226,25 +255,58 @@ const newList = val => {
 // 恢复
 const renew = () => getData();
 
+function PrintRWQD() {
+  if (groupedData.value.filter(i => i.selected).length == 0) {
+    ElMessage({
+      message: '请选择数据',
+      type: 'warning'
+    });
+    return;
+  }
+  const data = {
+    method: 'POST',
+    url: import.meta.env.VITE_APP_DY_100_API + '/api/Package/GetRWD_KFWJData',
+    data: {
+      UID: groupedData.value[0].UID,
+      list_cDefindParm09: groupedData.value
+        .filter(i => i.selected)
+        .map(i => i.cDefindParm09)
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.success) {
+      printData.value = res.data ?? [];
+      if (printData.value.length == 0) {
+        ElMessage({
+          message: '无数据',
+          type: 'warning'
+        });
+        return;
+      }
+      setTimeout(() => handlePrint(), 16);
+    }
+  });
+}
+
 onMounted(() => getData());
 
 onActivated(async () => {
-  if (cache.isCurrentPageInvalid()) {
-    await getData();
-    cache.removeCurrentPageInvalid();
-  }
+  // if (cache.isCurrentPageInvalid()) {
+  await getData();
+  //   cache.removeCurrentPageInvalid();
+  // }
 });
 </script>
 
 <template>
   <div class="container">
-    <FilterArea
+    <!-- <FilterArea
       :Filter="filters"
       @click-search="handleSearch"
       @reset-form="resetSearchParams"
-    />
+    /> -->
     <el-card>
-      <ButtonArea :ToolBut="toolButtons" @click-add="handleAdd" />
+      <!-- <ButtonArea :ToolBut="toolButtons" @click-add="handleAdd" />
       <TableArea
         ref="tableRef"
         :table-data="tableData"
@@ -322,8 +384,183 @@ onActivated(async () => {
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="handleChangePage"
-      />
+      /> -->
+      <el-button
+        @click="PrintRWQD"
+        style="margin-bottom: 10px; margin-left: 10px"
+      >
+        打印任务单
+      </el-button>
+      <el-row>
+        <el-col :span="24" v-for="item in groupedData" :key="item.UID">
+          <div style="padding: 10px">
+            <el-card shadow="always">
+              <template #header>
+                <ElCheckbox v-model="item.selected" size="large" />
+                <span style="margin-left: 10px">
+                  组柜序号：{{ item.cDefindParm09 }}
+                </span>
+                <span style="margin-left: 10px">
+                  当前组柜名称：{{ item.cDefindParm08 }}
+                </span>
+              </template>
+
+              <el-table
+                :data="item.list"
+                border
+                :cell-style="{
+                  padding: '0',
+                  height: '12px',
+                  margin: '0'
+                }"
+              >
+                <el-table-column prop="cInvName" label="五金名称">
+                </el-table-column>
+                <el-table-column prop="cInvCode" label="五金ID">
+                </el-table-column>
+                <el-table-column prop="cInvStd" label="规格"> </el-table-column>
+                <el-table-column prop="cUnitCode" label="单位">
+                </el-table-column>
+                <el-table-column prop="nQuantity" label="数量">
+                </el-table-column>
+                <el-table-column prop="cInStatus" label="包装状态">
+                </el-table-column>
+                <el-table-column prop="dCreateTime" label="包装时间">
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </div>
+        </el-col>
+      </el-row>
     </el-card>
+
+    <div ref="componentRef" class="print-content">
+      <div
+        :class="printData.length > 1 && 'per-page'"
+        v-for="(item, index) in printData"
+        :key="index"
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div style="font-size: 48px; font-weight: 900">TATA</div>
+          <div style="font-size: 30px">包装任务单（五金）</div>
+          <div
+            style="display: flex; flex-direction: column; align-items: center"
+          >
+            <qrcode-vue :value="item.list_bodys?.[0]?.WJPBarcode" :size="90" />
+            <span style="margin-top: 4px">
+              {{ item.list_bodys?.[0]?.WJPBarcode }}
+            </span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column">
+          <div style="display: flex; justify-content: space-between">
+            <div style="width: 43%">P订单号：{{ item?.cCode ?? '' }}</div>
+            <div style="width: 23%">
+              产品：{{ item.list_bodys?.[0]?.cDefindParm08 ?? '' }}
+            </div>
+            <div style="width: 33%">
+              城市：{{ `${item?.cProvinceCode ?? ''}${item?.cCityCode ?? ''}` }}
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between">
+            <div style="width: 43%">门店：{{ item?.cDefindParm04 ?? '' }}</div>
+            <div style="width: 16%">客户：{{ item?.cCusName ?? '' }}</div>
+            <div style="width: 40%">工厂：兰考闼闼同创工贸有限公司(25厂)</div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between">
+            <div style="width: 43%">
+              生产批次：{{
+                `${item?.cBatch ?? ''}-000${item?.iDefindParm13 ?? ''}-${
+                  item.list_bodys?.[0]?.cDefindParm09 ?? ''
+                }`
+              }}
+            </div>
+            <div style="width: 23%">
+              包装完成日期：{{ item?.dPlanDateStartStr ?? '' }}
+            </div>
+            <div style="width: 33%">
+              D订单号：{{ item?.cDefindParm05 ?? '' }}
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between">
+            <div style="width: 66%">
+              子订单号：{{
+                `${item?.cDefindParm30 ?? ''}-${item?.cCode ?? ''}-${
+                  item?.cProvinceCode ?? ''
+                }-${item?.cCityCode ?? ''}-000${item?.iDefindParm13 ?? ''}-${
+                  item.list_bodys?.[0]?.cDefindParm09 ?? ''
+                }`
+              }}
+            </div>
+            <div style="width: 33%">五金组柜</div>
+          </div>
+        </div>
+
+        <table
+          style="
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+          "
+        >
+          <thead>
+            <tr>
+              <th style="border: 1px solid #000; padding: 5px">序号</th>
+              <th style="border: 1px solid #000; padding: 5px">五金名称</th>
+              <th style="border: 1px solid #000; padding: 5px">五金ID</th>
+              <th style="border: 1px solid #000; padding: 5px">规格</th>
+              <th style="border: 1px solid #000; padding: 5px">单位</th>
+              <th style="border: 1px solid #000; padding: 5px">品牌</th>
+              <th style="border: 1px solid #000; padding: 5px">数量</th>
+              <th style="border: 1px solid #000; padding: 5px">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item, index) in item.list_bodys"
+              :key="index"
+              style="text-align: center"
+            >
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ index + 1 }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cInvName }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cInvCode }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cInvStd }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cUnitCode }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cDefindParm25 }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.nQuantity }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cMemo }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -333,5 +570,27 @@ onActivated(async () => {
   height: 100%;
   box-sizing: border-box;
   padding: 20px;
+}
+
+.print-content {
+  display: none;
+
+  @media print {
+    display: block;
+
+    .per-page {
+      page-break-after: always;
+      break-after: page;
+      padding: 20px;
+    }
+  }
+
+  html,
+  body {
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
 }
 </style>
