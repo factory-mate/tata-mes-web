@@ -504,7 +504,7 @@ $bus.on('tableUpData', v => {
               width: 100%;
               border-collapse: collapse;
               margin-top: 10px;
-              font-size: 14px;
+              font-size: 11px;
             "
           >
             <thead>
@@ -568,23 +568,20 @@ $bus.on('tableUpData', v => {
 
 .print-content {
   display: none;
+}
 
-  @media print {
-    display: block;
-
-    .per-page {
-      page-break-after: always;
-      break-after: page;
-      padding: 20px;
-    }
+@media print {
+  @page {
+    margin: 5mm;
   }
 
-  html,
-  body {
-    height: 100vh;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden;
+  .print-content {
+    display: block;
+  }
+
+  .per-page {
+    page-break-after: always;
+    break-after: page;
   }
 }
 </style>
