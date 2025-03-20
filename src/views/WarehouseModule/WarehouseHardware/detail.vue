@@ -459,7 +459,7 @@ onActivated(async () => {
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: column">
+        <div style="display: flex; flex-direction: column; font-size: 11px">
           <div style="display: flex; justify-content: space-between">
             <div style="width: 43%">P订单号：{{ item?.cCode ?? '' }}</div>
             <div style="width: 23%">
@@ -472,8 +472,8 @@ onActivated(async () => {
 
           <div style="display: flex; justify-content: space-between">
             <div style="width: 43%">门店：{{ item?.cDefindParm04 ?? '' }}</div>
-            <div style="width: 16%">客户：{{ item?.cCusName ?? '' }}</div>
-            <div style="width: 40%">工厂：兰考闼闼同创工贸有限公司(25厂)</div>
+            <div style="width: 23%">客户：{{ item?.cCusName ?? '' }}</div>
+            <div style="width: 33%">工厂：兰考闼闼同创工贸有限公司(25厂)</div>
           </div>
 
           <div style="display: flex; justify-content: space-between">
