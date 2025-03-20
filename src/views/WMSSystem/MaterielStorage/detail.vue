@@ -333,7 +333,7 @@ $bus.on('tableUpData', v => {
         :table-data="tableData"
         :table-columns="tableColumns"
         table-border
-        selection
+        :selection="false"
         @table-hear-data="sortTable"
         @handle-selection-change="handleSelectionChange"
       >
