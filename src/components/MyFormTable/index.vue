@@ -42,7 +42,8 @@
               'newProductionOrderChange',
               'addProductLine',
               'addProductLineEdit',
-              'addProductLineView'
+              'addProductLineView',
+              'menuMangment'
             ].includes(Route.name)
           "
         >
