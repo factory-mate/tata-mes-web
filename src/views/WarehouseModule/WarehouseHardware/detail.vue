@@ -419,11 +419,11 @@ onActivated(async () => {
                 <el-table-column prop="cInvCode" label="五金ID">
                 </el-table-column>
                 <el-table-column prop="cInvStd" label="规格"> </el-table-column>
+                <el-table-column prop="cPackageCode" label="包号">
+                </el-table-column>
                 <el-table-column prop="cUnitCode" label="单位">
                 </el-table-column>
                 <el-table-column prop="nQuantity" label="数量">
-                </el-table-column>
-                <el-table-column prop="cInStatus" label="包装状态">
                 </el-table-column>
                 <el-table-column prop="dCreateTime" label="包装时间">
                 </el-table-column>
@@ -520,6 +520,7 @@ onActivated(async () => {
               <th style="border: 1px solid #000; padding: 5px">五金名称</th>
               <th style="border: 1px solid #000; padding: 5px">五金ID</th>
               <th style="border: 1px solid #000; padding: 5px">规格</th>
+              <th style="border: 1px solid #000; padding: 5px">包号</th>
               <th style="border: 1px solid #000; padding: 5px">单位</th>
               <th style="border: 1px solid #000; padding: 5px">品牌</th>
               <th style="border: 1px solid #000; padding: 5px">数量</th>
@@ -543,6 +544,9 @@ onActivated(async () => {
               </td>
               <td style="border: 1px solid #000; padding: 5px">
                 {{ item.cInvStd }}
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                {{ item.cPackageCode }}
               </td>
               <td style="border: 1px solid #000; padding: 5px">
                 {{ item.cUnitCode }}
