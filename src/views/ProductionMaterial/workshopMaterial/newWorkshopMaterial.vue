@@ -47,6 +47,7 @@
         :selection="false"
         :disabled="disabled"
         :show-index="false"
+        :disabledHide="false"
       >
         <!-- <template #button>
           <el-table-column
