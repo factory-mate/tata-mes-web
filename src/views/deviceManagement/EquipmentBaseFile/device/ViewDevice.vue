@@ -564,13 +564,17 @@ const funTable = (arr: Array<any>) => {
 
 //表格数据查询
 const tableAxios = async () => {
+  let orderByFileds = OrderByFileds.value;
+  if (tabVal.value === 'Device.device_dev_pro_config.M.List') {
+    orderByFileds = 'cProgramTypeCode,cProgramCode';
+  }
   let dataVal = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value,
+      OrderByFileds: orderByFileds,
       Conditions: row.value
         ? `cDeviceCode=${rowVal.value.cDeviceCode}`
         : `cDeviceCode=${codess.value}`
@@ -752,6 +756,7 @@ const TfunTables = (arr: Array<any>) => {
 const TtableAxios = async () => {
   TtableData.value = [];
   total.value = 0;
+
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,

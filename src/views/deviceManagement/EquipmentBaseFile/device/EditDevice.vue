@@ -563,19 +563,17 @@ const funTable = (arr: Array<any>) => {
 
 //表格数据查询
 const tableAxios = async () => {
-  console.log(tabVal.value, 'tabVal.value');
-  let OrderByFileds = OrderByFileds.value;
+  let orderByFileds = OrderByFileds.value;
   if (tabVal.value === 'Device.device_dev_pro_config.M.List') {
-    OrderByFileds = 'cProgramTypeCode,cProgramCode';
+    orderByFileds = 'cProgramTypeCode,cProgramCode';
   }
-
   let dataVal = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds,
+      OrderByFileds: orderByFileds,
       Conditions: row.value?.cDeviceCode
         ? `cDeviceCode=${rowVal.value.cDeviceCode}`
         : `cDeviceCode=${codess.value}`
