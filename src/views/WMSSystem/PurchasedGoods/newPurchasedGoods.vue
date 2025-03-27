@@ -105,6 +105,7 @@
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
         :showIndex="false"
+        max-height="52vh"
       >
       </myTable>
       <template #footer>
