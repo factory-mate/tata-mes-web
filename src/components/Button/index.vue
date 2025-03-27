@@ -26,7 +26,6 @@
       </el-upload>
       <el-dropdown
         v-else-if="item.Resource.cAttributeCode == 'Export'"
-        style="margin-left: 10px"
         @command="HandExport($event, item)"
       >
         <el-button>
