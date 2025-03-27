@@ -287,7 +287,8 @@ const emits = defineEmits([
   'ExportDetail',
   'HangUp',
   'Copy',
-  'Print'
+  'Print',
+  'Del'
 ]);
 
 watch(
@@ -755,6 +756,9 @@ const Copy = (obj: any) => {
 const Print = (obj: any) => {
   emits('Print', obj);
 };
+const Del = (obj: any) => {
+  emits('Del', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1099,6 +1103,9 @@ const clickButton = (event: any) => {
       break;
     case 'Print':
       Print(event);
+      break;
+    case 'Del':
+      Del(event);
       break;
     default:
       break;

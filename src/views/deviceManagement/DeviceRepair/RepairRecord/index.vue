@@ -15,6 +15,7 @@
         @EqupimentRead="EqupimentRead"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @Del="handleDel"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -299,6 +300,52 @@ const tablefilter = () => {
     }
   });
 };
+
+const handleDel = (obj: any) => {
+  sendId.value = [];
+  sendIdArr.value.forEach((item: any) => {
+    sendId.value.push(item.UID);
+  });
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要删除的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  ElMessageBox.confirm('确定删除数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      delApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '删除成功'
+          });
+          tableAxios();
+          TabRef.value.handleRemoveSelectionChange();
+          sendId.value = [];
+        } else {
+          console.log('删除失败');
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除'
+      });
+    });
+};
+
 // table  排序
 const tableHearData = (val: any) => {
   OrderByFileds.value = tableSortModel(val.value);
