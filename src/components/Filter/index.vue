@@ -22,6 +22,7 @@
                 : item.Resource.cAttributeName + '：'
             "
             v-for="item in FilterData"
+            style="font-weight: 700"
             :key="item.cAppCode"
           >
             <!-- {{item.Resource.cAttributeCode}} -->

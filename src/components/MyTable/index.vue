@@ -377,6 +377,22 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'WarehouseHardware') {
+    switch (row.label) {
+      case '组柜数':
+      case '省份':
+      case '城市':
+      case '客户':
+        return 60;
+      case '材质类型':
+      case '主单材质':
+      case '单据类型':
+      case '五金状态':
+        return 80;
+      default:
+        break;
+    }
+  }
   if (Route.name === 'IncomingInspectionMaterialsView') {
     switch (row.label) {
       case '包号':
