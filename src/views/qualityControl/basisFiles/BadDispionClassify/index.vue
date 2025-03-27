@@ -67,6 +67,7 @@
     </el-card>
     <!-- 弹窗 -->
     <Odialog
+      width="500"
       :dialogFormVisible="ZZdialogFormVisible"
       :title="title"
       :objData="objData"
