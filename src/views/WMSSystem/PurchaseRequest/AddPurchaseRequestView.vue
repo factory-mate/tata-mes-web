@@ -181,6 +181,8 @@ onActivated(() => {
   // if (rowId.value != Route.params.rowId) {
   //   getAddUser(Route.meta.ModelCode);
   // }
+  tabVal.value = 'WMS.PlanPurchaseVouch.M.View.MaterialList';
+  tableColumns.value = [];
   getAddUser(Route.meta.ModelCode);
   rowId.value = Route.params.rowId;
   initType.value = false;
