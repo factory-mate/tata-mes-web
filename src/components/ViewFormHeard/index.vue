@@ -1263,6 +1263,37 @@ const funHeadview = () => {
           });
         }
       }
+      if (Route.name === 'EditDevice') {
+        if (ruleForm.value.cDeviceSourceType) {
+          window.sessionStorage.setItem(
+            'cDeviceSourceData',
+            JSON.stringify([
+              {
+                cDictonaryCode: ruleForm.value.cDeviceSourceType,
+                cDictonaryName: ruleForm.value.cDeviceSourceName
+              }
+            ])
+          );
+        } else {
+          window.sessionStorage.setItem(
+            'cDeviceSourceData',
+            JSON.stringify([])
+          );
+        }
+        if (ruleForm.value.cDeviceTypeCode) {
+          window.sessionStorage.setItem(
+            'cDeviceTypeData',
+            JSON.stringify([
+              {
+                cDictonaryCode: ruleForm.value.cDeviceTypeCode,
+                cDictonaryName: ruleForm.value.cDeviceTypeName
+              }
+            ])
+          );
+        } else {
+          window.sessionStorage.setItem('cDeviceTypeData', JSON.stringify([]));
+        }
+      }
       if (Route.name == 'neworiginalOrder') {
         ruleForm.value.cDefindParm02 = formatDate(ruleForm.value.cDefindParm02);
         ruleForm.value.cDefindParm03 = formatDate(ruleForm.value.cDefindParm03);
