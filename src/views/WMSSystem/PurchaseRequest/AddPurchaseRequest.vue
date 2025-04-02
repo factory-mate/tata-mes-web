@@ -212,8 +212,8 @@ const RoleBut = (v: any) => {
   }
 };
 const getAddUser = async (code: any) => {
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
     if (res.status == 200) {
       res.data.forEach((item: any) => {
@@ -248,14 +248,14 @@ const getAddUser = async (code: any) => {
           );
         }
       });
-      ElLoading.service().close();
+      loading.close();
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
+      loading.close();
     }
   } catch (error) {
     console.log(error, '程序出错了');
-    ElLoading.service().close();
+    loading.close();
   }
 };
 // tabs 切换，调取对应Tab数据
