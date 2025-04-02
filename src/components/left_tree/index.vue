@@ -11,7 +11,14 @@
         >
           <template v-for="item in FormDatas" :key="item.UID">
             <el-form-item
-              :label="item.Resource.cAttributeName + '：'"
+              :label="
+                item.cDataTypeCode == 'Nvarchar'
+                  ? ''
+                  : item.Resource.cAttributeName + '：'
+              "
+              :label-width="
+                item.cDataTypeCode == 'Nvarchar' ? '0px' : undefined
+              "
               :prop="item.Resource.cAttributeCode"
               v-if="
                 item.IsShow && item.Resource.cAttributeTypeCode != 'binddata'
@@ -21,8 +28,10 @@
               <el-input
                 v-if="item.cDataTypeCode == 'Nvarchar'"
                 v-model="ruleForm[item.Resource.cAttributeCode]"
-                :placeholder="disabled ? '' : '请输入'"
-                style="width: 100px"
+                :placeholder="
+                  disabled ? '' : '请输入' + item.Resource.cAttributeName
+                "
+                style="width: 140px"
               />
               <el-input
                 v-if="
