@@ -343,11 +343,6 @@ const clickView = (scope: any, obj: any) => {
       row: JSON.stringify(scope.row),
       pathName: 'MaterielStorage',
       title: '箱码信息'
-    },
-    query: {
-      cInvCode: scope.row.cInvCode,
-      cWareHouseCode: scope.row.cWareHouseCode,
-      cWareHouseLocationName: scope.row.cWareHouseLocationName
     }
   });
 };

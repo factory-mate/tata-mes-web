@@ -24,6 +24,7 @@ const $bus = getCurrentInstance()?.appContext.config.globalProperties.mittBus;
 const route = useRoute();
 const router = useRouter();
 
+const row = ref({});
 const queryParams = reactive({
   PageIndex: 1,
   PageSize: 20
@@ -109,9 +110,9 @@ const getData = async () => {
 const getTableData = async () => {
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   const defaultConditions = [];
-  const cInvCode = route.query.cInvCode;
-  const cWareHouseCode = route.query.cWareHouseCode;
-  const cWareHouseLocationName = route.query.cWareHouseLocationName;
+  const cInvCode = row.value.cInvCode;
+  const cWareHouseCode = row.value.cWareHouseCode;
+  const cWareHouseLocationName = row.value.cWareHouseLocationName;
   if (cInvCode) {
     defaultConditions.push(`cInvCode = ${cInvCode}`);
   }
@@ -300,9 +301,14 @@ const newList = val => {
   getTableData();
 };
 
-onMounted(() => getData());
+onMounted(() => {
+  getData();
+});
 
 onActivated(async () => {
+  if (history.state.row) {
+    row.value = JSON.parse(history.state.row);
+  }
   await getData();
   // if (cache.isCurrentPageInvalid()) {
   //   await getData();
