@@ -393,6 +393,19 @@ const calcWidth = (row: { label: any }) => {
         break;
     }
   }
+  if (Route.name === 'applicationInspection') {
+    switch (row.label) {
+      case '单位':
+      case '数量':
+      case '检验结果':
+      case '修改人':
+        return 70;
+      case '已打印箱码':
+        return 80;
+      default:
+        break;
+    }
+  }
   if (Route.name === 'IncomingInspectionMaterialsView') {
     switch (row.label) {
       case '包号':
