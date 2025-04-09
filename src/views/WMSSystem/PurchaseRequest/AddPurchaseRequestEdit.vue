@@ -5,6 +5,7 @@
       <!-- 按钮区域 -->
       <div class="bot-btn1">
         <ButtonViem
+          v-if="row?.iStatus === 0 || row?.iStatus === 5"
           :ToolBut="But"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
@@ -50,6 +51,7 @@
       >
         <template #button>
           <el-table-column
+            v-if="row?.iStatus === 0 || row?.iStatus === 5"
             label="操作"
             fixed="right"
             width="160px"
@@ -64,8 +66,9 @@
                 :disabled="disabled"
                 size="small"
                 @click="clickTableHandDel(scope)"
-                >删除</el-button
               >
+                删除
+              </el-button>
             </template>
           </el-table-column>
         </template>
@@ -90,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from 'element-plus';
 import { ref, toRefs, reactive, onActivated } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';

@@ -5,6 +5,7 @@
       <!-- 按钮区域 -->
       <div class="bot-btn1">
         <ButtonViem
+          v-if="row?.iStatus < 2"
           :ToolBut="But"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
@@ -23,7 +24,6 @@
         :treeSelData="treeSelData"
         @RoleBut="RoleBut"
       ></Head-View>
-
       <!-- tab切换 -->
       <el-tabs
         type="card"
@@ -50,6 +50,10 @@
       >
         <template #button>
           <el-table-column
+            v-if="
+              tabVal === 'WMS.MaterialApplyForWareHouse.M.View.MaterialList' &&
+              row?.iStatus < 2
+            "
             label="操作"
             fixed="right"
             width="160px"
@@ -64,8 +68,9 @@
                 :disabled="disabled"
                 size="small"
                 @click="clickTableHandDel(scope.$index)"
-                >删除</el-button
               >
+                删除
+              </el-button>
             </template>
           </el-table-column>
         </template>
