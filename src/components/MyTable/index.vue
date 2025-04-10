@@ -539,27 +539,45 @@ const PriveImg = (obj: any) => {
   imgIshow.value = true;
   srcList.value.push(url);
 };
+const pImg = url => {
+  srcList.value = [];
+  imgIshow.value = true;
+  srcList.value.push(url);
+};
+
 const DownLoad = (scope: any, item: any) => {
   if (
     item.label == '文件名称1' ||
     item.label == '图片1' ||
     item.label == '照片1'
   ) {
-    PriveImg(scope.row.FileName1);
+    if (Route.name === 'IncomingInspectionMaterialsView') {
+      pImg(scope.row.FilePath1);
+    } else {
+      PriveImg(scope.row.FileName1);
+    }
   }
   if (
     item.label == '文件名称2' ||
     item.label == '图片2' ||
     item.label == '照片2'
   ) {
-    PriveImg(scope.row.FileName2);
+    if (Route.name === 'IncomingInspectionMaterialsView') {
+      pImg(scope.row.FilePath2);
+    } else {
+      PriveImg(scope.row.FileName2);
+    }
   }
   if (
     item.label == '文件名称3' ||
     item.label == '图片3' ||
     item.label == '照片3'
   ) {
-    PriveImg(scope.row.FileName3);
+    if (Route.name === 'IncomingInspectionMaterialsView') {
+      pImg(scope.row.FilePath3);
+    } else {
+      PriveImg(scope.row.FileName3);
+    }
   }
 };
 // 排序
