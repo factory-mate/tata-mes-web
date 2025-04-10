@@ -711,8 +711,14 @@ const renew = () => {
 };
 
 const Export = async (obj: any) => {
-  console.log(obj);
   let conditions = filterModel(filterRef.value.FilterData);
+  if (ParentCode.value) {
+    if (conditions) {
+      conditions = `cDeviceClassCode in (${ParentCode.value}) && ${conditions}`;
+    } else {
+      conditions = `cDeviceClassCode in (${ParentCode.value})`;
+    }
+  }
   let url = obj.Resource.cServerIP + obj.Resource.cUrl;
   let data = {
     method: obj.Resource.cHttpTypeCode,
@@ -747,6 +753,14 @@ const Export = async (obj: any) => {
 
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
+  let conditions = Conditions.value;
+  if (ParentCode.value) {
+    if (conditions) {
+      conditions = `cDeviceClassCode in (${ParentCode.value}) && ${conditions}`;
+    } else {
+      conditions = `cDeviceClassCode in (${ParentCode.value})`;
+    }
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -754,7 +768,7 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: conditions
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
