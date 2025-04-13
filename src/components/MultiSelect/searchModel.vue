@@ -56,6 +56,7 @@ import { ElMessage } from 'element-plus';
 import { configApi, DataApi } from '@/api/configApi/index';
 import { filterModel, tableSortInit } from '@/utils';
 import FilterForm from '@/components/Filter/index.vue';
+import { compare } from '@/utils';
 import { useRoute } from 'vue-router';
 const myTableRef = ref();
 const Route = useRoute();
@@ -286,7 +287,7 @@ const configData = (val: string) => {
 // table 数据
 const funTable = (arr: Array<any>) => {
   tableColumn.value = [];
-  arr.forEach(item => {
+  arr.sort(compare('iIndex', true)).forEach(item => {
     // if(item.Resource.cAttributeTypeCode=='method'){}
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       if (ajaxData.value && ajaxData.value.url) {
