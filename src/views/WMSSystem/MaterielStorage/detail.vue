@@ -19,7 +19,7 @@ import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import useStore from '@/store';
 
-const { cache } = useStore();
+const { cache, tagsView } = useStore();
 const $bus = getCurrentInstance()?.appContext.config.globalProperties.mittBus;
 const route = useRoute();
 const router = useRouter();
@@ -313,11 +313,13 @@ onActivated(async () => {
   if (history.state.row) {
     row.value = JSON.parse(history.state.row);
   }
+  tagsView.updateVisitedView(route);
+
   await getData();
-  // if (cache.isCurrentPageInvalid()) {
-  //   await getData();
-  //   cache.removeCurrentPageInvalid();
-  // }
+  if (cache.isCurrentPageInvalid()) {
+    await getData();
+    cache.removeCurrentPageInvalid();
+  }
 });
 
 $bus.on('tableUpData', v => {

@@ -331,7 +331,6 @@ const changPage = (val: any) => {
 
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
-  console.log(scope.row);
   router.push({
     name: 'MaterielStorageDetail',
     params: {
@@ -346,6 +345,7 @@ const clickView = (scope: any, obj: any) => {
     }
   });
 };
+
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
