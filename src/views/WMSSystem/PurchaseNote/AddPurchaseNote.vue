@@ -515,12 +515,34 @@ const TtableAxios = async () => {
     if (res.status == 200) {
       TtableData.value = res.data.data;
       total.value = res.data.dataCount;
+      tablefilter();
     } else {
       console.log('请求出错');
     }
   } catch (error) {
     console.log(error, '程序出错');
   }
+};
+
+// table filters
+const tablefilter = () => {
+  TtableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    TtableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop]) {
+        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
+        aItem.filters = filData;
+      }
+    });
+    if (aItem.filters && aItem.filters.length) {
+      aItem.filters = aItem.filters.filter(
+        (item: { text: any }, index: any, self: any[]) => {
+          const i = self.findIndex((t: { text: any }) => t.text === item.text);
+          return i === index;
+        }
+      );
+    }
+  });
 };
 
 const itemData = ref([]) as any;

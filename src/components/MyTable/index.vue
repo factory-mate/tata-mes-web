@@ -116,6 +116,7 @@
                   >
                     <CaretBottom />
                   </el-icon>
+
                   <!-- 排序 默认-->
                   <el-icon v-else @click="() => clickSort(index, 'asc')">
                     <DCaret />
