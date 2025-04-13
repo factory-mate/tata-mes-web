@@ -413,7 +413,10 @@ const tableAxios = async () => {
   }
 };
 const handleTableDataChange = (val: any) => {
-  tableData.value = val;
+  tableData.value = val.map(i => ({
+    ...i,
+    nMoney: i.nPrice * i.nQuantity
+  }));
 };
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
