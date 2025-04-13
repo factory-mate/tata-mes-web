@@ -76,8 +76,16 @@ service.interceptors.response.use(
         isLongMessage = true;
       }
     } else if (errmsg?.[0]?.Value) {
-      errorMsg = errmsg[0].Value;
-      if (errmsg[0].Value.length > MESSAGE_LENGTH) {
+      try {
+        const errormsgParsedJSON = JSON.parse(errmsg[0].Value);
+        errorMsg = errormsgParsedJSON?.[0]?.name + errormsgParsedJSON?.[0]?.msg;
+      } catch {
+        errorMsg = errmsg[0].Value;
+      }
+      if (!errorMsg) {
+        errorMsg = errmsg[0].Value;
+      }
+      if (errorMsg.length > MESSAGE_LENGTH) {
         isLongMessage = true;
       }
     }
