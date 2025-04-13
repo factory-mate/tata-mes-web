@@ -106,6 +106,7 @@
                 "
                 placeholder=""
                 @change="(value:any)=>tableSelect(value,item.prop,scope.$index,item.PullData)"
+                filterable
               >
                 <el-option
                   v-for="(val, index) in item.PullData"
