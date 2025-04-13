@@ -571,7 +571,14 @@ onActivated(() => {
           <el-table-column prop="cSAPCode" label="SAP 物料编码" />
           <el-table-column prop="cVendorCode" label="供应商编码" />
           <el-table-column prop="cVendorName" label="供应商名称" />
-          <el-table-column prop="cPackageNumber" label="每包数量" />
+          <el-table-column prop="cPackageNumber" label="每包数量">
+            <template #default="scope">
+              <el-input-number
+                v-model="scope.row['cPackageNumber']"
+                placeholder="请输入"
+              />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="100">
             <template #default="scope">
               <el-button
