@@ -106,7 +106,7 @@ import {
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -118,6 +118,7 @@ const modelCode = ref();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
+const router = useRouter();
 const headRef = ref(null);
 let But = ref([]) as any;
 const tabVal = ref();
@@ -459,9 +460,22 @@ const SaveEdit = (obj: any) => {
 };
 // 编辑
 const clickEdit = (obj: any) => {
-  getAddUser(obj.cIncludeModelCode);
-  disabled.value = false;
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+  // getAddUser(obj.cIncludeModelCode);
+  // disabled.value = false;
+  // $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+  router.push({
+    name: 'AddPurchaseRequestEdit',
+    params: {
+      t: Date.now(),
+      rowId: row.value.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(row.value),
+      pathName: 'AddPurchaseRequestView',
+      title: '采购申请编辑'
+    }
+  });
 };
 
 const Commit = (obj: any) => {
