@@ -115,15 +115,23 @@
               <span>操作</span>
             </template>
             <template #default="scope">
-              <!-- <el-button
+              <el-button
+                v-if="headRef.ruleForm?.iStatus !== 0"
                 type="primary"
                 :disabled="disabled"
                 size="small"
                 @click="clickTableHandDel(scope)"
               >
                 删除
-              </el-button> -->
-              <el-button type="primary" size="small" @click="refuseItem(scope)">
+              </el-button>
+              <el-button
+                v-if="
+                  headRef.ruleForm?.iStatus !== 0 && scope.row.iStatus === 0
+                "
+                type="primary"
+                size="small"
+                @click="refuseItem(scope)"
+              >
                 拒收
               </el-button>
             </template>
