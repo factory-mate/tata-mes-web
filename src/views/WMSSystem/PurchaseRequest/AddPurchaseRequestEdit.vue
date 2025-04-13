@@ -32,7 +32,7 @@
         @tab-click="clickTabs"
       >
         <el-tab-pane
-          v-for="item in TabPageVal"
+          v-for="item in [TabPageVal[0]]"
           :key="item.cIncludeModelCode"
           :label="item.Resource.cAttributeName"
           :name="item.cIncludeModelCode"
