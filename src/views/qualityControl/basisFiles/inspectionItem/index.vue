@@ -422,23 +422,30 @@ const clickEditTable = (scope: any, obj: any) => {
 };
 //表格按钮停用
 const clickDelete = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
-  };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '停用成功'
-      });
-      tableAxios();
-      sendId.value = [];
-    } else {
-      ElMessage.error('停用失败');
-    }
+  ElMessageBox.confirm('确定删除数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 确认删除弹框
+    const senid = scope.row.UID;
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      data: [senid]
+    };
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '停用成功'
+        });
+        tableAxios();
+        sendId.value = [];
+      } else {
+        ElMessage.error('停用失败');
+      }
+    });
   });
 };
 //按钮新增
