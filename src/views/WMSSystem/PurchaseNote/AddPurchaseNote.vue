@@ -389,7 +389,10 @@ const funTable = (arr: Array<any>) => {
   getComboBoxFun();
 };
 const handleTableDataChange = (val: any) => {
-  tableData.value = val;
+  tableData.value = val.map(i => ({
+    ...i,
+    nMoney: i.nPrice * i.nQuantity
+  }));
 };
 
 //表格数据查询
