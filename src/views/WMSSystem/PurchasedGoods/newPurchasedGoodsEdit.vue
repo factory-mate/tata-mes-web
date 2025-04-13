@@ -115,6 +115,9 @@
               <span>操作</span>
             </template>
             <template #default="scope">
+              <el-button type="primary" size="small" @click="copyItem(scope)"
+                >复制</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="disabled"
@@ -504,6 +507,10 @@ const resetForm = (val: any) => {
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
   tableData.value.splice(val.$index, 1);
+};
+
+const copyItem = val => {
+  tableData.value.splice(val.$index + 1, 0, val.row);
 };
 
 const clickHandAdd = (data: any) => {
