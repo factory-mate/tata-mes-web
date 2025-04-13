@@ -50,7 +50,12 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i < (tableButton.length > 3 ? 2 : 3)"
+                  v-if="
+                    i < (tableButton.length > 3 ? 2 : 3) &&
+                    ((item.Resource.cAttributeCode === 'Edit' &&
+                      scope.row.iStauts === 0) ||
+                      item.Resource.cAttributeCode !== 'Edit')
+                  "
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
