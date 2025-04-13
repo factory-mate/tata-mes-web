@@ -250,9 +250,17 @@ const getAddUser = async (code: any) => {
           getAddUser(TabPageVal.value[0].cIncludeModelCode);
         }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
-          But.value = item[import.meta.env.VITE_APP_key].sort(
-            compare('iIndex', true)
-          );
+          But.value = item[import.meta.env.VITE_APP_key]
+            .sort(compare('iIndex', true))
+            .filter(i => {
+              if (
+                headRef.value?.ruleForm?.iStatus === 0 ||
+                headRef.value?.ruleForm?.iStatus === 5
+              ) {
+                return true;
+              }
+              return false;
+            });
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
           funTable(
