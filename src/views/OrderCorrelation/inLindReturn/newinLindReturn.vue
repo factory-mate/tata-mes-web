@@ -4,7 +4,7 @@
     <el-card>
       <!-- Head区域 -->
       <div>
-        <el-divider content-position="left">单据信息</el-divider>
+        <!-- <el-divider content-position="left">单据信息</el-divider> -->
         <Head-View
           :Head="head"
           :row="row"
@@ -15,8 +15,9 @@
           :treeSelData="treeSelData"
           @RoleBut="RoleBut"
         ></Head-View>
-        <el-divider content-position="left">产品信息</el-divider>
+        <!-- <el-divider content-position="left">产品信息</el-divider> -->
         <Head-View
+          v-if="false"
           :Head="headss"
           :row="row"
           :rowId="rowId"
@@ -345,6 +346,9 @@ const getAddUser = async (code: any) => {
               headss.value = arr2.sort(compare('iIndex', true));
             }
           });
+          head.value = arr
+            .sort(compare('iIndex', true))
+            .concat(arr2.sort(compare('iIndex', true)));
         }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
           But.value = item[import.meta.env.VITE_APP_key].sort(
