@@ -491,6 +491,7 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
+  console.log(row.value);
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
@@ -498,7 +499,9 @@ const TtableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: headRef.value?.ruleForm?.cVendorCode
+        ? 'cVendorCode=' + headRef.value?.ruleForm?.cVendorCode
+        : ''
     }
   };
   try {
