@@ -54,7 +54,7 @@
                   v-if="
                     item.iIndex < 3 &&
                     ((item.Resource.cAttributeCode === 'Edit' &&
-                      !scope.row.iStauts === 0) ||
+                      scope.row.iStauts === 0) ||
                       item.Resource.cAttributeCode !== 'Edit')
                   "
                   type="primary"
