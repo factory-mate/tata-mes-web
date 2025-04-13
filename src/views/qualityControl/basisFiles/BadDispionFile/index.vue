@@ -74,6 +74,7 @@
       :modeCode="objModeCode"
       :row="Trow"
       @FmodelClose="modelClose"
+      width="500px"
     ></Odialog>
   </div>
 </template>
