@@ -46,6 +46,8 @@
         :tableBorder="true"
         :selection="false"
         @tableHearData="tableHearData"
+        :setWidth="setWidth"
+        custom-width
       >
         <!-- <template #button>
                     <el-table-column label="操作" fixed="right" width="160px" align="center">
@@ -589,6 +591,20 @@ const tableHearData = (value: any) => {
     tableData.value.sort((a: any, b: any) => {
       return b[prop] - a[prop];
     });
+  }
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '物料名称':
+      return 240;
+    case '数量':
+    case '已购数量':
+    case '单位':
+    case '交货日期':
+      return 100;
+    default:
+      return 200;
   }
 };
 </script>
