@@ -9,7 +9,7 @@
     :title="propsData.titleName"
     center
     draggable
-    width="60%"
+    width="70%"
   >
     <!-- 搜索区域 -->
     <FilterForm
@@ -29,7 +29,27 @@
       >
         <el-table-column type="selection" width="55" />
         <template v-for="item in tableColumn" :key="item.value">
-          <el-table-column :prop="item.key" :label="item.name" />
+          <el-table-column
+            v-if="
+              Route.name === 'inspectionNormeEdit' &&
+              item.key === 'cStandardName'
+            "
+            :prop="item.key"
+            :label="item.name"
+          >
+            <template #default="scope">
+              <el-tooltip
+                effect="dark"
+                :content="scope.row[item.key]"
+                placement="top"
+              >
+                <span style="white-space: nowrap">{{
+                  scope.row[item.key]
+                }}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column v-else :prop="item.key" :label="item.name" />
         </template>
       </el-table>
       <pagination
