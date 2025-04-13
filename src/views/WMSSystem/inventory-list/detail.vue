@@ -283,11 +283,23 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
         }
+        console.log();
         if (item.cPropertyClassTypeCode == 'ToolBut') {
-          But.value = item[import.meta.env.VITE_APP_key].sort(
-            compare('iIndex', true)
-          );
-          console.log(But.value, '0-- But.value ');
+          const iStatus = headRef.value?.ruleForm.iStatus;
+          But.value = item[import.meta.env.VITE_APP_key]
+            .sort(compare('iIndex', true))
+            .filter(i => {
+              if (
+                iStatus === 20 &&
+                (i.cAttributeName === '删除重盘' || i.cAttributeName === '审核')
+              ) {
+                return true;
+              }
+              if (iStatus === 10 && i.cAttributeName === '编辑') {
+                return true;
+              }
+              return false;
+            });
           // ButOne.value = item[import.meta.env.VITE_APP_key].filter((item:any)=>item.Resource.cAttributeName=='保存')
           // Buttwo.value=item[import.meta.env.VITE_APP_key].filter((item:any)=>item.Resource.cAttributeName=='添加')
         }

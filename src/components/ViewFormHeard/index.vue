@@ -796,7 +796,6 @@ const getData = (newValue: any) => {
         ruleFormData.value[keyVal] = res.data;
         ruleFormData.value[extraKey] = res.data;
         ruleForm.value = { ...ruleForm.value, ...ruleFormData.value };
-        console.log('ruleForm.value', ruleForm.value);
         if (Route.name === 'ProDeviceProjectView') {
           const data = {
             method: 'get',
@@ -1229,7 +1228,7 @@ const funHeadview = () => {
       // paramsData = { val: props.rowId || props.row.UID ||Route.params.rowId}
       paramsData = { val: Route.params.rowId };
     }
-    console.log(paramsData);
+    // console.log(paramsData);
     let dataVal = {
       method: AxiosData.Resource.cHttpTypeCode,
       url: AxiosData.Resource.cServerIP + AxiosData.Resource.cUrl,
