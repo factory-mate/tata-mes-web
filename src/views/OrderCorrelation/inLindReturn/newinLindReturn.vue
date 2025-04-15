@@ -37,7 +37,7 @@
           :tableColumns="tableColumnss"
           :tableBorder="true"
           :selection="false"
-          :indexTable="true"
+          :indexTable="false"
         >
           <template #button>
             <el-table-column
@@ -108,7 +108,7 @@
             :tableColumns="tableColumns"
             :tableBorder="true"
             :selection="false"
-            :indexTable="true"
+            :indexTable="false"
           >
             <template #button>
               <el-table-column
