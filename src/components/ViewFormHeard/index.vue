@@ -243,7 +243,7 @@
               ref="treeRef"
               node-key="cFactoryUnitCode"
               v-if="item.cControlTypeCode == 'Tree'"
-              :props="prop"
+              :props="Route.name === 'UserAddEdit' ? clProp : prop"
               v-model="ruleForm[item.Resource.cAttributeCode]"
               :default-checked-keys="treeVal"
               :data="optionData"
@@ -397,6 +397,10 @@ const optionData = ref([]) as any;
 const prop = {
   children: 'Child',
   label: 'cFactoryUnitName'
+};
+const clProp = {
+  children: 'Child',
+  label: 'cMenuName'
 };
 // eslint-disable-next-line vue/no-setup-props-destructure
 // const rowVal = props.row
@@ -1162,6 +1166,15 @@ const treeChange = (valKey: any) => {
     ruleForm.value['cFactoryUnitName'] = joinnameData.value;
     ruleForm.value['cFactoryUnitCode'] = joincodeData.value;
   }
+  if (Route.name === 'UserAddEdit') {
+    ruleForm.value['cResourcesCodes'] = AllData.map(i => ({
+      cResourcesCode: i.cResourcesCode,
+      cResourcesName: i.cMenuName
+    })).filter(i => i);
+    ruleForm.value['cResourcesName'] = AllData.filter(i => i.cResourcesCode)
+      .map(i => i.cMenuName)
+      .join();
+  }
 };
 
 // 编辑/详情的数据
@@ -1574,6 +1587,9 @@ const selectData = (val: any) => {
     // 用户管理
     if (Route.name == 'UserAdd' || Route.name == 'UserAddEdit') {
       ruleForm.value['PersonUID'] = val.value[0]['cEmployeeCode'];
+      if (AttributeCode.value === 'cPolicyName') {
+        ruleForm.value['cPolicyCode'] = val.value[0].cPolicyCode;
+      }
     }
     if (Route.name == 'memAdminAdd' || Route.name == 'memAdminEdit') {
       if (AttributeCode.value == 'cDefindParm02') {

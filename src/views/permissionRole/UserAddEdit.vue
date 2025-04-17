@@ -26,7 +26,6 @@
             >
             </ButtonViem>
           </div>
-          <!-- TODO -->
           <div class="lettable">
             <myTable
               ref="TUref"
@@ -84,7 +83,6 @@
             >
             </ButtonViem>
           </div>
-          <!-- TODO -->
           <div class="righttable">
             <myTable
               ref="TrRef"
@@ -131,7 +129,7 @@
       <!-- 添加用户策略弹框 -->
       <div>
         <el-dialog v-model="CLAdddialogFormVisible" title="添加策略">
-          <myTable
+          <!-- <myTable
             ref="TUref"
             :tableData="TCUsertableData"
             :tableColumns="AddusertableColumns"
@@ -139,14 +137,15 @@
             :selection="true"
             @handleSelectionChange="UThandleSelectionChange"
           >
-          </myTable>
-          <pagination
+          </myTable> -->
+          <!-- <pagination
             v-if="cltotal > 0"
             :total="cltotal"
             v-model:page="clqueryParams.PageIndex"
             v-model:limit="clqueryParams.PageSize"
             @pagination="clRoleChange"
-          />
+          /> -->
+          <FHead :Head="clHead" ref="clHeadRef" :disabled="false"></FHead>
           <div class="bot-btn">
             <ButtonViem
               :ToolBut="PolicBtn"
@@ -224,6 +223,7 @@ const row = ref();
 const rowId = ref('');
 const Route = useRoute();
 const headRef = ref();
+const clHeadRef = ref();
 let But = ref([]) as any;
 const Rid = ref([]) as any;
 //新增保存/修改保存
@@ -243,7 +243,7 @@ const queryParams = ref({
 });
 const userqueryParams = ref({
   PageIndex: 1,
-  PageSize: 20
+  PageSize: 50
 });
 const rolequeryParams = ref({
   PageIndex: 1,
@@ -300,6 +300,7 @@ const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 const PolicBtn = ref([]) as any;
 const objModelCode = ref('') as any;
 let head = ref([]) as any;
+let clHead = ref([]) as any;
 //新增时保存的用户名
 const LoginName = ref();
 LoginName.value = localStorage.get('LoginName');
@@ -630,7 +631,7 @@ const SaveAdd = async (obj: any) => {
 
 //用户策略添加
 const UserPolicyAdd = (obj: any) => {
-  ElLoading.service({ lock: true, text: '加载中.....' });
+  // ElLoading.service({ lock: true, text: '加载中.....' });
   CLAdddialogFormVisible.value = true;
   objModelCode.value = obj.cIncludeModelCode;
   configApi(objModelCode.value).then(res => {
@@ -641,11 +642,19 @@ const UserPolicyAdd = (obj: any) => {
             compare('iIndex', true)
           );
         }
-        if (item.cPropertyClassTypeCode == 'Grid') {
-          AdduserfunTable(
-            item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
+        if (item.cPropertyClassTypeCode == 'Head') {
+          item[import.meta.env.VITE_APP_key].map((item: any) => {
+            item.Resource[item.Resource.cAttributeCode] = '';
+          });
+          clHead.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
           );
         }
+        // if (item.cPropertyClassTypeCode == 'Grid') {
+        //   AdduserfunTable(
+        //     item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
+        //   );
+        // }
       });
     }
   });
@@ -747,83 +756,111 @@ const UThandleSelectionChange = (arr: any) => {
 
 //弹窗用户添加策略保存
 const UserPolicySaveAdd = async (obj: any) => {
-  code.value = '';
-  SelectPolicyList.value.forEach((item: any) => {
-    code.value = item.cPolicyCode;
-  });
-  if (row.value) {
-    //编辑页面下，添加策略
-    let dd: any = [];
-
-    if (SelectPolicyList.value.length) {
-      SelectPolicyList.value.forEach((item: any) => {
-        dd.push({
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          cLoginName: row.value.cLoginName || '',
-          cPolicyCode: item.cPolicyCode
-        });
-      });
-    }
-
-    let data = {
-      method: obj.Resource.cHttpTypeCode,
-      url: obj.Resource.cServerIP + obj.Resource.cUrl,
-      data: {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // "cLoginName": row.value.cLoginName,
-        // "cPolicyCode": code.value
-        Items: dd
-      }
-    };
-    try {
-      const res = await DataApi(data);
-      ElLoading.service({ lock: true, text: '加载中.....' });
-      if (res.status == 200) {
-        ElMessage.success('新增策略成功');
-        usertableAxios();
-        CLAdddialogFormVisible.value = false;
-        ElLoading.service().close();
-      } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        ElMessage.error(res.msg);
-        ElLoading.service().close();
-      }
-    } catch (error) {
-      console.log(error, '程序出错');
-      ElLoading.service().close();
-    }
-  } else {
-    //新增页面下，添加策略
-    // if(!LoginName.value) {
-    //     ElMessage.info('请先新增用户')
-    //     return
-    // }
-    let data = {
-      method: obj.Resource.cHttpTypeCode,
-      url: obj.Resource.cServerIP + obj.Resource.cUrl,
-      data: {
-        cLoginName: LoginName.value,
-        cPolicyCode: code.value
-      }
-    };
-    try {
-      const res = await DataApi(data);
-      if (res.status == 200) {
-        ElMessage.success('新增策略成功');
-        usertableAxios();
-        CLAdddialogFormVisible.value = false;
-      } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        ElMessage.error(res.msg);
-      }
-    } catch (error) {
-      console.log(error, '程序出错');
-    }
+  if (!clHeadRef.value.ruleForm.cResourcesCodes) {
+    ElMessage.error('请先选择资源码');
+    return;
   }
+  const Items = clHeadRef.value.ruleForm.cResourcesCodes.map(i => ({
+    cLoginName: row.value.cLoginName,
+    cPolicyCode: clHeadRef.value.ruleForm.cPolicyCode,
+    cResourcesCode: i.cResourcesCode,
+    cResourcesName: i.cResourcesName
+  }));
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { Items }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  try {
+    const res = await DataApi(data);
+    if (res.success) {
+      ElMessage.success('新增策略成功');
+      usertableAxios();
+      CLAdddialogFormVisible.value = false;
+    } else {
+      ElMessage.error(res.msg);
+    }
+  } catch {
+    //
+  }
+  loading.close();
+  // code.value = '';
+  // SelectPolicyList.value.forEach((item: any) => {
+  //   code.value = item.cPolicyCode;
+  // });
+  // if (row.value) {
+  //   //编辑页面下，添加策略
+  //   let dd: any = [];
+  //   if (SelectPolicyList.value.length) {
+  //     SelectPolicyList.value.forEach((item: any) => {
+  //       dd.push({
+  //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //         // @ts-ignore
+  //         cLoginName: row.value.cLoginName || '',
+  //         cPolicyCode: item.cPolicyCode,
+  //         cResourcesCode: ''
+  //       });
+  //     });
+  //   }
+  //   let data = {
+  //     method: obj.Resource.cHttpTypeCode,
+  //     url: obj.Resource.cServerIP + obj.Resource.cUrl,
+  //     data: {
+  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //       // @ts-ignore
+  //       // "cLoginName": row.value.cLoginName,
+  //       // "cPolicyCode": code.value
+  //       Items: dd
+  //     }
+  //   };
+  //   try {
+  //     const res = await DataApi(data);
+  //     ElLoading.service({ lock: true, text: '加载中.....' });
+  //     if (res.status == 200) {
+  //       ElMessage.success('新增策略成功');
+  //       usertableAxios();
+  //       CLAdddialogFormVisible.value = false;
+  //       ElLoading.service().close();
+  //     } else {
+  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //       // @ts-ignore
+  //       ElMessage.error(res.msg);
+  //       ElLoading.service().close();
+  //     }
+  //   } catch (error) {
+  //     console.log(error, '程序出错');
+  //     ElLoading.service().close();
+  //   }
+  // } else {
+  //   //新增页面下，添加策略
+  //   // if(!LoginName.value) {
+  //   //     ElMessage.info('请先新增用户')
+  //   //     return
+  //   // }
+  //   let data = {
+  //     method: obj.Resource.cHttpTypeCode,
+  //     url: obj.Resource.cServerIP + obj.Resource.cUrl,
+  //     data: {
+  //       cLoginName: LoginName.value,
+  //       cPolicyCode: code.value
+  //     }
+  //   };
+  //   try {
+  //     const res = await DataApi(data);
+  //     if (res.status == 200) {
+  //       ElMessage.success('新增策略成功');
+  //       usertableAxios();
+  //       CLAdddialogFormVisible.value = false;
+  //     } else {
+  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //       // @ts-ignore
+  //       ElMessage.error(res.msg);
+  //     }
+  //   } catch (error) {
+  //     console.log(error, '程序出错');
+  //   }
+  // }
 };
 
 const handleSelectionChange = (arr: any) => {
