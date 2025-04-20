@@ -760,12 +760,14 @@ const UserPolicySaveAdd = async (obj: any) => {
     ElMessage.error('请先选择资源码');
     return;
   }
-  const Items = clHeadRef.value.ruleForm.cResourcesCodes.map(i => ({
-    cLoginName: row.value.cLoginName,
-    cPolicyCode: clHeadRef.value.ruleForm.cPolicyCode,
-    cResourcesCode: i.cResourcesCode,
-    cResourcesName: i.cResourcesName
-  }));
+  const Items = clHeadRef.value.ruleForm.cResourcesCodes
+    .filter(i => i.cResourcesCode && !i.Child)
+    .map(i => ({
+      cLoginName: row.value.cLoginName,
+      cPolicyCode: clHeadRef.value.ruleForm.cPolicyCode,
+      cResourcesCode: i.cResourcesCode,
+      cResourcesName: i.cResourcesName
+    }));
   const data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,

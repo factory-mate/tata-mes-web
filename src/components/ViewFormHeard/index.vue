@@ -1167,11 +1167,16 @@ const treeChange = (valKey: any) => {
     ruleForm.value['cFactoryUnitCode'] = joincodeData.value;
   }
   if (Route.name === 'UserAddEdit') {
-    ruleForm.value['cResourcesCodes'] = AllData.map(i => ({
+    console.log(childrenName);
+    ruleForm.value['cResourcesCodes'] = AllData.filter(
+      i => i.cResourcesCode && !i.Child
+    ).map(i => ({
       cResourcesCode: i.cResourcesCode,
       cResourcesName: i.cMenuName
-    })).filter(i => i);
-    ruleForm.value['cResourcesName'] = AllData.filter(i => i.cResourcesCode)
+    }));
+    ruleForm.value['cResourcesName'] = AllData.filter(
+      i => i.cResourcesCode && !i.Child
+    )
       .map(i => i.cMenuName)
       .join();
   }

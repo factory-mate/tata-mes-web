@@ -126,7 +126,9 @@
               </el-button>
               <el-button
                 v-if="
-                  headRef.ruleForm?.iStatus !== 0 && scope.row.iStatus === 0
+                  headRef.ruleForm?.iStatus !== 0 &&
+                  scope.row.iStatus === 0 &&
+                  refuseBtnConfig
                 "
                 type="primary"
                 size="small"
@@ -254,7 +256,7 @@ const selectArr = ref([]) as any;
 const printData = ref([]) as any;
 const modelGridType = ref(true);
 const View1val = ref('');
-const refuseBtnConfig = ref({});
+const refuseBtnConfig = ref(null);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
