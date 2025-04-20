@@ -1742,6 +1742,11 @@ const selectData = (val: any) => {
         ruleForm.value['cWorkCode'] = WorkCode.value['cWorkCode'] || '';
       }
     }
+    if (Route.name === 'addstaffEdit') {
+      if (AttributeCode.value == 'cVendorName') {
+        ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
+      }
+    }
     //班组新增/编辑
     if (
       Route.name == 'AddTeamJob' ||
