@@ -258,7 +258,7 @@ const dialogEnd = () => {
 const ClickSearch = (val: any) => {
   queryParams.value = {
     PageIndex: 1,
-    PageSize: 5
+    PageSize: 20
   };
   Conditions.value = filterModel(val.value);
   if (ajaxData.value && ajaxData.value.url) {
@@ -274,7 +274,7 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.value = {
     PageIndex: 1,
-    PageSize: 5
+    PageSize: 20
   };
   if (ajaxData.value && ajaxData.value.url) {
     tableAxios_2(ajaxData.value);
