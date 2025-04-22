@@ -3,6 +3,11 @@
   <div class="maintain">
     <el-card>
       <!-- 搜索区域 -->
+      <FilterForm
+        :Filter="Filter"
+        @ClickSearch="ClickSearch"
+        @resetForm="resetForm"
+      ></FilterForm>
       <Head-View
         :Head="head"
         :row="row"
@@ -129,6 +134,7 @@ import { ref, toRefs, reactive, nextTick, onActivated, provide } from 'vue';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import HeadView from '@/components/ViewFormHeard/index.vue';
+import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
 import Odialog from '@/components/DialogModel/index.vue';
@@ -139,7 +145,6 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
-import FilterForm from '@/components/Filter/index.vue';
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { compare, filterModel, tableSortInit } from '@/utils';
@@ -181,6 +186,7 @@ const TAxiosData = ref({}) as any;
 const TtableData = ref([]) as any;
 const TtableColumns = ref([]) as any;
 const TFilter = ref([]) as any;
+const Filter = ref([]) as any;
 const TBut = ref([]) as any;
 //分页查询参数
 const queryParams = reactive({
@@ -267,6 +273,11 @@ const getAddUser = async (code: any) => {
     const res = await configApi(code);
     if (res.status == 200) {
       res.data.forEach((item: any) => {
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          Filter.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
         if (item.cPropertyClassTypeCode == 'Head') {
           item[import.meta.env.VITE_APP_key].map((item: any) => {
             item.Resource[item.Resource.cAttributeCode] = '';
@@ -333,6 +344,12 @@ const funTable = (arr: Array<any>) => {
 
 //表格数据查询
 const tableAxios = async () => {
+  const conditions = [`cPersonGroupCode=${row.value.cPersonGroupCode}`];
+
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
+
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -340,7 +357,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: `cPersonGroupCode=${row.value.cPersonGroupCode}`
+      Conditions: conditions.join(' && ')
     }
   };
   try {
@@ -623,7 +640,7 @@ const newList = (val: any) => {
 const ClickSearch = (val: any) => {
   queryParams.PageIndex = 1;
   Conditions.value = filterModel(val.value);
-  TtableAxios();
+  tableAxios();
 };
 // 重置
 const FilresetForm = (val: any) => {
@@ -634,6 +651,16 @@ const FilresetForm = (val: any) => {
   queryParams.PageSize = 20;
   TtableAxios();
   TabRef.value.clearFilter();
+};
+
+// 重置
+const resetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  tableAxios();
 };
 </script>
 
