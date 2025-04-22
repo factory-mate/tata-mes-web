@@ -131,12 +131,7 @@
               v-if="item.cControlTypeCode == 'Tree'"
               v-model="item.cAttributeCodeValue"
               :options="options"
-              :props="
-                Route.name === 'WMSMaterial' ||
-                Route.name === 'AddPurchaseRequest'
-                  ? wmsMaterialProp
-                  : prop
-              "
+              :props="getTreeProps()"
               @change="(value:any) => handleChange(item, value)"
               @visible-change="getTreeDAata"
               clearable
@@ -274,6 +269,14 @@ const prop = {
 const wmsMaterialProp = {
   label: 'cInvClassName',
   value: 'cInvClassCode',
+  children: 'Child',
+  checkStrictly: true,
+  expandTrigger: 'hover'
+};
+
+const deviceProp = {
+  label: 'cDeviceClassName',
+  value: 'cDeviceClassCode',
   children: 'Child',
   checkStrictly: true,
   expandTrigger: 'hover'
@@ -774,6 +777,18 @@ const getSelectedNodeValue = (nodes: any, arr: any) => {
 // 搜索
 const ClickSearch = () => emits('ClickSearch', { value: FilterData.value });
 
+const getTreeProps = () => {
+  switch (Route.name) {
+    case 'WMSMaterial':
+    case 'AddPurchaseRequest':
+      return wmsMaterialProp;
+    case 'EquipmentCheckTask':
+    case 'DeviceMaintenanceTask':
+      return deviceProp;
+    default:
+      return prop;
+  }
+};
 // 重置
 const resetForm = () => {
   FilterData.value.forEach((item: any) => {
