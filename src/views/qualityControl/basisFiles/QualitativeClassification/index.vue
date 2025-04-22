@@ -509,13 +509,16 @@ const tableAxios = async () => {
   // }
   // ClickSearchVal.value.push(tt)
   Conditions.value = filterModel(ClickSearchVal.value);
+  let conditions = [];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
+  if (treeNodeValue.value.cParmValueClassCode) {
+    conditions.push('cParentCode = ' + treeNodeValue.value.cParmValueClassCode);
+  }
   let obj: any = {
     OrderByFileds: OrderByFileds.value,
-    Conditions: treeNodeValue.value.cParmValueClassCode
-      ? 'cParentCode = ' +
-        treeNodeValue.value.cParmValueClassCode +
-        Conditions.value
-      : Conditions.value
+    Conditions: conditions.join(' && ')
   };
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
