@@ -333,11 +333,11 @@ $bus.on('tableUpData', v => {
 
 <template>
   <div class="container">
-    <FilterArea
+    <!-- <FilterArea
       :Filter="filters"
       @click-search="handleSearch"
       @reset-form="resetSearchParams"
-    />
+    /> -->
     <el-card>
       <ButtonArea :ToolBut="toolButtons" @click-add="handleAdd" />
       <TableArea
