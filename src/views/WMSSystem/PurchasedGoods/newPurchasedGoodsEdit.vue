@@ -151,6 +151,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="90%"
     >
       <!-- 搜索区域 -->
       <FilterForm
@@ -167,6 +168,8 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        :setWidth="setDialogWidth"
+        custom-width
       >
       </myTable>
       <template #footer>
@@ -786,22 +789,57 @@ const clickEdit = (obj: any) => {
 
 const setWidth = row => {
   switch (row.label) {
+    case '申请单号':
+      return 170;
+    case '交货日期':
+      return 120;
     case '物料编码':
       return 120;
     case '质检':
       return 60;
     case '物料名称':
-      return 240;
+      return 200;
     case '规格型号':
       return 120;
-    case '订单号':
-      return 160;
     case '未到货数量':
     case '到货数量':
     case '每包数量':
       return 100;
+    case '剩余数量':
     case '单位':
-      return 80;
+      return 85;
+    case 'SAP物料编码':
+      return 110;
+    case '生产日期':
+      return 150;
+    default:
+      return 200;
+  }
+};
+
+const setDialogWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 170;
+    case '交货日期':
+      return 120;
+    case '物料编码':
+      return 120;
+    case '质检':
+      return 60;
+    case '物料名称':
+      return 200;
+    case '规格型号':
+      return 120;
+    case '未到货数量':
+    case '到货数量':
+    case '每包数量':
+      return 100;
+    case '剩余数量':
+    case '单位':
+      return 85;
+    case 'SAP物料编码':
+      return 110;
     case '生产日期':
       return 150;
     default:
