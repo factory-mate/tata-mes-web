@@ -5,7 +5,11 @@
       <!-- 按钮区域 -->
       <div class="bot-btn1">
         <ButtonViem
-          :ToolBut="ButOne"
+          :ToolBut="
+            headRef?.ruleForm?.iStatus === 0
+              ? ButOne
+              : ButOne.filter(i => i.Resource.cAttributeName !== '提交')
+          "
           :printDis="printDis"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
@@ -116,7 +120,7 @@
             </template>
             <template #default="scope">
               <el-button
-                v-if="headRef.ruleForm?.iStatus !== 0"
+                v-if="headRef.ruleForm?.iStatus === 0"
                 type="primary"
                 :disabled="disabled"
                 size="small"
@@ -126,7 +130,7 @@
               </el-button>
               <el-button
                 v-if="
-                  headRef.ruleForm?.iStatus !== 0 &&
+                  headRef.ruleForm?.iStatus === 1 &&
                   scope.row.iStatus === 0 &&
                   refuseBtnConfig
                 "

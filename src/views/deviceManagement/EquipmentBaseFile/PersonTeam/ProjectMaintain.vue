@@ -558,7 +558,7 @@ const clickDel = (
   scope: { row: any },
   obj: { cAttributeCode?: any; cIncludeModelCode?: any; Resource?: any }
 ) => {
-  const senid = scope.row.UID;
+  const senid = scope.row.DevProPersonUID;
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
