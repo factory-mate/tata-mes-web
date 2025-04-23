@@ -326,6 +326,9 @@ const tableRowClassName: any = ({ row, rowIndex }) => {
   if (Route.name === 'MinMaterielStorage') {
     uniqueField = 'cKeyCode';
   }
+  if (Route.name === 'ProjectMaintain') {
+    uniqueField = 'DevProPersonUID';
+  }
   if (selectData.value.map(i => i[uniqueField]).includes(row[uniqueField])) {
     return 'hover-row';
   }

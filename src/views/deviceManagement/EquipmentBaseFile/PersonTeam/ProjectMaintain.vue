@@ -79,7 +79,7 @@
         <div>
           <FilterForm
             :Filter="TFilter"
-            @ClickSearch="ClickSearch"
+            @ClickSearch="TClickSearch"
             @resetForm="FilresetForm"
           ></FilterForm>
         </div>
