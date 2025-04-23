@@ -288,7 +288,8 @@ const emits = defineEmits([
   'HangUp',
   'Copy',
   'Print',
-  'Del'
+  'Del',
+  'BatchDelete'
 ]);
 
 watch(
@@ -759,6 +760,9 @@ const Print = (obj: any) => {
 const Del = (obj: any) => {
   emits('Del', obj);
 };
+const BatchDelete = (obj: any) => {
+  emits('BatchDelete', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1106,6 +1110,9 @@ const clickButton = (event: any) => {
       break;
     case 'Del':
       Del(event);
+      break;
+    case 'BatchDelete':
+      BatchDelete(event);
       break;
     default:
       break;

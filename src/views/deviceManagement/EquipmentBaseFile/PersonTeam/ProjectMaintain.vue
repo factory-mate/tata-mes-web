@@ -18,7 +18,11 @@
       ></Head-View>
       <!-- 按钮区域 -->
       <div class="bot-btn">
-        <ButtonViem :ToolBut="But" @clickAdd="clickAdd"></ButtonViem>
+        <ButtonViem
+          :ToolBut="But"
+          @clickAdd="clickAdd"
+          @BatchDelete="BatchDelete"
+        ></ButtonViem>
       </div>
       <!-- 表格区域 -->
       <myTable
@@ -569,6 +573,46 @@ const TchangPage = (val: any) => {
   queryParams.PageIndex = val.page;
   queryParams.PageSize = val.limit;
   TtableAxios();
+};
+const BatchDelete = obj => {
+  if (CheckDataList.value.length === 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要删除的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: CheckDataList.value.map(i => i.DevProPersonUID)
+  };
+  ElMessageBox.confirm('确定删除数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      delApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '删除数据成功'
+          });
+          tableAxios();
+          TabRef.value.handleRemoveSelectionChange();
+          sendId.value = [];
+        } else {
+          console.log('删除失败');
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除'
+      });
+    });
 };
 //删除
 const clickDel = (
