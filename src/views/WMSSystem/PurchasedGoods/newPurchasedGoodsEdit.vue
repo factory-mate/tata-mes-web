@@ -513,7 +513,10 @@ const clickTableHandDel = (val: any) => {
 };
 
 const copyItem = val => {
-  tableData.value.splice(val.$index + 1, 0, val.row);
+  tableData.value.splice(val.$index + 1, 0, {
+    ...val.row,
+    UID: '00000000-0000-0000-0000-000000000000'
+  });
 };
 
 const clickHandAdd = (data: any) => {
