@@ -1742,7 +1742,7 @@ const selectData = (val: any) => {
         ruleForm.value['cWorkCode'] = WorkCode.value['cWorkCode'] || '';
       }
     }
-    if (Route.name === 'addstaffEdit') {
+    if (Route.name === 'addstaffEdit' || Route.name === 'addstaff') {
       if (AttributeCode.value == 'cVendorName') {
         ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
       }
