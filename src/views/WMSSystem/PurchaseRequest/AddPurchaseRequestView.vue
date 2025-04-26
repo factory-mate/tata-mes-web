@@ -463,6 +463,7 @@ const clickEdit = (obj: any) => {
   // getAddUser(obj.cIncludeModelCode);
   // disabled.value = false;
   // $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+  tagsView.delVisitedView(Route);
   router.push({
     name: 'AddPurchaseRequestEdit',
     params: {
