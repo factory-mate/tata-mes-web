@@ -495,7 +495,7 @@ const ExportAll = (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'dCreateTime',
       Conditions: 'cVouchSourceTypeCode = 01'
     }
   };
@@ -534,7 +534,7 @@ const ExportOne = (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'dCreateTime',
       Conditions: 'cVouchSourceTypeCode = 01'
     }
   };
