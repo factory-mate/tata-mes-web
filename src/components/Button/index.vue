@@ -6,7 +6,8 @@
       <el-upload
         v-if="
           item.cAttributeCode === 'ImportIn' ||
-          item.cAttributeCode === 'ImportInOnKF'
+          item.cAttributeCode === 'ImportInOnKF' ||
+          item.cAttributeCode === 'Import_GZ'
         "
         ref="importUploadRef"
         v-model:file-list="importFileList"
@@ -49,7 +50,8 @@
           item.Resource.cAttributeCode == 'DownloadLX_45' ||
           item.Resource.cAttributeCode == 'ExportFault' ||
           item.Resource.cAttributeCode == 'ExportStandard' ||
-          item.Resource.cAttributeCode == 'ExportPerson'
+          item.Resource.cAttributeCode == 'ExportPerson' ||
+          item.Resource.cAttributeCode == 'Export_GZ'
         "
         type="primary"
         @click="HandExport('ExportAll', item)"
@@ -284,6 +286,7 @@ const emits = defineEmits([
   'ImportPick',
   'ImportIn',
   'ImportInOnKF',
+  'Import_GZ',
   'ExportDetail',
   'HangUp',
   'Copy',

@@ -23,6 +23,8 @@
         @revoke="revoke"
         @cDefindParm07="cDefindParm07"
         @clickPick="clickPick"
+        @export-all="ExportAll"
+        @import_-g-z="ImportGZ"
       >
       </ButtonViem>
       <div
@@ -161,6 +163,7 @@ import FilterForm from '@/components/Filter/index.vue';
 import Odialogs from './components/orgDialog.vue';
 import tableItem from './components/table.vue';
 import TreeArea from './components/TreeArea.vue';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import {
   ElButton,
   ElCard,
@@ -1096,6 +1099,65 @@ const newList = (val: any) => {
     tableColumns.value = val.list;
     tabType.value = true;
   });
+};
+
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      OrderByFileds: 'cDefindParm02',
+      Conditions: `MID=${row.value.UID}`
+    }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '柜子信息');
+  loading.close();
+};
+
+const ImportGZ = obj => {
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+
+  const formData = new FormData();
+  formData.append('cfile', obj.files[0].raw);
+
+  let url = obj.Resource.cServerIP + obj.Resource.cUrl;
+
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url,
+    data: formData
+  };
+
+  DataApi(data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+    .then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: res.msg || '操作成功'
+        });
+        close();
+        tableAxios();
+      } else {
+        ElMessage({
+          message: res.msg || '操作失败',
+          type: 'error'
+        });
+      }
+    })
+    .catch(err => {
+      ElMessage({
+        message: '操作失败',
+        type: 'error'
+      });
+    })
+    .finally(() => {
+      loading.close();
+    });
 };
 provide('tableAxios', { tableAxios });
 </script>
