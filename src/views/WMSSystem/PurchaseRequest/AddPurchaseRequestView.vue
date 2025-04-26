@@ -493,6 +493,9 @@ const Commit = (obj: any) => {
       // tableAxios()
       // TabRef.value.handleRemoveSelectionChange()
       // sendId.value = []
+      router.push({ name: 'PurchaseRequest' });
+      tagsView.delVisitedView(Route);
+      $bus.emit('tableUpData', { name: 'PurchaseRequest' });
     } else {
       console.log('提交失败');
     }
