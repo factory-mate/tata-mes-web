@@ -525,10 +525,12 @@ const ExportAll = async (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: queryParams.PageIndex,
-      PageSize: queryParams.PageSize,
+      PageIndex: 1,
+      PageSize: 9999,
       OrderByFileds: '',
-      Conditions: ''
+      Conditions: Conditions.value
+        ? 'PID = ' + row.value.UID + ' && ' + Conditions.value
+        : 'PID = ' + row.value.UID
     }
   };
   try {
@@ -551,7 +553,9 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: '',
-      Conditions: ''
+      Conditions: Conditions.value
+        ? 'PID = ' + row.value.UID + ' && ' + Conditions.value
+        : 'PID = ' + row.value.UID
     }
   };
   try {
