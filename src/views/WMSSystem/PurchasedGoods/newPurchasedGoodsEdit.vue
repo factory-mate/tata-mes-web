@@ -786,7 +786,7 @@ const SaveEdit = (obj: any) => {
 const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
   disabled.value = false;
-  disa.value = false;
+  // disa.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '到货单编辑' });
 };
 
