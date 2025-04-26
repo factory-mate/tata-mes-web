@@ -53,7 +53,7 @@
                   v-if="
                     i < (tableButton.length > 3 ? 2 : 3) &&
                     ((item.Resource.cAttributeCode === 'Edit' &&
-                      scope.row.iStauts === 0) ||
+                      scope.row.iStatus === 0) ||
                       item.Resource.cAttributeCode !== 'Edit')
                   "
                   type="primary"
