@@ -1443,6 +1443,9 @@ const headVal = () => {
   if (Route.name === 'newPurchasedGoods') {
     ruleForm.value.dArriveDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
+  if (Route.name === 'UserAddEdit') {
+    ruleForm.value.cResourcesName = '';
+  }
 };
 
 // 搜索弹框事件
