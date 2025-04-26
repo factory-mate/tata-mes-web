@@ -56,6 +56,9 @@
               <span>操作</span>
             </template>
             <template #default="scope">
+              <el-button type="primary" size="small" @click="copyItem(scope)"
+                >复制</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="disabled"
@@ -333,6 +336,12 @@ const getComboBoxFun = async () => {
         item.PullData = res.data || [];
       });
     }
+  });
+};
+const copyItem = val => {
+  tableData.value.splice(val.$index + 1, 0, {
+    ...val.row,
+    UID: '00000000-0000-0000-0000-000000000000'
   });
 };
 // table 数据整合
