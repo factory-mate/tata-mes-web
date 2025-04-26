@@ -368,12 +368,11 @@ const tableAxios = async () => {
   let obj = JSON.parse(
     window.sessionStorage.getItem('PurchaseReturnRequestEdit')
   );
-
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
-      uid: obj?.MID ?? rowId.value,
+      uid: row.value?.MID,
       cInvCode: row.value?.cInvCode,
       cBatch: row.value?.cBatch
     }
