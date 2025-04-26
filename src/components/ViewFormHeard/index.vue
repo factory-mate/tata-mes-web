@@ -1891,6 +1891,8 @@ const selectData = (val: any) => {
       Route.name == 'newPurchasedGoods' ||
       Route.name == 'newPurchasedGoodsEdit'
     ) {
+      ruleForm.value['cPhone'] = val.value[0].cPhone || '';
+      ruleForm.value['cPerson'] = val.value[0].cPerson || '';
       ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
     }
     if (
