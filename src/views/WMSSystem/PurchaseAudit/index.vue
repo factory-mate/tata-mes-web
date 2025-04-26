@@ -49,7 +49,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="item.iIndex < 3"
+                  v-if="item.iIndex < 3 && showBtn(scope, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -74,6 +74,7 @@
                       :key="item.Resource.cAttributeName"
                     >
                       <el-button
+                        v-if="showBtn(scope, item)"
                         type="primary"
                         size="small"
                         @click="clickTableBut(scope, item)"
@@ -599,6 +600,13 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const showBtn = (scope, item) => {
+  if (item.cAttributeCode === 'Edit' && scope.row.iStatus > 1) {
+    return false;
+  }
+  return true;
 };
 </script>
 
