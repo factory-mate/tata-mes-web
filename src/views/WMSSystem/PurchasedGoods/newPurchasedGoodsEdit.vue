@@ -654,7 +654,7 @@ const SaveAdd = (obj: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
+  // disa.value = true;
 };
 //打印显示一个按钮
 const BtnDAel = (v: any) => {
@@ -780,7 +780,7 @@ const SaveEdit = (obj: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
+  // disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {
