@@ -425,6 +425,13 @@ const funTable = (arr: Array<any>) => {
 //表格数据查询
 const tableAxios = async () => {
   loading.value = true;
+  const conditions = [];
+  if (ParentCode.value) {
+    conditions.push(`cDeviceClassCode in (${ParentCode.value})`);
+  }
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -432,11 +439,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: ParentCode.value
-        ? `cDeviceClassCode in (${ParentCode.value})`
-        : Conditions.value
-        ? Conditions.value
-        : ''
+      Conditions: conditions.join(' && ')
     }
   };
   try {
