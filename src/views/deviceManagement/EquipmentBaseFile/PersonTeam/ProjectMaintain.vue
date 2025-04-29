@@ -63,6 +63,7 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
+        @pagination="changPage"
       />
     </el-card>
     <!-- 添加弹窗表格 -->
@@ -228,7 +229,7 @@ onActivated(() => {
   //     // @ts-ignore
   //     getAddUser(Route.meta.ModelCode)
   // }
-  getAddUser(Route.meta.ModelCode)
+  getAddUser(Route.meta.ModelCode);
   // if (rowId.value != Route.params.rowId) {
   //   getAddUser(Route.meta.ModelCode);
   // }
@@ -358,7 +359,7 @@ const tableAxios = async () => {
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
-    params: {
+    data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
@@ -369,7 +370,7 @@ const tableAxios = async () => {
     const res = await DataApi(data);
     if (res.status == 200) {
       // tableData.value = res.data.data;
-      tableData.value = res.data;
+      tableData.value = res.data.data;
       total.value = res.data.dataCount;
     } else {
       console.log('请求出错');
@@ -568,6 +569,11 @@ const Save = async (obj: any) => {
 const TClickSearch = (val: any) => {
   Conditions.value = filterModel(val.value);
   TtableAxios();
+};
+const changPage = (val: any) => {
+  queryParams.PageIndex = val.page;
+  queryParams.PageSize = val.limit;
+  tableAxios();
 };
 //TT页码变化
 const TchangPage = (val: any) => {
