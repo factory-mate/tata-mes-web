@@ -5,6 +5,7 @@
       <!-- 按钮区域 -->
       <div class="bot-btn1">
         <ButtonViem
+          v-if="row?.iStatus === 0"
           :ToolBut="But"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
@@ -45,6 +46,7 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="true"
+        :disabledHide="false"
       >
         <!-- <template #button>
                     <el-table-column label="操作" fixed="right" width="160px" align="center">
