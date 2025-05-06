@@ -269,8 +269,7 @@ const funTable = arr => {
         slot: '',
         lock: false,
         filters: [],
-        cFormPropertyCode: item.cFormPropertyCode,
-        minwidth: '140px'
+        cFormPropertyCode: item.cFormPropertyCode
       };
       tableColumns.value.push(itemData);
     }

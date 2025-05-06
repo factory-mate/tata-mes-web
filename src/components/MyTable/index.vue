@@ -381,6 +381,24 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'TemperedGlassStat') {
+    switch (row.label) {
+      case '单号':
+        return 120;
+      case '单内项号':
+      case '订单长':
+      case '订单宽':
+      case '订单厚':
+      case '长':
+      case '宽':
+      case '高':
+      case '数量':
+      case '备注':
+        return 80;
+      default:
+        break;
+    }
+  }
   if (Route.name === 'WarehouseHardware') {
     switch (row.label) {
       case '组柜数':
