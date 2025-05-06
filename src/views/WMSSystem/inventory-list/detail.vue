@@ -41,6 +41,8 @@
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         :disabledHide="false"
+        custom-width
+        :setWidth="setWidth"
       >
         <template #button>
           <el-table-column
@@ -687,6 +689,15 @@ const clickEdit = (obj: any) => {
     //     title: '退货质检申请编辑',
     // }
   });
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '物料名称':
+      return 200;
+    default:
+      return 120;
+  }
 };
 </script>
 
