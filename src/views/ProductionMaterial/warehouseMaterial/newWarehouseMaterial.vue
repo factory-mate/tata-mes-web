@@ -193,9 +193,11 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  tabVal.value = 'WMS.MaterialApplyForWareHouse.M.View.MaterialList';
+  getAddUser(Route.meta.ModelCode);
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -275,6 +277,7 @@ const getAddUser = async (code: any) => {
 };
 // tabs 切换，调取对应Tab数据
 const clickTabs = (val: any) => {
+  console.log(val);
   tableColumns.value = [];
   total.value = 0;
   tableData.value = [];
@@ -309,6 +312,7 @@ const getComboBoxFun = async () => {
 // table 数据整合
 const funTable = (arr: Array<any>) => {
   modelGrid.value = arr;
+  tableColumns.value = [];
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
