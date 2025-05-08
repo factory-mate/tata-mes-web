@@ -147,7 +147,7 @@ import {
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -162,6 +162,7 @@ const modelCode = ref();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
+const router = useRouter();
 const headRef = ref(null);
 let ButOne = ref([]) as any;
 const But = ref([]) as any;
@@ -617,13 +618,57 @@ const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
-const SaveAdd = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchasedGoods';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
+const SaveAdd = (obj: any, type = true) => {
+  // View1val.value = obj.cIncludeModelCode;
+  // obj.pathName = 'PurchasedGoods';
+  // obj.tableData = TABRef.value.tableDataVal;
+  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // // @ts-ignore
+  // headRef.value.validate(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    data: {
+      ...headRef.value.ruleForm,
+      Items: tableData.value,
+      bCheckQuantity: type
+    }
+  };
+  DataApi(data)
+    .then(res => {
+      if (res.success) {
+        ElMessage({
+          message: res.msg,
+          type: 'success'
+        });
+        $bus.emit('clickTableUp', true);
+        $bus.emit('tableUpData', { name: 'PurchasedGoods' });
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+      headRef.value.ruleForm = {};
+      router.push({ name: 'PurchasedGoods' });
+      tagsView.delVisitedView(Route);
+    })
+    .catch(res => {
+      if (res.status === 300) {
+        ElMessageBox.confirm(res.msg, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => SaveAdd(obj, false));
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    });
 };
 
 //打印显示一个按钮
