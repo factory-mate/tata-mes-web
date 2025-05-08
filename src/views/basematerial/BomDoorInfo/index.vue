@@ -355,15 +355,17 @@ const treeChangeFun22 = (node: any, key: any) => {
   //选中事件在选中后执行，当lis中有两个选中时，使用setCheckedKeys方法，选中一个节点
   if (key.checkedKeys.length >= 1) {
     //单选实现
-    treeRef22.value!.setCheckedKeys([]);
+    treeRef22.value?.setCheckedKeys([]);
     setTimeout(() => {
       // treeRef22.value!.setCheckedKeys(checkedDDD22.value)
-      treeRef22.value!.setCheckedNodes(node);
+      treeRef22.value?.setCheckedNodes([node]);
+      //   console.log(treeRef22.value);
+      //   treeRef22.value?.setCheckedKeys(checkedDDD22.value);
     }, 300);
   }
 };
 const clickTreeTwo = (node: any) => {
-  console.log(node, '--==two-----node');
+  // console.log(node, '--==two-----node');
   rowId.value = node.UID;
   TwotreeNodeValue.value = node;
   Level.value = 66;

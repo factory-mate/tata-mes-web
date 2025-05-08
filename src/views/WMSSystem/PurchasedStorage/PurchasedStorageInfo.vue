@@ -115,6 +115,7 @@ import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import {
   ElButton,
   ElCard,
@@ -533,16 +534,7 @@ const ExportAll = async (obj: any) => {
         : 'PID = ' + row.value.UID
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      console.log(res, '导出所有-----');
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
+  exportAnalysisHooks(data, '上架信息-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -558,16 +550,7 @@ const ExportOne = async (obj: any) => {
         : 'PID = ' + row.value.UID
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      console.log(res, '导出当前页-----');
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
+  exportAnalysisHooks(data, '上架信息-当前');
 };
 
 const data = reactive({

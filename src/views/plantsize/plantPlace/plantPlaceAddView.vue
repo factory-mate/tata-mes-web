@@ -77,7 +77,7 @@ import {
   ElMessageBox
 } from 'element-plus';
 import { configApi, DataApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { compare } from '@/utils';
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -85,6 +85,7 @@ const modelCode = ref();
 const row = ref();
 const rowId = ref();
 const Route = useRoute();
+const router = useRouter();
 const headRef = ref(null);
 let But = ref([]) as any;
 //表格数据
@@ -336,9 +337,23 @@ const SaveEdit = (obj: any) => {
 };
 // 编辑
 const clickEdit = (obj: any) => {
-  console.log(obj, '修改编辑');
-  getAddUser(obj.cIncludeModelCode);
-  disabled.value = false;
+  // console.log(obj, '修改编辑');
+  // console.log(obj.cIncludeModelCode, '修改编辑');
+  // getAddUser(obj.cIncludeModelCode);
+  // disabled.value = false;
+  router.push({
+    name: 'plantPlaceAddEdit',
+    params: {
+      t: Date.now(),
+      rowId: row.value.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(row.value),
+      pathName: 'plantPlaceAddView',
+      title: '工位档案编辑'
+    }
+  });
 };
 
 // 列表排序

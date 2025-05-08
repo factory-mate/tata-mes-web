@@ -148,7 +148,6 @@
     <el-dialog
       v-model="TdialogFormVisible"
       title="添加"
-      draggable
       :modal="false"
       :close-on-click-modal="false"
       width="90%"
