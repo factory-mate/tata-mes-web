@@ -547,8 +547,13 @@ const Tconfirm = () => {
     //   return;
     // }
   } else {
-    const { cVendorCode, cVendorName } = itemData.value[0];
-    headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+    const { cVendorCode, cVendorName, cPerson, cPhone } = itemData.value[0];
+    headRef.value.handleChangeRuleForm({
+      cVendorCode,
+      cVendorName,
+      cPerson,
+      cPhone
+    });
   }
   // 判断选中的数据 cVendorCode 是否一致
   if (
