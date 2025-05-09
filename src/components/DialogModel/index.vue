@@ -1346,7 +1346,8 @@ const getViewData = () => {
     Route.name == 'MaterialSupplier' ||
     Route.name == 'Texture' ||
     Route.name == 'ProductTag' ||
-    Route.name == 'ProcessRouteLine'
+    Route.name == 'ProcessRouteLine' ||
+    Route.name == 'PartFiles'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
