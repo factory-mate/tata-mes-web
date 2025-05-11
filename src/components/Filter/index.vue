@@ -499,7 +499,7 @@ const funHeadData = () => {
     }
     if (
       item.cAttributeCode === 'dPlanDateStart' &&
-      ['AutoUnloading'].includes(Route.name)
+      ['AutoUnloading', 'GlassReduction'].includes(Route.name)
     ) {
       item.cAttributeCodeValue = dayjs(new Date()).format('YYYY-MM-DD');
     }
