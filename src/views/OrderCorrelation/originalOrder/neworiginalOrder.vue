@@ -1411,23 +1411,17 @@ const clickDonwnFile = (item: any) => {
   };
   ParamsApi(data).then(res => {
     if (res.status == 200) {
-      if (
-        res.data[0].cFileSuffix == '.jpg' ||
-        res.data[0].cFileSuffix == '.png'
-      ) {
-        imgIshow.value = true;
-        url.value =
-          res.data[0].cFilePath +
-          res.data[0].cFileReName +
-          res.data[0].cFileSuffix;
-        srcList.value.push(url.value);
-      } else {
-        let src =
-          res.data[0].cFilePath +
-          res.data[0].cFileReName +
-          res.data[0].cFileSuffix;
-        window.location.href = src;
-      }
+      res.data.forEach(i => {
+        if (i.cFileSuffix == '.jpg' || i.cFileSuffix == '.png') {
+          srcList.value.push(i.cFilePath + i.cFileReName + i.cFileSuffix);
+        } else {
+          srcList.value.push(i.cFilePath + i.cFileReName + i.cFileSuffix);
+          let src = i.cFilePath + i.cFileReName + i.cFileSuffix;
+          // 浏览器打开新标签页预览
+          window.open(src, '_blank');
+        }
+      });
+      imgIshow.value = true;
     } else {
       console.log('请求出错');
     }
