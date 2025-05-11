@@ -3,7 +3,12 @@
   <div class="maintain">
     <!-- 按钮区域 -->
     <div style="display: flex">
-      <ButtonViem :ToolBut="But" @SaveEdit="SaveEdit" @clickAdd="clickAdd">
+      <ButtonViem
+        :ToolBut="But"
+        @SaveEdit="SaveEdit"
+        @clickAdd="clickAdd"
+        @BatchAddPersonGroup="batchAddPersonGroup"
+      >
       </ButtonViem>
     </div>
     <el-card>
@@ -699,6 +704,74 @@ const clickAdd = async (obj: any) => {
     }
   }
 };
+
+// TTTtable 数据整合
+const funTables = (arr: Array<any>) => {
+  (TtableData.value = []), (TtableColumns.value = []);
+  modelGrid.value = arr;
+  arr.forEach(item => {
+    if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
+      let itemData = {
+        checkType: true,
+        label: item.Resource.cAttributeName,
+        prop: item.Resource.cAttributeCode,
+        edit: item.DefinedParm4,
+        cControlTypeCode: item.cControlTypeCode,
+        headerSlot: false,
+        slot: ''
+      };
+      TtableColumns.value.push(itemData);
+      TtableColumns.value.push({
+        checkType: true,
+        label: '操作',
+        slotName: 'button'
+      });
+      TtableColumns.value = TtableColumns.value.filter(
+        (item: { label: any }, index: any, self: any[]) => {
+          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
+          const i = self.findIndex(
+            (t: { label: any }) => t.label === item.label
+          );
+          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
+          return i === index;
+        }
+      );
+    }
+    if (item.Resource.cAttributeTypeCode == 'binddata') {
+      TAxiosData.value = item;
+      TtableAxios();
+    }
+  });
+};
+
+const batchAddPersonGroup = async obj => {
+  TdialogFormVisible.value = true;
+  try {
+    const res = await configApi(obj.cIncludeModelCode);
+    if (res.status == 200) {
+      res.data.forEach((item: any) => {
+        if (item.cPropertyClassTypeCode == 'Grid') {
+          funTables(
+            item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
+          );
+        }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          TFilter.value = item[import.meta.env.VITE_APP_key];
+        }
+        if (item.cPropertyClassTypeCode == 'ToolBut') {
+          TBut.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+      });
+    } else {
+      console.log('请求出错');
+    }
+  } catch (error) {
+    console.log(error, '程序出错了');
+  }
+};
+
 //新增/编辑/详情弹窗
 const modelClose = (v: any) => {
   ZZdialogFormVisible.value = v.type;
@@ -776,29 +849,77 @@ const ThandleSelectionChange = (val: any) => {
 const Save = async (obj: any) => {
   console.log(obj, '弹窗保存---');
   if (tabVal.value !== 'Device.device_dev_file.M.List') {
-    let data = {
-      method: obj.Resource.cHttpTypeCode,
-      url: obj.Resource.cServerIP + obj.Resource.cUrl,
-      data: {
-        cDeviceCode: row.value ? rowVal.value.cDeviceCode : codess.value,
-        list_fault: itemData.value
-      }
-    };
-    try {
-      const res = await DataApi(data);
-      TTABRef.value.handleRemoveSelectionChange();
-      if (res.status == 200) {
-        ElMessage({
-          type: 'success',
-          message: '保存成功'
+    if (
+      obj.cFormPropertyCode ===
+      'Device.device_dev_pro_person.M.Add.device_persongroup.ToolBut'
+    ) {
+      const ms = [];
+      console.log(TabRef.value);
+      itemData.value?.forEach(i => {
+        console.log(TabRef.value);
+        TabRef.value.selectData?.forEach(j => {
+          ms.push({
+            ...i,
+            cProgramCode: j.cProgramCode,
+            cDeviceCode: j.cDeviceCode
+          });
         });
-        TdialogFormVisible.value = false;
-        tableAxios();
-      } else {
-        console.log('请求出错');
+      });
+      let data = {
+        method: obj.Resource.cHttpTypeCode,
+        url: obj.Resource.cServerIP + obj.Resource.cUrl,
+        data: {
+          ms
+        }
+      };
+      if (ms.length == 0) {
+        ElMessage({
+          type: 'warning',
+          message: '请至少选择一条数据'
+        });
+        return;
       }
-    } catch (error) {
-      console.log(error, '程序出错');
+      try {
+        const res = await DataApi(data);
+        TTABRef.value.handleRemoveSelectionChange();
+        if (res.status == 200) {
+          ElMessage({
+            type: 'success',
+            message: '保存成功'
+          });
+          TdialogFormVisible.value = false;
+          tableAxios();
+        } else {
+          console.log('请求出错');
+        }
+      } catch (error) {
+        console.log(error, '程序出错');
+      }
+    } else {
+      let data = {
+        method: obj.Resource.cHttpTypeCode,
+        url: obj.Resource.cServerIP + obj.Resource.cUrl,
+        data: {
+          cDeviceCode: row.value ? rowVal.value.cDeviceCode : codess.value,
+          list_fault: itemData.value
+        }
+      };
+      try {
+        const res = await DataApi(data);
+        TTABRef.value.handleRemoveSelectionChange();
+        if (res.status == 200) {
+          ElMessage({
+            type: 'success',
+            message: '保存成功'
+          });
+          TdialogFormVisible.value = false;
+          tableAxios();
+        } else {
+          console.log('请求出错');
+        }
+      } catch (error) {
+        console.log(error, '程序出错');
+      }
     }
   } else {
     //添加文档

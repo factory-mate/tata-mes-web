@@ -764,7 +764,7 @@ const clearFilter = () => {
   myTableRef.value!.clearFilter();
 };
 // 暴露方法
-defineExpose({ handleRemoveSelectionChange, clearFilter });
+defineExpose({ handleRemoveSelectionChange, clearFilter, selectData });
 </script>
 
 <style lang="scss" scoped>
