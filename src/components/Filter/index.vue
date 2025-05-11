@@ -784,6 +784,7 @@ const getTreeProps = () => {
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':
+    case 'ProfessionEquipCheckTask':
       return deviceProp;
     default:
       return prop;
