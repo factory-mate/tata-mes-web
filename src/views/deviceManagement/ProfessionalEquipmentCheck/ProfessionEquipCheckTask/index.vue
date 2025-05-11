@@ -234,6 +234,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'View':
       clickView(scope, event);
       break;
+    case 'PlanPerson':
+      planPersonView(scope, event);
+      break;
     default:
       break;
   }
@@ -462,6 +465,23 @@ const clickView = (scope: any, obj: any) => {
       row: JSON.stringify(scope.row),
       pathName: 'ProfessionEquipCheckTask',
       title: '项目详情'
+    }
+  });
+};
+
+const planPersonView = (scope: any, obj: any) => {
+  router.push({
+    name: 'ProfessionalEquipmentCheckPersonView',
+    params: {
+      t: Date.now(),
+      rowId: scope.row.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      pageType: 'view',
+      row: JSON.stringify(scope.row),
+      pathName: 'ProfessionalEquipmentCheck',
+      title: '人员信息'
     }
   });
 };
