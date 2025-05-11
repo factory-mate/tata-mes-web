@@ -76,7 +76,7 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
-import { configApi, DataApi } from '@/api/configApi/index';
+import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { compare } from '@/utils';
 import useStore from '@/store';
@@ -101,7 +101,7 @@ const AxiosData = ref({}) as any;
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 20
+  PageSize: 500
 });
 //启用传递的UID
 const sendId = ref([]) as any;
@@ -251,24 +251,22 @@ const tableAxios = async () => {
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
-    data: {
+    params: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: 'cPositionCode = ' + row.value.cPositionCode
     }
   };
   try {
-    const res = await DataApi(data);
+    const res = await ParamsApi(data);
     if (res.status == 200) {
-      tableData.value = res.data.data.map(
-        (item: { IsValid: string | boolean }) => {
-          return {
-            ...item,
-            IsValid: item.IsValid ? '是' : '否'
-          };
-        }
-      );
+      tableData.value = res.data.map((item: { IsValid: string | boolean }) => {
+        return {
+          ...item,
+          IsValid: item.IsValid ? '是' : '否'
+        };
+      });
       //启用传递的UID
       tableData.value.forEach((item: { IsValid: string; UID: any }) => {
         if (item.IsValid === '否') {

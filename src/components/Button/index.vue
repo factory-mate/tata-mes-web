@@ -293,7 +293,9 @@ const emits = defineEmits([
   'Print',
   'Del',
   'BatchDelete',
-  'AddEquipment'
+  'AddEquipment',
+  'AddProcess',
+  'AddShowColor'
 ]);
 
 watch(
@@ -770,6 +772,13 @@ const BatchDelete = (obj: any) => {
 const AddEquipment = (obj: any) => {
   emits('AddEquipment', obj);
 };
+const AddProcess = (obj: any) => {
+  emits('AddProcess', obj);
+};
+const AddShowColor = (obj: any) => {
+  emits('AddShowColor', obj);
+};
+
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1124,6 +1133,11 @@ const clickButton = (event: any) => {
     case 'AddEquipment':
       AddEquipment(event);
       break;
+    case 'AddProcess':
+      AddProcess(event);
+      break;
+    case 'AddShowColor':
+      AddShowColor(event);
     default:
       break;
   }
