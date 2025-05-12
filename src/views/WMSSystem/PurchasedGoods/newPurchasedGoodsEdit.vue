@@ -205,7 +205,7 @@ import {
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 //引入二维码
 import QrcodeVue from 'qrcode.vue';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
@@ -222,6 +222,7 @@ const modelCode = ref();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
+const router = useRouter();
 let Filter = ref([]) as any;
 const headRef = ref(null);
 let ButOne = ref([]) as any;
@@ -514,7 +515,8 @@ const clickTableHandDel = (val: any) => {
 const copyItem = val => {
   tableData.value.splice(val.$index + 1, 0, {
     ...val.row,
-    UID: '00000000-0000-0000-0000-000000000000'
+    UID: '00000000-0000-0000-0000-000000000000',
+    nAccReceiveQuantity: ''
   });
 };
 
@@ -772,14 +774,58 @@ const PrintLabel = (obj: any, v: any) => {
 };
 
 //修改保存
-const SaveEdit = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchasedGoods';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
-  // disa.value = true;
+const SaveEdit = (obj: any, type = true) => {
+  // View1val.value = obj.cIncludeModelCode;
+  // obj.pathName = 'PurchasedGoods';
+  // obj.tableData = TABRef.value.tableDataVal;
+  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // // @ts-ignore
+  // headRef.value.validate(obj);
+  // // disa.value = true;
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    data: {
+      ...headRef.value.ruleForm,
+      Items: tableData.value,
+      bCheckQuantity: type
+    }
+  };
+  DataApi(data)
+    .then(res => {
+      if (res.success) {
+        ElMessage({
+          message: res.msg,
+          type: 'success'
+        });
+        $bus.emit('clickTableUp', true);
+        $bus.emit('tableUpData', { name: 'PurchasedGoods' });
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+      headRef.value.ruleForm = {};
+      router.push({ name: 'PurchasedGoods' });
+      tagsView.delVisitedView(Route);
+    })
+    .catch(res => {
+      if (res.status === 300) {
+        ElMessageBox.confirm(res.msg, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => SaveEdit(obj, false));
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    });
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {
