@@ -1705,6 +1705,10 @@ const handlePosAdjust = (item: any) => {
 const SaveAdd = (item: any) => {
   if (Route.name !== 'File') {
     //新增
+    if (Route.name === 'PartFiles') {
+      ruleForm.value.cMaterialType = 4;
+      ruleForm.value.cInvClassCode = 'SBBJ';
+    }
     if (Route.name == 'protectPart') {
       ruleForm.value.MID = TrowVal.value.UID;
       ruleForm.value.cInvCode = PartCode.value;
