@@ -785,6 +785,7 @@ const getTreeProps = () => {
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':
     case 'ProfessionEquipCheckTask':
+    case 'ProDeviceMaintenanceTask':
       return deviceProp;
     default:
       return prop;
