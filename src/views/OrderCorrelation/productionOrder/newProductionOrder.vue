@@ -1107,7 +1107,7 @@ const ExportAll = async (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
       OrderByFileds: 'cDefindParm02',
-      Conditions: `MID=${row.value.UID}`
+      Conditions: `MID=${row.value.UID} && cDefindParm17!=五金件`
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
