@@ -789,7 +789,7 @@ const SaveEdit = (obj: any, type = true) => {
     // @ts-ignore
     data: {
       ...headRef.value.ruleForm,
-      Items: tableData.value,
+      Items: TABRef.value.tableDataVal,
       bCheckQuantity: type
     }
   };
