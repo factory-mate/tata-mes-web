@@ -541,6 +541,9 @@ onActivated(() => {
       ruleForm.value = {};
     }
   }
+  setTimeout(() => {
+    ruleFormRef.value?.clearValidate();
+  }, 16);
 });
 onMounted(() => {
   if (Route.query.pathName) {
