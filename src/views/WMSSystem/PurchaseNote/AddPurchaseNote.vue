@@ -726,6 +726,8 @@ const setWidth = row => {
     case '数量':
     case '单位':
       return 80;
+    case 'SAP产品编码':
+      return 110;
     case '交货日期':
       return 120;
     default:
