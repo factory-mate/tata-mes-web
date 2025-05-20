@@ -643,7 +643,10 @@ const getSelectData = () => {
       if (!item.Resource.cUrl) return false;
       let obj = {};
       if (Route.name == 'PurchaseRequest') {
-        obj = { Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus' };
+        obj = {
+          Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus',
+          OrderByFileds: 'cDictonaryCode'
+        };
       } else if (
         Route.name == 'workshopMaterial' ||
         Route.name == 'warehouseMaterial'
@@ -693,7 +696,8 @@ const getSelectData = () => {
         }
       } else {
         obj = {
-          Conditions: 'cDictonaryTypeCode=' + item.Resource.cAttributeCode
+          Conditions: 'cDictonaryTypeCode=' + item.Resource.cAttributeCode,
+          OrderByFileds: 'cDictonaryCode'
         };
       }
       if (item.Resource.cHttpTypeCode == 'post') {
