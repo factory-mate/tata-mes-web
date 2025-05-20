@@ -476,8 +476,8 @@ const ExportAll = async (obj: any) => {
       PageSize: 9999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+      // ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
+      // : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
@@ -494,8 +494,8 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+      // ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
+      // : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
