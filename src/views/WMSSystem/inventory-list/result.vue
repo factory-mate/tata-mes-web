@@ -236,8 +236,8 @@ const tableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? `MID=${Route.params.rowId} && ${Conditions.value}`
-        : `MID=${Route.params.rowId}`
+        ? `MIDs=${Route.params.rowId} && ${Conditions.value}`
+        : `MIDs=${Route.params.rowId}`
     }
   };
   try {
