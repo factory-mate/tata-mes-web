@@ -268,7 +268,7 @@ const resetForm = () => {
   emit('resetForm', { value: ruleForm.value });
 };
 const funHeight = () => {
-  return window.innerHeight - 210 + 'px';
+  return window.innerHeight - 225 + 'px';
 };
 defineExpose({ clearTree });
 </script>
