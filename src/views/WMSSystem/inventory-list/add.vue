@@ -38,35 +38,37 @@
         ></el-tab-pane>
       </el-tabs>
       <!-- 表格区域 -->
-      <myTable
-        ref="TABRef"
-        :tableData="tableData"
-        :tableColumns="tableColumns"
-        :tableBorder="true"
-        :selection="false"
-      >
-        <template #button>
-          <el-table-column
-            label="操作"
-            fixed="right"
-            width="160px"
-            align="center"
-          >
-            <template #header>
-              <span>操作</span>
-            </template>
-            <template #default="scope">
-              <el-button
-                type="primary"
-                :disabled="disabled"
-                size="small"
-                @click="clickTableHandDel(scope)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </template>
-      </myTable>
+      <div v-show="showTable">
+        <myTable
+          ref="TABRef"
+          :tableData="tableData"
+          :tableColumns="tableColumns"
+          :tableBorder="true"
+          :selection="false"
+        >
+          <template #button>
+            <el-table-column
+              label="操作"
+              fixed="right"
+              width="160px"
+              align="center"
+            >
+              <template #header>
+                <span>操作</span>
+              </template>
+              <template #default="scope">
+                <el-button
+                  type="primary"
+                  :disabled="disabled"
+                  size="small"
+                  @click="clickTableHandDel(scope)"
+                  >删除</el-button
+                >
+              </template>
+            </el-table-column>
+          </template>
+        </myTable>
+      </div>
       <pagination
         v-if="total > 0"
         :total="total"
@@ -87,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated } from 'vue';
+import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
@@ -110,6 +112,7 @@ const { tagsView, permission } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const modelCode = ref();
+const showTable = ref(true);
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
@@ -155,6 +158,17 @@ const {
 } = toRefs(data);
 let head = ref([]) as any;
 const initType = ref(true);
+watch(
+  () => headRef.value?.ruleForm.cTakeTypeCode,
+  val => {
+    console.log(val);
+    if (val === '1') {
+      showTable.value = false;
+    } else {
+      showTable.value = true;
+    }
+  }
+);
 onActivated(() => {
   modelCode.value = history.state.modelCode
     ? history.state.modelCode
