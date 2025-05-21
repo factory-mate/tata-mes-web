@@ -144,7 +144,7 @@ const data = reactive({
   isCollapse: false,
   dialogV: false,
   dialogTitle: '编辑',
-  Conditions: '',
+  Conditions: 'IsValid = true',
   OrderByFileds: '',
   disabled: false,
   dialogFormVisible: false,
@@ -337,8 +337,9 @@ const tableAxios = async () => {
 // 搜索
 const ClickSearch = (val: any) => {
   let searchData = JSON.parse(JSON.stringify(val.value));
-
-  Conditions.value = filterModel(searchData);
+  Conditions.value = filterModel(searchData)
+    ? `${filterModel(searchData)} && IsValid = true`
+    : 'IsValid = true';
   tableAxios();
 };
 const Stop = (obj: any) => {
@@ -823,7 +824,7 @@ const changPage = (val: any) => {
 };
 // 重置
 const resetForm = (val: any) => {
-  Conditions.value = '';
+  Conditions.value = 'IsValid = true';
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
