@@ -36,6 +36,7 @@
             "
             :prop="item.key"
             :label="item.name"
+            :min-width="setWidth(item)"
           >
             <template #default="scope">
               <el-tooltip
@@ -49,7 +50,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-else :prop="item.key" :label="item.name" />
+          <el-table-column
+            v-else
+            :prop="item.key"
+            :label="item.name"
+            :min-width="setWidth(item)"
+          />
         </template>
       </el-table>
       <pagination
@@ -391,6 +397,23 @@ const changPage = (val: any) => {
   } else {
     tableAxios(tableItemData.value);
   }
+};
+
+const setWidth = item => {
+  console.log(item);
+  if (Route.name === 'AddPurchaseRequest') {
+    switch (item.name) {
+      case '物料编码':
+        return 60;
+      case '物料名称':
+        return 200;
+      case '物料规格':
+        return 60;
+      case '物料分类':
+        return 60;
+    }
+  }
+  return undefined;
 };
 </script>
 
