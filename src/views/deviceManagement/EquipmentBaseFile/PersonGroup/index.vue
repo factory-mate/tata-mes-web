@@ -14,6 +14,7 @@
         @clickAdd="clickAdd"
         @clickStart="Start"
         @clickDelete="clickDel"
+        @ExportAll="ExportAll"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -89,6 +90,7 @@
 </template>
 
 <script setup lang="ts">
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import {
   ref,
   toRefs,
@@ -99,7 +101,6 @@ import {
   onActivated,
   provide
 } from 'vue';
-import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
@@ -542,6 +543,22 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const ExportAll = obj => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 9999,
+      OrderByFileds: '',
+      Conditions: Conditions.value
+    }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '人员组信息');
+  loading.close();
 };
 </script>
 
