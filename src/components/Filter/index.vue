@@ -299,6 +299,7 @@ const getTreeProps = () => {
     case 'DeviceMaintenanceTask':
     case 'ProfessionEquipCheckTask':
     case 'ProDeviceMaintenanceTask':
+    case 'DeviceCheckMaintainFinish':
       return deviceProp;
     case 'inLindReturn':
       return inLindReturnProp;
