@@ -13,6 +13,7 @@
         :ToolBut="But"
         @clickDelete="clickDel"
         @clickAdd="clickAdd"
+        @ExportAll="ExportAll"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -113,6 +114,7 @@
 </template>
 
 <script setup lang="ts">
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import { ref, toRefs, reactive, nextTick, onActivated, provide } from 'vue';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
@@ -556,6 +558,21 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+const ExportAll = obj => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 9999,
+      OrderByFileds: '',
+      Conditions: Conditions.value
+    }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '部件档案');
+  loading.close();
 };
 </script>
 
