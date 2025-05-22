@@ -136,6 +136,7 @@
               @visible-change="getTreeDAata"
               clearable
               ref="cascaderRef"
+              :show-all-levels="getShowAllLevels()"
             />
           </el-form-item>
         </el-form>
@@ -281,6 +282,38 @@ const deviceProp = {
   checkStrictly: true,
   expandTrigger: 'hover'
 };
+const inLindReturnProp = {
+  label: 'cFactoryUnitName',
+  value: 'cReName',
+  children: 'Child',
+  checkStrictly: true,
+  expandTrigger: 'hover'
+};
+
+const getTreeProps = () => {
+  switch (Route.name) {
+    case 'WMSMaterial':
+    case 'AddPurchaseRequest':
+      return wmsMaterialProp;
+    case 'EquipmentCheckTask':
+    case 'DeviceMaintenanceTask':
+    case 'ProfessionEquipCheckTask':
+    case 'ProDeviceMaintenanceTask':
+      return deviceProp;
+    case 'inLindReturn':
+      return inLindReturnProp;
+    default:
+      return prop;
+  }
+};
+
+const getShowAllLevels = () => {
+  if (Route.name === 'inLindReturn') {
+    return false;
+  }
+  return true;
+};
+
 const clickFil = (val: any) => {
   fileType.value = !fileType.value;
 };
@@ -764,6 +797,7 @@ const handleChange = (item: any, value: any) => {
   console.log(selectedNodeValue);
   item.cAttributeCodeValue =
     value.length > 1 ? value[value.length - 1] : value[0];
+  console.log(item.cAttributeCodeValue);
   item.treeSelectedValues = selectedNodeValue;
   cascaderRef.value[0].togglePopperVisible();
 };
@@ -781,20 +815,6 @@ const getSelectedNodeValue = (nodes: any, arr: any) => {
 // 搜索
 const ClickSearch = () => emits('ClickSearch', { value: FilterData.value });
 
-const getTreeProps = () => {
-  switch (Route.name) {
-    case 'WMSMaterial':
-    case 'AddPurchaseRequest':
-      return wmsMaterialProp;
-    case 'EquipmentCheckTask':
-    case 'DeviceMaintenanceTask':
-    case 'ProfessionEquipCheckTask':
-    case 'ProDeviceMaintenanceTask':
-      return deviceProp;
-    default:
-      return prop;
-  }
-};
 // 重置
 const resetForm = () => {
   FilterData.value.forEach((item: any) => {
