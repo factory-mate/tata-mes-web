@@ -244,7 +244,7 @@ const tableAxios = async () => {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await ParamsApi(data);
     if (res.status == 200) {
-      tableData.value = (res.data.data ?? []).map(
+      tableData.value = (res.data ?? []).map(
         (item: { IsValid: string | boolean }) => {
           return {
             ...item,
