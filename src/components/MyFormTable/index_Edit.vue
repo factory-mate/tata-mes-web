@@ -737,8 +737,8 @@ const selectDatas = (val: any) => {
               cUnitCode: val.value[i + 1].CG_UnitCode,
               cUnitName: val.value[i + 1].CG_UnitName,
               cDefindParm03: val.value[i + 1].SAPCode,
-              cVendorName: val.value[0].cVendorName,
-              cVendorCode: val.value[0].cVendorCode
+              cVendorName: val.value[i + 1].cVendorName,
+              cVendorCode: val.value[i + 1].cVendorCode
             });
           }
         }
