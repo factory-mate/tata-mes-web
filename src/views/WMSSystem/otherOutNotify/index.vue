@@ -50,7 +50,10 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i < (tableButton.length > 3 ? 2 : 3)"
+                  v-if="
+                    i < (tableButton.length > 3 ? 2 : 3) &&
+                    showButton(scope.row, item)
+                  "
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -564,6 +567,20 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const showButton = (obj, item) => {
+  if (
+    item.Resource.cAttributeName === '详情' ||
+    item.Resource.cAttributeName === '删除'
+  ) {
+    return true;
+  }
+  if (item.Resource.cAttributeName === '编辑' && obj.iStatus === 0) {
+    return true;
+  } else {
+    return false;
+  }
 };
 </script>
 
