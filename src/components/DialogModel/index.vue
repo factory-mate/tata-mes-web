@@ -1361,6 +1361,10 @@ const getViewData = () => {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
     };
+  } else if (Route.name == 'WorkDevice') {
+    obj = {
+      val: rowVal.value?.ResourceUID || TrowVal.value?.ResourceUID || ''
+    };
   } else if (Route.name == 'UserLine') {
     obj = { val: rowVal.value?.cLoginName };
   } else {

@@ -231,7 +231,7 @@ const clickTableBut = (scope: any, event: any) => {
     case 'View':
       clickView(scope, event);
       break;
-    case 'SaveEdit':
+    case 'Edit':
       clickEditTable(scope, event);
       break;
     case 'Delete':
@@ -452,7 +452,7 @@ const Disabled = (scope: any, obj: any) => {
 };
 //表格按钮删除
 const clickDelete = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
+  const senid = scope.row.ResourceUID;
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
