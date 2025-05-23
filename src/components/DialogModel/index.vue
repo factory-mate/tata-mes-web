@@ -1136,6 +1136,15 @@ const selectData = (val: any) => {
           ruleForm.value.cLoginName = val.value[0].cLoginName;
         }
       }
+      if (Route.name === 'WorkDevice') {
+        if (AttributeCode.value === 'cDeviceName') {
+          ruleForm.value.cResourceName = val.value[0].cDeviceName;
+          ruleForm.value.cResourceCode = val.value[0].cDeviceCode;
+        }
+        if (AttributeCode.value === 'cPositionName') {
+          ruleForm.value.cPositionCode = val.value[0].cPositionCode;
+        }
+      }
     }
   );
 };
@@ -1705,6 +1714,9 @@ const handlePosAdjust = (item: any) => {
 const SaveAdd = (item: any) => {
   if (Route.name !== 'File') {
     //新增
+    if (Route.name === 'WorkDevice') {
+      ruleForm.value.cResourceTypeCode = '9';
+    }
     if (Route.name === 'PartFiles') {
       ruleForm.value.cMaterialType = 4;
       ruleForm.value.cInvClassCode = 'SBBJ';
@@ -1918,6 +1930,9 @@ const SaveEdit = (item: any) => {
     ? rowVal.value.utfs
     : TrowVal.value.utfs || '';
 
+  if (Route.name === 'WorkDevice') {
+    ruleForm.value.cResourceTypeCode = '9';
+  }
   if (Route.name !== 'File') {
     if (Route.name === 'scheme') {
       ruleForm.value.cProjectTypeCode = ProjectName.value[0]?.cDictonaryCode;
