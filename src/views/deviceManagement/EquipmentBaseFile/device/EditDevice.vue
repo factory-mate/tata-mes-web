@@ -585,6 +585,14 @@ const tableAxios = async () => {
   if (tabVal.value === 'Device.device_dev_pro_config.M.List') {
     orderByFileds = 'cProgramTypeCode,cProgramCode';
   }
+  const conditions = [
+    row.value?.cDeviceCode
+      ? `cDeviceCode=${rowVal.value.cDeviceCode}`
+      : `cDeviceCode=${codess.value}`
+  ];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let dataVal = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -592,9 +600,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: orderByFileds,
-      Conditions: row.value?.cDeviceCode
-        ? `cDeviceCode=${rowVal.value.cDeviceCode}`
-        : `cDeviceCode=${codess.value}`
+      Conditions: conditions.join(' && ')
     }
   };
   DataApi(dataVal).then((res: any) => {
