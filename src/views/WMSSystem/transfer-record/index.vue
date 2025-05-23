@@ -46,11 +46,11 @@
             </template>
             <template #default="scope">
               <template
-                v-for="(item, i) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i == 0 || i == 1"
+                  v-if="showButton(scope.row, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -564,6 +564,17 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const showButton = (obj, item) => {
+  if (item.Resource.cAttributeName === '详情') {
+    return true;
+  }
+  if (obj.iStatusName === '保存') {
+    return true;
+  } else {
+    return false;
+  }
 };
 </script>
 

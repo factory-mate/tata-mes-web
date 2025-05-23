@@ -147,7 +147,6 @@ const showButton = (obj, item) => {
   if (item.Resource.cAttributeName === '详情') {
     return true;
   }
-  console.log(obj);
   if (obj.iStatusName === '保存') {
     return true;
   } else {
