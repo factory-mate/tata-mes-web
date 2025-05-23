@@ -188,6 +188,8 @@ watch(
       newValue.codeType === 'TMS.TMS_INVETORY.M.FormList'
     ) {
       Conditions.value = `IsRepair = true`;
+    } else if (Route.name === 'AddPartolPlan') {
+      Conditions.value = 'cProjectTypeCode=04';
     } else {
       Conditions.value = '';
     }
