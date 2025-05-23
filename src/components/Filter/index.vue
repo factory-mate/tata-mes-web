@@ -294,6 +294,8 @@ const getTreeProps = () => {
   switch (Route.name) {
     case 'WMSMaterial':
     case 'AddPurchaseRequest':
+    case 'RawMaterialComparisonAdd':
+    case 'RawMaterialComparisonEdit':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':
