@@ -47,6 +47,8 @@
         :disabledHide="false"
         :show-index="false"
         @handleTableDataChange="handleTableDataChange"
+        :setWidth="setMainTableWidth"
+        custom-width
       >
         <template #button>
           <el-table-column
@@ -732,6 +734,27 @@ const setWidth = row => {
       return 100;
     default:
       return 200;
+  }
+};
+
+const setMainTableWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 120;
+    case '物料编码':
+      return 90;
+    case '物料名称':
+      return 200;
+    case '供应商名称':
+      return 120;
+    case '剩余数量':
+    case '采购数量':
+    case '单位':
+      return 50;
+    case 'SAP物料编码':
+      return 90;
+    case '交货日期':
+      return 100;
   }
 };
 </script>

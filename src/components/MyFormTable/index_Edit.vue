@@ -723,7 +723,7 @@ const selectDatas = (val: any) => {
           if (emptyRow) {
             emptyRow.cInvCode = val.value[i + 1].cInvCode;
             emptyRow.cInvName = val.value[i + 1].cInvName;
-            emptyRow.cInvStd = val.value[i + 1].cInvstd;
+            emptyRow.cInvStd = val.value[i + 1].cInvStd;
             emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
             emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
             emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
@@ -733,7 +733,7 @@ const selectDatas = (val: any) => {
             tableDataVal.value.push({
               cInvCode: val.value[i + 1].cInvCode,
               cInvName: val.value[i + 1].cInvName,
-              cInvStd: val.value[i + 1].cInvstd,
+              cInvStd: val.value[i + 1].cInvStd,
               cUnitCode: val.value[i + 1].CG_UnitCode,
               cUnitName: val.value[i + 1].CG_UnitName,
               cDefindParm03: val.value[i + 1].SAPCode,
@@ -968,7 +968,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       ElMessage.success('录入成功');
       tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
       tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
-      tableDataVal.value[scope.$index].cInvStd = data[0].cInvstd;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
       tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
       tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
       tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
