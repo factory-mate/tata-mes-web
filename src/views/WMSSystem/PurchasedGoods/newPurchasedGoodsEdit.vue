@@ -103,6 +103,7 @@
         :disabledHide="false"
         :setWidth="setWidth"
         custom-width
+        @handle-table-data-change="handleTableDataChange"
       >
         <template #button>
           <el-table-column
@@ -512,11 +513,18 @@ const clickTableHandDel = (val: any) => {
   tableData.value.splice(val.$index, 1);
 };
 
+const handleTableDataChange = (val: any) => {
+  tableData.value = val;
+};
+
 const copyItem = val => {
   tableData.value.splice(val.$index + 1, 0, {
     ...val.row,
     UID: '00000000-0000-0000-0000-000000000000',
-    nAccReceiveQuantity: ''
+    nAccReceiveQuantity: '',
+    nReceiveQuantity: '',
+    dProductDay: '',
+    cVendorBatch: ''
   });
 };
 
