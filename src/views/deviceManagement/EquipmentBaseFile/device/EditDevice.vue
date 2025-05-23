@@ -40,6 +40,12 @@
           @RoleBut="RoleBut"
         ></Head-View>
       </div>
+      <FilterForm
+        v-show="Filter?.length"
+        :Filter="Filter"
+        @ClickSearch="ClickSearch"
+        @resetForm="resetForm"
+      ></FilterForm>
       <!-- 表格区域 -->
       <div v-show="tableColumns.length">
         <myTable
@@ -318,6 +324,7 @@ const queryParams = reactive({
   PageIndex: 1,
   PageSize: 20
 });
+const Filter = ref([]) as any;
 //弹窗数据
 const TTABRef = ref();
 const TdialogFormVisible = ref();
@@ -449,6 +456,7 @@ const getAddUser = async (code: any) => {
       ftotal.value = 0;
       tableData.value = [];
       But.value = [];
+      Filter.value = [];
       res.data.forEach((item: any) => {
         if (item.cPropertyClassTypeCode == 'Head') {
           item[import.meta.env.VITE_APP_key].map((item: any) => {
@@ -472,6 +480,11 @@ const getAddUser = async (code: any) => {
         }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
           But.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          Filter.value = item[import.meta.env.VITE_APP_key].sort(
             compare('iIndex', true)
           );
         }
@@ -958,6 +971,20 @@ const Tconfirm = () => {
   TTABRef.value.handleRemoveSelectionChange();
 };
 
+const ClickSearch = (val: any) => {
+  queryParams.PageIndex = 1;
+  let searchData = JSON.parse(JSON.stringify(val.value));
+  Conditions.value = filterModel(searchData);
+  tableAxios();
+};
+const resetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  tableAxios();
+};
 //TT弹窗搜索
 const TClickSearch = (val: any) => {
   Conditions.value = filterModel(val.value);
