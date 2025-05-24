@@ -570,13 +570,14 @@ const renew = () => {
 };
 
 const showButton = (obj, item) => {
-  if (
-    item.Resource.cAttributeName === '详情' ||
-    item.Resource.cAttributeName === '删除'
-  ) {
+  if (item.Resource.cAttributeName === '详情') {
     return true;
   }
-  if (item.Resource.cAttributeName === '编辑' && obj.iStatus === 0) {
+  if (
+    (item.Resource.cAttributeName === '编辑' ||
+      item.Resource.cAttributeName === '删除') &&
+    obj.iStatus === 0
+  ) {
     return true;
   } else {
     return false;
