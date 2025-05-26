@@ -1672,7 +1672,6 @@ const selectData = (val: any) => {
       }
     }
     if (
-      Route.name == 'AddPartolPlan' ||
       Route.name == 'newOutputPlanEdit' ||
       Route.name === 'RawMaterialComparisonAdd' ||
       Route.name === 'RawMaterialComparisonEdit'
@@ -1680,6 +1679,13 @@ const selectData = (val: any) => {
       if (AttributeCode.value == 'cProjectName') {
         ruleForm.value['cProjectName'] = val.value[0].cProjectName || '';
         ruleForm.value['cProjectCode'] = val.value[0].cProjectCode || '';
+      }
+    }
+    if (Route.name === 'AddPartolPlan' || Route.name === 'EditPatrolPlan') {
+      if (AttributeCode.value == 'cProjectName') {
+        ruleForm.value['cProjectName'] = val.value[0].cProjectName || '';
+        ruleForm.value['cProjectCode'] = val.value[0].cProjectCode || '';
+        ruleForm.value['projectNameUID'] = val.value[0].UID;
       }
     }
     //部门档案新增/编辑

@@ -189,10 +189,19 @@ watch(
     ) {
       Conditions.value = `IsRepair = true`;
     } else if (
-      Route.name === 'AddPartolPlan' &&
-      newValue.titleName === '方案名称'
+      Route.name === 'AddPartolPlan' ||
+      Route.name === 'EditPatrolPlan'
     ) {
-      Conditions.value = 'cProjectTypeCode=04';
+      if (newValue.titleName === '方案名称') {
+        Conditions.value = 'cProjectTypeCode=04';
+      }
+      if (newValue.titleName === '版本号') {
+        if (newValue.ruleForm?.projectNameUID) {
+          Conditions.value = `MID=${newValue.ruleForm?.projectNameUID}`;
+        } else {
+          Conditions.value = '';
+        }
+      }
     } else {
       Conditions.value = '';
     }
