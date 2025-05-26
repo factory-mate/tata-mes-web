@@ -188,7 +188,10 @@ watch(
       newValue.codeType === 'TMS.TMS_INVETORY.M.FormList'
     ) {
       Conditions.value = `IsRepair = true`;
-    } else if (Route.name === 'AddPartolPlan') {
+    } else if (
+      Route.name === 'AddPartolPlan' &&
+      newValue.titleName === '方案名称'
+    ) {
       Conditions.value = 'cProjectTypeCode=04';
     } else {
       Conditions.value = '';

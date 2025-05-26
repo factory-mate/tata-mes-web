@@ -95,6 +95,7 @@
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
+                @change="changeDatePicker(scope.$index, scope.row)"
                 style="width: auto"
               />
               <el-select
@@ -672,6 +673,9 @@ const changeTextBox = (i: any, scope: any) => {
   // if(Route.name=='ScrapToolInfoEdit'||Route.name=='LabelUsageConfigurationEdit'||Route.name=='inishedSubPartComparisonEdit'){
   //     tableDataVal.value[i].state=tableDataVal.value[i].state=='added'?'added':'edit'  //周盈中的方案 报废单菜单  解决丢失覆盖问题
   // }
+  emit('handleTableDataChange', tableDataVal.value);
+};
+const changeDatePicker = (i, scope) => {
   emit('handleTableDataChange', tableDataVal.value);
 };
 //搜索弹框表格选中

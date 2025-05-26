@@ -342,7 +342,11 @@ const getComboBoxFun = async () => {
 const copyItem = val => {
   tableData.value.splice(val.$index + 1, 0, {
     ...val.row,
-    UID: '00000000-0000-0000-0000-000000000000'
+    UID: '00000000-0000-0000-0000-000000000000',
+    nAccReceiveQuantity: '',
+    nReceiveQuantity: '',
+    dProductDay: '',
+    cVendorBatch: ''
   });
 };
 // table 数据整合
