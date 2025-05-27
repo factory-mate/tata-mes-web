@@ -1,20 +1,17 @@
 <template>
-  <!--采购单新增页面 -->
+  <!-- /编辑新增页面 -->
   <div class="maintain">
     <el-card>
       <!-- 按钮区域 -->
-      <div class="bot-btn1">
+      <div class="bot-btn1" v-if="showBtnArea">
         <ButtonViem
-          :ToolBut="ButOne"
-          :printDis="printDis"
+          :ToolBut="But"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
           @Commit="Commit"
-          @PrintLabel="PrintLabel"
-        >
-        </ButtonViem>
+        ></ButtonViem>
       </div>
       <Head-View
         :Head="head"
@@ -24,30 +21,40 @@
         :disabled="disabled"
         :dialogFormVisible="dialogFormVisible"
         :treeSelData="treeSelData"
-        @clickView="clickView"
-        @BtnDAel="BtnDAel"
         @RoleBut="RoleBut"
       ></Head-View>
-      <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
-      </div>
+
+      <!-- tab切换 -->
+      <el-tabs
+        type="card"
+        v-model="tabVal"
+        v-if="TabPageVal.length"
+        @tab-click="clickTabs"
+      >
+        <el-tab-pane
+          v-for="item in TabPageVal"
+          :key="item.cIncludeModelCode"
+          :label="item.Resource.cAttributeName"
+          :name="item.cIncludeModelCode"
+        ></el-tab-pane>
+      </el-tabs>
+      <!-- 表格区域 -->
       <myTable
         ref="TABRef"
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="false"
-        :EditType="EditType"
-        @handleSelectionChange="handleSelectionChange"
-        :disabled="disa"
-        :disabledHide="false"
         @tableHearData="tableHearData"
+        :disabledHide="false"
+        :setWidth="setWidth"
+        custom-width
       >
         <!-- <template #button>
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="160px"
             align="center"
           >
             <template #header>
@@ -82,44 +89,10 @@
       ></pop-model>
     </el-card>
   </div>
-
-  <!-- 添加弹窗表格 -->
-  <div>
-    <el-dialog
-      v-model="TdialogFormVisible"
-      title="添加"
-      draggable
-      :modal="false"
-      :close-on-click-modal="false"
-    >
-      <myTable
-        ref="TTABRef"
-        :tableData="TtableData"
-        :tableColumns="TtableColumns"
-        :tableBorder="true"
-        :selection="true"
-        :EditType="EditType"
-        @handleSelectionChange="ThandleSelectionChange"
-      >
-      </myTable>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="TdialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="Tconfirm"> 确认 </el-button>
-        </span>
-      </template>
-      <pagination
-        v-if="total > 0"
-        :total="total"
-        v-model:page="queryParams.PageIndex"
-        v-model:limit="queryParams.PageSize"
-      />
-    </el-dialog>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated, watch } from 'vue';
+import { ref, toRefs, reactive, onActivated } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
@@ -127,14 +100,13 @@ import { compare } from '@/utils';
 import {
   ElButton,
   ElCard,
+  ElLoading,
   ElTableColumn,
-  ElMessage,
-  ElMessageBox,
-  ElLoading
+  ElMessage
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
+import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -142,37 +114,28 @@ const { tagsView, permission } = useStore();
 // @ts-ignore
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
-const TABRef = ref();
-const printDis = ref(true);
-const TTABRef = ref();
 const modelCode = ref();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
+const router = useRouter();
 const headRef = ref(null);
-let ButOne = ref([]) as any;
-const But = ref([]) as any;
-const Buttwo = ref([]) as any;
-const EditType = ref(false);
-//弹窗数据
-const TdialogFormVisible = ref();
-const TAxiosData = ref({}) as any;
-const TtableData = ref([]) as any;
-const TtableColumns = ref([]) as any;
+let But = ref([]) as any;
+const tabVal = ref();
+const tabValBol = ref(true);
+let TabPageVal = ref([]) as any;
+const TABRef = ref();
 //表格数据
 const tableData = ref([] as any);
 //总条数
 const total = ref(0);
 // 表格配置数据
-const disa = ref(false);
 let dataVal = ref([] as any[]);
 const tableColumns = ref(dataVal);
 const AxiosData = ref({}) as any;
 const modelGrid = ref([]) as any;
-const selectArr = ref([]) as any;
-const printData = ref([]) as any;
 const modelGridType = ref(true);
-const View1val = ref('');
+const showBtnArea = ref(true);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
@@ -195,11 +158,8 @@ const {
   dialogFormVisible,
   modelTitle,
   modelCIncludeModelCode,
-  treeSelData,
-  Conditions,
-  OrderByFileds
+  treeSelData
 } = toRefs(data);
-
 let head = ref([]) as any;
 const initType = ref(true);
 onActivated(() => {
@@ -222,6 +182,8 @@ onActivated(() => {
   // if (rowId.value != Route.params.rowId) {
   //   getAddUser(Route.meta.ModelCode);
   // }
+  tabVal.value = 'WMS.PurchaseVouch.M.View.MaterialList';
+  tableColumns.value = [];
   getAddUser(Route.meta.ModelCode);
   rowId.value = Route.params.rowId;
   initType.value = false;
@@ -233,16 +195,15 @@ onActivated(() => {
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
   }
+  // if (row.value.iStatus !== 10) {
+  //   showBtnArea.value = true;
+  // } else {
+  //   showBtnArea.value = false;
+  // }
   if (history.state.title == '采购单详情') {
     disabled.value = true;
   }
 });
-const clickView = (val: any) => {
-  rowId.value = val.val;
-  disabled.value = true;
-  getAddUser(View1val.value);
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购单详情' });
-};
 // 权限按钮
 const RoleBut = (v: any) => {
   let ToolData = head.value.filter((BItem: any) => {
@@ -277,16 +238,31 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
         }
+        if (item.cPropertyClassTypeCode == 'TabPage') {
+          let itemArr = item[import.meta.env.VITE_APP_key].sort(
+            sortArr('iIndex')
+          );
+          if (tabValBol.value) {
+            tabVal.value = itemArr[0].cIncludeModelCode;
+          }
+          tabValBol.value = false;
+          TabPageVal.value = itemArr;
+          //调取第一个tab数据
+          getAddUser(TabPageVal.value[0].cIncludeModelCode);
+        }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
           But.value = item[import.meta.env.VITE_APP_key].sort(
             compare('iIndex', true)
           );
-          ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '保存'
-          );
-          Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '添加'
-          );
+          // .filter(i => {
+          //   if (
+          //     headRef.value?.ruleForm?.iStatus === 0 ||
+          //     headRef.value?.ruleForm?.iStatus === 5
+          //   ) {
+          //     return true;
+          //   }
+          //   return false;
+          // });
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
           funTable(
@@ -294,6 +270,7 @@ const getAddUser = async (code: any) => {
           );
         }
       });
+      ElLoading.service().close();
     } else {
       console.log('请求出错');
       ElLoading.service().close();
@@ -302,6 +279,17 @@ const getAddUser = async (code: any) => {
     console.log(error, '程序出错了');
     ElLoading.service().close();
   }
+};
+// tabs 切换，调取对应Tab数据
+const clickTabs = (val: any) => {
+  tableColumns.value = [];
+  total.value = 0;
+  tableData.value = [];
+  tabVal.value = val.props.name;
+  getAddUser(tabVal.value);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.clearValidate();
 };
 //获取下拉框数据
 const getComboBoxFun = async () => {
@@ -335,14 +323,15 @@ const funTable = (arr: Array<any>) => {
           checkType: true,
           label: item.Resource.cAttributeName,
           prop: item.Resource.cAttributeCode,
+          headerSlot: false,
+          slot: '',
           edit: item.DefinedParm4,
+          cControlTypeCode: item.cControlTypeCode,
+          cIncludeModelCode: item.cIncludeModelCode,
+          cHttpTypeCode: item.Resource.cHttpTypeCode,
           cServerIP: item.Resource.cServerIP,
           cUrl: item.Resource.cUrl,
-          cHttpTypeCode: item.Resource.cHttpTypeCode,
-          cControlTypeCode: item.cControlTypeCode,
-          cAttributeCode: item.Resource.cAttributeCode,
-          headerSlot: false,
-          slot: ''
+          cAttributeCode: item.Resource.cAttributeCode
         };
         tableColumns.value.push(itemData);
         tableColumns.value.push({
@@ -400,202 +389,6 @@ const tableAxios = async () => {
   }
 };
 
-const PrintLabel = (obj: any) => {
-  console.log(obj, '--');
-};
-// table 按钮 集合
-const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
-};
-
-const clickHandAdd = (data: any) => {
-  let itemData = JSON.parse(JSON.stringify(data.val));
-  dialogFormVisible.value = data.type;
-  tableData.value.push(itemData);
-};
-//添加t弹窗表格
-const ItemAdd = async (obj: any) => {
-  TdialogFormVisible.value = true;
-  try {
-    const res = await configApi(obj.cIncludeModelCode);
-    if (res.status == 200) {
-      res.data.forEach((item: any) => {
-        if (item.cPropertyClassTypeCode == 'Grid') {
-          funTables(
-            item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
-          );
-        }
-      });
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错了');
-  }
-};
-// TTTtable 数据整合
-const funTables = (arr: Array<any>) => {
-  modelGrid.value = arr;
-  arr.forEach(item => {
-    if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
-      let itemData = {
-        checkType: true,
-        label: item.Resource.cAttributeName,
-        prop: item.Resource.cAttributeCode,
-        edit: item.DefinedParm4,
-        cControlTypeCode: item.cControlTypeCode,
-        headerSlot: false,
-        slot: ''
-      };
-      TtableColumns.value.push(itemData);
-      TtableColumns.value.push({
-        checkType: true,
-        label: '操作',
-        slotName: 'button'
-      });
-      TtableColumns.value = TtableColumns.value.filter(
-        (item: { label: any }, index: any, self: any[]) => {
-          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
-          const i = self.findIndex(
-            (t: { label: any }) => t.label === item.label
-          );
-          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
-          return i === index;
-        }
-      );
-    }
-    if (item.Resource.cAttributeTypeCode == 'binddata') {
-      TAxiosData.value = item;
-      TtableAxios();
-    }
-  });
-};
-
-//表格数据查询
-const TtableAxios = async () => {
-  let data = {
-    method: TAxiosData.value.Resource.cHttpTypeCode,
-    url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
-    data: {
-      PageIndex: queryParams.PageIndex,
-      PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
-    }
-  };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      TtableData.value = res.data.data;
-      total.value = res.data.dataCount;
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
-};
-
-const itemData = ref([]) as any;
-//弹窗表格选中
-const ThandleSelectionChange = (val: any) => {
-  itemData.value = val;
-};
-//弹窗确认
-const Tconfirm = () => {
-  TdialogFormVisible.value = false;
-  // 表格添加数据
-  itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
-  });
-  TTABRef.value.handleRemoveSelectionChange();
-};
-
-// 添加弹窗form
-const clickAddConvert = (val: any) => {
-  dialogFormVisible.value = true;
-  modelTitle.value = '新增';
-  modelCIncludeModelCode.value = val.cIncludeModelCode;
-};
-//页码变化
-const changPage = (val: any) => {
-  queryParams.PageIndex = val.page;
-  queryParams.PageSize = val.limit;
-  TtableAxios();
-};
-const modelClose = (val: any) => {
-  dialogFormVisible.value = val.type;
-};
-//新增保存
-const SaveAdd = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'AddPurchaseNote';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
-  disa.value = true;
-};
-//打印显示一个按钮
-const BtnDAel = (v: any) => {
-  console.log(v, '-----');
-
-  // if (v > 0) {
-  //     But.value = But.value.filter((item: { Resource: { cAttributeName: string; }; }) => item.Resource.cAttributeName == '打印标签')
-  // }
-};
-//提交
-const Commit = (obj: any) => {
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [rowId.value]
-  };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '提交成功'
-      });
-      // tableAxios()
-      // TabRef.value.handleRemoveSelectionChange()
-      // sendId.value = []
-    } else {
-      console.log('提交失败');
-    }
-  });
-  console.log(obj, '提交');
-};
-
-const DYUID = ref([]) as any;
-//表格多选
-const handleSelectionChange = (v: any) => {
-  selectArr.value = v;
-  v.forEach((item: { UID: any }) => DYUID.value.push(item.UID));
-  //多选去重
-  DYUID.value = DYUID.value.filter(
-    (i: any, index: any) => DYUID.value.indexOf(i) === index
-  );
-};
-
-//修改保存
-const SaveEdit = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseNote';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
-  disa.value = true;
-};
-// 编辑按钮
-const clickEdit = (obj: any) => {
-  getAddUser(obj.cIncludeModelCode);
-  disabled.value = false;
-  disa.value = false;
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
-};
-
 // table filters
 const tablefilter = () => {
   tableColumns.value.forEach((aItem: any) => {
@@ -617,6 +410,101 @@ const tablefilter = () => {
   });
 };
 
+//排序
+const sortArr = (property: any) => {
+  return function (a: any, b: any) {
+    var value1 = a[property];
+    var value2 = b[property];
+    return value1 - value2; //正序
+    // return value2 - value1; //倒叙
+  };
+};
+
+// table 按钮删除
+const clickTableHandDel = (val: any) => {
+  //调用子组件的 DelBtn方法
+  TABRef.value.DelBtn();
+};
+
+const clickHandAdd = (data: any) => {
+  let itemData = JSON.parse(JSON.stringify(data.val));
+  dialogFormVisible.value = data.type;
+  tableData.value.push(itemData);
+  // total.value=total.value+1
+};
+
+// 添加
+const clickAddConvert = (val: any) => {
+  dialogFormVisible.value = true;
+  modelTitle.value = '新增';
+  modelCIncludeModelCode.value = val.cIncludeModelCode;
+};
+const modelClose = (val: any) => {
+  dialogFormVisible.value = val.type;
+};
+//新增保存
+const SaveAdd = (obj: any) => {
+  obj.pathName = 'PurchaseRequest';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
+};
+
+//修改保存
+const SaveEdit = (obj: any) => {
+  obj.pathName = 'PurchaseRequest';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
+};
+// 编辑
+const clickEdit = (obj: any) => {
+  // getAddUser(obj.cIncludeModelCode);
+  // disabled.value = false;
+  // $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+  tagsView.delVisitedView(Route);
+  router.push({
+    name: 'AddPurchaseNoteEdit',
+    params: {
+      t: Date.now(),
+      rowId: row.value.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(row.value),
+      pathName: 'AddPurchaseNoteView',
+      title: '采购单编辑'
+    }
+  });
+};
+
+const Commit = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [rowId.value]
+  };
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '提交成功'
+      });
+      // tableAxios()
+      // TabRef.value.handleRemoveSelectionChange()
+      // sendId.value = []
+      router.push({ name: 'PurchaseRequest' });
+      tagsView.delVisitedView(Route);
+      $bus.emit('tableUpData', { name: 'PurchaseRequest' });
+    } else {
+      console.log('提交失败');
+    }
+  });
+  console.log(obj, '提交');
+};
+
 const tableHearData = (value: any) => {
   const { prop, val } = value;
   // 排序
@@ -631,6 +519,24 @@ const tableHearData = (value: any) => {
     });
   }
 };
+const setWidth = row => {
+  switch (row.label) {
+    case '物料编码':
+      return 80;
+    case '物料名称':
+      return 250;
+    case '规格型号':
+      return 80;
+    case '数量':
+    case '原始数量':
+    case '单位':
+      return 50;
+    case '交货日期':
+      return 70;
+    default:
+      return 200;
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -639,38 +545,6 @@ const tableHearData = (value: any) => {
   height: 100%;
   box-sizing: border-box;
   padding: 20px;
-
-  .DY {
-    background: #fff;
-    width: 320px;
-    height: 200px;
-    border: 1px solid black;
-    font-size: 14px;
-    display: none;
-    .js_barcode {
-      height: 40%;
-
-      .imgs {
-        padding-top: 10px;
-        padding-left: 10px;
-      }
-    }
-
-    :deep(.el-col-12) {
-      margin: 10px 0;
-    }
-
-    .DY-Text {
-      height: 60%;
-
-      .Te-con {
-        padding: 10px;
-      }
-      .Qrcode {
-        margin-left: 30px;
-      }
-    }
-  }
 
   .maintain_card {
     width: 100%;
@@ -705,5 +579,12 @@ const tableHearData = (value: any) => {
 
 :deep(.el-form-item__label) {
   font-weight: bold;
+}
+
+:deep(.el-table .cell) {
+  // padding: 5px;
+  .el-input-number .el-input__inner {
+    width: 30px;
+  }
 }
 </style>
