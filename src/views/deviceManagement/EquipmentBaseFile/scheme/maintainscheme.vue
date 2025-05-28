@@ -301,7 +301,7 @@ const funTable = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
         checkType: true,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: ''
@@ -421,7 +421,7 @@ const TfunTables = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
         checkType: true,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         edit: item.DefinedParm4,
         cControlTypeCode: item.cControlTypeCode,

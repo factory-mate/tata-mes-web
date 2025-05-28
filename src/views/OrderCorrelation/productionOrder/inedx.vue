@@ -334,7 +334,7 @@ const funTable = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
         checkType: item.IsShow,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: '',

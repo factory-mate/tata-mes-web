@@ -382,7 +382,7 @@ const funTable = (arr: Array<any>) => {
     ) {
       let itemData = {
         checkType: true,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: false,
         slot: '',
@@ -403,7 +403,7 @@ const funTable = (arr: Array<any>) => {
     ) {
       let itemData = {
         checkType: true,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: false,
         slot: '',

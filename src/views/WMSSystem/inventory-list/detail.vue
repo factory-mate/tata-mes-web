@@ -471,7 +471,7 @@ const funTables = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
         checkType: true,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         edit: item.DefinedParm4,
         cControlTypeCode: item.cControlTypeCode,
@@ -581,9 +581,11 @@ const Commit = (obj: any) => {
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [rowId.value]
+    params: {
+      val: rowId.value
+    }
   };
-  DataApi(data).then(res => {
+  ParamsApi(data).then(res => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',

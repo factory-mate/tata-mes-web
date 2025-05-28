@@ -377,7 +377,7 @@ const funTable = (arr: Array<any>) => {
       };
       let itemData = {
         checkType: item.IsShow,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         cIncludeModelCode: item.cIncludeModelCode,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,

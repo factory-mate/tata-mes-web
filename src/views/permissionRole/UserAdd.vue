@@ -347,7 +347,7 @@ const funTable = (arr: Array<any>) => {
     ) {
       let itemDatas = {
         checkType: item.IsShow,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: '',
@@ -367,7 +367,7 @@ const funTable = (arr: Array<any>) => {
     ) {
       let itemData = {
         checkType: item.IsShow,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: '',
@@ -603,7 +603,7 @@ const AdduserfunTable = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
         checkType: item.IsShow,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: '',
@@ -818,7 +818,7 @@ const AddrolefunTable = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
         checkType: item.IsShow,
-        label: item.Resource.cAttributeName,
+        label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: '',

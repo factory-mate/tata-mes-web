@@ -2367,12 +2367,8 @@ const newAdd = () => {
     ButObjTableData.value.forEach((item: any) => {
       item.IsAuth = true;
     });
-    // #1799 #3229
     dataValue = {
-      Items: ButObjTableData.value.map(i => ({
-        ...i
-        // nQuantity: i.nQuantity2 ?? i.nQuantity
-      }))
+      Items: ButObjTableData.value
     };
   } else if (
     Route.name == 'AddPurchaseNote' ||
@@ -2383,12 +2379,8 @@ const newAdd = () => {
     ButObjTableData.value.forEach((item: any) => {
       item.IsAuth = true;
     });
-    // #1799 #3229
     dataValue = {
-      Items: ButObjTableData.value.map(i => ({
-        ...i
-        // nQuantity: i.nQuantity2 ?? i.nQuantity
-      }))
+      Items: ButObjTableData.value
     };
   } else if (
     Route.name == 'AddPurchaseRequest' ||
@@ -2397,17 +2389,19 @@ const newAdd = () => {
   ) {
     ruleForm.value.IsAuth = true;
     console.log(ButObjTableData.value);
-    ButObjTableData.value.forEach((item: any) => {
-      item.IsAuth = true;
+    const items = ButObjTableData.value
+      .filter(i => i.cInvCode)
+      .map(i => ({
+        ...i,
+        IsAuth: true
+      }));
+    let iIndex = 10;
+    items.forEach(i => {
+      i.iIndex = iIndex;
+      iIndex += 10;
     });
-    // #1799 #3229
     dataValue = {
-      Items: ButObjTableData.value
-        .filter(i => i.cInvCode)
-        .map(i => ({
-          ...i
-          // nQuantity: i.nQuantity2 ?? i.nQuantity
-        }))
+      Items: items
     };
   } else if (
     Route.name == 'AddBusineScen' ||

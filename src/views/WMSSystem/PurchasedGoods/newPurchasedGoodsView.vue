@@ -443,7 +443,7 @@ const funTable = (arr: Array<any>) => {
       if (item.IsShow) {
         let itemData = {
           checkType: true,
-          label: item.Resource.cAttributeName,
+          label: item.cShowName ?? item.Resource.cAttributeName,
           prop: item.Resource.cAttributeCode,
           edit: item.DefinedParm4,
           cServerIP: item.Resource.cServerIP,
@@ -605,7 +605,7 @@ const funTables = (arr: Array<any>) => {
       if (item.IsShow) {
         let itemData = {
           checkType: true,
-          label: item.Resource.cAttributeName,
+          label: item.cShowName ?? item.Resource.cAttributeName,
           prop: item.Resource.cAttributeCode,
           edit: item.DefinedParm4,
           cControlTypeCode: item.cControlTypeCode,
