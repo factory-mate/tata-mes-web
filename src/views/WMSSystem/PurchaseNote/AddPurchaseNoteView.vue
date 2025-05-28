@@ -522,7 +522,8 @@ const tableHearData = (value: any) => {
 const setWidth = row => {
   switch (row.label) {
     case '物料编码':
-      return 80;
+    case 'SAP物料编码':
+      return 120;
     case '物料名称':
       return 250;
     case '规格型号':
@@ -530,9 +531,14 @@ const setWidth = row => {
     case '数量':
     case '原始数量':
     case '单位':
-      return 50;
-    case '交货日期':
+    case '单价':
+    case '金额':
+    case '剩余数量':
+    case '到货数量':
+    case '采购数量':
       return 70;
+    case '交货日期':
+      return 120;
     default:
       return 200;
   }

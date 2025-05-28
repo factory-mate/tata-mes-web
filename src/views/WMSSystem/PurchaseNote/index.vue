@@ -15,6 +15,7 @@
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
         @Commit="Commit"
+        @ItemAddOnMaterial="ItemAddOnMaterial"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -396,19 +397,35 @@ const clickView = (scope: any, obj: any) => {
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
-  router.push({
-    name: 'AddPurchaseNoteEdit',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.UID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'PurchaseNote',
-      title: '采购单编辑'
-    }
-  });
+  if (scope.row.cVouchSourceTypeCode === '0') {
+    router.push({
+      name: 'AddPurchaseNoteEditNoOrigin',
+      params: {
+        t: Date.now(),
+        rowId: scope.row.UID
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        row: JSON.stringify(scope.row),
+        pathName: 'PurchaseNote',
+        title: '采购单无来源编辑'
+      }
+    });
+  } else {
+    router.push({
+      name: 'AddPurchaseNoteEdit',
+      params: {
+        t: Date.now(),
+        rowId: scope.row.UID
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        row: JSON.stringify(scope.row),
+        pathName: 'PurchaseNote',
+        title: '采购单编辑'
+      }
+    });
+  }
 };
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
@@ -425,6 +442,22 @@ const clickAdd = (obj: { cIncludeModelCode: any }) => {
     }
   });
 };
+
+const ItemAddOnMaterial = obj => {
+  router.push({
+    name: 'AddPurchaseNoteNoOrigin',
+    params: {
+      t: Date.now(),
+      rowId: ' '
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      title: '采购单无来源新增',
+      type: 'add'
+    }
+  });
+};
+
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
   // arr.forEach((item: { IsValid: string; UID: any; }) => {

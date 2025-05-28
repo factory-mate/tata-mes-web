@@ -1436,6 +1436,7 @@ const headVal = () => {
 
   if (
     Route.name === 'AddPurchaseNote' ||
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'ScrapToolInfoAdd' ||
     Route.name === 'resizeDialAdd' ||
     Route.name === 'AddGrindOrder' ||
@@ -2272,6 +2273,14 @@ const newAdd = () => {
     ruleForm.value['cOutWareHouseName'] = name2;
   }
 
+  if (
+    Route.name == 'AddPurchaseNoteNoOrigin' ||
+    Route.name == 'AddPurchaseNoteEditNoOrigin'
+  ) {
+    ruleForm.value.cVouchSourceTypeCode = 0;
+    ruleForm.value.Items = ButObjTableData.value;
+  }
+
   let dataValue = {};
   //产线档案新增
   if (
@@ -2344,8 +2353,6 @@ const newAdd = () => {
     });
     dataValue = { BodyModels: ButObjTableData.value };
   } else if (
-    Route.name == 'AddPurchaseNote' ||
-    Route.name == 'AddPurchaseNoteEdit' ||
     Route.name == 'AddPurchaseNoteView' ||
     Route.name == 'newPurchasedGoods' ||
     Route.name == 'newPurchasedGoodsEdit' ||
@@ -2357,6 +2364,22 @@ const newAdd = () => {
     Route.name == 'newPurchaseAuditEdit'
   ) {
     ruleForm.value.IsAuth = true;
+    ButObjTableData.value.forEach((item: any) => {
+      item.IsAuth = true;
+    });
+    // #1799 #3229
+    dataValue = {
+      Items: ButObjTableData.value.map(i => ({
+        ...i
+        // nQuantity: i.nQuantity2 ?? i.nQuantity
+      }))
+    };
+  } else if (
+    Route.name == 'AddPurchaseNote' ||
+    Route.name == 'AddPurchaseNoteEdit'
+  ) {
+    ruleForm.value.IsAuth = true;
+    ruleForm.value.cVouchSourceTypeCode = 1;
     ButObjTableData.value.forEach((item: any) => {
       item.IsAuth = true;
     });

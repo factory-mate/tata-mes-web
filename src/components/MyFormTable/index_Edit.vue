@@ -199,6 +199,26 @@
                 />
               </el-select>
             </div>
+            <div
+              v-else-if="
+                (Route.name === 'AddPurchaseNoteNoOrigin' ||
+                  Route.name === 'AddPurchaseNoteEditNoOrigin') &&
+                item.cAttributeCode === 'cVendorName'
+              "
+            >
+              <el-select
+                v-model="scope.row[item.prop]"
+                placeholder="请选择"
+                @change="e => onVendorChange(e, scope)"
+              >
+                <el-option
+                  v-for="(selectItem, index) in scope.row['vendorSAPList']"
+                  :key="index"
+                  :label="selectItem.cVendorName"
+                  :value="selectItem.cVendorCode"
+                />
+              </el-select>
+            </div>
             <div v-else>
               <span>{{ scope.row[item.prop] }}</span>
             </div>
@@ -701,6 +721,31 @@ const selectDatas = (val: any) => {
     }
   }
   if (
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
+  ) {
+    if (AttributeCode.value == 'cInvName') {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+      metadata.value.cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].vendorSAPList = val.value[0].list_sap;
+      tableDataVal.value[IndexType.value].cDefindParm03 =
+        val.value[0].list_sap.find(
+          i =>
+            i.cInvCode === val.value[0].cInvCode &&
+            i.cVendorCode === val.value[0].cVendorCode
+        )?.cSAPCode || '';
+    }
+  }
+  if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView'
@@ -994,6 +1039,7 @@ const onKeyPressEnter = async (e, item, scope) => {
 };
 // 搜索弹框事件
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
+  console.log(obj);
   ajax.value = obj.ajax;
   IndexType.value = i;
   MulitChoose.value =
@@ -1141,6 +1187,12 @@ const handleAutoTextSelect = (item: any) => {
 
 // 自动补全修改（移除数据）
 const handleAutoTextChange = () => {};
+
+const onVendorChange = (e, scope) => {
+  console.log(e, scope);
+  tableDataVal.value[scope.$index].cDefindParm03 =
+    scope.row.vendorSAPList.find(i => i.cVendorCode === e)?.cSAPCode || '';
+};
 
 // 暴露方法
 defineExpose({
