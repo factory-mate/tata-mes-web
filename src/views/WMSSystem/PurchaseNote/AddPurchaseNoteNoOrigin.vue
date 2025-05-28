@@ -430,7 +430,7 @@ const BtnDAel = (obj: any) => {
 };
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
+  TABRef.value.tableDataVal.splice(val.$index, 1);
 };
 
 const clickHandAdd = (data: any) => {
