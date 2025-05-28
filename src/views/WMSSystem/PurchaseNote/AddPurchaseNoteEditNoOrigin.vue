@@ -40,7 +40,7 @@
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
-        :disabledHide="false"
+        :disabledHide="true"
         @handleTableDataChange="handleTableDataChange"
       >
         <template #button>
@@ -683,7 +683,7 @@ const setWidth = row => {
       return 120;
     case '数量':
     case '单位':
-      return 80;
+      return 90;
     case '交货日期':
       return 120;
     default:

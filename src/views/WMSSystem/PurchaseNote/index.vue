@@ -405,7 +405,7 @@ const clickEditTable = (scope: any, obj: any) => {
         rowId: scope.row.UID
       },
       state: {
-        modelCode: obj.cIncludeModelCode,
+        modelCode: 'WMS.PurchaseVouch.M.EditOnNoSource',
         row: JSON.stringify(scope.row),
         pathName: 'PurchaseNote',
         title: '采购单无来源编辑'
