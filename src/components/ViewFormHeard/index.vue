@@ -2281,6 +2281,24 @@ const newAdd = () => {
     ruleForm.value.Items = ButObjTableData.value;
   }
 
+  if (
+    Route.name == 'newPurchasedGoods' ||
+    Route.name == 'newPurchasedGoodsEdit' ||
+    Route.name == 'newPurchasedGoodsView'
+  ) {
+    ruleForm.value.IsAuth = true;
+    const items = ButObjTableData.value.map(i => ({
+      ...i,
+      IsAuth: true
+    }));
+    let iIndex = 10;
+    items.forEach(i => {
+      i.iIndex = iIndex;
+      iIndex += 10;
+    });
+    ruleForm.value.Items = items;
+  }
+
   let dataValue = {};
   //产线档案新增
   if (
@@ -2354,9 +2372,6 @@ const newAdd = () => {
     dataValue = { BodyModels: ButObjTableData.value };
   } else if (
     Route.name == 'AddPurchaseNoteView' ||
-    Route.name == 'newPurchasedGoods' ||
-    Route.name == 'newPurchasedGoodsEdit' ||
-    Route.name == 'newPurchasedGoodsView' ||
     Route.name == 'newWorkshopMaterial' ||
     Route.name == 'newWorkshopMaterialView' ||
     Route.name == 'newWarehouseMaterial' ||
@@ -2388,7 +2403,6 @@ const newAdd = () => {
     Route.name == 'AddPurchaseRequestView'
   ) {
     ruleForm.value.IsAuth = true;
-    console.log(ButObjTableData.value);
     const items = ButObjTableData.value
       .filter(i => i.cInvCode)
       .map(i => ({
