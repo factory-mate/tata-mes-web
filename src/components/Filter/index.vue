@@ -296,6 +296,8 @@ const getTreeProps = () => {
     case 'AddPurchaseRequest':
     case 'RawMaterialComparisonAdd':
     case 'RawMaterialComparisonEdit':
+    case 'AddPurchaseNoteNoOrigin':
+    case 'AddPurchaseNoteEditNoOrigin':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':

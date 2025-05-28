@@ -724,7 +724,7 @@ const selectDatas = (val: any) => {
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin'
   ) {
-    if (AttributeCode.value == 'cInvName') {
+    if (AttributeCode.value == 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
@@ -743,6 +743,46 @@ const selectDatas = (val: any) => {
             i.cInvCode === val.value[0].cInvCode &&
             i.cVendorCode === val.value[0].cVendorCode
         )?.cSAPCode || '';
+    }
+
+    // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
+    if (val.value.length > 1) {
+      for (let i = 0; i < val.value.length - 1; i++) {
+        const emptyRow = tableDataVal.value.find((item: any) => !item.cInvCode);
+        if (emptyRow) {
+          emptyRow.cInvCode = val.value[i + 1].cInvCode;
+          emptyRow.cInvName = val.value[i + 1].cInvName;
+          emptyRow.cInvStd = val.value[i + 1].cInvStd;
+          emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
+          emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
+          emptyRow.cVendorName = val.value[i + 1].cVendorName;
+          emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
+          emptyRow.vendorSAPList = val.value[i + 1].list_sap;
+          emptyRow.cDefindParm03 =
+            val.value[i + 1].list_sap.find(
+              j =>
+                j.cInvCode === val.value[i + 1].cInvCode &&
+                j.cVendorCode === val.value[i + 1].cVendorCode
+            )?.cSAPCode || '';
+        } else {
+          tableDataVal.value.push({
+            cInvCode: val.value[i + 1].cInvCode,
+            cInvName: val.value[i + 1].cInvName,
+            cInvStd: val.value[i + 1].cInvStd,
+            cUnitCode: val.value[i + 1].CG_UnitCode,
+            cUnitName: val.value[i + 1].CG_UnitName,
+            cVendorName: val.value[i + 1].cVendorName,
+            cVendorCode: val.value[i + 1].cVendorCode,
+            vendorSAPList: val.value[i + 1].list_sap,
+            cDefindParm03:
+              val.value[i + 1].list_sap.find(
+                j =>
+                  j.cInvCode === val.value[i + 1].cInvCode &&
+                  j.cVendorCode === val.value[i + 1].cVendorCode
+              )?.cSAPCode || ''
+          });
+        }
+      }
     }
   }
   if (
@@ -1045,7 +1085,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
   MulitChoose.value =
     Route.name === 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView' ||
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
       ? true
       : false;
   titleName.value = obj.label;
