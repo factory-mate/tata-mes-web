@@ -119,7 +119,7 @@
               <span>操作</span>
             </template>
             <template #default="scope">
-              <el-button
+              <!-- <el-button
                 v-if="headRef.ruleForm?.iStatus === 0"
                 type="primary"
                 :disabled="disabled"
@@ -127,7 +127,7 @@
                 @click="clickTableHandDel(scope)"
               >
                 删除
-              </el-button>
+              </el-button> -->
               <el-button
                 v-if="
                   scope.row.iStatus === 0 &&
