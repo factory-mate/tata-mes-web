@@ -78,3 +78,16 @@ export function InventoryInfoGetForPage(cInvCode) {
     }
   });
 }
+
+export function InventoryInfoGetForPageNoOrigin(cInvCode) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + `/api/Inentory_info/GetForPage`,
+    method: 'POST',
+    data: {
+      conditions: `cInvCode = ${cInvCode}`
+    },
+    params: {
+      cType: 1
+    }
+  });
+}

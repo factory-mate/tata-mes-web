@@ -266,7 +266,11 @@ import {
 } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import ElSelectLoading from '@/components/ElSelectLoading/index.vue';
-import { ParamsApi, InventoryInfoGetForPage } from '@/api/configApi/index';
+import {
+  ParamsApi,
+  InventoryInfoGetForPage,
+  InventoryInfoGetForPageNoOrigin
+} from '@/api/configApi/index';
 import {
   MoreFilled,
   DCaret,
@@ -731,7 +735,6 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
       metadata.value.cInvCode = val.value[0].cInvCode;
-      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
       tableDataVal.value[IndexType.value].cVendorName =
         val.value[0].cVendorName;
       tableDataVal.value[IndexType.value].cVendorCode =
@@ -1042,14 +1045,14 @@ const selectDatas = (val: any) => {
 
 const onKeyPressEnter = async (e, item, scope) => {
   console.log(e.target.value, item, scope);
+  if (!e.target.value) {
+    return;
+  }
   if (
     Route.name === 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView'
   ) {
-    if (!e.target.value) {
-      return;
-    }
     const {
       data: { data }
     } = await InventoryInfoGetForPage(e.target.value);
@@ -1074,6 +1077,44 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cDefindParm03 = '';
       tableDataVal.value[scope.$index].cVendorName = '';
       tableDataVal.value[scope.$index].cVendorCode = '';
+    }
+  }
+
+  if (
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
+  ) {
+    const {
+      data: { data }
+    } = await InventoryInfoGetForPageNoOrigin(e.target.value);
+    if (data[0]) {
+      ElMessage.success('录入成功');
+      tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
+      tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
+      tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
+      tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
+      tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
+      tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
+      tableDataVal.value[scope.$index].vendorSAPList = data[0].list_sap;
+      tableDataVal.value[scope.$index].cDefindParm03 =
+        data[0].list_sap.find(
+          i =>
+            i.cInvCode === data[0].cInvCode &&
+            i.cVendorCode === data[0].cVendorCode
+        )?.cSAPCode || '';
+    } else {
+      // 提示错误：未找到物料
+      ElMessage.error('未找到数据');
+      tableDataVal.value[scope.$index].cInvCode = '';
+      tableDataVal.value[scope.$index].cInvName = '';
+      tableDataVal.value[scope.$index].cInvStd = '';
+      tableDataVal.value[scope.$index].cUnitCode = '';
+      tableDataVal.value[scope.$index].cUnitName = '';
+      tableDataVal.value[scope.$index].cVendorName = '';
+      tableDataVal.value[scope.$index].cVendorCode = '';
+      tableDataVal.value[scope.$index].vendorSAPList = [];
+      tableDataVal.value[scope.$index].cDefindParm03 = '';
     }
   }
 };
