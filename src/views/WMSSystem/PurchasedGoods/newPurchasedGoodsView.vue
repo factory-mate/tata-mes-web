@@ -130,8 +130,8 @@
               </el-button>
               <el-button
                 v-if="
-                  headRef.ruleForm?.iStatus === 1 &&
                   scope.row.iStatus === 0 &&
+                  !scope.row.cDefindParm01 &&
                   refuseBtnConfig
                 "
                 type="primary"
@@ -139,6 +139,14 @@
                 @click="refuseItem(scope)"
               >
                 拒收
+              </el-button>
+              <el-button
+                v-if="scope.row.cDefindParm01 === '1' && revokeBtnConfig"
+                type="primary"
+                size="small"
+                @click="revokeItem(scope)"
+              >
+                撤回拒收
               </el-button>
             </template>
           </el-table-column>
@@ -261,6 +269,7 @@ const printData = ref([]) as any;
 const modelGridType = ref(true);
 const View1val = ref('');
 const refuseBtnConfig = ref(null);
+const revokeBtnConfig = ref(null);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
@@ -439,6 +448,9 @@ const funTable = (arr: Array<any>) => {
     if (item.cAttributeCode === 'btn_Refuse') {
       refuseBtnConfig.value = item;
     }
+    if (item.cAttributeCode === 'btn_CancelRefuse') {
+      revokeBtnConfig.value = item;
+    }
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       if (item.IsShow) {
         let itemData = {
@@ -541,6 +553,43 @@ const refuseItem = val => {
   };
   // 确认弹框
   ElMessageBox.confirm('是否确认拒收', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      DataApi(data).then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+        } else {
+          console.log('操作失败');
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消'
+      });
+    });
+};
+
+const revokeItem = val => {
+  console.log(val);
+  const obj = revokeBtnConfig.value;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: {
+      val: val.row.UID
+    }
+  };
+  // 确认弹框
+  ElMessageBox.confirm('是否确认撤销拒收', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
