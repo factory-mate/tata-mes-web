@@ -334,11 +334,11 @@ const funTable = (arr: Array<any>) => {
           cAttributeCode: item.Resource.cAttributeCode
         };
         tableColumns.value.push(itemData);
-        tableColumns.value.push({
-          checkType: true,
-          label: '操作',
-          slotName: 'button'
-        });
+        // tableColumns.value.push({
+        //   checkType: true,
+        //   label: '操作',
+        //   slotName: 'button'
+        // });
         tableColumns.value = tableColumns.value.filter(
           (item: { label: any }, index: any, self: any[]) => {
             // 利用findIndex方法找到第一个与当前元素id相等的元素索引
