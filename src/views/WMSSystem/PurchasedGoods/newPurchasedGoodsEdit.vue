@@ -514,7 +514,11 @@ const clickTableHandDel = (val: any) => {
 };
 
 const handleTableDataChange = (val: any) => {
-  tableData.value = val;
+  TABRef.value.tableDataVal = TABRef.value.tableDataVal.map(i => ({
+    ...i,
+    nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
+  }));
+  tableData.value = TABRef.value.tableDataVal;
 };
 
 const copyItem = val => {

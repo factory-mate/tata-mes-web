@@ -437,7 +437,11 @@ const clickHandAdd = (data: any) => {
   tableData.value.push(itemData);
 };
 const handleTableDataChange = (val: any) => {
-  tableData.value = val;
+  TABRef.value.tableDataVal = TABRef.value.tableDataVal.map(i => ({
+    ...i,
+    nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
+  }));
+  tableData.value = TABRef.value.tableDataVal;
 };
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {
@@ -584,7 +588,7 @@ const Tconfirm = () => {
     tableData.value.push({
       ...item,
       nAccReceiveQuantity: item.inv_iDefindParm12,
-      nReceiveQuantity: item.nSumQuantity
+      nReceiveQuantity: ''
     });
   });
 
@@ -735,16 +739,18 @@ const clickEdit = (obj: any) => {
 
 const setWidth = row => {
   switch (row.label) {
-    case '申请单号':
-      return 170;
+    case '订单号':
+      return 160;
     case '交货日期':
       return 120;
+    case '采购日期':
+      return 180;
     case '物料编码':
       return 120;
     case '质检':
       return 60;
-    case '物料名称':
-      return 200;
+    // case '物料名称':
+    //   return 200;
     case '规格型号':
       return 120;
     case '未到货数量':
