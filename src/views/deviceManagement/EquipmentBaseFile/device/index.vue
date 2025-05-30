@@ -93,6 +93,7 @@
                     type="primary"
                     size="small"
                     @click="clickTableBut(scope, item)"
+                    v-if="showBtn(scope, item)"
                   >
                     {{ item.Resource.cAttributeName }}
                   </el-button>
@@ -501,6 +502,16 @@ const changPage = (val: any) => {
   queryParams.PageIndex = val.page;
   queryParams.PageSize = val.limit;
   tableAxios();
+};
+const showBtn = (scope, item) => {
+  if (item.cAttributeName !== '停用') {
+    return true;
+  }
+  if (scope.row.IsValid === '是') {
+    return true;
+  } else {
+    return false;
+  }
 };
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
