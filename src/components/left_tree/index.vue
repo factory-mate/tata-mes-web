@@ -106,7 +106,7 @@
         <el-button type="primary" @click="ClickSearch" style="margin-left: 10px"
           >搜索</el-button
         >
-        <el-button type="info" @click="resetForm">重置</el-button>
+        <!-- <el-button type="info" @click="resetForm">重置</el-button> -->
       </div>
       <div class="treeSty">
         <el-tree

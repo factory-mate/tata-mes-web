@@ -130,8 +130,9 @@
               </el-button> -->
               <el-button
                 v-if="
+                  headRef.ruleForm?.iStatus > 0 &&
                   scope.row.iStatus === 0 &&
-                  !scope.row.cDefindParm01 &&
+                  scope.row.cDefindParm01 !== '1' &&
                   refuseBtnConfig
                 "
                 type="primary"
