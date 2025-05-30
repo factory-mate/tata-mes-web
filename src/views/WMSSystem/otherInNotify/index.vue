@@ -51,10 +51,7 @@
               >
                 <el-button
                   v-if="
-                    i < (tableButton.length > 3 ? 2 : 3) &&
-                    ((item.Resource.cAttributeCode === 'Edit' &&
-                      scope.row.iStatus === 0) ||
-                      item.Resource.cAttributeCode !== 'Edit')
+                    i < (tableButton.length > 3 ? 2 : 3) && showBtn(scope, item)
                   "
                   type="primary"
                   size="small"
@@ -214,6 +211,19 @@ const queryParams = reactive({
 const total = ref(0);
 //表格数据
 const tableData = ref([] as any);
+const showBtn = (scope, item) => {
+  if (
+    item.Resource.cAttributeCode === 'Edit' ||
+    item.Resource.cAttributeCode === 'Delete'
+  ) {
+    if (scope.row.iStatus === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
   switch (event.cAttributeCode) {
