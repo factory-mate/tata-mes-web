@@ -28,6 +28,22 @@
         @BtnDAel="BtnDAel"
         @RoleBut="RoleBut"
       ></Head-View>
+
+      <!-- tab切换 -->
+      <el-tabs
+        type="card"
+        v-model="tabVal"
+        v-if="TabPageVal.length"
+        @tab-click="clickTabs"
+      >
+        <el-tab-pane
+          v-for="item in TabPageVal"
+          :key="item.cIncludeModelCode"
+          :label="item.Resource.cAttributeName"
+          :name="item.cIncludeModelCode"
+        ></el-tab-pane>
+      </el-tabs>
+
       <div style="float: right">
         <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
       </div>
@@ -154,6 +170,9 @@ const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
 const headRef = ref(null);
+const tabVal = ref();
+const tabValBol = ref(true);
+let TabPageVal = ref([]) as any;
 let ButOne = ref([]) as any;
 const But = ref([]) as any;
 const Buttwo = ref([]) as any;
@@ -227,6 +246,8 @@ onActivated(() => {
   // if (rowId.value != Route.params.rowId) {
   //   getAddUser(Route.meta.ModelCode);
   // }
+  tabVal.value = 'WMS.STOCK_TAKE.M.View.MaterialList';
+  tableColumns.value = [];
   getAddUser(Route.meta.ModelCode);
 
   rowId.value = Route.params.rowId;
@@ -285,7 +306,18 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
         }
-        console.log();
+        if (item.cPropertyClassTypeCode == 'TabPage') {
+          let itemArr = item[import.meta.env.VITE_APP_key].sort(
+            sortArr('iIndex')
+          );
+          if (tabValBol.value) {
+            tabVal.value = itemArr[0].cIncludeModelCode;
+          }
+          tabValBol.value = false;
+          TabPageVal.value = itemArr;
+          //调取第一个tab数据
+          getAddUser(TabPageVal.value[0].cIncludeModelCode);
+        }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
           const iStatus = headRef.value?.ruleForm.iStatus;
           But.value = item[import.meta.env.VITE_APP_key]
@@ -319,6 +351,17 @@ const getAddUser = async (code: any) => {
     console.log(error, '程序出错了');
     ElLoading.service().close();
   }
+};
+// tabs 切换，调取对应Tab数据
+const clickTabs = (val: any) => {
+  tableColumns.value = [];
+  total.value = 0;
+  tableData.value = [];
+  tabVal.value = val.props.name;
+  getAddUser(tabVal.value);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.clearValidate();
 };
 //获取下拉框数据
 const getComboBoxFun = async () => {
@@ -691,6 +734,15 @@ const clickEdit = (obj: any) => {
     //     title: '退货质检申请编辑',
     // }
   });
+};
+//排序
+const sortArr = (property: any) => {
+  return function (a: any, b: any) {
+    var value1 = a[property];
+    var value2 = b[property];
+    return value1 - value2; //正序
+    // return value2 - value1; //倒叙
+  };
 };
 
 const setWidth = row => {

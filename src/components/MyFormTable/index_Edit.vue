@@ -202,7 +202,8 @@
             <div
               v-else-if="
                 (Route.name === 'AddPurchaseNoteNoOrigin' ||
-                  Route.name === 'AddPurchaseNoteEditNoOrigin') &&
+                  Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+                  Route.name === 'newPurchaseAuditEdit') &&
                 item.cAttributeCode === 'cVendorName'
               "
             >
@@ -212,7 +213,7 @@
                 @change="e => onVendorChange(e, scope)"
               >
                 <el-option
-                  v-for="(selectItem, index) in scope.row['vendorSAPList']"
+                  v-for="(selectItem, index) in scope.row['list_sap']"
                   :key="index"
                   :label="selectItem.cVendorName"
                   :value="selectItem.cVendorCode"
@@ -739,7 +740,7 @@ const selectDatas = (val: any) => {
         val.value[0].cVendorName;
       tableDataVal.value[IndexType.value].cVendorCode =
         val.value[0].cVendorCode;
-      tableDataVal.value[IndexType.value].vendorSAPList = val.value[0].list_sap;
+      tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
       tableDataVal.value[IndexType.value].cDefindParm03 =
         val.value[0].list_sap.find(
           i =>
@@ -760,7 +761,7 @@ const selectDatas = (val: any) => {
           emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
           emptyRow.cVendorName = val.value[i + 1].cVendorName;
           emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
-          emptyRow.vendorSAPList = val.value[i + 1].list_sap;
+          emptyRow.list_sap = val.value[i + 1].list_sap;
           emptyRow.cDefindParm03 =
             val.value[i + 1].list_sap.find(
               j =>
@@ -776,7 +777,7 @@ const selectDatas = (val: any) => {
             cUnitName: val.value[i + 1].CG_UnitName,
             cVendorName: val.value[i + 1].cVendorName,
             cVendorCode: val.value[i + 1].cVendorCode,
-            vendorSAPList: val.value[i + 1].list_sap,
+            list_sap: val.value[i + 1].list_sap,
             cDefindParm03:
               val.value[i + 1].list_sap.find(
                 j =>
@@ -1096,7 +1097,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
       tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
-      tableDataVal.value[scope.$index].vendorSAPList = data[0].list_sap;
+      tableDataVal.value[scope.$index].list_sap = data[0].list_sap;
       tableDataVal.value[scope.$index].cDefindParm03 =
         data[0].list_sap.find(
           i =>
@@ -1113,7 +1114,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cUnitName = '';
       tableDataVal.value[scope.$index].cVendorName = '';
       tableDataVal.value[scope.$index].cVendorCode = '';
-      tableDataVal.value[scope.$index].vendorSAPList = [];
+      tableDataVal.value[scope.$index].list_sap = [];
       tableDataVal.value[scope.$index].cDefindParm03 = '';
     }
   }
@@ -1274,7 +1275,7 @@ const handleAutoTextChange = () => {};
 const onVendorChange = (e, scope) => {
   console.log(e, scope);
   tableDataVal.value[scope.$index].cDefindParm03 =
-    scope.row.vendorSAPList.find(i => i.cVendorCode === e)?.cSAPCode || '';
+    scope.row.list_sap.find(i => i.cVendorCode === e)?.cSAPCode || '';
 };
 
 // 暴露方法
