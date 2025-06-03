@@ -1450,6 +1450,9 @@ const headVal = () => {
   if (Route.name === 'UserAddEdit') {
     ruleForm.value.cResourcesName = '';
   }
+  setTimeout(() => {
+    ruleFormRef.value?.clearValidate();
+  }, 16);
 };
 
 // 搜索弹框事件
