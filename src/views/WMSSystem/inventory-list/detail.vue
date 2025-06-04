@@ -12,6 +12,7 @@
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
           @Commit="Commit"
+          @DelCheckData="DelCheckData"
           @PrintLabel="PrintLabel"
         >
         </ButtonViem>
@@ -619,29 +620,47 @@ const BtnDAel = (v: any) => {
     );
   }
 };
-//提交
-const Commit = (obj: any) => {
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    params: {
-      val: rowId.value
-    }
+// 删除重盘
+const DelCheckData = (obj: any) => {
+  obj.pathName = 'InventoryList';
+  obj.customData = {
+    list_S: tableData.value.map(i => ({
+      cInvCode: i.cInvCode,
+      MID: i.MID
+    }))
   };
-  ParamsApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '提交成功'
-      });
-      // tableAxios()
-      // TabRef.value.handleRemoveSelectionChange()
-      // sendId.value = []
-    } else {
-      console.log('提交失败');
-    }
-  });
-  console.log(obj, '提交');
+  headRef.value.validate(obj);
+};
+
+// 审核
+const Commit = (obj: any) => {
+  obj.pathName = 'InventoryList';
+  obj.customParams = {
+    val: rowId.value
+  };
+  headRef.value.validate(obj);
+  // let data = {
+  //   method: obj.Resource.cHttpTypeCode,
+  //   url: obj.Resource.cServerIP + obj.Resource.cUrl,
+  //   params: {
+  //     val: rowId.value
+  //   }
+  // };
+  // ParamsApi(data).then(res => {
+  //   if (res.status === 200) {
+  //     ElMessage({
+  //       type: 'success',
+  //       message: '提交成功'
+  //     });
+  //     router.back();
+  //     // tableAxios()
+  //     // TabRef.value.handleRemoveSelectionChange()
+  //     // sendId.value = []
+  //   } else {
+  //     console.log('提交失败');
+  //   }
+  // });
+  // console.log(obj, '提交');
 };
 
 const DYUID = ref([]) as any;

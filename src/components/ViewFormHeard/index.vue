@@ -2197,6 +2197,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 // 新增保存
 const newAdd = () => {
+  console.log(validateObj.value);
   if (Route.name == 'resizeDialAdd') {
     if (ruleForm.value.cOutWareHouseCode === ruleForm.value.cInWareHouseCode) {
       ElMessage({
@@ -2303,6 +2304,16 @@ const newAdd = () => {
   }
 
   let dataValue = {};
+  let paramsData = {};
+  if (validateObj.value.customParams) {
+    paramsData = {
+      ...validateObj.value.customParams
+    };
+  }
+  if (validateObj.value.customData) {
+    dataValue = { ...validateObj.value.customData };
+  }
+
   //产线档案新增
   if (
     Route.name == 'addProductLine' ||
@@ -2545,7 +2556,10 @@ const newAdd = () => {
       // cVouchTypeCode: '1'
     };
   } else {
-    dataValue = { uNITCONVERTs: ButObjTableData.value };
+    dataValue = {
+      ...dataValue,
+      uNITCONVERTs: ButObjTableData.value
+    };
   }
 
   if (Route.name === 'otherInNotifyAdd') {
@@ -2573,6 +2587,9 @@ const newAdd = () => {
     data: {
       ...ruleForm.value,
       ...dataValue
+    },
+    params: {
+      ...paramsData
     }
   };
   //（用户管理模块）用户策略/角色新增需要登录名

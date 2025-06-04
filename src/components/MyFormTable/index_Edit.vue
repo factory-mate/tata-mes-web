@@ -201,11 +201,12 @@
             </div>
             <div
               v-else-if="
-                (Route.name === 'AddPurchaseNoteNoOrigin' ||
-                  Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-                  Route.name === 'newPurchaseAuditEdit' ||
-                  Route.name === 'AddPurchaseRequestEdit') &&
-                item.cAttributeCode === 'cVendorName'
+                [
+                  'AddPurchaseNoteNoOrigin',
+                  'AddPurchaseNoteEditNoOrigin',
+                  'newPurchaseAuditEdit',
+                  'AddPurchaseRequestEdit'
+                ].includes(Route.name as string) && item.cAttributeCode === 'cVendorName'
               "
             >
               <el-select

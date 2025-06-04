@@ -297,7 +297,8 @@ const emits = defineEmits([
   'AddProcess',
   'AddShowColor',
   'BatchAddPersonGroup',
-  'RejectForm'
+  'RejectForm',
+  'DelCheckData'
 ]);
 
 watch(
@@ -786,6 +787,9 @@ const BatchAddPersonGroup = (obj: any) => {
 const RejectForm = (obj: any) => {
   emits('RejectForm', obj);
 };
+const DelCheckData = (obj: any) => {
+  emits('DelCheckData', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1152,6 +1156,9 @@ const clickButton = (event: any) => {
       break;
     case 'RejectForm':
       RejectForm(event);
+      break;
+    case 'DelCheckData':
+      DelCheckData(event);
       break;
     default:
       break;
