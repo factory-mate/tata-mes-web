@@ -139,7 +139,7 @@ const tabType = ref(true);
 const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
-
+const row = ref();
 const initType = ref(true);
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -156,6 +156,9 @@ onActivated(() => {
   // }
   getData(Route.meta.ModelCode);
   initType.value = false;
+  if (history.state.row) {
+    row.value = JSON.parse(history.state.row);
+  }
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
@@ -228,6 +231,13 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  const conditions = [`MID=${Route.params.rowId}`];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
+  if (row.value.cInvCode) {
+    conditions.push(`cInvCode=${row.value.cInvCode}`);
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -235,9 +245,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
-        ? `MIDs=${Route.params.rowId} && ${Conditions.value}`
-        : `MIDs=${Route.params.rowId}`
+      Conditions: conditions.join(' && ')
     }
   };
   try {
