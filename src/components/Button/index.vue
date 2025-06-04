@@ -296,7 +296,8 @@ const emits = defineEmits([
   'AddEquipment',
   'AddProcess',
   'AddShowColor',
-  'BatchAddPersonGroup'
+  'BatchAddPersonGroup',
+  'RejectForm'
 ]);
 
 watch(
@@ -782,6 +783,9 @@ const AddShowColor = (obj: any) => {
 const BatchAddPersonGroup = (obj: any) => {
   emits('BatchAddPersonGroup', obj);
 };
+const RejectForm = (obj: any) => {
+  emits('RejectForm', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1145,6 +1149,9 @@ const clickButton = (event: any) => {
       break;
     case 'BatchAddPersonGroup':
       BatchAddPersonGroup(event);
+      break;
+    case 'RejectForm':
+      RejectForm(event);
       break;
     default:
       break;

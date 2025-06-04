@@ -11,7 +11,7 @@
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
           @clickAudit="Audit"
-          @clickReject="Reject"
+          @RejectForm="RejectForm"
         ></ButtonViem>
       </div>
       <Head-View
@@ -137,15 +137,26 @@
         @clickHandAdd="clickHandAdd"
       ></pop-model>
     </el-card>
+    <Odialog
+      width="600"
+      :dialogFormVisible="rejectDialog.visible"
+      title="驳回"
+      :objData="rejectDialog.objData"
+      :disabled="false"
+      :modeCode="rejectDialog.modelCode"
+      :row="rejectDialog.row"
+      @FmodelClose="closeRejectModal"
+    ></Odialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated } from 'vue';
+import { ref, toRefs, reactive, onActivated, provide } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
+import Odialog from '@/components/DialogModel/index.vue';
 import {
   ElButton,
   ElCard,
@@ -215,6 +226,12 @@ const {
 } = toRefs(data);
 let head = ref([]) as any;
 const initType = ref(true);
+const rejectDialog = ref({
+  visible: false,
+  objData: {},
+  row: {},
+  modelCode: ''
+});
 onActivated(() => {
   modelCode.value = history.state.modelCode
     ? history.state.modelCode
@@ -543,6 +560,9 @@ const clickAddConvert = (val: any) => {
 const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
+const closeRejectModal = val => {
+  rejectDialog.value.visible = val.type;
+};
 //新增保存
 const SaveAdd = (obj: any) => {
   obj.pathName = 'PurchaseAudit';
@@ -590,11 +610,18 @@ const Audit = (obj: any) => {
   });
 };
 
-const Reject = (obj: any) => {
+const RejectForm = (obj: any) => {
+  rejectDialog.value.visible = true;
+  rejectDialog.value.objData = obj;
+  rejectDialog.value.modelCode = obj.cIncludeModelCode;
+  rejectDialog.value.row = rowId.value;
+  return;
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: { KeyVal: [rowId.value] }
+    data: {
+      KeyVal: [rowId.value]
+    }
   };
   DataApi(data).then(res => {
     if (res.status === 200) {
@@ -611,6 +638,7 @@ const Reject = (obj: any) => {
     }
   });
 };
+
 const setWidth = row => {
   switch (row.label) {
     case '物料编码':
@@ -629,6 +657,7 @@ const setWidth = row => {
       return 200;
   }
 };
+provide('tableAxios', { tableAxios });
 </script>
 
 <style scoped lang="scss">

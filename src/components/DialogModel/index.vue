@@ -405,7 +405,7 @@ import {
 import { configApi, DataApi, ParamsApi, delApi } from '@/api/configApi/index';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import myTable from '@/components/MyTable/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
@@ -418,6 +418,7 @@ import BDSWHERE from '@/components/BDS/index_where.vue';
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const Route = useRoute();
+const router = useRouter();
 const ruleFormRef = ref<FormInstance>();
 const ruleForm: any = ref({});
 const dialogFormVisible = ref();
@@ -1526,6 +1527,9 @@ const submitForm = async (formEl: FormInstance | undefined, item: any) => {
         case 'AllOut':
           handleAllOut(item);
           break;
+        case 'Reject':
+          handleReject(item);
+          break;
         default:
           break;
       }
@@ -2327,6 +2331,31 @@ const handleAllOut = (item: any) => {
       dialogFormVisible.value = false;
     } else {
       ElMessage.error('出库失败');
+    }
+  });
+};
+
+const handleReject = obj => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      KeyVal: [rowVal.value],
+      cMemo: ruleForm.value.cMemo
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '驳回成功'
+      });
+      router.push({
+        name: 'PurchaseAudit'
+      });
+      $bus.emit('tableUpData', { name: 'PurchaseAudit' });
+    } else {
+      ElMessage.error('驳回失败');
     }
   });
 };
