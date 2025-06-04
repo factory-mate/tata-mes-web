@@ -135,7 +135,7 @@
               @change="(value:any) => handleChange(item, value)"
               @visible-change="getTreeDAata"
               clearable
-              ref="cascaderRef"
+              :ref="el => bindRef(el, item)"
               :show-all-levels="getShowAllLevels()"
             />
           </el-form-item>
@@ -206,7 +206,17 @@ const props = defineProps({
 const { tagsView } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
-const cascaderRef = ref(null);
+const cascaderRefs = ref([]);
+const bindRef = (el, item) => {
+  if (cascaderRefs.value.find(i => i.code === item.cAttributeCode)) {
+    return;
+  } else {
+    cascaderRefs.value.push({
+      code: item.cAttributeCode,
+      el
+    });
+  }
+};
 //弹窗组件事件
 const data = reactive({
   dialogType: false,
@@ -794,8 +804,12 @@ const getTreeData = (newValue: any) => {
 const handleChange = (item: any, value: any) => {
   console.log(value, '树结构选中数据');
   console.log(item.optionsDataList);
+  const refValue = cascaderRefs.value.find(
+    i => i.code === item.cAttributeCode
+  )?.el;
+  console.log(refValue);
 
-  const currentNode = cascaderRef.value[0].getCheckedNodes();
+  const currentNode = refValue.getCheckedNodes();
   const selectedNodeValue = [];
   getSelectedNodeValue(currentNode, selectedNodeValue);
 
@@ -804,7 +818,7 @@ const handleChange = (item: any, value: any) => {
     value.length > 1 ? value[value.length - 1] : value[0];
   console.log(item.cAttributeCodeValue);
   item.treeSelectedValues = selectedNodeValue;
-  cascaderRef.value[0].togglePopperVisible();
+  refValue.togglePopperVisible();
 };
 
 // 递归将节点的value值存入数组

@@ -12,7 +12,7 @@
       <ButtonViem
         :ToolBut="But"
         @clickAudit="clickAudit"
-        @clickReject="clickReject"
+        @RejectForm="clickReject"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
       >
