@@ -203,7 +203,8 @@
               v-else-if="
                 (Route.name === 'AddPurchaseNoteNoOrigin' ||
                   Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-                  Route.name === 'newPurchaseAuditEdit') &&
+                  Route.name === 'newPurchaseAuditEdit' ||
+                  Route.name === 'AddPurchaseRequestEdit') &&
                 item.cAttributeCode === 'cVendorName'
               "
             >
