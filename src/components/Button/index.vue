@@ -298,7 +298,8 @@ const emits = defineEmits([
   'AddShowColor',
   'BatchAddPersonGroup',
   'RejectForm',
-  'DelCheckData'
+  'DelCheckData',
+  'PrintOutLabel'
 ]);
 
 watch(
@@ -790,6 +791,9 @@ const RejectForm = (obj: any) => {
 const DelCheckData = (obj: any) => {
   emits('DelCheckData', obj);
 };
+const PrintOutLabel = obj => {
+  emits('PrintOutLabel', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1159,6 +1163,9 @@ const clickButton = (event: any) => {
       break;
     case 'DelCheckData':
       DelCheckData(event);
+      break;
+    case 'PrintOutLabel':
+      PrintOutLabel(event);
       break;
     default:
       break;

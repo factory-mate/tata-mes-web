@@ -18,6 +18,7 @@
           @ItemAdd="ItemAdd"
           @Commit="Commit"
           @PrintLabel="PrintLabel"
+          @PrintOutLabel="onClickPrintOutLabel"
         >
         </ButtonViem>
       </div>
@@ -33,6 +34,30 @@
         @BtnDAel="BtnDAel"
         @RoleBut="RoleBut"
       ></Head-View>
+      <div ref="componentRef" class="print-content">
+        <div
+          :class="printData.length > 1 && 'per-page'"
+          v-for="(item, i) in printData"
+          :key="i"
+          style="width: 100%; height: 100vh"
+        >
+          <div style="display: flex; flex-direction: column">
+            <div style="width: 100%; display: flex; justify-content: center">
+              <qrcode-vue :value="item.cQRCode" :size="120"></qrcode-vue>
+            </div>
+            <div style="margin-top: 20px">箱码: {{ item.cQRCode }}</div>
+            <div>物料编码: {{ item.cInvCode }}</div>
+            <div>物料名称：{{ item.cInvName }}</div>
+            <div>数量：{{ item.iDefindParm13 }}{{ item.cDefindParm06 }}</div>
+            <div>物料规格: {{ item.cDefindParm03 }}</div>
+            <div>批次号: {{ item.cDefindParm01 }}</div>
+            <div>生产日期: {{ item.cDefindParm04 }}</div>
+            <div>采购订单号: {{ item.cSourceCode }}</div>
+            <div>供应商: {{ item.cVendorName }}</div>
+            <div>供应商批号: {{ item.cVendorBatch }}</div>
+          </div>
+        </div>
+      </div>
       <!-- 打印 ------------->
       <div class="DY" id="printMe">
         <div
@@ -232,6 +257,14 @@ import { useRoute } from 'vue-router';
 import QrcodeVue from 'qrcode.vue';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
+import { useVueToPrint } from 'vue-to-print';
+
+const componentRef = ref();
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: '外包标签'
+});
+
 const { tagsView, permission } = useStore();
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -806,17 +839,11 @@ const printajax = () => {
     });
     return false;
   }
-  console.log(1);
   let data = {
     method: 'post',
     url: import.meta.env.VITE_APP_DY_API + '/api/ArriveVouch/PrintItemsLabel',
     data: DYUID.value
   };
-  // let data = {
-  //     method: obj.Resource.cHttpTypeCode,
-  //     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-  //     data: DYUID.value
-  // }
   DataApi(data).then(res => {
     if (res.status == 200) {
       if (res.data.length == 0) {
@@ -832,38 +859,43 @@ const printajax = () => {
   });
 };
 
+const onClickPrintOutLabel = () => {
+  setTimeout(() => handlePrint(), 16);
+};
+
 //打印标签
 const PrintLabel = (obj: any, v: any) => {
-  setTimeout(() => {
-    var printIframe = frame.value;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    var html = printDiv?.value?.innerHTML;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    printIframe.setAttribute('srcdoc', html);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    printIframe.onload = function () {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      console.log(printIframe.contentWindow);
-      // 去掉iframe里面的dom的body的padding margin的默认数值
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      printIframe.contentWindow.document.body.style.padding = '0px';
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      printIframe.contentWindow.document.body.style.margin = '0px';
-      // 开始打印
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      printIframe.contentWindow.focus();
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      printIframe.contentWindow.print();
-    };
-  }, 100);
+  console.log(obj);
+  // setTimeout(() => {
+  //   var printIframe = frame.value;
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   var html = printDiv?.value?.innerHTML;
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   printIframe.setAttribute('srcdoc', html);
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   printIframe.onload = function () {
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //     // @ts-ignore
+  //     console.log(printIframe.contentWindow);
+  //     // 去掉iframe里面的dom的body的padding margin的默认数值
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //     // @ts-ignore
+  //     printIframe.contentWindow.document.body.style.padding = '0px';
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //     // @ts-ignore
+  //     printIframe.contentWindow.document.body.style.margin = '0px';
+  //     // 开始打印
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //     // @ts-ignore
+  //     printIframe.contentWindow.focus();
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //     // @ts-ignore
+  //     printIframe.contentWindow.print();
+  //   };
+  // }, 100);
 };
 
 //修改保存
@@ -985,5 +1017,24 @@ const setWidth = row => {
 
 :deep(.el-form-item__label) {
   font-weight: bold;
+}
+
+.print-content {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 5mm;
+  }
+
+  .print-content {
+    display: block;
+  }
+
+  .per-page {
+    page-break-after: always;
+    break-after: page;
+  }
 }
 </style>
