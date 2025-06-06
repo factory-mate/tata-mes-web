@@ -297,6 +297,7 @@ const getAddUser = async (code: any) => {
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
+    But.value = [];
     if (res.status == 200) {
       res.data.forEach((item: any) => {
         if (item.cPropertyClassTypeCode == 'Head') {
@@ -330,11 +331,9 @@ const getAddUser = async (code: any) => {
               ) {
                 return true;
               }
-              if (iStatus === 10 && i.cAttributeName === '编辑') {
-                return true;
-              }
               return false;
             });
+          console.log(But.value);
           // ButOne.value = item[import.meta.env.VITE_APP_key].filter((item:any)=>item.Resource.cAttributeName=='保存')
           // Buttwo.value=item[import.meta.env.VITE_APP_key].filter((item:any)=>item.Resource.cAttributeName=='添加')
         }
@@ -626,9 +625,9 @@ const BtnDAel = (v: any) => {
 const DelCheckData = (obj: any) => {
   obj.pathName = 'InventoryList';
   obj.customData = {
+    UID: rowId.value,
     list_S: tableData.value.map(i => ({
-      cInvCode: i.cInvCode,
-      MID: i.MID
+      cInvCode: i.cInvCode
     }))
   };
   headRef.value.validate(obj);

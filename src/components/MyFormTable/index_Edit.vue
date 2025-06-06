@@ -973,24 +973,44 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
   }
   if (Route.name == 'otherInNotifyAdd' || Route.name == 'otherInNotifyEdit') {
-    tableDataVal.value[IndexType.value].state =
-      tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-    tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
-    tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
-    tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+    if (AttributeCode.value === 'cInvCode') {
+      tableDataVal.value[IndexType.value].state =
+        tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+    }
+    if (AttributeCode.value === 'cDefindParm06') {
+      tableDataVal.value[IndexType.value].cDefindParm05 =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm06 =
+        val.value[0].cVendorName;
+    }
   }
   if (Route.name == 'otherOutNotifyAdd' || Route.name == 'otherOutNotifyEdit') {
-    tableDataVal.value[IndexType.value].state =
-      tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-    tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
-    tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+    if (AttributeCode.value === 'cInvCode') {
+      tableDataVal.value[IndexType.value].state =
+        tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+    }
+    if (AttributeCode.value === 'cDefindParm06') {
+      tableDataVal.value[IndexType.value].cDefindParm05 =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm06 =
+        val.value[0].cVendorName;
+    }
   }
 
   if (Route.name == 'TransferRecordAdd' || Route.name == 'TransferRecordEdit') {
-    tableDataVal.value[IndexType.value].state =
-      tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-    tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
-    tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+    if (AttributeCode.value === 'cInvCode') {
+      tableDataVal.value[IndexType.value].state =
+        tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+    }
   }
 
   if (

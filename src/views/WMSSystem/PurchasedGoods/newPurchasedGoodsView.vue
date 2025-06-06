@@ -860,6 +860,13 @@ const printajax = () => {
 };
 
 const onClickPrintOutLabel = () => {
+  if (DYUID.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请选择打印数据'
+    });
+    return;
+  }
   setTimeout(() => handlePrint(), 16);
 };
 

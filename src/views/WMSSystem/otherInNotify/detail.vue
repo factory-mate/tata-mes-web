@@ -5,12 +5,13 @@
       <!-- 按钮区域 -->
       <div class="bot-btn1">
         <ButtonViem
-          v-if="row?.iStatus === 0"
+          v-if="row?.iStatus > 0"
           :ToolBut="But"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
+          @PrintLabel="PrintLabel"
         ></ButtonViem>
       </div>
       <Head-View
@@ -23,6 +24,31 @@
         :treeSelData="treeSelData"
         @RoleBut="RoleBut"
       ></Head-View>
+
+      <div ref="componentRef" class="print-content">
+        <div
+          :class="printData.length > 1 && 'per-page'"
+          v-for="(item, i) in printData"
+          :key="i"
+          style="width: 100%; height: 100vh"
+        >
+          <div style="display: flex; flex-direction: column">
+            <div style="width: 100%; display: flex; justify-content: center">
+              <qrcode-vue :value="item.cQRCode" :size="120"></qrcode-vue>
+            </div>
+            <div style="margin-top: 20px">箱码: {{ item.cQRCode }}</div>
+            <div>物料编码: {{ item.cInvCode }}</div>
+            <div>物料名称：{{ item.cInvName }}</div>
+            <div>数量：{{ item.iDefindParm13 }}{{ item.cDefindParm06 }}</div>
+            <div>物料规格: {{ item.cDefindParm03 }}</div>
+            <div>批次号: {{ item.cDefindParm01 }}</div>
+            <div>生产日期: {{ item.cDefindParm04 }}</div>
+            <div>采购订单号: {{ item.cSourceCode }}</div>
+            <div>供应商: {{ item.cVendorName }}</div>
+            <div>供应商批号: {{ item.cVendorBatch }}</div>
+          </div>
+        </div>
+      </div>
 
       <!-- tab切换 -->
       <el-tabs
@@ -47,6 +73,7 @@
         :tableBorder="true"
         :selection="true"
         :disabledHide="false"
+        @handleSelectionChange="handleSelectionChange"
       >
         <!-- <template #button>
                     <el-table-column label="操作" fixed="right" width="160px" align="center">
@@ -93,12 +120,20 @@ import {
   ElMessageBox,
   ElTableColumn
 } from 'element-plus';
+import QrcodeVue from 'qrcode.vue';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, delApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 import router from '@/router';
+import { useVueToPrint } from 'vue-to-print';
+
+const componentRef = ref();
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: '标签'
+});
 const { tagsView, permission } = useStore();
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -511,6 +546,45 @@ const clickEdit = (obj: any) => {
     }
   });
 };
+
+const printData = ref([]);
+const selectedItems = ref([]);
+//表格多选
+const handleSelectionChange = v => {
+  selectedItems.value = v;
+};
+
+const PrintLabel = obj => {
+  if (selectedItems.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请选择打印数据'
+    });
+    return false;
+  }
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: selectedItems.value.map(i => i.UID)
+  };
+  DataApi(data).then(res => {
+    if (res.success) {
+      if (res.data.length === 0) {
+        ElMessage({
+          type: 'info',
+          message: '暂无数据需要打印'
+        });
+        printData.value = [];
+        return;
+      }
+      console.log(res);
+      printData.value = res.data;
+      setTimeout(() => handlePrint(), 16);
+    } else {
+      console.log('失败');
+    }
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -559,6 +633,25 @@ const clickEdit = (obj: any) => {
   // padding: 5px;
   .el-input-number .el-input__inner {
     width: 30px;
+  }
+}
+
+.print-content {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 5mm;
+  }
+
+  .print-content {
+    display: block;
+  }
+
+  .per-page {
+    page-break-after: always;
+    break-after: page;
   }
 }
 </style>

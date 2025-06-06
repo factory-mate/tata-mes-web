@@ -94,8 +94,9 @@
       <template v-else>
         <el-button
           v-if="
-            item.Resource.cAttributeName !== '打印标签' &&
-            item.Resource.cAttributeName !== '补打'
+            (item.Resource.cAttributeName !== '打印标签' &&
+              item.Resource.cAttributeName !== '补打') ||
+            Route.name === 'otherInNotifyDetail'
           "
           :type="
             item.cAttributeCode == 'Add' ||
