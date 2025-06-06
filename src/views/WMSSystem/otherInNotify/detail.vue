@@ -567,23 +567,28 @@ const PrintLabel = obj => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: selectedItems.value.map(i => i.UID)
   };
-  DataApi(data).then(res => {
-    if (res.success) {
-      if (res.data.length === 0) {
-        ElMessage({
-          type: 'info',
-          message: '暂无数据需要打印'
-        });
-        printData.value = [];
-        return;
+  const loading = ElLoading.service({ lock: true });
+  DataApi(data)
+    .then(res => {
+      if (res.success) {
+        if (res.data.length === 0) {
+          ElMessage({
+            type: 'info',
+            message: '暂无数据需要打印'
+          });
+          printData.value = [];
+          return;
+        }
+        console.log(res);
+        printData.value = res.data;
+        setTimeout(() => handlePrint(), 16);
+      } else {
+        console.log('失败');
       }
-      console.log(res);
-      printData.value = res.data;
-      setTimeout(() => handlePrint(), 16);
-    } else {
-      console.log('失败');
-    }
-  });
+    })
+    .finally(() => {
+      loading.close();
+    });
 };
 </script>
 
