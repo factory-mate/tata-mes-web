@@ -350,6 +350,7 @@ const treeChangeFun22 = (node: any, key: any) => {
   // console.log(key,"---key");
   //  eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
+  console.log(node.KeyGuid);
   checkedDDD22.value = [node.KeyGuid];
   clickTreeTwo(node);
   //选中事件在选中后执行，当lis中有两个选中时，使用setCheckedKeys方法，选中一个节点
