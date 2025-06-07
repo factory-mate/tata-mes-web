@@ -21,7 +21,7 @@
         :row="row"
         :rowId="rowId"
         ref="headRef"
-        disabled="true"
+        :disabled="false"
         :dialogFormVisible="dialogFormVisible"
         :treeSelData="treeSelData"
         @clickView="clickView"
@@ -31,7 +31,7 @@
       <div style="float: right">
         <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
       </div>
-      <myTable
+      <myEditTable
         ref="TABRef"
         :tableData="tableData"
         :tableColumns="tableColumns"
@@ -42,7 +42,7 @@
         :disabled="disa"
         :disabledHide="false"
       >
-      </myTable>
+      </myEditTable>
       <pagination
         v-if="total > 0"
         :total="total"
@@ -99,6 +99,7 @@
 <script setup lang="ts">
 import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyTable/index.vue';
+import myEditTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
@@ -197,9 +198,10 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -558,11 +560,16 @@ const handleSelectionChange = (v: any) => {
 const SaveEdit = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'IncomingInspectionMaterials';
-  obj.tableData = TABRef.value.tableDataVal;
+  obj.customData = {
+    bodys: TABRef.value.tableDataVal.map(i => ({
+      UID: i.UID,
+      nCheckQuantity: i.nCheckQuantity
+    }))
+  };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
+  // disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {
