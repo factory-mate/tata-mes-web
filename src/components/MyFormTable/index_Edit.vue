@@ -145,44 +145,62 @@
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
               />
-              <!-- <el-autocomplete
-                v-if="item.cControlTypeCode == 'TextBoxLink'"
-                v-model="scope.row[item.prop]"
-                :disabled="props.disabled"
-                :fetch-suggestions="querySearchAsync"
-                :placeholder="disabled ? '' : '请输入'"
-                @select="handleAutoTextSelect"
-                @change="handleAutoTextChange"
-                :style="
-                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
-                "
-              >
-                <template #append>
-                  <el-icon
-                    @click="clickModel(item, item.prop, scope.$index, scope)"
-                  >
-                    <MoreFilled />
-                  </el-icon>
-                </template>
-              </el-autocomplete> -->
-              <el-input
-                v-if="item.cControlTypeCode == 'TextBoxLink'"
-                :disabled="props.disabled"
-                v-model="scope.row[item.prop]"
-                :placeholder="disabled ? '' : '请输入'"
-                :style="
-                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
-                "
-                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
-              >
-                <template #append>
-                  <el-icon
-                    @click="clickModel(item, item.prop, scope.$index, scope)"
-                  >
-                    <MoreFilled />
-                  </el-icon>
-                </template>
-              </el-input>
+              <div v-if="item.cControlTypeCode == 'TextBoxLink'">
+                <el-autocomplete
+                  v-if="
+                    item.xu == 'TextBoxLink' &&
+                    Route.name === 'ProductionOrderBG' &&
+                    [
+                      'Itemss_cInvName',
+                      'Items_cInvName',
+                      'Itemss_cDefindParm01Name',
+                      'Itemss_cStructName',
+                      'Itemss_cDefindParm05Name',
+                      'Itemss_cDefindParm04Name',
+                      'Itemss_cDefindParm06Name'
+                    ].includes(item.prop)
+                  "
+                  :disabled="props.disabled"
+                  v-model="scope.row[item.prop]"
+                  :placeholder="disabled ? '' : '请输入'"
+                  :fetch-suggestions="
+                    (queryString, cb) =>
+                      querySearchAsync(item, scope, queryString, cb)
+                  "
+                  @select="s => handleAutoTextSelect(s, item, scope)"
+                  @change="handleAutoTextChange"
+                  :style="
+                    funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                  "
+                  @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
+                >
+                  <template #append>
+                    <el-icon
+                      @click="clickModel(item, item.prop, scope.$index, scope)"
+                    >
+                      <MoreFilled />
+                    </el-icon>
+                  </template>
+                </el-autocomplete>
+                <el-input
+                  v-else
+                  :disabled="props.disabled"
+                  v-model="scope.row[item.prop]"
+                  :placeholder="disabled ? '' : '请输入'"
+                  :style="
+                    funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                  "
+                  @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
+                >
+                  <template #append>
+                    <el-icon
+                      @click="clickModel(item, item.prop, scope.$index, scope)"
+                    >
+                      <MoreFilled />
+                    </el-icon>
+                  </template>
+                </el-input>
+              </div>
             </div>
             <div
               v-else-if="
@@ -274,6 +292,7 @@ import {
   InventoryInfoGetForPage,
   InventoryInfoGetForPageNoOrigin
 } from '@/api/configApi/index';
+import request from '@/utils/request';
 import {
   MoreFilled,
   DCaret,
@@ -1253,46 +1272,95 @@ const clearFilter = () => {
   myTableRef.value!.clearFilter();
 };
 
-const autoText = ref('');
 const querySearchAsync = async (
+  item,
+  scope,
   queryString: string,
   cb: (arg: any) => void
 ) => {
-  const data = await fetchRemoteData();
-  const results = queryString ? data.filter(createFilter(queryString)) : data;
-  cb(results);
-};
-const createFilter = (queryString: string) => {
-  return (restaurant: any) => {
-    return (
-      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-    );
+  console.log(item, scope);
+  let queryParams: any = {};
+  let queryData: any = {
+    PageIndex: 1,
+    PageSize: 20,
+    OrderByFileds: '',
+    conditions: ''
   };
-};
-
-const fetchRemoteData = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([
-        { value: 'vue', link: 'https://github.com/vuejs/vue' },
-        { value: 'element', link: 'https://github.com/ElemeFE/element' },
-        { value: 'cooking', link: 'https://github.com/ElemeFE/cooking' },
-        { value: 'mint-ui', link: 'https://github.com/ElemeFE/mint-ui' },
-        { value: 'vuex', link: 'https://github.com/vuejs/vuex' },
-        { value: 'vue-router', link: 'https://github.com/vuejs/vue-router' },
-        { value: 'babel', link: 'https://github.com/babel/babel' }
-      ]);
-    }, 1000);
-  });
+  if (queryString) {
+    if (Route.name === 'ProductionOrderBG') {
+      if (item.prop === 'Items_cInvName' || item.prop === 'Itemss_cInvName') {
+        queryData.conditions = `cInvCode like ${queryString}`;
+      }
+      if (
+        [
+          'Itemss_cStructName',
+          'Itemss_cDefindParm01Name',
+          'Itemss_cDefindParm04Name',
+          'Itemss_cDefindParm05Name',
+          'Itemss_cDefindParm06Name'
+        ].includes(item.prop)
+      ) {
+        queryData.conditions = `cDictonaryName like ${queryString}`;
+      }
+    }
+  }
+  try {
+    const { data } = await request({
+      url: item.cServerIP + item.cUrl,
+      method: item.cHttpTypeCode,
+      params: queryParams,
+      data: queryData
+    });
+    let results = [];
+    results = (data.data ?? data).map(i => {
+      const r = { ...i };
+      if (Route.name === 'ProductionOrderBG') {
+        if (item.prop === 'Items_cInvName' || item.prop === 'Itemss_cInvName') {
+          r.value = i.cInvName;
+        }
+        if (
+          [
+            'Itemss_cStructName',
+            'Itemss_cDefindParm01Name',
+            'Itemss_cDefindParm04Name',
+            'Itemss_cDefindParm05Name',
+            'Itemss_cDefindParm06Name'
+          ].includes(item.prop)
+        ) {
+          r.value = i.cDictonaryName;
+        }
+      }
+      return r;
+    });
+    cb(results);
+  } catch {
+    //
+  }
 };
 
 // 自动补全选择
-const handleAutoTextSelect = (item: any) => {
+const handleAutoTextSelect = (data: any, item, scope) => {
   console.log(item);
+  if (Route.name === 'ProductionOrderBG') {
+    if (
+      [
+        'Itemss_cStructName',
+        'Itemss_cDefindParm01Name',
+        'Itemss_cDefindParm04Name',
+        'Itemss_cDefindParm05Name',
+        'Itemss_cDefindParm06Name'
+      ].includes(item.prop)
+    ) {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+    }
+  }
+  console.log(tableDataVal.value);
 };
 
 // 自动补全修改（移除数据）
-const handleAutoTextChange = () => {};
+const handleAutoTextChange = item => {
+  console.log(item);
+};
 
 const onVendorChange = (e, scope) => {
   console.log(e, scope);
