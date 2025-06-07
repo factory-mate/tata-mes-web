@@ -16,6 +16,7 @@ import UnitModal from './components/UnitModal.vue';
 import WarehouseModal from './components/WarehouseModal.vue';
 import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
 import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
+import MaterialModal from './components/MaterialModal.vue';
 import useStore from '@/store';
 import { ElMessage } from 'element-plus';
 import { getCurrentInstance } from '@vue/runtime-core';
@@ -54,6 +55,7 @@ const secondUnitModalRef = ref();
 const warehouseModalRef = ref();
 const warehouseAreaModalRef = ref();
 const warehouseLocationModalRef = ref();
+const materialModalRef = ref();
 
 const rules = ref({
   cInvCode: [{ required: true, message: '请输入存货编号', trigger: 'change' }],
@@ -237,6 +239,16 @@ function handleWarehouseLocationModalConfirm(data) {
   formData.value.cWareHouseLocationName = data?.cWareHouseLocationName;
 }
 
+function handleClickMaterialModal() {
+  materialModalRef.value.showDialog = true;
+}
+
+function handleMaterialModalConfirm(data) {
+  console.log(data);
+  formData.value.cDynamicsParm03 = data?.cDictonaryCode;
+  formData.value.materialName = data?.cDictonaryName;
+}
+
 function closeSelectedTag(view) {
   tagsView.delVisitedView(view);
 }
@@ -389,6 +401,65 @@ onActivated(() => {
                 style="width: 240px"
                 :options="cMaterialTypeOptions"
               />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+
+      <el-card>
+        <el-tag type="primary" size="large">物料规格</el-tag>
+        <el-row :gutter="24" style="margin-top: 12px">
+          <el-col :span="6">
+            <el-form-item label="物料长" label-width="150" prop="nSafeQuinity">
+              <el-input v-model="formData.iDefindParm11" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="物料宽" label-width="150" prop="nSafeQuinity">
+              <el-input v-model="formData.iDefindParm12" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="物料厚" label-width="150" prop="nMaxQuinity">
+              <el-input v-model="formData.iDefindParm13" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="板材等级" label-width="150" prop="nMinQuinity">
+              <el-input v-model="formData.cDynamicsParm01" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24" style="margin-top: 12px">
+          <el-col :span="6">
+            <el-form-item
+              label="适用品牌"
+              label-width="150"
+              prop="cWarnRuleCode"
+            >
+              <el-input v-model="formData.cDynamicsParm02" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item label="材质" label-width="150" prop="materialName">
+              <el-input
+                v-model="formData.materialName"
+                style="width: 100%"
+                clearable
+              >
+                <template #append>
+                  <el-icon @click="handleClickMaterialModal">
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item label="颜色" label-width="150" prop="cWarnRuleCode">
+              <el-input v-model="formData.cDynamicsParm04" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -752,4 +823,5 @@ onActivated(() => {
     ref="warehouseLocationModalRef"
     @confirm="handleWarehouseLocationModalConfirm"
   />
+  <MaterialModal ref="materialModalRef" @confirm="handleMaterialModalConfirm" />
 </template>

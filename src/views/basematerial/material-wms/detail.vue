@@ -64,6 +64,27 @@ onActivated(async () => {
     </el-card>
 
     <el-card>
+      <el-tag type="primary" size="large">物料规格</el-tag>
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
+        <el-col :span="6"> 物料长：{{ extendData.iDefindParm11 }} </el-col>
+        <el-col :span="6"> 物料宽：{{ extendData.iDefindParm12 }} </el-col>
+        <el-col :span="6"> 物料厚：{{ extendData.iDefindParm13 }} </el-col>
+        <el-col :span="6"> 板材等级：{{ extendData.cDynamicsParm01 }} </el-col>
+      </el-row>
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
+        <el-col :span="6"> 适用品牌：{{ extendData.cDynamicsParm02 }} </el-col>
+        <el-col :span="6"> 材质：{{ extendData.cDynamicsParm03 }} </el-col>
+        <el-col :span="6"> 颜色：{{ extendData.cDynamicsParm04 }} </el-col>
+      </el-row>
+    </el-card>
+
+    <el-card>
       <el-tag type="primary" size="large">库管信息</el-tag>
       <el-row
         :gutter="24"

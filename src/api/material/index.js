@@ -117,3 +117,15 @@ export function getCMaterialTypes(data) {
     }
   });
 }
+
+export function getMaterialForPage(data) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + '/api/Dictonary/GetDidForPage',
+    method: 'post',
+    params: {
+      cTableCode: 'FM_MES_PRODUCT_VOUCH_S_S_S',
+      cAttributeCode: 'cDefindParm01'
+    },
+    data
+  });
+}
