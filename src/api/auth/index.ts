@@ -10,7 +10,7 @@ import { LoginForm, VerifyCode } from './types';
 export function loginApi(data: LoginForm): AxiosPromise<string> {
   return request({
     // url: '/api/v1/auth/login',
-    url: import.meta.env.VITE_APP_BASE_API+'/api/Login/LoginIn',
+    url: import.meta.env.VITE_APP_BASE_API + '/api/Login/LoginIn',
     method: 'post',
     data: data,
     headers: {
@@ -25,7 +25,7 @@ export function loginApi(data: LoginForm): AxiosPromise<string> {
 export function logoutApi() {
   return request({
     // url: '/api/v1/auth/logout',
-    url: import.meta.env.VITE_APP_BASE_API+'/api/Login/LoginOut',
+    url: import.meta.env.VITE_APP_BASE_API + '/api/Login/LoginOut',
     method: 'get'
   });
 }
@@ -41,9 +41,9 @@ export function getCaptcha(): AxiosPromise<VerifyCode> {
 }
 
 // table  排序
-export function tableSort(data:any) {
+export function tableSort(data: any) {
   return request({
-    url: import.meta.env.VITE_APP_BASE_API+'/api/FormPropertyByUser/Add',
+    url: import.meta.env.VITE_APP_BASE_API + '/api/FormPropertyByUser/Add',
     method: 'post',
     data: data
   });
