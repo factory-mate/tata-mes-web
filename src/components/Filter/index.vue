@@ -137,6 +137,7 @@
               clearable
               :ref="el => bindRef(el, item)"
               :show-all-levels="getShowAllLevels()"
+              placeholder="请选择"
             />
           </el-form-item>
         </el-form>
@@ -308,6 +309,8 @@ const getTreeProps = () => {
     case 'RawMaterialComparisonEdit':
     case 'AddPurchaseNoteNoOrigin':
     case 'AddPurchaseNoteEditNoOrigin':
+    case 'otherInNotifyAdd':
+    case 'otherInNotifyEdit':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':

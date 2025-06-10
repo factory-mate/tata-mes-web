@@ -43,7 +43,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
       >
         <template #button>
           <el-table-column
@@ -297,6 +297,7 @@ const getComboBoxFun = async () => {
 // table 数据整合
 const funTable = (arr: Array<any>) => {
   modelGrid.value = arr;
+  tableButton.value = [];
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       if (item.IsShow) {
