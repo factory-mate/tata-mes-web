@@ -998,6 +998,8 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
     }
     if (AttributeCode.value === 'cDefindParm06') {
       tableDataVal.value[IndexType.value].cDefindParm05 =
