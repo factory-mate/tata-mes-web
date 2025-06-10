@@ -789,7 +789,6 @@ const clickHandAdd = async (formEl: FormInstance | undefined) => {
     ruleForm.value['cRoleTypeCode'] = RoleName.value[0]?.cDictonaryCode || '';
     // ruleForm.value['cPersonCode'] = RoleName.value[0]?.cPersonCode || '';
   }
-  ruleForm.value.state = 'added';
   await formEl.validate((valid, fields) => {
     if (valid) {
       // if(Route.name=='AddPersonTeam'||Route.name=='EditPersonTeam'){

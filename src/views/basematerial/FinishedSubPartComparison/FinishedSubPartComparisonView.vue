@@ -365,9 +365,6 @@ const tableAxios = async () => {
     };
     ParamsApi(data).then(res => {
       if (res.status == 200) {
-        res.data.forEach((item: any) => {
-          item.state = ''; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-        });
         tableData.value = res.data;
         ElLoading.service().close();
       } else {

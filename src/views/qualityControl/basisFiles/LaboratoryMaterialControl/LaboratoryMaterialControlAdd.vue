@@ -415,16 +415,12 @@ const clickHandAdd = (data: any) => {
   // total.value=total.value+1
 };
 const FmodelTable = (val: any) => {
-  // TODO:
   console.log(val.data, '---vvvdd');
   val.data.forEach((item: any, i: any) => {
     item.cResourceCode = item.cInvCode;
     item.cResourceName = item.cInvName;
   });
   tableData.value = [...tableData.value, ...val.data];
-  tableData.value.forEach((item: any) => {
-    item.state = 'added';
-  });
 };
 //添加t弹窗表格
 const AddBody = async (obj: any) => {

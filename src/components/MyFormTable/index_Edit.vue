@@ -616,7 +616,6 @@ const funEdit = (v: any) => {
   }
   return false;
 };
-//添加数据的处理 added  edit
 const tableFunObj = () => {
   let obj = {};
   tableHeader.value.forEach((item: any) => {
@@ -632,18 +631,10 @@ const tableFunObj = () => {
     // @ts-ignore
     obj.UID = '00000000-0000-0000-0000-000000000000';
   }
-  // if(Route.name=='ScrapToolInfoAdd'||Route.name=='ScrapToolInfoEdit'||Route.name=='LabelUsageConfigurationAdd'||Route.name=='LabelUsageConfigurationEdit'||Route.name=='inishedSubPartComparisonEdit'){
-  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //     // @ts-ignore
-  //     obj.state='added'
-  // }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  obj.state = 'added';
   return obj;
 };
 const tableSelect = (val: any, prop: any, i: any, list: any) => {
-  console.log(val, prop, i, list, '-----selllll');
+  console.log(val, prop, i, list);
   let dataVal: any = [];
   if (list.length) {
     dataVal = list.filter((item: any) => {
@@ -686,16 +677,6 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
       tableDataVal.value[i]['cUnitName'] = dataVal[0].cUnitName;
     }
   }
-  if (
-    Route.name == 'ScrapToolInfoAdd' ||
-    Route.name == 'ScrapToolInfoEdit' ||
-    Route.name == 'LabelUsageConfigurationAdd' ||
-    Route.name == 'LabelUsageConfigurationEdit' ||
-    Route.name == 'inishedSubPartComparisonEdit'
-  ) {
-    tableDataVal.value[i].state =
-      tableDataVal.value[i].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-  }
   console.log(tableDataVal.value, '--tableDataVal.value');
 };
 //表格单独按钮删除
@@ -714,11 +695,6 @@ const CoptTable = (i: any, index: number) => {
 const IndexType = ref(0) as any;
 // 输入框
 const changeTextBox = (i: any, scope: any) => {
-  tableDataVal.value[i].state =
-    tableDataVal.value[i].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-  // if(Route.name=='ScrapToolInfoEdit'||Route.name=='LabelUsageConfigurationEdit'||Route.name=='inishedSubPartComparisonEdit'){
-  //     tableDataVal.value[i].state=tableDataVal.value[i].state=='added'?'added':'edit'  //周盈中的方案 报废单菜单  解决丢失覆盖问题
-  // }
   emit('handleTableDataChange', tableDataVal.value);
 };
 const changeDatePicker = (i, scope) => {
@@ -987,14 +963,8 @@ const selectDatas = (val: any) => {
     tableDataVal.value[IndexType.value].cLableName = val.value[0].cLableName;
     tableDataVal.value[IndexType.value].model = '';
   }
-  if (Route.name == 'ScrapToolInfoEdit') {
-    tableDataVal.value[IndexType.value].state =
-      tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-  }
   if (Route.name == 'otherInNotifyAdd' || Route.name == 'otherInNotifyEdit') {
     if (AttributeCode.value === 'cInvCode') {
-      tableDataVal.value[IndexType.value].state =
-        tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
@@ -1010,8 +980,6 @@ const selectDatas = (val: any) => {
   }
   if (Route.name == 'otherOutNotifyAdd' || Route.name == 'otherOutNotifyEdit') {
     if (AttributeCode.value === 'cInvCode') {
-      tableDataVal.value[IndexType.value].state =
-        tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
@@ -1026,8 +994,6 @@ const selectDatas = (val: any) => {
 
   if (Route.name == 'TransferRecordAdd' || Route.name == 'TransferRecordEdit') {
     if (AttributeCode.value === 'cInvCode') {
-      tableDataVal.value[IndexType.value].state =
-        tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
@@ -1039,8 +1005,6 @@ const selectDatas = (val: any) => {
     Route.name == 'LabelUsageConfigurationEdit' ||
     Route.name == 'LabelUsageConfigurationView'
   ) {
-    tableDataVal.value[IndexType.value].state =
-      tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
     tableDataVal.value[IndexType.value].LABELCODE = val.value[0].LABELCODE;
     tableDataVal.value[IndexType.value].LABELNAME = val.value[0].LABELNAME;
   }
@@ -1049,8 +1013,6 @@ const selectDatas = (val: any) => {
     Route.name == 'FinishedSubPartComparisonEdit' ||
     Route.name == 'FinishedSubPartComparisonView'
   ) {
-    tableDataVal.value[IndexType.value].state =
-      tableDataVal.value[IndexType.value].state == 'added' ? 'added' : 'edit'; //周盈中的方案 报废单菜单  解决丢失覆盖问题
     if (AttributeCode.value == 'cStructureCode') {
       tableDataVal.value[IndexType.value].cStructureCode =
         val.value[0].cDictonaryCode;

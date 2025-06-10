@@ -373,9 +373,6 @@ const tableAxios = async () => {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await ParamsApi(data);
     if (res.status == 200) {
-      res.data.forEach((item: any) => {
-        item.state = ''; //周盈中的方案 报废单菜单  解决丢失覆盖问题
-      });
       tableData.value = res.data;
       ElLoading.service().close();
     } else {
@@ -415,37 +412,38 @@ const clickTablBut = (scope: any, obj: any) => {
   }
 };
 const DeleteBody = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
-  };
-  ElMessageBox.confirm('确定删除数据?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(() => {
-      delApi(data).then(res => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功'
-          });
-          tableAxios();
-        } else {
-          ElMessage.error('删除失败');
-        }
-      });
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除'
-      });
-      ElLoading.service().close();
-    });
+  TABRef.value.DelBtn(scope.$index);
+  // const senid = scope.row.UID;
+  // let data = {
+  //   method: obj.Resource.cHttpTypeCode,
+  //   url: obj.Resource.cServerIP + obj.Resource.cUrl,
+  //   data: [senid]
+  // };
+  // ElMessageBox.confirm('确定删除数据?', '提示', {
+  //   confirmButtonText: '确定',
+  //   cancelButtonText: '取消',
+  //   type: 'warning'
+  // })
+  //   .then(() => {
+  //     delApi(data).then(res => {
+  //       if (res.status === 200) {
+  //         ElMessage({
+  //           type: 'success',
+  //           message: '删除成功'
+  //         });
+  //         tableAxios();
+  //       } else {
+  //         ElMessage.error('删除失败');
+  //       }
+  //     });
+  //   })
+  //   .catch(() => {
+  //     ElMessage({
+  //       type: 'info',
+  //       message: '取消删除'
+  //     });
+  //     ElLoading.service().close();
+  //   });
 };
 
 const clickHandAdd = (data: any) => {

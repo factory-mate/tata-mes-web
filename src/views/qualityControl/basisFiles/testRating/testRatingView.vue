@@ -465,9 +465,6 @@ const clickHandAdd = (data: any) => {
 };
 const FmodelTable = (val: any) => {
   console.log(val.data, '---vvvdd');
-  val.data.forEach((item: any) => {
-    item.state = 'added';
-  });
   tableData.value = [...tableData.value, ...val.data];
 };
 //添加t弹窗表格
