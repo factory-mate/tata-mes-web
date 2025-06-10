@@ -354,7 +354,7 @@ onActivated(async () => {
 });
 
 $bus.on('tableUpData', v => {
-  if (v.name == 'YL-RecipeFiles') {
+  if (v.name == 'AutoUnloading') {
     getData();
   }
 });

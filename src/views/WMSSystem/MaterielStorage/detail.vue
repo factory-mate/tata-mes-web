@@ -182,14 +182,14 @@ const handleClickTableButton = (scope, event) => {
 // 新增
 const handleAdd = obj => {
   router.push({
-    name: 'YL-ProductionOrderAdd',
+    name: 'ProductionOrderAdd',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      pathName: 'YL-ProductionOrder',
+      pathName: 'ProductionOrder',
       title: '生产订单新增'
     }
   });
@@ -201,14 +201,14 @@ const handleView = (scope, obj) => {};
 // 编辑
 const handleEdit = (scope, obj) => {
   router.push({
-    name: 'YL-ProductionOrderEdit',
+    name: 'ProductionOrderEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.cInvCode
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      pathName: 'YL-ProductionOrder',
+      pathName: 'ProductionOrder',
       title: '生产订单编辑'
     }
   });

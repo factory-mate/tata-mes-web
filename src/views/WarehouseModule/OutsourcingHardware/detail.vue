@@ -147,7 +147,7 @@ const handleClickTableButton = (scope, event) => {
 // 查看
 const handleView = (scope, obj) => {
   router.push({
-    name: 'YL-SalesOrderDetail',
+    name: 'SalesOrderDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -155,7 +155,7 @@ const handleView = (scope, obj) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'YL-SalesOrder',
+      pathName: 'SalesOrder',
       title: '销售订单详情'
     }
   });

@@ -79,7 +79,7 @@ onMounted(() => {
   } else {
     setting.changeSetting({
       key: 'theme',
-      value: ENV.isYL() ? '#0078d7' : '#a7072b'
+      value: '#a7072b'
     });
   }
 });

@@ -1,31 +1,9 @@
 <template>
   <div class="login-container">
-    <div :class="ENV.isYL() ? 'login_yl_left' : 'login_left'"></div>
+    <div :class="'login_left'"></div>
     <div class="login_right">
-      <div :class="ENV.isYL() ? 'logo_yl_bg' : 'logo_bg'">
-        <!-- <img src="../../assets/bg_logo.png" alt=""> -->
-        <!-- <p></p> -->
-      </div>
+      <div :class="'logo_bg'"></div>
       <el-button @click="downloadAPK">下载 APK</el-button>
-      <div
-        v-if="ENV.isYL()"
-        style="display: flex; align-items: center; gap: 10px"
-      >
-        <img src="../../assets/img/home.jpg" alt="" height="50" />
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-          "
-        >
-          <span style="font-weight: bold; font-size: 30px"
-            >慧友天工数字化平台</span
-          >
-          <span>Huiyou Digitalize Platform</span>
-        </div>
-      </div>
       <el-form
         ref="loginFormRef"
         :model="loginForm"
@@ -370,21 +348,12 @@ $light_gray: #eee;
     background: url('../../assets/bg_l.png') no-repeat;
     background-size: 100% 100%;
   }
-  .login_yl_left {
-    flex: 1;
-    background: url('../../assets/bg_yl_l.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
   .login_right {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-  }
-  .logo_yl_bg {
-    height: 200px;
   }
   .logo_bg {
     margin: 10% auto 0 auto;

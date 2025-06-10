@@ -1574,14 +1574,6 @@ const selectData = (val: any) => {
   if (val.type === false) {
     ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
     if (
-      Route.name === 'YL-RecipeFilesAdd' ||
-      Route.name === 'YL-RecipeFilesEdit'
-    ) {
-      if (AttributeCode.value == 'cInvName') {
-        ruleForm.value['cInvCode'] = val.value[0]['cInvCode'] || '';
-      }
-    }
-    if (
       Route.name == 'addSupplierClass' ||
       Route.name == 'addSupplierClassEdit' ||
       Route.name == 'addSupplierClassView'
@@ -2068,15 +2060,6 @@ const selectData = (val: any) => {
       Route.name == 'FinishedSubPartComparisonAdd' ||
       Route.name == 'FinishedSubPartComparisonEdit' ||
       Route.name == 'FinishedSubPartComparisonView'
-    ) {
-      if (AttributeCode.value == 'cInvName') {
-        ruleForm.value['cInvName'] = val.value[0].cInvName || '';
-        ruleForm.value['cInvCode'] = val.value[0].cInvCode || '';
-      }
-    }
-    if (
-      Route.name === 'YL-ProductionOrderAdd' ||
-      Route.name === 'YL-ProductionOrderEdit'
     ) {
       if (AttributeCode.value == 'cInvName') {
         ruleForm.value['cInvName'] = val.value[0].cInvName || '';

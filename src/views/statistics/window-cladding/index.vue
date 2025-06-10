@@ -374,13 +374,15 @@ onMounted(() => getData());
 
 onActivated(async () => {
   if (cache.isCurrentPageInvalid()) {
-    await getData();
-    cache.removeCurrentPageInvalid();
+    if (route.name === 'WindowCladding') {
+      await getData();
+      cache.removeCurrentPageInvalid();
+    }
   }
 });
 
 $bus.on('tableUpData', v => {
-  if (v.name == 'YL-RecipeFiles') {
+  if (v.name == 'WindowCladding') {
     getData();
   }
 });
