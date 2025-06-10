@@ -260,7 +260,7 @@ function handleClickMaterialModal() {
 function handleMaterialModalConfirm(data) {
   console.log(data);
   formData.value.cDynamicsParm03 = data?.cDictonaryCode;
-  formData.value.materialName = data?.cDictonaryName;
+  formData.value.cDynamicsParm03Name = data?.cDictonaryName;
 }
 
 function closeSelectedTag(view) {
@@ -447,9 +447,13 @@ onActivated(() => {
           </el-col>
 
           <el-col :span="6">
-            <el-form-item label="材质" label-width="150" prop="materialName">
+            <el-form-item
+              label="材质"
+              label-width="150"
+              prop="cDynamicsParm03Name"
+            >
               <el-input
-                v-model="formData.materialName"
+                v-model="formData.cDynamicsParm03Name"
                 style="width: 100%"
                 clearable
               >

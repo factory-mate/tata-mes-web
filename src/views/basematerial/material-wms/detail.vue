@@ -79,7 +79,7 @@ onActivated(async () => {
         style="margin-top: 12px; font-weight: 700; font-size: 14px"
       >
         <el-col :span="6"> 适用品牌：{{ extendData.cDynamicsParm02 }} </el-col>
-        <el-col :span="6"> 材质：{{ extendData.cDynamicsParm03 }} </el-col>
+        <el-col :span="6"> 材质：{{ extendData.cDynamicsParm03Name }} </el-col>
         <el-col :span="6"> 颜色：{{ extendData.cDynamicsParm04 }} </el-col>
       </el-row>
     </el-card>
