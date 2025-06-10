@@ -145,62 +145,65 @@
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
               />
-              <div v-if="item.cControlTypeCode == 'TextBoxLink'">
-                <el-autocomplete
-                  v-if="
-                    item.xu == 'TextBoxLink' &&
-                    Route.name === 'ProductionOrderBG' &&
-                    [
-                      'Itemss_cInvName',
-                      'Items_cInvName',
-                      'Itemss_cDefindParm01Name',
-                      'Itemss_cStructName',
-                      'Itemss_cDefindParm05Name',
-                      'Itemss_cDefindParm04Name',
-                      'Itemss_cDefindParm06Name'
-                    ].includes(item.prop)
-                  "
-                  :disabled="props.disabled"
-                  v-model="scope.row[item.prop]"
-                  :placeholder="disabled ? '' : '请输入'"
-                  :fetch-suggestions="
-                    (queryString, cb) =>
-                      querySearchAsync(item, scope, queryString, cb)
-                  "
-                  @select="s => handleAutoTextSelect(s, item, scope)"
-                  @change="handleAutoTextChange"
-                  :style="
-                    funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
-                  "
-                  @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
-                >
-                  <template #append>
-                    <el-icon
-                      @click="clickModel(item, item.prop, scope.$index, scope)"
-                    >
-                      <MoreFilled />
-                    </el-icon>
-                  </template>
-                </el-autocomplete>
-                <el-input
-                  v-else
-                  :disabled="props.disabled"
-                  v-model="scope.row[item.prop]"
-                  :placeholder="disabled ? '' : '请输入'"
-                  :style="
-                    funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
-                  "
-                  @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
-                >
-                  <template #append>
-                    <el-icon
-                      @click="clickModel(item, item.prop, scope.$index, scope)"
-                    >
-                      <MoreFilled />
-                    </el-icon>
-                  </template>
-                </el-input>
-              </div>
+              <el-autocomplete
+                v-if="item.cControlTypeCode == 'AutoComplete'"
+                :disabled="props.disabled"
+                v-model="scope.row[item.prop]"
+                :placeholder="disabled ? '' : '请输入'"
+                :fetch-suggestions="
+                  (queryString, cb) =>
+                    querySearchAsync(item, scope, queryString, cb)
+                "
+                @select="s => handleAutoTextSelect(s, item, scope)"
+                @change="handleAutoTextChange"
+                :style="
+                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                "
+                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
+              ></el-autocomplete>
+              <el-autocomplete
+                v-if="item.cControlTypeCode == 'AutoTextBoxLink'"
+                :disabled="props.disabled"
+                v-model="scope.row[item.prop]"
+                :placeholder="disabled ? '' : '请输入'"
+                :fetch-suggestions="
+                  (queryString, cb) =>
+                    querySearchAsync(item, scope, queryString, cb)
+                "
+                @select="s => handleAutoTextSelect(s, item, scope)"
+                @change="handleAutoTextChange"
+                :style="
+                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                "
+                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
+              >
+                <template #append>
+                  <el-icon
+                    @click="clickModel(item, item.prop, scope.$index, scope)"
+                  >
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-autocomplete>
+
+              <el-input
+                v-if="item.cControlTypeCode == 'TextBoxLink'"
+                :disabled="props.disabled"
+                v-model="scope.row[item.prop]"
+                :placeholder="disabled ? '' : '请输入'"
+                :style="
+                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                "
+                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
+              >
+                <template #append>
+                  <el-icon
+                    @click="clickModel(item, item.prop, scope.$index, scope)"
+                  >
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
             </div>
             <div
               v-else-if="
@@ -1253,7 +1256,7 @@ const querySearchAsync = async (
   if (queryString) {
     if (Route.name === 'ProductionOrderBG') {
       if (item.prop === 'Items_cInvName' || item.prop === 'Itemss_cInvName') {
-        queryData.conditions = `cInvCode like ${queryString}`;
+        queryData.conditions = `cInvName like ${queryString}`;
       }
       if (
         [
