@@ -346,8 +346,10 @@ onMounted(() => getData());
 
 onActivated(async () => {
   if (cache.isCurrentPageInvalid()) {
-    await getData();
-    cache.removeCurrentPageInvalid();
+    if (route.name === 'GlassReduction') {
+      await getData();
+      cache.removeCurrentPageInvalid();
+    }
   }
 });
 

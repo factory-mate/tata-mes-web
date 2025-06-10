@@ -346,8 +346,10 @@ onMounted(() => getData());
 
 onActivated(async () => {
   if (cache.isCurrentPageInvalid()) {
-    await getData();
-    cache.removeCurrentPageInvalid();
+    if (route.name === 'AutoUnloading') {
+      await getData();
+      cache.removeCurrentPageInvalid();
+    }
   }
 });
 
