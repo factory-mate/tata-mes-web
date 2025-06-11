@@ -1506,8 +1506,6 @@ const ModelClose = (val: any) => {
 const DepClassCode = ref();
 //部门编码
 const DepCode = ref();
-//供应商分类编码
-const cVenCode = ref({}) as any;
 //工厂编码
 const FactoryCode = ref();
 //车间编码
@@ -1538,12 +1536,6 @@ const selectData = (val: any) => {
   val.value.forEach((item: { cDepClassCode: any }) => {
     if (item.cDepClassCode) {
       DepClassCode.value = item;
-    }
-  });
-  //供应商/分类编码
-  val.value.forEach((item: { cVendorClassCode: any }) => {
-    if (item.cVendorClassCode) {
-      cVenCode.value = item;
     }
   });
   //获取工厂编码
@@ -1578,18 +1570,16 @@ const selectData = (val: any) => {
       Route.name == 'addSupplierClassEdit' ||
       Route.name == 'addSupplierClassView'
     ) {
-      //供应商增页面，获取供应商/分类编码
-      if (AttributeCode.value == 'cParentCode') {
-        ruleForm.value['cParentCode'] =
-          cVenCode.value['cVendorClassCode'] || '';
-      }
-      //供应商增页面，获取供应商/分类编码
       if (AttributeCode.value == 'cParentName') {
-        ruleForm.value['cParentName'] =
-          cVenCode.value['cVendorClassName'] || '';
+        ruleForm.value['cParentName'] = val.value[0]['cVendorClassName'];
+        ruleForm.value['cParentCode'] = val.value[0]['cVendorClassCode'];
       }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
+    }
+    if (Route.name === 'addSupplierEdit' || Route.name === 'addSupplier') {
+      if (AttributeCode.value === 'cVendorClassName') {
+        ruleForm.value['cVendorClassName'] = val.value[0]['cVendorClassName'];
+        ruleForm.value['cVendorClassCode'] = val.value[0]['cVendorClassCode'];
+      }
     }
     // 用户管理
     if (Route.name == 'UserAdd' || Route.name == 'UserAddEdit') {
@@ -2227,22 +2217,6 @@ const newAdd = () => {
       ruleForm.value['cDeviceSourceType'] = source[0]?.cDictonaryCode || '';
     }
   }
-  // 物料
-  // if (Route.name == 'material'||Route.name == 'materialEdit'||Route.name == 'materialView') {
-  //     materialFun()
-  // }
-  if (
-    Route.name == 'addSupplier' ||
-    Route.name == 'addSupplierEdit' ||
-    Route.name == 'addSupplierView'
-  ) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (ruleForm.value.hasOwnProperty('cVendorClassName')) {
-      ruleForm.value['cVendorClassCode'] =
-        cVenCode.value['cVendorClassCode'] || '';
-    }
-  }
-
   // WMS 调拨单
   if (Route.name == 'TransferRecordAdd' || Route.name == 'TransferRecordEdit') {
     const [code1, name1] = [
@@ -2752,29 +2726,6 @@ function toLastView(visitedViews: any, view?: any) {
     }
   }
 }
-const materialFun = () => {
-  ruleForm.value['cVendorClassCode'] = cVenCode.value['cVendorClassCode'] || '';
-  if (
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.Add.WMS' ||
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.View.WMS' ||
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.Edit.WMS' ||
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.Edit.Extend'
-  ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    ruleForm.value.cInvCode = window.sessionStorage.getItem('cInvCode');
-  }
-  if (
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.Add.Extend' ||
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.View.Extend' ||
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.Edit.WMS' ||
-    validateObj.value.tabVal == 'ManageCenter.Inentory.M.Edit.Extend'
-  ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    ruleForm.value.cInvCode = window.sessionStorage.getItem('cInvCode');
-  }
-};
 const materialFunData = (data: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
