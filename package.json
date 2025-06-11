@@ -3,10 +3,8 @@
   "version": "1.1.1",
   "scripts": {
     "dev": "vite --mode development",
-    "build:prod": "vite build --mode production",
-    "dev:yl": "vite --mode yl.development",
-    "build:prod:yl": "vite build --mode yl.production",
     "build:staging": "vite build --mode staging",
+    "build:prod": "vite build --mode production",
     "serve": "vite preview",
     "lint": "eslint src/**/*.{ts,js,vue} --fix --cache",
     "prepare": "husky install",
