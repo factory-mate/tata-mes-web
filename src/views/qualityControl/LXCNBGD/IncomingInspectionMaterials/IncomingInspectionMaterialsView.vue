@@ -208,7 +208,9 @@ onActivated(() => {
     row.value = JSON.parse(history.state.row);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    rowId.value = JSON.parse(history.state.row).UID;
+    rowId.value =
+      JSON.parse(history.state.row).CheckVouchUID ??
+      JSON.parse(history.state.row).UID;
   }
   if (history.state.title == '采购单详情') {
     disabled.value = true;
