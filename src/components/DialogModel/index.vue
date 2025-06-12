@@ -567,7 +567,7 @@ const { tableAxios } = inject('tableAxios') as {
   tableAxios: () => void;
 };
 const optionData = ref([]) as any;
-
+const isSubmitting = ref(false);
 //form
 watch(
   props,
@@ -1851,6 +1851,11 @@ const SaveAdd = (item: any) => {
       url: item.Resource.cServerIP + item.Resource.cUrl,
       data: ruleForm.value
     };
+    if (isSubmitting.value) {
+      ElMessage.warning('加载中，请勿重复提交');
+      return;
+    }
+    isSubmitting.value = true;
     DataApi(data)
       .then(res => {
         if (res.status === 200) {
@@ -1898,7 +1903,10 @@ const SaveAdd = (item: any) => {
           ElMessage.error('新增失败');
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        isSubmitting.value = false;
+      });
   } else {
     //上传文件保存
     let fd = new FormData();

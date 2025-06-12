@@ -82,6 +82,7 @@
         :disabled="disabled"
         :Trow="Trow"
         @FmodelClose="modelClose"
+        width="600px"
       ></Odialog>
     </div>
   </div>

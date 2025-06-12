@@ -962,7 +962,12 @@ const selectDatas = (val: any) => {
     tableDataVal.value[IndexType.value].cLableName = val.value[0].cLableName;
     tableDataVal.value[IndexType.value].model = '';
   }
-  if (Route.name == 'otherInNotifyAdd' || Route.name == 'otherInNotifyEdit') {
+  if (
+    Route.name == 'otherInNotifyAdd' ||
+    Route.name == 'otherInNotifyEdit' ||
+    Route.name == 'otherOutNotifyAdd' ||
+    Route.name == 'otherOutNotifyEdit'
+  ) {
     if (AttributeCode.value === 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
@@ -973,19 +978,6 @@ const selectDatas = (val: any) => {
         val.value[0].cVendorCode;
       tableDataVal.value[IndexType.value].cDefindParm06 =
         val.value[0].cVendorName;
-    }
-    if (AttributeCode.value === 'cDefindParm06') {
-      tableDataVal.value[IndexType.value].cDefindParm05 =
-        val.value[0].cVendorCode;
-      tableDataVal.value[IndexType.value].cDefindParm06 =
-        val.value[0].cVendorName;
-    }
-  }
-  if (Route.name == 'otherOutNotifyAdd' || Route.name == 'otherOutNotifyEdit') {
-    if (AttributeCode.value === 'cInvCode') {
-      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
-      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
-      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
     }
     if (AttributeCode.value === 'cDefindParm06') {
       tableDataVal.value[IndexType.value].cDefindParm05 =
@@ -1253,6 +1245,7 @@ const querySearchAsync = async (
     OrderByFileds: '',
     conditions: ''
   };
+  let results = [];
   if (queryString) {
     if (Route.name === 'ProductionOrderBG') {
       if (item.prop === 'Items_cInvName' || item.prop === 'Itemss_cInvName') {
@@ -1273,15 +1266,22 @@ const querySearchAsync = async (
       }
     }
   }
-  if (
-    (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') &&
-    scope.row.cInvCode
-  ) {
-    const conditions = [`cInvCode = ${scope.row.cInvCode}`, 'cUnitTypeCode=1 '];
-    if (queryString) {
-      conditions.push(`cUnitName like ${queryString}`);
+  if (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') {
+    if (item.prop === 'cUnitName') {
+      if (scope.row.cInvCode) {
+        const conditions = [
+          `cInvCode = ${scope.row.cInvCode}`,
+          'cUnitTypeCode=1 '
+        ];
+        if (queryString) {
+          conditions.push(`cUnitName like ${queryString}`);
+        }
+        queryData.conditions = conditions.join(' && ');
+      } else {
+        cb(results);
+        return;
+      }
     }
-    queryData.conditions = conditions.join(' && ');
   }
   try {
     const { data } = await request({
@@ -1290,7 +1290,6 @@ const querySearchAsync = async (
       params: queryParams,
       data: queryData
     });
-    let results = [];
     results = (data.data ?? data).map(i => {
       const r = { ...i };
       if (Route.name === 'ProductionOrderBG') {
