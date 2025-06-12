@@ -870,10 +870,6 @@ const selectDatas = (val: any) => {
   }
   //工厂变更
   if (Route.name == 'ProductionOrderBG') {
-    //Items_cInvName产品名称
-    // Itemss_cInvName 子件名称  Itemss_cDefindParm01Name材质名称  Itemss_cStructName结构名称 Itemss_cDefindParm06Name安装方式
-    // Itemss_cDefindParm05Name开向 Itemss_cDefindParm04Name合页  Itemss_cDefindParm03Name锁孔 Itemss_cDefindParm02Name磁吸代别
-
     if (AttributeCode.value == 'Items_cInvName') {
       tableDataVal.value[IndexType.value][AttributeCode.value] =
         val.value[0].cInvName;
@@ -1262,6 +1258,8 @@ const querySearchAsync = async (
         [
           'Itemss_cStructName',
           'Itemss_cDefindParm01Name',
+          'Itemss_cDefindParm02Name',
+          'Itemss_cDefindParm03Name',
           'Itemss_cDefindParm04Name',
           'Itemss_cDefindParm05Name',
           'Itemss_cDefindParm06Name'
@@ -1289,6 +1287,8 @@ const querySearchAsync = async (
           [
             'Itemss_cStructName',
             'Itemss_cDefindParm01Name',
+            'Itemss_cDefindParm02Name',
+            'Itemss_cDefindParm03Name',
             'Itemss_cDefindParm04Name',
             'Itemss_cDefindParm05Name',
             'Itemss_cDefindParm06Name'
@@ -1309,16 +1309,48 @@ const querySearchAsync = async (
 const handleAutoTextSelect = (data: any, item, scope) => {
   console.log(item);
   if (Route.name === 'ProductionOrderBG') {
-    if (
-      [
-        'Itemss_cStructName',
-        'Itemss_cDefindParm01Name',
-        'Itemss_cDefindParm04Name',
-        'Itemss_cDefindParm05Name',
-        'Itemss_cDefindParm06Name'
-      ].includes(item.prop)
-    ) {
+    if (item.prop === 'Itemss_cStructName') {
       tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cStructCode'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Itemss_cDefindParm01Name') {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cDefindParm01'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Itemss_cDefindParm02Name') {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cDefindParm02'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Itemss_cDefindParm03Name') {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cDefindParm03'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Itemss_cDefindParm04Name') {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cDefindParm04'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Itemss_cDefindParm05Name') {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cDefindParm05'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Itemss_cDefindParm06Name') {
+      tableDataVal.value[scope.$index][item.prop] = data.cDictonaryName;
+      tableDataVal.value[scope.$index]['Itemss_cDefindParm06'] =
+        data.cDictonaryCode;
+    }
+    if (item.prop === 'Items_cInvName') {
+      tableDataVal.value[scope.$index][item.prop] = data.cInvName;
+      tableDataVal.value[scope.$index]['Items_cInvCode'] = data.cInvCode;
+    }
+    if (item.prop === 'Itemss_cInvName') {
+      tableDataVal.value[scope.$index][item.prop] = data.cInvName;
+      tableDataVal.value[scope.$index]['Itemss_cInvCode'] = data.cInvCode;
     }
   }
   console.log(tableDataVal.value);
