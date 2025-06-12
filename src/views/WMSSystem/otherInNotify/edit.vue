@@ -480,21 +480,21 @@ const SaveEdit = (obj: any) => {
     });
     return false;
   }
-  // let list=[]
-  // list= TABRef.value.tableDataVal.filter((item:any)=>{
-  //     return item.cInvCode=='' ||item.nQuantity==''
-  // })
-  // if(list.length){
-  //     ElMessage({
-  //         type: 'error',
-  //         message: '编号/数量不能为空！',
-  //     })
-  // }else{
-  // }
+  let error = false;
+  TABRef.value.tableDataVal.forEach(i => {
+    if (i.nQuantity < i.nAccQuantity) {
+      error = true;
+    }
+  });
+  if (error) {
+    ElMessage({
+      type: 'error',
+      message: '通知数量不得小于每包数量'
+    });
+    return;
+  }
   obj.pathName = 'otherInNotify';
   obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   headRef.value.validate(obj);
 };
 // 编辑
