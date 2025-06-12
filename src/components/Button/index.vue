@@ -306,11 +306,9 @@ const emits = defineEmits([
 watch(
   () => props.ToolBut,
   newVal => {
-    if (newVal.length) {
-      ToolButVal.value = newVal.filter((item: any) => {
-        return item.IsShow == true;
-      });
-    }
+    ToolButVal.value = (newVal ?? []).filter((item: any) => {
+      return item.IsShow == true;
+    });
   },
   { deep: true }
 );

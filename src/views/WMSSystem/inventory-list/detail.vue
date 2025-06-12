@@ -297,7 +297,6 @@ const getAddUser = async (code: any) => {
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
-    But.value = [];
     if (res.status == 200) {
       res.data.forEach((item: any) => {
         if (item.cPropertyClassTypeCode == 'Head') {
@@ -320,8 +319,11 @@ const getAddUser = async (code: any) => {
           //调取第一个tab数据
           getAddUser(TabPageVal.value[0].cIncludeModelCode);
         }
+        console.log(item.cPropertyClassTypeCode);
         if (item.cPropertyClassTypeCode == 'ToolBut') {
+          But.value = [];
           const iStatus = headRef.value?.ruleForm.iStatus;
+          console.log(iStatus);
           But.value = item[import.meta.env.VITE_APP_key]
             .sort(compare('iIndex', true))
             .filter(i => {
