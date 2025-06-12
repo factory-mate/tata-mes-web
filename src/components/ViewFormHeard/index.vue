@@ -1566,6 +1566,23 @@ const selectData = (val: any) => {
   if (val.type === false) {
     ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
     if (
+      Route.name === 'inspectionNormeAdd' ||
+      Route.name === 'inspectionNormeEdit'
+    ) {
+      if (AttributeCode.value === 'cStandardName') {
+        ruleForm.value.cStandardCode = val.value[0].cStandardCode;
+        ruleForm.value.cAnalysisTypeName = val.value[0].cAnalysisTypeName;
+        ruleForm.value.cCheckTypeName = val.value[0].cCheckTypeName;
+        ruleForm.value.nSore = val.value[0].nSore;
+        ruleForm.value.cCheckQuantity = val.value[0].cCheckQuantity;
+        ruleForm.value.cGuideMemo = val.value[0].cGuideMemo;
+        ruleForm.value.nStandValue = val.value[0].nStandValue;
+        ruleForm.value.nMaxValue = val.value[0].nMaxValue;
+        ruleForm.value.nMinValue = val.value[0].nMinValue;
+        ruleForm.value.nNoQualificationRate = val.value[0].nNoQualificationRate;
+      }
+    }
+    if (
       Route.name == 'addSupplierClass' ||
       Route.name == 'addSupplierClassEdit' ||
       Route.name == 'addSupplierClassView'
