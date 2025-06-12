@@ -969,6 +969,10 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+      tableDataVal.value[IndexType.value].cDefindParm05 =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm06 =
+        val.value[0].cVendorName;
     }
     if (AttributeCode.value === 'cDefindParm06') {
       tableDataVal.value[IndexType.value].cDefindParm05 =
@@ -1269,6 +1273,16 @@ const querySearchAsync = async (
       }
     }
   }
+  if (
+    (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') &&
+    scope.row.cInvCode
+  ) {
+    const conditions = [`cInvCode = ${scope.row.cInvCode}`, 'cUnitTypeCode=1 '];
+    if (queryString) {
+      conditions.push(`cUnitName like ${queryString}`);
+    }
+    queryData.conditions = conditions.join(' && ');
+  }
   try {
     const { data } = await request({
       url: item.cServerIP + item.cUrl,
@@ -1295,6 +1309,15 @@ const querySearchAsync = async (
           ].includes(item.prop)
         ) {
           r.value = i.cDictonaryName;
+        }
+      }
+
+      if (
+        Route.name === 'otherInNotifyAdd' ||
+        Route.name === 'otherInNotifyEdit'
+      ) {
+        if (item.prop === 'cUnitName') {
+          r.value = i.cUnitName;
         }
       }
       return r;
