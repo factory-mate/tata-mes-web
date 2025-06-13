@@ -1266,7 +1266,12 @@ const querySearchAsync = async (
       }
     }
   }
-  if (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') {
+  if (
+    Route.name === 'otherInNotifyAdd' ||
+    Route.name === 'otherInNotifyEdit' ||
+    Route.name === 'otherOutNotifyAdd' ||
+    Route.name === 'otherOutNotifyEdit'
+  ) {
     if (item.prop === 'cUnitName') {
       if (scope.row.cInvCode) {
         const conditions = [
@@ -1313,7 +1318,9 @@ const querySearchAsync = async (
 
       if (
         Route.name === 'otherInNotifyAdd' ||
-        Route.name === 'otherInNotifyEdit'
+        Route.name === 'otherInNotifyEdit' ||
+        Route.name === 'otherOutNotifyAdd' ||
+        Route.name === 'otherOutNotifyEdit'
       ) {
         if (item.prop === 'cUnitName') {
           r.value = i.cUnitName;
