@@ -222,12 +222,17 @@
             </div>
             <div
               v-else-if="
-                [
+                ([
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
                   'newPurchaseAuditEdit',
                   'AddPurchaseRequestEdit'
-                ].includes(Route.name as string) && item.cAttributeCode === 'cVendorName'
+                ].includes(Route.name as any) &&
+                  item.cAttributeCode === 'cVendorName') ||
+                (['otherInNotifyAdd', 'otherInNotifyEdit'].includes(
+                  Route.name as any
+                ) &&
+                  item.cAttributeCode === 'cDefindParm06')
               "
             >
               <el-select
@@ -978,6 +983,7 @@ const selectDatas = (val: any) => {
         val.value[0].cVendorCode;
       tableDataVal.value[IndexType.value].cDefindParm06 =
         val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
     }
     if (AttributeCode.value === 'cDefindParm06') {
       tableDataVal.value[IndexType.value].cDefindParm05 =
@@ -1392,8 +1398,10 @@ const handleAutoTextChange = item => {
 
 const onVendorChange = (e, scope) => {
   console.log(e, scope);
-  tableDataVal.value[scope.$index].cDefindParm03 =
-    scope.row.list_sap.find(i => i.cVendorCode === e)?.cSAPCode || '';
+  if (!['otherInNotifyAdd', 'otherInNotifyEdit'].includes(Route.name)) {
+    tableDataVal.value[scope.$index].cDefindParm03 =
+      scope.row.list_sap.find(i => i.cVendorCode === e)?.cSAPCode || '';
+  }
 };
 
 // 暴露方法
