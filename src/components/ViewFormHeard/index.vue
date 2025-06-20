@@ -781,7 +781,8 @@ const getData = (newValue: any) => {
       let data = {
         method: item.Resource.cHttpTypeCode,
         url: item.Resource.cServerIP + item.Resource.cUrl,
-        params: obj
+        params: obj,
+        data: obj
         // {
         //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //     // @ts-ignore
@@ -790,6 +791,11 @@ const getData = (newValue: any) => {
         //     Conditions:"cDictonaryTypeCode="+item.Resource.cAttributeCode
         // }
       };
+      if (item.Resource.cHttpTypeCode?.toLowerCase() === 'get') {
+        data.params = obj;
+      } else {
+        data.data = obj;
+      }
       // 巡线计划新增 特殊处理
       if (
         Route.name == 'AddPartolPlan' ||
@@ -799,7 +805,7 @@ const getData = (newValue: any) => {
         if (!ruleForm.value.dProductDate) return false;
       }
 
-      ParamsApi(data).then((res: any) => {
+      DataApi(data).then((res: any) => {
         ruleFormData.value[keyVal] = res.data;
         ruleFormData.value[extraKey] = res.data;
         ruleForm.value = { ...ruleForm.value, ...ruleFormData.value };
