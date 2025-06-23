@@ -443,7 +443,7 @@ onActivated(() => {
 
           <el-col :span="6">
             <el-form-item
-              label="材质"
+              label="板材材质"
               label-width="150"
               prop="cDynamicsParm03Name"
             >

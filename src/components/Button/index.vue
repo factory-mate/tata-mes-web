@@ -818,8 +818,12 @@ const clickDonwnFile = (item: any) => {
   ParamsApi(data)
     .then(res => {
       if (res.status == 200) {
+        const timestamp = Date.now();
         window.location.href =
-          res.data.cFilePath + res.data.cFileReName + res.data.cFileSuffix;
+          res.data.cFilePath +
+          res.data.cFileReName +
+          res.data.cFileSuffix +
+          `?v=${timestamp}`;
       }
     })
     .finally(() => {
