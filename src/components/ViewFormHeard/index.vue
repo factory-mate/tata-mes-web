@@ -332,7 +332,12 @@ import {
 import useStore from '@/store';
 import searchModel from '@/components/MultiSelect/searchModel.vue';
 import ImgPreview from '@/components/ImgPrive/index.vue'; //图片预览
-import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
+import {
+  configApi,
+  ParamsApi,
+  DataApi,
+  commonApi
+} from '@/api/configApi/index';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 import { localStorage, sessionStorage } from '@/utils/storage';
@@ -778,24 +783,13 @@ const getData = (newValue: any) => {
           Conditions: 'cDictonaryTypeCode=' + item.Resource.cAttributeCode
         };
       }
-      let data = {
+      const data = {
         method: item.Resource.cHttpTypeCode,
         url: item.Resource.cServerIP + item.Resource.cUrl,
         params: obj,
         data: obj
-        // {
-        //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //     // @ts-ignore
-        //     // Conditions:"cDictonaryTypeCode="+item.Resource.cAttributeCode+"&&cAuthCode="+item.Resource.cAuthCode
-        //     // cDictonaryTypeCode: item.Resource.cAttributeCode
-        //     Conditions:"cDictonaryTypeCode="+item.Resource.cAttributeCode
-        // }
       };
-      if (item.Resource.cHttpTypeCode?.toLowerCase() === 'get') {
-        data.params = obj;
-      } else {
-        data.data = obj;
-      }
+      console.log(data);
       // 巡线计划新增 特殊处理
       if (
         Route.name == 'AddPartolPlan' ||
@@ -805,7 +799,7 @@ const getData = (newValue: any) => {
         if (!ruleForm.value.dProductDate) return false;
       }
 
-      DataApi(data).then((res: any) => {
+      commonApi(data).then((res: any) => {
         ruleFormData.value[keyVal] = res.data;
         ruleFormData.value[extraKey] = res.data;
         ruleForm.value = { ...ruleForm.value, ...ruleFormData.value };

@@ -35,6 +35,11 @@ export function DataApi(data: any, config?: any) {
     ...config
   });
 }
+export function commonApi(config?: any) {
+  return request({
+    ...config
+  });
+}
 export function DataParamsApi(data: any) {
   return request({
     url: data.params ? data.url + '?' + data.params : data.url,
