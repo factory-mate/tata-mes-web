@@ -11,14 +11,13 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     >
-    <!-- <span class="sp1">每页</span><input type="text" :value="limit" class="inp"><span class="sp1">条</span> -->
-  </el-pagination>
-
+      <!-- <span class="sp1">每页</span><input type="text" :value="limit" class="inp"><span class="sp1">条</span> -->
+    </el-pagination>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, PropType ,toRefs } from 'vue';
+import { computed, PropType, toRefs, watch } from 'vue';
 import { scrollTo } from '@/utils/scroll-to';
 
 const props = defineProps({
@@ -42,7 +41,7 @@ const props = defineProps({
   pageSizes: {
     type: Array as PropType<number[]>,
     default() {
-      return [5,10, 20, 30, 50,100];
+      return [5, 10, 20, 30, 50, 100];
     }
   },
   layout: {
@@ -62,7 +61,7 @@ const props = defineProps({
     default: false
   }
 });
-const {limit } =toRefs(props)
+const { limit } = toRefs(props);
 const emit = defineEmits(['update:page', 'update:limit', 'pagination']);
 
 const currentPage = computed<number | undefined>({
@@ -82,27 +81,30 @@ const pageSize = computed<number | undefined>({
 });
 // 条
 function handleSizeChange(val: number) {
-  emit('pagination', { page: currentPage.value , limit: val });
-  if (props.autoScroll) {
-    scrollTo(0, 800);
-  }
+  console.log(val);
+  handleCurrentChange(1, val);
+  // if (props.autoScroll) {
+  //   scrollTo(0, 800);
+  // }
 }
 // 页码
-function handleCurrentChange(val: number) {
+function handleCurrentChange(val: number, limit) {
   currentPage.value = val;
-  emit('pagination', { page: val, limit: props.limit });
+  emit('pagination', { page: val, limit: limit ?? props.limit });
   if (props.autoScroll) {
     scrollTo(0, 800);
   }
 }
+
+watch;
 </script>
 
-<style  scoped>
-.sp1{
+<style scoped>
+.sp1 {
   margin: 0 10px;
   color: #606266;
 }
-.inp{
+.inp {
   width: 40px;
   border: 1px solid #dcdfe6;
   height: 30px;
