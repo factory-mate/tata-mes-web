@@ -3,6 +3,7 @@
   "version": "1.1.1",
   "scripts": {
     "dev": "vite --mode development",
+    "dev:prod": "vite --mode production",
     "build:staging": "vite build --mode staging",
     "build:prod": "vite build --mode production",
     "serve": "vite preview",

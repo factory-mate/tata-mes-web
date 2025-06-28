@@ -835,17 +835,16 @@ const Tconfirm = () => {
   // 向 cDefindParm01List 添加数据，去重复根据 cDictonaryCode,使用 vue 修改方式
   const filteredData = itemData.value.filter(
     i =>
-      !headRef.value.ruleForm.cDefindParm01List.some(
+      !(headRef.value.ruleForm.cDefindParm01List ?? []).some(
         j => j.cDictonaryCode === i.cDictonaryCode
       )
   );
   const resultData = [
-    ...headRef.value.ruleForm.cDefindParm01List,
+    ...(headRef.value.ruleForm.cDefindParm01List ?? []),
     ...filteredData
   ];
   headRef.value.ruleForm.cDefindParm01List = [...resultData];
   headRef.value.ruleForm.cDefindParm01 = resultData.map(i => i.cDictonaryCode);
-
   TTABRef.value.handleRemoveSelectionChange();
 };
 

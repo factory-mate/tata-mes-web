@@ -300,7 +300,13 @@ const emits = defineEmits([
   'BatchAddPersonGroup',
   'RejectForm',
   'DelCheckData',
-  'PrintOutLabel'
+  'PrintOutLabel',
+  'SendPlanStatus',
+  'SendPlanRollBack',
+  'MaterialChangeStatus',
+  'SendPlan',
+  'MaterialChange',
+  'MaterialChangeRollBack'
 ]);
 
 watch(
@@ -793,6 +799,24 @@ const DelCheckData = (obj: any) => {
 const PrintOutLabel = obj => {
   emits('PrintOutLabel', obj);
 };
+const SendPlanStatus = obj => {
+  emits('SendPlanStatus', obj);
+};
+const SendPlanRollBack = obj => {
+  emits('SendPlanRollBack', obj);
+};
+const MaterialChangeStatus = obj => {
+  emits('MaterialChangeStatus', obj);
+};
+const SendPlan = obj => {
+  emits('SendPlan', obj);
+};
+const MaterialChange = obj => {
+  emits('MaterialChange', obj);
+};
+const MaterialChangeRollBack = obj => {
+  emits('MaterialChangeRollBack', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1169,6 +1193,24 @@ const clickButton = (event: any) => {
       break;
     case 'PrintOutLabel':
       PrintOutLabel(event);
+      break;
+    case 'SendPlanStatus':
+      SendPlanStatus(event);
+      break;
+    case 'SendPlanRollBack':
+      SendPlanRollBack(event);
+      break;
+    case 'MaterialChangeStatus':
+      MaterialChangeStatus(event);
+      break;
+    case 'SendPlan':
+      SendPlan(event);
+      break;
+    case 'MaterialChange':
+      MaterialChange(event);
+      break;
+    case 'MaterialChangeRollBack':
+      MaterialChangeRollBack(event);
       break;
     default:
       break;

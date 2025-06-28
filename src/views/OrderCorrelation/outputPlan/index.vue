@@ -15,6 +15,12 @@
         @ExportOne="ExportOne"
         @clickStart="Start"
         @clickDelete="clickDel"
+        @SendPlanStatus="SendPlanStatus"
+        @SendPlanRollBack="SendPlanRollBack"
+        @MaterialChangeStatus="MaterialChangeStatus"
+        @SendPlan="SendPlan"
+        @MaterialChange="MaterialChange"
+        @MaterialChangeRollBack="MaterialChangeRollBack"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -127,7 +133,7 @@ import {
 } from 'element-plus';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import type { FormInstance, FormRules } from 'element-plus';
-import { configApi, DataApi, delApi } from '@/api/configApi/index';
+import { configApi, DataApi, delApi, commonApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
@@ -191,7 +197,9 @@ const getData: any = async (val: string) => {
           Filter.value = item[import.meta.env.VITE_APP_key];
         }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
-          But.value = item[import.meta.env.VITE_APP_key];
+          But.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
           funTable(
@@ -395,6 +403,155 @@ const clickDel = (obj: any) => {
       });
     });
 };
+const MaterialChange = obj => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要操作的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: sendId.value[0]
+    }
+  };
+  ElMessageBox.confirm('确定操作？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    commonApi(data).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        sendId.value = [];
+        TabRef.value.handleRemoveSelectionChange();
+      }
+    });
+  });
+};
+
+const MaterialChangeRollBack = obj => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要操作的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: sendId.value[0]
+    },
+    params: {
+      UID: sendId.value[0]
+    }
+  };
+  ElMessageBox.confirm('确定操作？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    commonApi(data).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        sendId.value = [];
+        TabRef.value.handleRemoveSelectionChange();
+      }
+    });
+  });
+};
+
+const SendPlan = obj => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要操作的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: sendId.value[0]
+    }
+  };
+  ElMessageBox.confirm('确定操作？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    commonApi(data).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        sendId.value = [];
+        TabRef.value.handleRemoveSelectionChange();
+      }
+    });
+  });
+};
+
+const SendPlanRollBack = obj => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要操作的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: sendId.value[0]
+    },
+    params: {
+      UID: sendId.value[0]
+    }
+  };
+  ElMessageBox.confirm('确定操作？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    commonApi(data).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        sendId.value = [];
+        TabRef.value.handleRemoveSelectionChange();
+      }
+    });
+  });
+};
+
+const SendPlanStatus = () => {
+  console.log('SendPlanStatus');
+};
+const MaterialChangeStatus = () => {
+  console.log('MaterialChangeStatus');
+};
+
 //表格按钮撤销排产
 const clickRevoke = (scope: any, obj: any) => {
   console.log(obj, '撤销排产');
