@@ -85,15 +85,15 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="showDialog" title="存货分类" width="80%">
+  <el-dialog v-model="showDialog" title="物料分类" width="80%">
     <el-row :gutter="24" style="margin-top: 12px">
       <el-col :span="8">
-        <el-form-item label="存货分类编号" label-width="150">
+        <el-form-item label="物料分类编号" label-width="150">
           <el-input v-model="searchParams.cInvClassCode" autocomplete="off" />
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="存货分类" label-width="150">
+        <el-form-item label="物料分类" label-width="150">
           <el-input v-model="searchParams.cInvClassName" autocomplete="off" />
         </el-form-item>
       </el-col>
@@ -109,8 +109,8 @@ defineExpose({
       @current-change="handleCurrentChange"
       height="600"
     >
-      <el-table-column property="cInvClassName" label="存货分类" />
-      <el-table-column property="cInvClassCode" label="存货分类编号" />
+      <el-table-column property="cInvClassName" label="物料分类" />
+      <el-table-column property="cInvClassCode" label="物料分类编号" />
     </el-table>
     <pagination
       v-if="total > 0"

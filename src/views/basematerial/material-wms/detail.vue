@@ -33,10 +33,10 @@ onActivated(async () => {
         :gutter="24"
         style="margin-top: 12px; font-weight: 700; font-size: 14px"
       >
-        <el-col :span="6"> 存货分类：{{ infoData.cInvClassName }} </el-col>
-        <el-col :span="6"> 存货编号：{{ infoData.cInvCode }} </el-col>
-        <el-col :span="6"> 存货名称：{{ infoData.cInvName }} </el-col>
-        <el-col :span="6"> 存货规格：{{ infoData.cInvstd }} </el-col>
+        <el-col :span="6"> 物料分类：{{ infoData.cInvClassName }} </el-col>
+        <el-col :span="6"> 物料编号：{{ infoData.cInvCode }} </el-col>
+        <el-col :span="6"> 物料名称：{{ infoData.cInvName }} </el-col>
+        <el-col :span="6"> 物料规格：{{ infoData.cInvStd }} </el-col>
       </el-row>
       <el-row
         :gutter="24"
@@ -105,15 +105,15 @@ onActivated(async () => {
       >
         <el-col :span="6"> 预警规则：{{ wmsData.cWarnRuleCode }} </el-col>
         <el-col :span="6"> 出入库方式：{{ wmsData.cInOutTypeCode }} </el-col>
-        <el-col :span="6"> 默认仓库：{{ wmsData.cWareHouseCode }} </el-col>
-        <el-col :span="6"> 默认库区：{{ wmsData.cWareHouseAreaCode }} </el-col>
+        <el-col :span="6"> 默认仓库：{{ wmsData.cWareHouseName }} </el-col>
+        <el-col :span="6"> 默认库区：{{ wmsData.cWareHouseAreaName }} </el-col>
       </el-row>
       <el-row
         :gutter="24"
         style="margin-top: 12px; font-weight: 700; font-size: 14px"
       >
         <el-col :span="6">
-          默认库位：{{ wmsData.cWareHouseLocationCode }}
+          默认库位：{{ wmsData.cWareHouseLocationName }}
         </el-col>
         <el-col :span="6"> 最小包装量：{{ wmsData.iMinPackage }} </el-col>
       </el-row>

@@ -58,8 +58,8 @@ const warehouseLocationModalRef = ref();
 const materialModalRef = ref();
 
 const rules = ref({
-  cInvCode: [{ required: true, message: '请输入存货编号', trigger: 'change' }],
-  cInvName: [{ required: true, message: '请输入存货名称', trigger: 'change' }],
+  cInvCode: [{ required: true, message: '请输入物料编号', trigger: 'change' }],
+  cInvName: [{ required: true, message: '请输入物料名称', trigger: 'change' }],
   IsBatch: [{ required: true, message: '请选择批次管理', trigger: 'blur' }],
   IsStore: [{ required: true, message: '请选择库存管理', trigger: 'blur' }],
   IsQC: [{ required: true, message: '请选择质检', trigger: 'blur' }]
@@ -284,7 +284,7 @@ onActivated(() => {
         <el-row :gutter="24" style="margin-top: 12px">
           <el-col :span="6">
             <el-form-item
-              label="存货分类"
+              label="物料分类"
               label-width="150"
               prop="cInvClassName"
             >
@@ -302,7 +302,7 @@ onActivated(() => {
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="存货编号" label-width="150" prop="cInvCode">
+            <el-form-item label="物料编号" label-width="150" prop="cInvCode">
               <el-input
                 v-model="formData.cInvCode"
                 autocomplete="off"
@@ -311,12 +311,12 @@ onActivated(() => {
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="存货名称" label-width="150" prop="cInvName">
+            <el-form-item label="物料名称" label-width="150" prop="cInvName">
               <el-input v-model="formData.cInvName" autocomplete="off" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="存货规格" label-width="150" prop="cInvstd">
+            <el-form-item label="物料规格" label-width="150" prop="cInvstd">
               <el-input v-model="formData.cInvstd" autocomplete="off" />
             </el-form-item>
           </el-col>
