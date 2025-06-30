@@ -95,7 +95,7 @@ service.interceptors.response.use(
         message: errorMsg || '出错！！！',
         type: 'error',
         showClose: true,
-        duration: isLongMessage ? 0 : 3000
+        duration: isLongMessage ? 0 : 10000
       });
     } else if (status == '200') {
       return response.data;
@@ -117,7 +117,7 @@ service.interceptors.response.use(
           message: errorMsg || '',
           type: 'error',
           showClose: true,
-          duration: isLongMessage ? 0 : 3000
+          duration: isLongMessage ? 0 : 10000
         });
         return Promise.reject(response.data);
       } else {
@@ -125,7 +125,7 @@ service.interceptors.response.use(
           message: response.data.errmsg[0].Value,
           type: 'error',
           showClose: true,
-          duration: isLongMessage ? 0 : 3000
+          duration: isLongMessage ? 0 : 10000
         });
         return Promise.reject(response.data);
       }
@@ -163,7 +163,7 @@ service.interceptors.response.use(
           message: msg || '系统出错！！！',
           type: 'error',
           showClose: true,
-          duration: isLongMessage ? 0 : 3000
+          duration: isLongMessage ? 0 : 10000
         });
       }
     }
