@@ -60,7 +60,10 @@
       </el-button>
       <!-- 下载模版 -->
       <el-button
-        v-else-if="item.Resource.cAttributeCode == 'GetTemplate'"
+        v-else-if="
+          item.Resource.cAttributeCode == 'GetTemplate' ||
+          item.Resource.cAttributeCode == 'GetUpdateTemplate'
+        "
         type="primary"
         @click="clickDonwnFile(item)"
         >{{ item.Resource.cAttributeName }}</el-button
@@ -71,7 +74,8 @@
         v-else-if="
           item.Resource.cAttributeCode == 'ImportOrder' ||
           item.Resource.cAttributeCode == 'Import' ||
-          item.Resource.cAttributeCode == 'UploadFile'
+          item.Resource.cAttributeCode == 'UploadFile' ||
+          item.Resource.cAttributeCode == 'ImportUpdate'
         "
         v-model:file-list="fileList"
         class="fileSty"
@@ -306,7 +310,9 @@ const emits = defineEmits([
   'MaterialChangeStatus',
   'SendPlan',
   'MaterialChange',
-  'MaterialChangeRollBack'
+  'MaterialChangeRollBack',
+  'GetUpdateTemplate',
+  'ImportUpdate'
 ]);
 
 watch(
@@ -340,8 +346,6 @@ const beforeUpload = () => {
   }
 };
 const SuccessFun = (response: any, uploadFile: any, uploadFiles: any) => {
-  // console.log(1111);
-
   const loadingInstance = ElLoading.service();
   loadingInstance.close();
   emits('ExpotrFile', { uid: guid() });
@@ -817,6 +821,12 @@ const MaterialChange = obj => {
 const MaterialChangeRollBack = obj => {
   emits('MaterialChangeRollBack', obj);
 };
+const GetUpdateTemplate = obj => {
+  emits('GetUpdateTemplate', obj);
+};
+const ImportUpdate = obj => {
+  emits('ImportUpdate', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1211,6 +1221,12 @@ const clickButton = (event: any) => {
       break;
     case 'MaterialChangeRollBack':
       MaterialChangeRollBack(event);
+      break;
+    case 'GetUpdateTemplate':
+      GetUpdateTemplate(event);
+      break;
+    case 'ImportUpdate':
+      ImportUpdate(event);
       break;
     default:
       break;
