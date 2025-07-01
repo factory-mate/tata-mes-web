@@ -853,11 +853,13 @@ const clickDonwnFile = (item: any) => {
     .then(res => {
       if (res.status == 200) {
         const timestamp = Date.now();
-        window.location.href =
+        window.open(
           res.data.cFilePath +
-          res.data.cFileReName +
-          res.data.cFileSuffix +
-          `?v=${timestamp}`;
+            res.data.cFileReName +
+            res.data.cFileSuffix +
+            `?v=${timestamp}`,
+          '_blank'
+        );
       }
     })
     .finally(() => {
