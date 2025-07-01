@@ -408,8 +408,18 @@ const funTable = (arr: Array<any>) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  const conditions = [];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   if (AxiosData.value.Resource.cUrl === '/api/MES_PROJECT/GetForPage') {
     sendMID.value = '';
+  }
+  if (AxiosData.value.Resource.cUrl === '/api/MES_PROJECT/GetForPage') {
+    conditions.push('cProjectCode=VERIFY_VOUCH');
+  }
+  if (sendMID.value) {
+    conditions.push(`Mid=${sendMID.value}`);
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -418,12 +428,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions:
-        sendMID.value && !Conditions.value
-          ? `Mid=${sendMID.value}`
-          : sendMID.value && Conditions.value
-          ? `${Conditions.value}&&Mid=${sendMID.value}`
-          : Conditions.value
+      Conditions: conditions.join(' && ')
     }
   };
   try {
