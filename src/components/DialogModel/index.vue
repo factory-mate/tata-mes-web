@@ -17,7 +17,7 @@
         v-if="FormDatas.length"
         :model="ruleForm"
         :rules="rules"
-        :label-width="Route.name == 'DictionaryFile' ? '250px' : '120px'"
+        :label-width="getLabelWidth()"
         status-icon
       >
         <template v-for="item in FormDatas" :key="item.UID">
@@ -568,6 +568,16 @@ const { tableAxios } = inject('tableAxios') as {
 };
 const optionData = ref([]) as any;
 const isSubmitting = ref(false);
+
+const getLabelWidth = () => {
+  if (Route.name == 'ProductLineStandardCapacity') {
+    return '200px';
+  }
+  if (Route.name == 'DictionaryFile') {
+    return '250px';
+  }
+  return '120px';
+};
 //form
 watch(
   props,

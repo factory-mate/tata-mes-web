@@ -102,7 +102,7 @@
     </el-card>
     <!-- 弹窗 -->
     <Odialog
-      width="450px"
+      width="500px"
       :dialogFormVisible="ZZdialogFormVisible"
       :title="title"
       :objData="objData"
@@ -232,7 +232,7 @@ const clickTableBut = (scope: any, event: any) => {
     case 'View':
       clickView(scope, event);
       break;
-    case 'Edit':
+    case 'SaveEdit':
       clickEditTable(scope, event);
       break;
     case 'Delete':

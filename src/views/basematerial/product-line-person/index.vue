@@ -232,7 +232,7 @@ const clickTableBut = (scope: any, event: any) => {
     case 'View':
       clickView(scope, event);
       break;
-    case 'Edit':
+    case 'SaveEdit':
       clickEditTable(scope, event);
       break;
     case 'Delete':
