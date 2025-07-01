@@ -49,7 +49,10 @@ const getWDList = () => {
     conditions = 'cModelCode=TD001';
   }
   const cDataCode = window.sessionStorage.getItem('Where:cDataCode');
-  if (route.name === 'AddBusineScen' && cDataCode) {
+  if (
+    (route.name === 'AddBusineScen' || route.name === 'RuleAuditEdit') &&
+    cDataCode
+  ) {
     conditions = 'cModelCode=' + cDataCode;
   }
   const data = {

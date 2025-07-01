@@ -53,7 +53,8 @@
               :rows="
                 (Route.name == 'AddBusineScen' ||
                   Route.name == 'AddBusineScenEdit' ||
-                  Route.name == 'AddBusineScenView') &&
+                  Route.name == 'AddBusineScenView' ||
+                  Route.name == 'RuleAuditEdit') &&
                 ['条件表达式', '描述'].includes(item.cAttributeName) &&
                 6
               "
@@ -273,7 +274,7 @@
       :ruleForm="ruleForm"
     ></searchModel>
   </div>
-  <div v-if="Route.name === 'AddBusineScen'">
+  <div v-if="Route.name === 'AddBusineScen' || Route.name == 'RuleAuditEdit'">
     <!-- <div style="margin-top: 10px" v-if="ruleForm.cLamdaTypeCode === 'Where'">
       <BDS
         :Head="props.Head"
@@ -558,12 +559,12 @@ onMounted(() => {
   }
 });
 $bus.on('BDSGET', (val: any) => {
-  if (Route.name == 'AddBusineScen') {
+  if (Route.name == 'AddBusineScen' || Route.name == 'RuleAuditEdit') {
     funHeadview();
   }
 });
 $bus.on('SETBDS', (val: any) => {
-  if (Route.name == 'AddBusineScen') {
+  if (Route.name == 'AddBusineScen' || Route.name == 'RuleAuditEdit') {
     ruleForm.value.cLamda = val;
   }
 });
@@ -571,7 +572,10 @@ const rules = computed(() => {
   let obj: any = {};
   HeadData.value
     .filter((item: { IsRequest: boolean }) => {
-      if (Route.name === 'AddBusineScen' && Route.meta.title.match(/新增/gi)) {
+      if (
+        (Route.name === 'AddBusineScen' || Route.name == 'RuleAuditEdit') &&
+        Route.meta.title.match(/新增/gi)
+      ) {
         if (item.cAttributeName === '条件表达式') {
           return false;
         }
@@ -1801,7 +1805,8 @@ const selectData = (val: any) => {
     if (
       Route.name == 'AddBusineScen' ||
       Route.name == 'AddBusineScenEdit' ||
-      Route.name == 'AddBusineScenView'
+      Route.name == 'AddBusineScenView' ||
+      Route.name == 'RuleAuditEdit'
     ) {
       if (AttributeCode.value == 'cParentName') {
         ruleForm.value['cParentName'] =
@@ -2408,7 +2413,8 @@ const newAdd = () => {
   } else if (
     Route.name == 'AddBusineScen' ||
     Route.name == 'AddBusineScenEdit' ||
-    Route.name == 'AddBusineScenView'
+    Route.name == 'AddBusineScenView' ||
+    Route.name == 'RuleAuditEdit'
   ) {
     dataValue = { Mid: MID.value, models: ruleForm.value.models };
     //指标档案
@@ -2789,6 +2795,7 @@ const getFormItemLength = item => {
   if (
     Route.name == 'AddBusineScen' ||
     Route.name == 'AddBusineScenEdit' ||
+    Route.name == 'RuleAuditEdit' ||
     (Route.name == 'AddBusineScenView' &&
       (item.cAttributeName === '条件表达式' || item.cAttributeName === '描述'))
   ) {

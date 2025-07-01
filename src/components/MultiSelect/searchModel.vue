@@ -177,6 +177,7 @@ watch(
       }
     } else if (
       (Route.name === 'AddBusineScen' ||
+        Route.name === 'RuleAuditEdit' ||
         Route.name === 'newProductPlan' ||
         Route.name === 'newProductPlanView') &&
       newValue.codeType === 'ManageCenter.SYS_DICTONARY.M.FormList' &&
