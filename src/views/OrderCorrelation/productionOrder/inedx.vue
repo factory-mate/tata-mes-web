@@ -693,7 +693,7 @@ const BOMOperation = (obj: any) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    ElLoading.service({ lock: true, text: '加载中.....' });
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
     DataApi(data).then(res => {
       if (res.status == 200) {
         tableAxios();
@@ -707,9 +707,8 @@ const BOMOperation = (obj: any) => {
           type: 'error',
           message: res.msg || '失败'
         });
-        console.log('出错了');
       }
-      ElLoading.service().close();
+      loading.close();
     });
   });
 };

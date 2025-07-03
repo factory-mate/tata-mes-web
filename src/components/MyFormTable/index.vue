@@ -514,13 +514,9 @@ const filterMethod = (value: string, row: any, column: any) => {
 };
 
 const labelSty = (val: any, prop: any, i: any) => {
-  // console.log(prop,i,"---sss");
-  // console.log(tableDataValVVV,"---tableDataValVVV");
-
+  console.log(val, prop, i);
   if (prop) {
     if (i > 0) {
-      // console.log(val,tableDataValVVV.value[i-1][prop]);
-
       if (val != tableDataValVVV.value[i - 1][prop]) {
         return true;
       } else {

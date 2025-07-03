@@ -92,7 +92,7 @@ service.interceptors.response.use(
     if (status == '500') {
       ElLoading.service().close();
       ElMessage({
-        message: errorMsg || '出错！！！',
+        message: errorMsg?.substring(0, 5000) || '出错！！！',
         type: 'error',
         showClose: true,
         duration: isLongMessage ? 0 : 10000

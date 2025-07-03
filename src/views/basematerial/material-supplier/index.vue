@@ -13,6 +13,8 @@
         :ToolBut="But"
         @clickDelete="clickDel"
         @clickAdd="clickAdd"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -48,11 +50,10 @@
                                 </el-button>
                             </template> -->
               <template
-                v-for="(item, i) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i == 0 || i == 1"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -102,6 +103,7 @@
     </el-card>
     <!-- 弹窗 -->
     <Odialog
+      width="500px"
       :dialogFormVisible="ZZdialogFormVisible"
       :title="title"
       :objData="objData"
@@ -121,6 +123,7 @@ import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
 import Odialog from '@/components/DialogModel/index.vue';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import {
@@ -517,6 +520,39 @@ const handleSelectionChange = (arr: any) => {
   } else {
     sendIdArr.value = [];
   }
+};
+
+//按钮导出所有
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 9999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '物料供应商对照-所有');
+  ElLoading.service().close();
+};
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '物料供应商对照');
+  ElLoading.service().close();
 };
 
 const data = reactive({
