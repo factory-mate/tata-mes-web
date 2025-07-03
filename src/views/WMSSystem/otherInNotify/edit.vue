@@ -482,7 +482,7 @@ const SaveEdit = (obj: any) => {
   }
   let error = false;
   TABRef.value.tableDataVal.forEach(i => {
-    if (i.nQuantity < i.nAccQuantity) {
+    if (Number(i.nQuantity) < Number(i.nAccQuantity)) {
       error = true;
     }
   });
