@@ -382,6 +382,23 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'productLine') {
+    switch (row.label) {
+      case '生产线编号':
+      case '生产线名称':
+      case '产线别名':
+      case '负责人名称':
+      case '产线优先级':
+      case '产能上限':
+      case '产能下限':
+      case '允许超产能':
+      case '是否启用':
+      case '修改人名称':
+        return 80;
+      default:
+        break;
+    }
+  }
   if (Route.name === 'TemperedGlassStat') {
     switch (row.label) {
       case '单号':
