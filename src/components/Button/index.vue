@@ -857,13 +857,16 @@ const clickDonwnFile = (item: any) => {
     .then(res => {
       if (res.status == 200) {
         const timestamp = Date.now();
-        window.open(
+        const newWindow = window.open(
           res.data.cFilePath +
             res.data.cFileReName +
             res.data.cFileSuffix +
             `?v=${timestamp}`,
           '_blank'
         );
+        setTimeout(() => {
+          newWindow.close();
+        }, 2000);
       }
     })
     .finally(() => {
