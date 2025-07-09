@@ -772,13 +772,9 @@ const Schedule = (obj: any) => {
   DataApi(data).then(res => {
     if (res.status == 200) {
       ProcessdiaRef.value.DiaOpen();
-      // ElMessage({
-      //     type: 'success',
-      //     message: res.msg||'成功',
-      // })
       ProcessData.value = res.data;
-      count.value = 5; //倒计时
-      Verification(); //循环接口
+      count.value = 5;
+      Verification();
     } else {
       ElMessage({
         type: 'error',

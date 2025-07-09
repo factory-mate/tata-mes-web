@@ -104,6 +104,11 @@
         :page-sizes="[20, 50, 100]"
       />
     </el-card>
+    <ProcessDialog
+      ref="ProcessdiaRef"
+      :obj="ProcessData"
+      @CloseTC="CloseTC"
+    ></ProcessDialog>
   </div>
 </template>
 
@@ -115,7 +120,8 @@ import {
   nextTick,
   computed,
   watch,
-  onActivated
+  onActivated,
+  onUnmounted
 } from 'vue';
 import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import myTable from '@/components/MyTable/index.vue';
@@ -131,6 +137,7 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
+import ProcessDialog from '@/components/ProgressDialog/index.vue';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { configApi, DataApi, delApi, commonApi } from '@/api/configApi/index';
@@ -155,8 +162,19 @@ const tabType = ref(true);
 const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
-
+const timer = ref();
+const count = ref(0);
+const ProcessData = ref({}) as any;
+const ProcessdiaRef = ref();
 const initType = ref(true);
+
+const CloseTC = (val: any) => {
+  if (val == false) {
+    clearInterval(timer.value);
+    timer.value = null;
+  }
+};
+
 onActivated(() => {
   if (Route.name === 'outputPlan') {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -545,11 +563,76 @@ const SendPlanRollBack = obj => {
   });
 };
 
-const SendPlanStatus = () => {
+const SendPlanStatus = obj => {
   console.log('SendPlanStatus');
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: []
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      ProcessdiaRef.value.DiaOpen();
+      ProcessData.value = res.data;
+      count.value = 5;
+      autoFetchSendPlanStatus(obj);
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg || '失败'
+      });
+    }
+    loading.close();
+  });
 };
-const MaterialChangeStatus = () => {
+
+const MaterialChangeStatus = obj => {
   console.log('MaterialChangeStatus');
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: []
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      ProcessdiaRef.value.DiaOpen();
+      ProcessData.value = res.data;
+      count.value = 5;
+      autoFetchMaterialChangeStatus(obj);
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg || '失败'
+      });
+    }
+    loading.close();
+  });
+};
+
+const autoFetchSendPlanStatus = obj => {
+  timer.value = setInterval(() => {
+    if (count.value > 0 && count.value <= 5) {
+      count.value--;
+    } else if (count.value === 0) {
+      SendPlanStatus(obj);
+      clearInterval(timer.value);
+      timer.value = null;
+    }
+  }, 1000);
+};
+
+const autoFetchMaterialChangeStatus = obj => {
+  timer.value = setInterval(() => {
+    if (count.value > 0 && count.value <= 5) {
+      count.value--;
+    } else if (count.value === 0) {
+      autoFetchMaterialChangeStatus(obj);
+      clearInterval(timer.value);
+      timer.value = null;
+    }
+  }, 1000);
 };
 
 //表格按钮撤销排产
@@ -784,6 +867,11 @@ const newList = (val: any) => {
 const renew = () => {
   getData(Route.meta.ModelCode);
 };
+
+onUnmounted(() => {
+  clearInterval(timer.value);
+  timer.value = null;
+});
 </script>
 
 <style scoped lang="scss">
