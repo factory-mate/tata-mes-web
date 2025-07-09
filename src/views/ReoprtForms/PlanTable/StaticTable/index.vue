@@ -228,7 +228,7 @@ const tableAxios = async () => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value + ' cFactoryUnitName asc',
+      OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
   };
@@ -404,7 +404,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'dPlanDateStart,cBatch,cFactoryUnitCode'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -417,7 +417,7 @@ const ClickSearch = (val: any) => {
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'dPlanDateStart,cBatch,cFactoryUnitCode';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
