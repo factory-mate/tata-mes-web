@@ -93,6 +93,8 @@
           @SaveEditWMS="SaveEditWMS"
           @SaveEditExtend="SaveAddExtend"
           @InfoEdit="InfoEdit"
+          @SaveEdit="SaveEditBase"
+          @SaveAdd="SaveAddBase"
           @Copy="Copy"
         ></ButtonViem>
       </div>
