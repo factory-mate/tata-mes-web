@@ -1021,7 +1021,12 @@ const selectData = (val: any) => {
   FormData.value[AttributeCode.value] = '11';
   // 单选
   if (val.type === false) {
-    if (
+    if (Route.name === 'ProductLinePerson') {
+      if (AttributeCode.value == 'cDefindParm04') {
+        ruleForm.value.cDefindParm04 = val.value[0].cEmployeeName;
+        ruleForm.value.cDefindParm05 = val.value[0].cEmployeeCode;
+      }
+    } else if (
       titleName.value == '换算单位编码' ||
       titleName.value == '辅计量单位编码'
     ) {

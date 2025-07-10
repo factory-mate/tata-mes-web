@@ -48,11 +48,10 @@
                                 </el-button>
                             </template> -->
               <template
-                v-for="(item, i) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i == 0 || i == 1"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
