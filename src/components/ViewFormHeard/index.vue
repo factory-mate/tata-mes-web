@@ -2416,7 +2416,7 @@ const newAdd = () => {
     Route.name == 'AddBusineScenView' ||
     Route.name == 'RuleAuditEdit'
   ) {
-    dataValue = { Mid: MID.value, models: ruleForm.value.models };
+    dataValue = { Mid: MID.value, models: ruleForm.value.models ?? [] };
     //指标档案
   } else if (Route.name == 'AddTarget' || Route.name == 'EditTarget') {
     // 下拉数据------------------------
@@ -2714,6 +2714,7 @@ const newAdd = () => {
         // 更新列表数据
         $bus.emit('tableUpData', { name: pathName.value });
       } else {
+        console.log(1);
         ElMessage({
           message: res.msg,
           type: 'error'
