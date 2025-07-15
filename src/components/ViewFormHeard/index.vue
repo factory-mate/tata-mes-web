@@ -2451,7 +2451,9 @@ const newAdd = () => {
       ruleForm.value.cDefindParm01List = list;
     }
 
-    ruleForm.value.cInvCode = window.sessionStorage.getItem('cInvCode');
+    console.log(ruleForm.value);
+    ruleForm.value.cInvCode =
+      window.sessionStorage.getItem('cInvCode') ?? ruleForm.value.cInvCode;
   } else if (Route.name == 'material' || Route.name == 'materialView') {
     let list = [] as any;
     if (ruleForm.value.cDefindParm01 && ruleForm.value.cDefindParm01.length) {
