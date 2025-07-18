@@ -185,6 +185,12 @@ watch(
     ) {
       Conditions.value = `cDictonaryTypeCode=${newValue.metadata.cDictonaryTypeCode}`;
     } else if (
+      // #3855
+      Route.name === 'RuleAuditEdit' &&
+      newValue.codeType === 'ManageCenter.MES_PROJECT_S_S.M.FormList'
+    ) {
+      Conditions.value = `MID=${Route.params.rowId}`;
+    } else if (
       Route.name === 'AddGrindOrder' &&
       newValue.codeType === 'TMS.TMS_INVETORY.M.FormList'
     ) {
