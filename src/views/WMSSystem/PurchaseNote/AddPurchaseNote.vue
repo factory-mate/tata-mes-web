@@ -750,7 +750,7 @@ const setMainTableWidth = row => {
     case '剩余数量':
     case '采购数量':
     case '单位':
-      return 50;
+      return 60;
     case 'SAP物料编码':
       return 90;
     case '交货日期':
