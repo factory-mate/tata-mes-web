@@ -778,6 +778,7 @@ const setWidth = row => {
     case '未到货数量':
     case '到货数量':
     case '每包数量':
+    case '箱数':
       return 100;
     case '剩余数量':
     case '单位':
