@@ -2267,7 +2267,9 @@ const newAdd = () => {
   if (
     Route.name == 'newPurchasedGoods' ||
     Route.name == 'newPurchasedGoodsEdit' ||
-    Route.name == 'newPurchasedGoodsView'
+    Route.name == 'newPurchasedGoodsView' ||
+    Route.name == 'TransferRecordAdd' ||
+    Route.name == 'TransferRecordEdit'
   ) {
     ruleForm.value.IsAuth = true;
     const items = ButObjTableData.value.map(i => ({

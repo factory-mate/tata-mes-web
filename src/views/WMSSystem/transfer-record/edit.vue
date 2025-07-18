@@ -176,9 +176,11 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -296,6 +298,7 @@ const getComboBoxFun = async () => {
 // table 数据整合
 const funTable = (arr: Array<any>) => {
   modelGrid.value = arr;
+  tableButton.value = [];
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       if (item.IsShow) {
