@@ -270,9 +270,7 @@ const tableAxios = async () => {
   chartData.value = [];
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
-    url:
-      ('http://171.13.38.94:10700' ?? AxiosData.value.Resource.cServerIP) +
-      AxiosData.value.Resource.cUrl,
+    url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
