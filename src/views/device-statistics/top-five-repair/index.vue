@@ -66,6 +66,9 @@
         :page-sizes="[20, 50, 100]"
       />
     </el-card>
+    <el-card style="margin-top: 20px">
+      <v-chart style="height: 400px" :option="chartOptions" />
+    </el-card>
     <!-- 组织管理弹窗 -->
     <Odialog
       :dialogFormVisible="ZZdialogFormVisible"
@@ -139,20 +142,68 @@ const sendId = ref([]) as any;
 const sendIdArr = ref([]) as any;
 const butmodeCode = ref('');
 const initType = ref(true);
+
+const chartData = ref([]);
+const chartOptions = computed(() => ({
+  textStyle: {
+    fontFamily: 'inherit'
+  },
+  backgroundColor: '',
+  title: {
+    text: '',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross'
+    }
+  },
+  grid: {
+    left: 0,
+    right: 0,
+    bottom: 10,
+    top: 50,
+    tooltip: true,
+    containLabel: true
+  },
+  // legend: {
+  //   orient: 'vertical',
+  //   left: 0
+  // },
+  xAxis: {
+    type: 'value',
+    min: 0,
+    max: 100
+  },
+  yAxis: [
+    {
+      type: 'category',
+      name: '设备',
+      axisTick: {
+        alignWithLabel: true
+      }
+    }
+  ],
+  series: [
+    { type: 'bar', name: '维修次数', label: { show: true, position: 'top' } }
+  ],
+  dataset: {
+    dimensions: [
+      { name: 'cDeviceName', displayName: '设备名称' },
+      { name: 'nQuantity', displayName: '维修次数' }
+    ],
+    source: chartData.value
+  }
+}));
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
-  initType.value = false;
+  getData(Route.meta.ModelCode);
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
@@ -222,9 +273,12 @@ const clickTableBut = (scope: any, event: any) => {
 //表格数据查询
 const tableAxios = async () => {
   tableData.value = [];
+  chartData.value = [];
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
-    url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
+    url:
+      ('http://171.13.38.94:10700' ?? AxiosData.value.Resource.cServerIP) +
+      AxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
@@ -244,6 +298,7 @@ const tableAxios = async () => {
           };
         }
       );
+      chartData.value = (res.data?.data ?? []).reverse();
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();
@@ -404,7 +459,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'iIndex desc'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -417,7 +472,7 @@ const ClickSearch = (val: any) => {
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'iIndex desc';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
@@ -444,7 +499,7 @@ const ExportAll = obj => {
     data: {
       PageIndex: 1,
       PageSize: 9999,
-      OrderByFileds: '',
+      OrderByFileds: 'iIndex desc',
       Conditions: Conditions.value
     }
   };

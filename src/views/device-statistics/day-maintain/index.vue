@@ -145,14 +145,7 @@ onActivated(() => {
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
-  initType.value = false;
+  getData(Route.meta.ModelCode);
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {

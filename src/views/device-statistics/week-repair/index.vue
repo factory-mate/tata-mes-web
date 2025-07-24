@@ -2,11 +2,11 @@
   <!-- 排产统计报表页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
-    <FilterForm
+    <!-- <FilterForm
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
-    ></FilterForm>
+    ></FilterForm> -->
     <el-card>
       <!-- 按钮区域 -->
       <ButtonViem
@@ -145,14 +145,7 @@ onActivated(() => {
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
-  initType.value = false;
+  getData(Route.meta.ModelCode);
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {

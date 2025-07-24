@@ -66,6 +66,9 @@
         :page-sizes="[20, 50, 100]"
       />
     </el-card>
+    <el-card style="margin-top: 20px">
+      <v-chart style="height: 400px" :option="chartOptions" />
+    </el-card>
     <!-- 组织管理弹窗 -->
     <Odialog
       :dialogFormVisible="ZZdialogFormVisible"
@@ -139,20 +142,62 @@ const sendId = ref([]) as any;
 const sendIdArr = ref([]) as any;
 const butmodeCode = ref('');
 const initType = ref(true);
+
+const chartData = ref([]);
+const chartOptions = computed(() => ({
+  textStyle: {
+    fontFamily: 'inherit'
+  },
+  backgroundColor: '',
+  title: {
+    text: '',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross'
+    }
+  },
+  grid: {
+    left: 0,
+    right: 0,
+    bottom: 10,
+    top: 60,
+    tooltip: true,
+    containLabel: true
+  },
+  // legend: {
+  //   orient: 'vertical',
+  //   left: 0
+  // },
+  xAxis: {
+    type: 'category',
+    axisTick: {
+      alignWithLabel: true
+    }
+  },
+  yAxis: [{ type: 'value', name: '数量', min: 0, max: 1000 }],
+  series: [
+    { type: 'bar', name: '保养数', label: { show: true, position: 'top' } }
+  ],
+  dataset: {
+    dimensions: [
+      { name: 'cMonth', displayName: '月份' },
+      { name: 'nPlanQuantity', displayName: '保养数' },
+      { name: 'cYear', displayName: '年份' }
+    ],
+    source: chartData.value
+  }
+}));
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
-  initType.value = false;
+  getData(Route.meta.ModelCode);
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
@@ -222,9 +267,12 @@ const clickTableBut = (scope: any, event: any) => {
 //表格数据查询
 const tableAxios = async () => {
   tableData.value = [];
+  chartData.value = [];
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
-    url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
+    url:
+      ('http://171.13.38.94:10700' ?? AxiosData.value.Resource.cServerIP) +
+      AxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
@@ -244,6 +292,7 @@ const tableAxios = async () => {
           };
         }
       );
+      chartData.value = res.data?.data ?? [];
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();

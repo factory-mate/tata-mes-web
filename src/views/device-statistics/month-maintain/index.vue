@@ -2,11 +2,11 @@
   <!-- 排产统计报表页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
-    <FilterForm
+    <!-- <FilterForm
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
-    ></FilterForm>
+    ></FilterForm> -->
     <el-card>
       <!-- 按钮区域 -->
       <ButtonViem
@@ -65,6 +65,9 @@
         @pagination="changPage"
         :page-sizes="[20, 50, 100]"
       />
+    </el-card>
+    <el-card style="margin-top: 20px">
+      <v-chart style="height: 400px" :option="chartOptions" />
     </el-card>
     <!-- 组织管理弹窗 -->
     <Odialog
@@ -139,20 +142,73 @@ const sendId = ref([]) as any;
 const sendIdArr = ref([]) as any;
 const butmodeCode = ref('');
 const initType = ref(true);
+
+const chartData = ref([]);
+const chartOptions = computed(() => ({
+  textStyle: {
+    fontFamily: 'inherit'
+  },
+  backgroundColor: '',
+  title: {
+    text: '',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross'
+    }
+  },
+  grid: {
+    left: 0,
+    right: 0,
+    bottom: 10,
+    top: 120,
+    tooltip: true,
+    containLabel: true
+  },
+  legend: {
+    orient: 'vertical',
+    left: 0
+  },
+  xAxis: {
+    type: 'category',
+    axisTick: {
+      alignWithLabel: true
+    }
+  },
+  yAxis: [
+    { type: 'value', name: '数量', min: 0, max: 300 },
+    { type: 'value', name: '完成率', min: 0, max: 100 }
+  ],
+  series: [
+    { type: 'bar', name: '计划保养数', label: { show: true, position: 'top' } },
+    { type: 'bar', name: '完成保养数', label: { show: true, position: 'top' } },
+    {
+      type: 'line',
+      name: '完成率',
+      label: { show: true, position: 'top' },
+      yAxisIndex: 1
+    }
+  ],
+  dataset: {
+    dimensions: [
+      { name: 'cPersonGroupName', displayName: '人员组' },
+      { name: 'nPlanQuantity', displayName: '计划保养数' },
+      { name: 'nEndQuantity', displayName: '完成保养数' },
+      { name: 'iRate', displayName: '完成率' }
+    ],
+    source: chartData.value
+  }
+}));
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
-  initType.value = false;
+  getData(Route.meta.ModelCode);
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
@@ -222,9 +278,12 @@ const clickTableBut = (scope: any, event: any) => {
 //表格数据查询
 const tableAxios = async () => {
   tableData.value = [];
+  chartData.value = [];
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
-    url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
+    url:
+      ('http://171.13.38.94:10700' ?? AxiosData.value.Resource.cServerIP) +
+      AxiosData.value.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
@@ -244,6 +303,7 @@ const tableAxios = async () => {
           };
         }
       );
+      chartData.value = res.data?.data ?? [];
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();
