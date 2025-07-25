@@ -2018,7 +2018,9 @@ const selectData = (val: any) => {
     }
     //刀具档案
     if (Route.name == 'AddToolFile' || Route.name == 'EditToolFile') {
-      ruleForm.value['cInvClassCode'] = val.value[0].cInvClassCode || '';
+      if (AttributeCode.value === 'cInvClassName') {
+        ruleForm.value['cInvClassCode'] = val.value[0].cInvClassCode || '';
+      }
     }
     // 调拨单
     if (
