@@ -373,9 +373,11 @@ const clickEditTable = async (scope: any, obj: any) => {
   if (res.status === 200) {
     res.data.forEach((item: any) => {
       if (item.cPropertyClassTypeCode == 'Head') {
-        item[import.meta.env.VITE_APP_key].map((item: any) => {
-          item.Resource[item.Resource.cAttributeCode] = '';
-        });
+        item[import.meta.env.VITE_APP_key]
+          .sort(compare('iIndex', true))
+          .map((item: any) => {
+            item.Resource[item.Resource.cAttributeCode] = '';
+          });
         ZZFormData.value = item[import.meta.env.VITE_APP_key];
       }
       if (item.cPropertyClassTypeCode == 'ToolBut') {
@@ -413,9 +415,11 @@ const clickAdd = async (obj: { cIncludeModelCode: any }) => {
   if (res.status === 200) {
     res.data.forEach((item: any) => {
       if (item.cPropertyClassTypeCode == 'Head') {
-        item[import.meta.env.VITE_APP_key].map((item: any) => {
-          item.Resource[item.Resource.cAttributeCode] = '';
-        });
+        item[import.meta.env.VITE_APP_key]
+          .sort(compare('iIndex', true))
+          .map((item: any) => {
+            item.Resource[item.Resource.cAttributeCode] = '';
+          });
         ZZFormData.value = item[import.meta.env.VITE_APP_key];
       }
       if (item.cPropertyClassTypeCode == 'ToolBut') {
