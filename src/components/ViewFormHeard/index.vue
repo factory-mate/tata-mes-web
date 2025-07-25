@@ -1373,6 +1373,20 @@ const funHeadview = () => {
           });
           ruleForm.value.cDefindParm01 = list;
         }
+
+        if (res.data._INENTORY_INFO_EXTEND) {
+          ruleForm.value = {
+            ...ruleForm.value,
+            cDefindParm01:
+              res.data._INENTORY_INFO_EXTEND?.cDefindParm01List.map(
+                i => i.cDictonaryCode
+              ),
+            cDefindParm01List:
+              res.data._INENTORY_INFO_EXTEND?.cDefindParm01List,
+            cDefindParm02: res.data._INENTORY_INFO_EXTEND?.cDefindParm02,
+            cDefindParm03: res.data._INENTORY_INFO_EXTEND?.cDefindParm03
+          };
+        }
       }
       //到货单
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
