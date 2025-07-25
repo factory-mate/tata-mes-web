@@ -794,6 +794,8 @@ const SaveEdit = (obj: any, type = true) => {
   // // @ts-ignore
   // headRef.value.validate(obj);
   // // disa.value = true;
+  let iIndex = 10;
+
   const data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -801,7 +803,11 @@ const SaveEdit = (obj: any, type = true) => {
     // @ts-ignore
     data: {
       ...headRef.value.ruleForm,
-      Items: TABRef.value.tableDataVal,
+      Items: TABRef.value.tableDataVal.map(i => {
+        i.iIndex = iIndex;
+        iIndex += 10;
+        return i;
+      }),
       bCheckQuantity: type
     }
   };
