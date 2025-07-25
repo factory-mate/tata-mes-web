@@ -655,6 +655,14 @@ const SaveAdd = (obj: any, type = true) => {
   // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // // @ts-ignore
   // headRef.value.validate(obj);
+  let iIndex = 10;
+
+  const orderedTableData = tableData.value.map(i => {
+    i.iIndex = iIndex;
+    iIndex += 10;
+    return i;
+  });
+
   const data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -662,7 +670,7 @@ const SaveAdd = (obj: any, type = true) => {
     // @ts-ignore
     data: {
       ...headRef.value.ruleForm,
-      Items: tableData.value,
+      Items: orderedTableData,
       bCheckQuantity: type
     }
   };
