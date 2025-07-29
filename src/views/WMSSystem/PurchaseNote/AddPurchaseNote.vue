@@ -301,11 +301,7 @@ const getAddUser = async (code: any) => {
           ButOne.value = item[import.meta.env.VITE_APP_key].filter(
             (item: any) => item.Resource.cAttributeName == '保存'
           );
-          Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) =>
-              item.Resource.cAttributeName == '无来源添加' ||
-              item.Resource.cAttributeName == '参照申请单添加'
-          );
+          Buttwo.value = item[import.meta.env.VITE_APP_key];
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
           funTable(
