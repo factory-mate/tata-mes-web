@@ -1610,6 +1610,11 @@ const selectData = (val: any) => {
         ruleForm.value['cParentCode'] = val.value[0]['cVendorClassCode'];
       }
     }
+    if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+      if (AttributeCode.value == 'cVendorName') {
+        ruleForm.value['cVendorCode'] = val.value[0]['cVendorCode'];
+      }
+    }
     if (Route.name === 'addSupplierEdit' || Route.name === 'addSupplier') {
       if (AttributeCode.value === 'cVendorClassName') {
         ruleForm.value['cVendorClassName'] = val.value[0]['cVendorClassName'];

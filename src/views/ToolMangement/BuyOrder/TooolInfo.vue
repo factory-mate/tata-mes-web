@@ -134,7 +134,8 @@ import {
   ElTableColumn,
   ElMessage,
   ElMessageBox,
-  ElLoading
+  ElLoading,
+  ElPopconfirm
 } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
 import PopModel from '@/components/PopModel/model.vue';
@@ -510,11 +511,17 @@ const ThandleSelectionChange = (val: any) => {
   itemData.value = val;
 };
 //弹窗确认
-const Tconfirm = () => {
+const Tconfirm = async () => {
   if (
     headRef.value.ruleForm.cVendorName ||
     headRef.value.ruleForm.cVendorCode
   ) {
+    console.log(
+      '已指定供应商',
+      headRef.value.ruleForm.cVendorName,
+      headRef.value.ruleForm.cVendorCode,
+      itemData.value
+    );
     if (
       itemData.value.some(
         (item: any) =>
@@ -522,11 +529,21 @@ const Tconfirm = () => {
           item.cVendorName !== headRef.value.ruleForm.cVendorName
       )
     ) {
-      ElMessage({
-        type: 'error',
-        message: '已指定供应商，请选择该供应商的物料'
-      });
-      return;
+      try {
+        await ElMessageBox.confirm(
+          '与已指定供应商不批评，是否继续添加？',
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        );
+        const { cVendorCode, cVendorName } = itemData.value[0];
+        headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+      } catch {
+        return;
+      }
     }
   } else {
     const { cVendorCode, cVendorName } = itemData.value[0];
