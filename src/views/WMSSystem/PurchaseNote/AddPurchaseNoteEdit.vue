@@ -293,12 +293,10 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
           ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '保存'
+            (item: any) => item.Resource.cAttributeCode == 'SaveEdit'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) =>
-              item.Resource.cAttributeName == '无来源添加' ||
-              item.Resource.cAttributeName == '参照申请单添加'
+            (item: any) => item.Resource.cAttributeCode !== 'SaveEdit'
           );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {

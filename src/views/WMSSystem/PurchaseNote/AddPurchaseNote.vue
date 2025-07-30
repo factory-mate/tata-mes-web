@@ -299,9 +299,11 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
           ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '保存'
+            (item: any) => item.Resource.cAttributeCode == 'SaveAdd'
           );
-          Buttwo.value = item[import.meta.env.VITE_APP_key];
+          Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
+            (item: any) => item.Resource.cAttributeCode != 'SaveAdd'
+          );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
           funTable(
