@@ -209,6 +209,19 @@ watch(
           Conditions.value = '';
         }
       }
+    } else if (
+      Route.name == 'inspectionNormeAdd' ||
+      Route.name == 'inspectionNormeEdit' ||
+      Route.name == 'inspectionNormeView'
+    ) {
+      console.log(newValue);
+      if (newValue.titleName === '指标名称') {
+        if (newValue.ruleForm?.cProgramCode) {
+          Conditions.value = `cProgramCode=${newValue.ruleForm?.cProgramCode}`;
+        } else {
+          Conditions.value = '';
+        }
+      }
     } else {
       Conditions.value = '';
     }
