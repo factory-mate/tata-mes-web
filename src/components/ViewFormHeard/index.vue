@@ -1590,7 +1590,9 @@ const selectData = (val: any) => {
       if (AttributeCode.value === 'cStandardName') {
         ruleForm.value.cStandardCode = val.value[0].cStandardCode;
         ruleForm.value.cAnalysisTypeName = val.value[0].cAnalysisTypeName;
+        ruleForm.value.cAnalysisTypeCode = val.value[0].cAnalysisTypeCode;
         ruleForm.value.cCheckTypeName = val.value[0].cCheckTypeName;
+        ruleForm.value.cCheckTypeCode = val.value[0].cCheckTypeCode;
         ruleForm.value.nSore = val.value[0].nSore;
         ruleForm.value.cCheckQuantity = val.value[0].cCheckQuantity;
         ruleForm.value.cGuideMemo = val.value[0].cGuideMemo;
