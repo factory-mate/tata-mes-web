@@ -121,6 +121,7 @@ const $bus: any =
 const Route = useRoute();
 const router = useRouter();
 let Filter = ref([]) as any;
+const filterRef = ref(null);
 let But = ref([]) as any;
 // 表格配置数据
 const TabRef = ref();
@@ -496,6 +497,7 @@ const renew = () => {
   getData(Route.meta.ModelCode);
 };
 const ExportAll = obj => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
