@@ -157,74 +157,10 @@ const queryParams = ref({
 const dialogTypeVal: Ref<boolean> = ref(false);
 watch(
   propsData,
-  (newValue, oldValue) => {
+  newValue => {
     ajaxData.value = newValue.ajax || {};
     dialogTypeVal.value = newValue.dialogType;
-    if (
-      ['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name as any) &&
-      newValue.titleName === '寻线批次号'
-    ) {
-      Conditions.value = `cVouchTypeCode=01 && iStatus=1 && dProductDate=${
-        newValue.ruleForm.dProductDate.split(' ')[0]
-      }`;
-    } else if (
-      Route.name == 'AddPurchaseRequest' ||
-      Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView'
-    ) {
-      if (newValue.metadata?.cInvCode) {
-        // Conditions.value = `cInvCode=${newValue.metadata.cInvCode}`;
-      }
-    } else if (
-      (Route.name === 'AddBusineScen' ||
-        Route.name === 'RuleAuditEdit' ||
-        Route.name === 'newProductPlan' ||
-        Route.name === 'newProductPlanView') &&
-      newValue.codeType === 'ManageCenter.SYS_DICTONARY.M.FormList' &&
-      newValue.metadata?.cDictonaryTypeCode
-    ) {
-      Conditions.value = `cDictonaryTypeCode=${newValue.metadata.cDictonaryTypeCode}`;
-    } else if (
-      // #3855
-      Route.name === 'RuleAuditEdit' &&
-      newValue.codeType === 'ManageCenter.MES_PROJECT_S_S.M.FormList'
-    ) {
-      Conditions.value = `MID=${Route.params.rowId}`;
-    } else if (
-      Route.name === 'AddGrindOrder' &&
-      newValue.codeType === 'TMS.TMS_INVETORY.M.FormList'
-    ) {
-      Conditions.value = `IsRepair = true`;
-    } else if (
-      Route.name === 'AddPartolPlan' ||
-      Route.name === 'EditPatrolPlan'
-    ) {
-      if (newValue.titleName === '方案名称') {
-        Conditions.value = 'cProjectTypeCode=04';
-      }
-      if (newValue.titleName === '版本号') {
-        if (newValue.ruleForm?.projectNameUID) {
-          Conditions.value = `MID=${newValue.ruleForm?.projectNameUID}`;
-        } else {
-          Conditions.value = '';
-        }
-      }
-    } else if (
-      Route.name == 'inspectionNormeAdd' ||
-      Route.name == 'inspectionNormeEdit' ||
-      Route.name == 'inspectionNormeView'
-    ) {
-      console.log(newValue);
-      if (newValue.titleName === '指标名称') {
-        if (newValue.ruleForm?.cProgramCode) {
-          Conditions.value = `cProgramCode=${newValue.ruleForm?.cProgramCode}`;
-        } else {
-          Conditions.value = '';
-        }
-      }
-    } else {
-      Conditions.value = '';
-    }
+    processFilterLogic([], newValue);
     if (newValue.codeType && newValue.dialogType) {
       configData(newValue.codeType);
     } else {
@@ -300,7 +236,7 @@ const ClickSearch = (val: any) => {
     PageIndex: 1,
     PageSize: 20
   };
-  Conditions.value = filterModel(val.value);
+  processFilterLogic(val.value, propsData);
   if (ajaxData.value && ajaxData.value.url) {
     tableAxios_2(ajaxData.value);
   } else {
@@ -316,6 +252,7 @@ const resetForm = (val: any) => {
     PageIndex: 1,
     PageSize: 20
   };
+  processFilterLogic(val.value, propsData);
   if (ajaxData.value && ajaxData.value.url) {
     tableAxios_2(ajaxData.value);
   } else {
@@ -323,6 +260,79 @@ const resetForm = (val: any) => {
   }
   myTableRef.value.clearFilter();
 };
+
+const processFilterLogic = (val, p) => {
+  const conditions = [];
+  if (
+    Route.name == 'inspectionNormeAdd' ||
+    Route.name == 'inspectionNormeEdit' ||
+    Route.name == 'inspectionNormeView'
+  ) {
+    if (p.titleName === '指标名称') {
+      if (p.ruleForm?.cProgramCode) {
+        conditions.push(`cProgramCode=${p.ruleForm?.cProgramCode}`);
+      }
+    }
+  }
+
+  if (
+    ['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name) &&
+    p.titleName === '寻线批次号'
+  ) {
+    conditions.push(
+      `cVouchTypeCode=01 && iStatus=1 && dProductDate=${
+        p.ruleForm.dProductDate.split(' ')[0]
+      }`
+    );
+  }
+  if (
+    Route.name == 'AddPurchaseRequest' ||
+    Route.name == 'AddPurchaseRequestEdit' ||
+    Route.name == 'AddPurchaseRequestView'
+  ) {
+    if (p.metadata?.cInvCode) {
+      conditions.push(`cInvCode=${p.metadata.cInvCode}`);
+    }
+  }
+  if (
+    (Route.name === 'AddBusineScen' ||
+      Route.name === 'RuleAuditEdit' ||
+      Route.name === 'newProductPlan' ||
+      Route.name === 'newProductPlanView') &&
+    p.codeType === 'ManageCenter.SYS_DICTONARY.M.FormList' &&
+    p.metadata?.cDictonaryTypeCode
+  ) {
+    conditions.push(`cDictonaryTypeCode=${p.metadata.cDictonaryTypeCode}`);
+  }
+  if (
+    // #3855
+    Route.name === 'RuleAuditEdit' &&
+    p.codeType === 'ManageCenter.MES_PROJECT_S_S.M.FormList'
+  ) {
+    conditions.push(`MID=${Route.params.rowId}`);
+  }
+  if (
+    Route.name === 'AddGrindOrder' &&
+    p.codeType === 'TMS.TMS_INVETORY.M.FormList'
+  ) {
+    conditions.push(`IsRepair = true`);
+  }
+  if (Route.name === 'AddPartolPlan' || Route.name === 'EditPatrolPlan') {
+    if (p.titleName === '方案名称') {
+      conditions.push('cProjectTypeCode=04');
+    }
+    if (p.titleName === '版本号') {
+      if (p.ruleForm?.projectNameUID) {
+        conditions.push(`MID=${p.ruleForm?.projectNameUID}`);
+      }
+    }
+  }
+  if (filterModel(val)) {
+    conditions.push(filterModel(val));
+  }
+  Conditions.value = conditions.join(' && ');
+};
+
 // 配置接口
 const configData = (val: string) => {
   Filter.value = [];
