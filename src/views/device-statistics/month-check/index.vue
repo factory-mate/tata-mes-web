@@ -2,11 +2,11 @@
   <!-- 排产统计报表页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
-    <!-- <FilterForm
+    <FilterForm
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
-    ></FilterForm> -->
+    ></FilterForm>
     <el-card>
       <!-- 按钮区域 -->
       <ButtonViem
@@ -383,7 +383,7 @@ const funTable = (arr: Array<any>) => {
     }
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       AxiosData.value = item;
-      tableAxios();
+      //tableAxios();
     }
   });
 };
@@ -487,7 +487,10 @@ const resetForm = (val: any) => {
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
-  tableAxios();
+  tableData.value = [];
+  total.value = 0;
+  chartData.value = [];
+  //tableAxios();
 };
 
 // 列表排序
