@@ -383,7 +383,7 @@ const clickView = (scope: any, obj: any) => {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
       pathName: 'PurchaseReturnCheck',
-      title: '采购退货通知单物料详情'
+      title: '退货申请物料详情'
     }
   });
 };
