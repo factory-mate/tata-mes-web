@@ -61,6 +61,7 @@
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
+                  v-if="showBtn(item)"
                 >
                   {{ item.Resource.cAttributeName }}
                 </el-button>
@@ -202,6 +203,18 @@ const {
   Conditions,
   OrderByFileds
 } = toRefs(data);
+
+const showBtn = (item: any) => {
+  console.log(item, 'item');
+  console.log(row.value);
+  // #3898 已审核的订单不显示编辑箱码
+  if (row.value.iStatus == 3) {
+    if (item.cAttributeCode === 'ViewXMEdit') {
+      return false;
+    }
+  }
+  return true;
+};
 
 let head = ref([]) as any;
 const initType = ref(true);
