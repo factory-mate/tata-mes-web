@@ -1600,6 +1600,7 @@ const selectData = (val: any) => {
         ruleForm.value.nMaxValue = val.value[0].nMaxValue;
         ruleForm.value.nMinValue = val.value[0].nMinValue;
         ruleForm.value.nNoQualificationRate = val.value[0].nNoQualificationRate;
+        ruleForm.value.cPARM01 = val.value[0].cPARM01;
       }
     }
     if (
