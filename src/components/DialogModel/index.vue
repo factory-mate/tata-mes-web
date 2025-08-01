@@ -1390,7 +1390,9 @@ const getViewData = () => {
     Route.name == 'MaterialConfigGroup' ||
     Route.name == 'MaterialConfigAllocate' ||
     Route.name == 'MaterialConfigRule' ||
-    Route.name == 'MaterialConfigGroupProcess'
+    Route.name == 'MaterialConfigGroupProcess' ||
+    Route.name == 'WorkshopStatisticsUser' ||
+    Route.name == 'Electric'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
