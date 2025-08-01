@@ -54,7 +54,8 @@
                 (Route.name == 'AddBusineScen' ||
                   Route.name == 'AddBusineScenEdit' ||
                   Route.name == 'AddBusineScenView' ||
-                  Route.name == 'RuleAuditEdit') &&
+                  Route.name == 'RuleAuditEdit' ||
+                  Route.name === 'MaterialConfigDeductEdit') &&
                 ['条件表达式', '描述'].includes(item.cAttributeName) &&
                 6
               "
@@ -274,7 +275,13 @@
       :ruleForm="ruleForm"
     ></searchModel>
   </div>
-  <div v-if="Route.name === 'AddBusineScen' || Route.name == 'RuleAuditEdit'">
+  <div
+    v-if="
+      Route.name === 'AddBusineScen' ||
+      Route.name == 'RuleAuditEdit' ||
+      Route.name === 'MaterialConfigDeductEdit'
+    "
+  >
     <!-- <div style="margin-top: 10px" v-if="ruleForm.cLamdaTypeCode === 'Where'">
       <BDS
         :Head="props.Head"
@@ -559,12 +566,20 @@ onMounted(() => {
   }
 });
 $bus.on('BDSGET', (val: any) => {
-  if (Route.name == 'AddBusineScen' || Route.name == 'RuleAuditEdit') {
+  if (
+    Route.name == 'AddBusineScen' ||
+    Route.name == 'RuleAuditEdit' ||
+    Route.name === 'MaterialConfigDeductEdit'
+  ) {
     funHeadview();
   }
 });
 $bus.on('SETBDS', (val: any) => {
-  if (Route.name == 'AddBusineScen' || Route.name == 'RuleAuditEdit') {
+  if (
+    Route.name == 'AddBusineScen' ||
+    Route.name == 'RuleAuditEdit' ||
+    Route.name === 'MaterialConfigDeductEdit'
+  ) {
     ruleForm.value.cLamda = val;
   }
 });
@@ -573,7 +588,9 @@ const rules = computed(() => {
   HeadData.value
     .filter((item: { IsRequest: boolean }) => {
       if (
-        (Route.name === 'AddBusineScen' || Route.name == 'RuleAuditEdit') &&
+        (Route.name === 'AddBusineScen' ||
+          Route.name == 'RuleAuditEdit' ||
+          Route.name === 'MaterialConfigDeductEdit') &&
         Route.meta.title.match(/新增/gi)
       ) {
         if (item.cAttributeName === '条件表达式') {
@@ -1828,7 +1845,8 @@ const selectData = (val: any) => {
       Route.name == 'AddBusineScen' ||
       Route.name == 'AddBusineScenEdit' ||
       Route.name == 'AddBusineScenView' ||
-      Route.name == 'RuleAuditEdit'
+      Route.name == 'RuleAuditEdit' ||
+      Route.name === 'MaterialConfigDeductEdit'
     ) {
       if (AttributeCode.value == 'cParentName') {
         ruleForm.value['cParentName'] =
@@ -2440,7 +2458,8 @@ const newAdd = () => {
     Route.name == 'AddBusineScen' ||
     Route.name == 'AddBusineScenEdit' ||
     Route.name == 'AddBusineScenView' ||
-    Route.name == 'RuleAuditEdit'
+    Route.name == 'RuleAuditEdit' ||
+    Route.name === 'MaterialConfigDeductEdit'
   ) {
     dataValue = { Mid: MID.value, models: ruleForm.value.models ?? [] };
     //指标档案
@@ -2825,6 +2844,7 @@ const getFormItemLength = item => {
     Route.name == 'AddBusineScen' ||
     Route.name == 'AddBusineScenEdit' ||
     Route.name == 'RuleAuditEdit' ||
+    Route.name === 'MaterialConfigDeductEdit' ||
     (Route.name == 'AddBusineScenView' &&
       (item.cAttributeName === '条件表达式' || item.cAttributeName === '描述'))
   ) {

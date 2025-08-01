@@ -267,12 +267,14 @@ const treeObj = ref({});
 onMounted(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  treeObj.value = JSON.parse(window.sessionStorage.getItem('RuleAudit'));
+  treeObj.value = JSON.parse(
+    window.sessionStorage.getItem('MaterialConfigDeduct')
+  );
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'RuleAuditEdit') {
+    if (v.name == 'MaterialConfigDeductEdit') {
       tableAxios();
     }
   }, 300);
@@ -617,7 +619,7 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  obj.pathName = 'RuleAudit';
+  obj.pathName = 'MaterialConfigDeduct';
   obj.tableData = tableData.value;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -626,7 +628,7 @@ const SaveAdd = (obj: any) => {
 
 //修改保存
 const SaveEdit = (obj: any) => {
-  obj.pathName = 'RuleAudit';
+  obj.pathName = 'MaterialConfigDeduct';
   obj.tableData = tableData.value;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

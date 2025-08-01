@@ -307,7 +307,11 @@ const getListWD = () => {
   if (Route.name === 'newProductPlan' || Route.name === 'newProductPlanView') {
     conditions = 'cModelCode=TD001';
   }
-  if (Route.name === 'AddBusineScen' || Route.name === 'RuleAuditEdit') {
+  if (
+    Route.name === 'AddBusineScen' ||
+    Route.name === 'RuleAuditEdit' ||
+    Route.name === 'MaterialConfigDeductEdit'
+  ) {
     conditions = 'cModelCode=' + Route.query.cDataCode;
   }
   let data = {
@@ -565,7 +569,11 @@ const clickAdd = async () => {
 
   emits('changeRuleForm', { models: dimensionCodes });
 
-  if (Route.name === 'AddBusineScen' || Route.name === 'RuleAuditEdit') {
+  if (
+    Route.name === 'AddBusineScen' ||
+    Route.name === 'RuleAuditEdit' ||
+    Route.name === 'MaterialConfigDeductEdit'
+  ) {
     if (Route.meta.title.match(/新增/gi)) {
       const { UID } = (
         await DataApi({
@@ -622,9 +630,14 @@ const clickAdd = async () => {
           if (Route.name === 'AddBusineScen') {
             router.push({ name: 'BusineScen' });
             $bus.emit('tableUpData', { name: 'BusineScen' });
-          } else {
+          }
+          if (Route.name === 'RuleAuditEdit') {
             router.push({ name: 'RuleAudit' });
             $bus.emit('tableUpData', { name: 'RuleAudit' });
+          }
+          if (Route.name === 'MaterialConfigDeductEdit') {
+            router.push({ name: 'MaterialConfigDeduct' });
+            $bus.emit('tableUpData', { name: 'MaterialConfigDeduct' });
           }
           tagsView.delVisitedView(Route);
         }

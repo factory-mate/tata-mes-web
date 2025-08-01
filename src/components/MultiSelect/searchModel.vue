@@ -297,6 +297,7 @@ const processFilterLogic = (val, p) => {
   if (
     (Route.name === 'AddBusineScen' ||
       Route.name === 'RuleAuditEdit' ||
+      Route.name === 'MaterialConfigDeductEdit' ||
       Route.name === 'newProductPlan' ||
       Route.name === 'newProductPlanView') &&
     p.codeType === 'ManageCenter.SYS_DICTONARY.M.FormList' &&
@@ -306,7 +307,8 @@ const processFilterLogic = (val, p) => {
   }
   if (
     // #3855
-    Route.name === 'RuleAuditEdit' &&
+    (Route.name === 'RuleAuditEdit' ||
+      Route.name === 'MaterialConfigDeductEdit') &&
     p.codeType === 'ManageCenter.MES_PROJECT_S_S.M.FormList'
   ) {
     conditions.push(`MID=${Route.params.rowId}`);

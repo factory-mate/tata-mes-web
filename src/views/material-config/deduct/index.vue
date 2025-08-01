@@ -194,7 +194,7 @@ onActivated(() => {});
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'RuleAudit') {
+    if (v.name == 'MaterialConfigDeduct') {
       tableAxios();
       treeAxios(treeAxiosData.value);
     }
@@ -315,13 +315,16 @@ const treeChange = (datas: any, checked: any, indeterminate: any) => {
       rootParent.data.cDataCode ?? ''
     );
     router.replace({
-      name: 'RuleAudit'
+      name: 'MaterialConfigDeduct'
     });
   }
   treeObj.value = datas;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  window.sessionStorage.setItem('RuleAudit', JSON.stringify(treeObj.value));
+  window.sessionStorage.setItem(
+    'MaterialConfigDeduct',
+    JSON.stringify(treeObj.value)
+  );
   //树结构单选处理
   if (checked && checkedD.value !== datas.UID) {
     checkedD.value = datas.UID;
@@ -416,7 +419,7 @@ const tableAxios = async () => {
     sendMID.value = '';
   }
   if (AxiosData.value.Resource.cUrl === '/api/MES_PROJECT/GetForPage') {
-    conditions.push('cProjectCode=VERIFY_VOUCH');
+    conditions.push('cProjectCode=KL001');
   }
   if (sendMID.value) {
     conditions.push(`Mid=${sendMID.value}`);
@@ -554,7 +557,7 @@ const clickDel = (obj: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'RuleAuditEdit',
+    name: 'MaterialConfigDeductEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -562,7 +565,7 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'RuleAudit',
+      pathName: 'MaterialConfigDeduct',
       title: '业务方案档案详情'
     },
     query: {
@@ -573,7 +576,7 @@ const clickView = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'RuleAuditEdit',
+    name: 'MaterialConfigDeductEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -581,7 +584,7 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'RuleAudit',
+      pathName: 'MaterialConfigDeduct',
       title: '业务方案档案编辑'
     },
     query: {
@@ -594,11 +597,11 @@ const clickAssionable = (scope: any, obj: any) => {
   let mid = scope.row.UID;
   sessionStorage.set('MId', mid);
   router.push({
-    name: 'RuleAuditEdit',
+    name: 'MaterialConfigDeductEdit',
     query: {
       modelCode: obj.cIncludeModelCode,
       // row: JSON.stringify(scope.row),
-      pathName: 'RuleAudit',
+      pathName: 'MaterialConfigDeduct',
       title: '业务方案档案关联',
       ...Route.query
     }
@@ -628,7 +631,7 @@ const clickStop = (scope: any, obj: any) => {
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   console.log(treeData.value);
   router.push({
-    name: 'RuleAuditEdit',
+    name: 'MaterialConfigDeductEdit',
     params: {
       t: Date.now(),
       rowId: sendUID.value
