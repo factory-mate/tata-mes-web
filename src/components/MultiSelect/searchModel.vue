@@ -358,7 +358,6 @@ const configData = (val: string) => {
 const funTable = (arr: Array<any>) => {
   tableColumn.value = [];
   arr.sort(compare('iIndex', true)).forEach(item => {
-    // if(item.Resource.cAttributeTypeCode=='method'){}
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       if (ajaxData.value && ajaxData.value.url) {
         tableAxios_2(ajaxData.value);

@@ -116,6 +116,28 @@
         custom-width
         :show-index="false"
       >
+        <template #button>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            width="200px"
+            align="center"
+          >
+            <template #header>
+              <span>操作</span>
+            </template>
+            <template #default="scope">
+              <el-button
+                type="primary"
+                :disabled="disabled"
+                size="small"
+                @click="handleClose(scope)"
+              >
+                关闭
+              </el-button>
+            </template>
+          </el-table-column>
+        </template>
       </myTable>
       <template #footer>
         <span class="dialog-footer">
@@ -343,6 +365,7 @@ const getComboBoxFun = async () => {
     }
   });
 };
+
 // table 数据整合
 const funTable = (arr: Array<any>) => {
   modelGrid.value = arr;
@@ -462,7 +485,7 @@ const ItemAdd = async (obj: any) => {
 const ItemAddOnMaterial = async obj => {
   console.log(obj);
 };
-
+const closeBtnConfig = ref({});
 // TTTtable 数据整合
 const funTables = (arr: Array<any>) => {
   modelGrid.value = arr;
@@ -497,6 +520,10 @@ const funTables = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       TAxiosData.value = item;
       TtableAxios();
+    }
+    if (item.Resource.cAttributeTypeCode == 'method') {
+      closeBtnConfig.value = item;
+      console.log(closeBtnConfig.value);
     }
   });
 };
@@ -754,6 +781,27 @@ const setMainTableWidth = row => {
     case '交货日期':
       return 100;
   }
+};
+
+const handleClose = scope => {
+  const obj: any = closeBtnConfig.value;
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [scope.row.cSourceRowUID]
+  };
+  DataApi(data)
+    .then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+      }
+    })
+    .finally(() => {
+      TtableAxios();
+    });
 };
 </script>
 
