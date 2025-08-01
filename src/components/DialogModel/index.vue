@@ -897,6 +897,24 @@ const selectData = (val: any) => {
       if (item.Resource.cAttributeName == titleName.value) {
         ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
       }
+      if (
+        Route.name === 'MaterialConfigGroupProcess' ||
+        Route.name === 'MaterialConfigRule' ||
+        Route.name === 'MaterialConfigAllocate'
+      ) {
+        if (titleName.value == '物料分组名称') {
+          ruleForm.value.cInvMGroupCode = val.value[0].cInvMGroupCode;
+        }
+        if (titleName.value == '工序名称') {
+          ruleForm.value.cProcessCode = val.value[0].cProcessCode;
+        }
+        if (titleName.value === '维度名称') {
+          ruleForm.value.cDimensionalityCode = val.value[0].cDimensionalityCode;
+        }
+        if (titleName.value === '物料名称') {
+          ruleForm.value.cInvCode = val.value[0].cInvCode;
+        }
+      }
       //原因分类弹窗上级分类取值
       if (
         Route.name == 'CauseClassification' &&
@@ -1368,7 +1386,11 @@ const getViewData = () => {
     Route.name == 'Texture' ||
     Route.name == 'ProductTag' ||
     Route.name == 'ProcessRouteLine' ||
-    Route.name == 'PartFiles'
+    Route.name == 'PartFiles' ||
+    Route.name == 'MaterialConfigGroup' ||
+    Route.name == 'MaterialConfigAllocate' ||
+    Route.name == 'MaterialConfigRule' ||
+    Route.name == 'MaterialConfigGroupProcess'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
