@@ -784,24 +784,31 @@ const setMainTableWidth = row => {
 };
 
 const handleClose = scope => {
-  const obj: any = closeBtnConfig.value;
-  const data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [scope.row.cSourceRowUID]
-  };
-  DataApi(data)
-    .then(res => {
-      if (res.success) {
-        ElMessage({
-          type: 'success',
-          message: '操作成功'
-        });
-      }
-    })
-    .finally(() => {
-      TtableAxios();
-    });
+  // 弹窗确认
+  ElMessageBox.confirm('是否关闭？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const obj: any = closeBtnConfig.value;
+    const data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      data: [scope.row.cSourceRowUID]
+    };
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+        }
+      })
+      .finally(() => {
+        TtableAxios();
+      });
+  });
 };
 </script>
 
