@@ -212,9 +212,13 @@ const clickTableBut = (scope: any, event: any) => {
       break;
   }
 };
-
+const firstEnter = ref(true);
 //表格数据查询
 const tableAxios = async () => {
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
+  }
   tableData.value = [];
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,

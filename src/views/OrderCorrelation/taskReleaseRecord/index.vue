@@ -201,6 +201,7 @@ const getData: any = async (val: string) => {
     console.log(error, '程序出错了');
     ElLoading.service().close();
   }
+  ElLoading.service().close();
 };
 //分页查询参数
 const queryParams = reactive({
@@ -227,8 +228,13 @@ const clickTableBut = (scope: any, event: any) => {
       break;
   }
 };
+const firstEnter = ref(true);
 //表格数据查询
 const tableAxios = async () => {
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,

@@ -193,6 +193,7 @@ onActivated(() => {
   if (Route.meta.title.match(/详情/gi)) {
     // disabled.value=true
   }
+  firstEnter.value = true;
 });
 // 权限按钮
 const RoleBut = (v: any) => {
@@ -293,9 +294,13 @@ const funTable = (arr: Array<any>) => {
     }
   });
 };
-
+const firstEnter = ref(true);
 //表格数据查询
 const tableAxios = async () => {
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
+  }
   let params = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,

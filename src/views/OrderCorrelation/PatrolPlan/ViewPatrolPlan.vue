@@ -251,6 +251,7 @@ onActivated(() => {
     if (Route.meta.title.match(/详情/gi)) {
       disabled.value = true;
     }
+    firstEnter.value = true;
   }
 });
 // 权限按钮
@@ -421,9 +422,13 @@ const ExportAll = async (obj: any) => {
     ElLoading.service().close();
   });
 };
-
+const firstEnter = ref(true);
 //表格数据查询
 const tableAxios = async () => {
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
