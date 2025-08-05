@@ -92,6 +92,7 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
+        :page-sizes="[20, 50, 100]"
         @pagination="changPage"
       />
     </el-card>
