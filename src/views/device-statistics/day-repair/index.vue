@@ -439,7 +439,7 @@ const ExportAll = obj => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
       PageIndex: 1,
-      PageSize: 9999,
+      PageSize: 999999,
       OrderByFileds: '',
       Conditions: Conditions.value
     }

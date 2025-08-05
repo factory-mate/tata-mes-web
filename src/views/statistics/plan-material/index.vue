@@ -299,7 +299,7 @@ const exportAll = async obj => {
       dPlanDateStart.value,
     data: {
       PageIndex: 1,
-      PageSize: 9999,
+      PageSize: 999999,
       OrderByFileds: orderBy.value,
       Conditions: conditions.value
     }

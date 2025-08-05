@@ -292,8 +292,6 @@ const tableAxios = async () => {
     const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
-      console.log(res, '9999999999');
-
       // total.value = res.data.dataCount
     } else {
       console.log('请求出错');

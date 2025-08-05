@@ -530,7 +530,7 @@ const ExportAll = async (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
       PageIndex: 1,
-      PageSize: 9999,
+      PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
         ? 'cVouchTypeCode = 01 && iStatus in (5,51,6) && ' + Conditions.value

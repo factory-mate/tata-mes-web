@@ -517,7 +517,7 @@ const ExportAll = (val: any) => {
     url: val.Resource.cServerIP + val.Resource.cUrl,
     data: {
       PageIndex: 1,
-      PageSize: 9999,
+      PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
