@@ -589,7 +589,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cWareHouseName,cWareHouseAreaCode'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -602,7 +602,7 @@ const ClickSearch = (val: any) => {
 const resetForm = (val: any) => {
   console.log(val, '重置');
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'cWareHouseName,cWareHouseAreaCode';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
