@@ -105,6 +105,7 @@ import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import dayjs from 'dayjs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const $bus: any =
@@ -212,13 +213,13 @@ const clickTableBut = (scope: any, event: any) => {
       break;
   }
 };
-const firstEnter = ref(true);
+// const firstEnter = ref(true);
 //表格数据查询
 const tableAxios = async () => {
-  if (firstEnter.value) {
-    firstEnter.value = false;
-    return;
-  }
+  // if (firstEnter.value) {
+  //   firstEnter.value = false;
+  //   return;
+  // }
   tableData.value = [];
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -314,6 +315,11 @@ const funTable = (arr: Array<any>) => {
       );
     }
     if (item.Resource.cAttributeTypeCode == 'binddata') {
+      const today = dayjs(new Date()).format('YYYY-MM-DD');
+      const pastTenDays = dayjs(new Date())
+        .subtract(10, 'day')
+        .format('YYYY-MM-DD');
+      Conditions.value = `PDate >= ${pastTenDays}T00:00:00 && PDate <= ${today}T23:59:59`;
       AxiosData.value = item;
       tableAxios();
     }

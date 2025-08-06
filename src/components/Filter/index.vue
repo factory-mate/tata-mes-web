@@ -554,6 +554,14 @@ const funHeadData = () => {
     ) {
       item.cAttributeCodeValue = dayjs(new Date()).format('YYYY-MM-DD');
     }
+    if (Route.name === 'WareMangeReportMain') {
+      if (item.cAttributeCode === 'PDate') {
+        item.cAttributeCodeValue = [
+          dayjs(new Date()).subtract(10, 'day').format('YYYY-MM-DD'),
+          dayjs(new Date()).format('YYYY-MM-DD')
+        ];
+      }
+    }
   });
   getTreeData(FilterData.value);
 };
