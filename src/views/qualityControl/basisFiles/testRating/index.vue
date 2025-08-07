@@ -505,7 +505,7 @@ const ExportAll = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单-所有');
+  exportAnalysisHooks(data, '检验指标档案-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -521,7 +521,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单');
+  exportAnalysisHooks(data, '检验指标档案');
   ElLoading.service().close();
 };
 
