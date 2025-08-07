@@ -373,6 +373,7 @@ const sortArr = (property: any) => {
 const clickTableHandDel = (val: any) => {
   //调用子组件的 DelBtn方法
   tableData.value.splice(val.$index, 1);
+  TABRef.value.DelBtn(val.$index);
 };
 
 const clickHandAdd = (data: any) => {
