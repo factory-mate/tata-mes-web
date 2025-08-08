@@ -445,7 +445,7 @@ const ExportAll = obj => {
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '日点检');
+  exportAnalysisHooks(data, '设备状态查询-所有');
   loading.close();
 };
 provide('tableAxios', { tableAxios });

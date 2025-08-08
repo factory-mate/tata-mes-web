@@ -13,6 +13,7 @@
       <ButtonViem
         :ToolBut="But"
         @clickDelete="clickDel"
+        @ExportOne="ExportOne"
         @ExportAll="ExportAll"
       ></ButtonViem>
       <!-- 表格区域 -->
@@ -432,6 +433,22 @@ const newList = (val: any) => {
 const renew = () => {
   getData(Route.meta.ModelCode);
 };
+const ExportOne = obj => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: '',
+      Conditions: Conditions.value
+    }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '压单统计');
+  loading.close();
+};
 const ExportAll = obj => {
   Conditions.value = filterModel(filterRef.value.FilterData);
   let data = {
@@ -445,7 +462,7 @@ const ExportAll = obj => {
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '日点检');
+  exportAnalysisHooks(data, '压单统计-所有');
   loading.close();
 };
 provide('tableAxios', { tableAxios });
