@@ -87,13 +87,13 @@
       :close-on-click-modal="false"
     >
       <!-- 搜索区域 -->
-      <div v-if="TFilter.length">
-        <FilterForm
-          :Filter="TFilter"
-          @ClickSearch="TClickSearch"
-          @resetForm="TresetForm"
-        ></FilterForm>
-      </div>
+
+      <FilterForm
+        :Filter="TFilter"
+        @ClickSearch="TClickSearch"
+        @resetForm="TresetForm"
+      ></FilterForm>
+
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
