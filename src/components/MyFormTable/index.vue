@@ -44,7 +44,8 @@
               'addProductLineEdit',
               'addProductLineView',
               'menuMangment',
-              'inspectionSchemeEdit'
+              'inspectionSchemeEdit',
+              'newproductionChangeOrder'
             ].includes(Route.name)
           "
         >
