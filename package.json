@@ -1,6 +1,5 @@
 {
-  "name": "慧友科技",
-  "version": "1.1.1",
+  "name": "mes-web",
   "scripts": {
     "dev": "vite --mode development",
     "dev:prod": "vite --mode production",
@@ -9,7 +8,6 @@
     "build:all": "pnpm build:staging && pnpm build:prod",
     "serve": "vite preview",
     "lint": "eslint src/**/*.{ts,js,vue} --fix --cache",
-    "prepare": "husky install",
     "prettier": "prettier --write ."
   },
   "dependencies": {
@@ -47,8 +45,6 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.3",
-    "@commitlint/config-conventional": "^16.2.1",
     "@types/node": "^16.11.7",
     "@types/nprogress": "^0.2.0",
     "@types/path-browserify": "^1.0.0",
@@ -60,22 +56,11 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.6.0",
     "fast-glob": "^3.2.11",
-    "husky": "^7.0.4",
     "prettier": "^2.6.2",
     "sass": "^1.53.0",
     "typescript": "^4.7.4",
     "vite": "^3.2.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^0.35.0"
-  },
-  "repository": "https://www.huiyou.cloud/",
-  "author": "慧友科技",
-  "license": "MIT",
-  "lint-staged": {
-    "*.{js,vue,ts}": [
-      "eslint --cache --fix",
-      "npm run lint",
-      "git add"
-    ]
   }
 }
