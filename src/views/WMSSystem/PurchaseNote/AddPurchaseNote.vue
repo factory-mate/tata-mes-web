@@ -54,7 +54,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
@@ -162,7 +162,7 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare, filterModel, tableSortInit } from '@/utils';
+import { compare, filterModel, getNTaxMoney, tableSortInit } from '@/utils';
 import {
   ElButton,
   ElCard,
@@ -171,8 +171,9 @@ import {
   ElMessageBox,
   ElLoading
 } from 'element-plus';
+import BigNumber from 'bignumber.js';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
+import { configApi, ParamsApi, DataApi, getPrice } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
@@ -411,12 +412,7 @@ const funTable = (arr: Array<any>) => {
   // 获取下拉框数据
   getComboBoxFun();
 };
-const handleTableDataChange = (val: any) => {
-  tableData.value = val.map(i => ({
-    ...i,
-    nMoney: i.nPrice * i.nQuantity
-  }));
-};
+const handleTableDataChange = (val: any) => {};
 
 //表格数据查询
 const tableAxios = async () => {
@@ -628,7 +624,58 @@ const Tconfirm = () => {
       item.cDefindParm03List = [item.cDefindParm03];
     }
 
-    tableData.value.push({ ...item, nSumQuantity: item.nQuantity });
+    // 计算价格
+    getPrice({
+      cInvCode: item.cInvCode,
+      cVendorCode: item.cVendorCode
+    })
+      .then(res => {
+        const result = res.data?.[0];
+        item.nTaxPrice = result?.nTaxPrice ?? 0;
+        item.nTaxRate = result?.nTaxRate ?? 0;
+      })
+      .catch(() => {
+        item.nTaxPrice = 0;
+        item.nTaxRate = 0;
+      })
+      .finally(() => {
+        item.nQuantity = new BigNumber(item.nQuantity); // 数量
+        item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
+        item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
+        item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价
+
+        item.cDefindParm06 = item.nTaxMoney
+          .dividedBy(new BigNumber(1).plus(item.nTaxRate.dividedBy(100)))
+          .multipliedBy(item.nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+        item.nMoney = item.nTaxMoney.minus(item.cDefindParm06); // 不含税金额：价税合计-税额
+        item.nPrice = item.nQuantity.isGreaterThan(0)
+          ? item.nMoney.dividedBy(item.nQuantity).decimalPlaces(8)
+          : 0; // 不含税单价：不含税金额/采购数量
+
+        console.table([
+          ['cInvCode', item.cInvCode],
+          ['cVendorCode', item.cVendorCode],
+          ['nQuantity', item.nQuantity.toString()],
+          ['nTaxPrice', item.nTaxPrice.toString()],
+          ['nTaxMoney', item.nTaxMoney.toString()],
+          ['cDefindParm06', item.cDefindParm06.toString()],
+          ['nPrice', item.nPrice.toString()],
+          ['nMoney', item.nMoney.toString()]
+        ]);
+
+        tableData.value.push({
+          ...item,
+          nSumQuantity: item.nQuantity.toString(),
+          nQuantity: item.nQuantity.toString(),
+          nTaxPrice: item.nTaxPrice.toString(),
+          nTaxRate: item.nTaxRate.toString(),
+          nTaxMoney: item.nTaxMoney.toString(),
+          cDefindParm06: item.cDefindParm06.toFixed(2).replace(/\.?0+$/, ''),
+          nPrice: item.nPrice.toFixed(8).replace(/\.?0+$/, ''),
+          nMoney: item.nMoney.toFixed(2).replace(/\.?0+$/, '')
+        });
+        console.log(tableData.value, 'tableData.value');
+      });
   });
 
   TTABRef.value.handleRemoveSelectionChange();
@@ -750,11 +797,16 @@ const setWidth = row => {
       return 200;
     case '规格型号':
       return 120;
-    case '数量':
     case '单位':
-      return 90;
+    case '采购数量':
+    case '单价':
+    case '含税单价':
+    case '含税金额':
+    case '税额':
+    case '不含税金额':
+    case '金额':
     case 'SAP产品编码':
-      return 90;
+      return 200;
     case '交货日期':
       return 100;
     default:

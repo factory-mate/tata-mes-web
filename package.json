@@ -19,6 +19,7 @@
     "af-table-column": "^1.0.3",
     "axios": "^1.7.2",
     "better-scroll": "^2.4.2",
+    "bignumber.js": "^9.3.1",
     "circular-json": "^0.5.9",
     "dayjs": "^1.11.13",
     "default-passive-events": "^2.0.0",

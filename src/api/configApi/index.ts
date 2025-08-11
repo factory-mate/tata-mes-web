@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { spellObj } from '@/utils';
+import dayjs from 'dayjs';
 // import { AxiosPromise } from 'axios';
 // 公用配置管理
 export function configApi(data: string) {
@@ -93,6 +94,25 @@ export function InventoryInfoGetForPageNoOrigin(cInvCode) {
     },
     params: {
       cType: 1
+    }
+  });
+}
+
+export function getPrice({ cInvCode, cVendorCode }) {
+  return request({
+    url: `${
+      import.meta.env.VITE_APP_BASE_API
+    }/api/INVENTORY_PURCHASEPRICE/GetForPage`,
+    method: 'post',
+    data: {
+      PageIndex: 1,
+      PageSize: 1,
+      OrderByFileds: 'dBeginDate desc',
+      Conditions: `dBeginDate>${dayjs(new Date()).format(
+        'YYYY-MM-DD'
+      )} && dEndDate<${dayjs(new Date()).format(
+        'YYYY-MM-DD'
+      )} && cInvCode=${cInvCode} && cVendorCode=${cVendorCode}`
     }
   });
 }

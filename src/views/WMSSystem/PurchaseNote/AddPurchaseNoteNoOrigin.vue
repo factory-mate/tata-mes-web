@@ -54,7 +54,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
@@ -392,10 +392,7 @@ const funTable = (arr: Array<any>) => {
   getComboBoxFun();
 };
 const handleTableDataChange = (val: any) => {
-  tableData.value = val.map(i => ({
-    ...i,
-    nMoney: i.nPrice * i.nQuantity
-  }));
+  console.log(val, 'handleTableDataChange');
 };
 
 //表格数据查询
@@ -726,9 +723,14 @@ const setWidth = row => {
       return 200;
     case '规格型号':
       return 120;
-    case '数量':
     case '单位':
-      return 50;
+    case '采购数量':
+    case '单价':
+    case '含税单价':
+    case '含税金额':
+    case '税额':
+    case '不含税金额':
+    case '金额':
     case 'SAP产品编码':
       return 90;
     case '交货日期':

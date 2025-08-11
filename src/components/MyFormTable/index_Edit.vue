@@ -10,7 +10,6 @@
         >增行</el-button
       >
     </div>
-
     <el-table
       ref="myTableRef"
       stripe
@@ -28,6 +27,7 @@
       class="visible"
       scrollbar-always-on
       :max-height="props.maxHeight"
+      size="small"
     >
       <!-- 无数据时的插槽 -->
       <slot name="empty">{{ noData }}</slot>
@@ -115,12 +115,6 @@
                   :label="val.cDictonaryName || val.cUnitName"
                   :value="val.cDictonaryCode || val.cUnitCode"
                 />
-                <!-- <ElSelectLoading
-                                    :page="page"
-                                    :loading="loading"
-                                    :hasMore="hasMore"
-                                    @loadMore="handloadMore"
-                                    ></ElSelectLoading> -->
               </el-select>
               <el-input-number
                 :disabled="props.disabled"
@@ -139,7 +133,8 @@
                 v-else-if="item.cControlTypeCode == 'TextBox'"
                 v-model="scope.row[item.prop]"
                 placeholder="请输入"
-                @change="changeTextBox(scope.$index, scope.row)"
+                @input="handleTextBoxInput(scope.$index, scope)"
+                @change="v => changeTextBox(scope.$index, scope, v)"
                 :disabled="props.disabled"
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
@@ -294,11 +289,12 @@ import {
   ElMessageBox
 } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
-import ElSelectLoading from '@/components/ElSelectLoading/index.vue';
+import BigNumber from 'bignumber.js';
 import {
   ParamsApi,
   InventoryInfoGetForPage,
-  InventoryInfoGetForPageNoOrigin
+  InventoryInfoGetForPageNoOrigin,
+  getPrice
 } from '@/api/configApi/index';
 import request from '@/utils/request';
 import {
@@ -509,8 +505,6 @@ const tableHeader: any = ref(
 );
 const tableDataVal: any = ref([]);
 const tableDataValCopy: any = ref([]);
-const tableInit: any = ref([]);
-const sType = ref(false);
 const emit = defineEmits([
   'tableHearData',
   'handleSortChange',
@@ -539,7 +533,6 @@ watch(
     // tableDataVal.value.forEach((item:any,i:any)=>{
     //     item.int=i
     // })
-    tableInit.value = JSON.parse(JSON.stringify(val));
   },
   { deep: true }
 );
@@ -702,8 +695,136 @@ const CoptTable = (i: any, index: number) => {
 //添加表格当前行的Iindex
 const IndexType = ref(0) as any;
 // 输入框
-const changeTextBox = (i: any, scope: any) => {
-  emit('handleTableDataChange', tableDataVal.value);
+const changeTextBox = async (i: any, scope: any, v) => {
+  console.log(i, scope, v);
+  const p = scope.column.property;
+  const row = scope.row;
+  if (Route.name === 'newPurchasedGoods') {
+    if (
+      p === 'nAccReceiveQuantity' ||
+      p === 'nAccQuantity' ||
+      p === 'nReceiveQuantity'
+    ) {
+      const nReceiveQuantity = new BigNumber(row.nReceiveQuantity ?? 0); // 到货数量
+      const nTaxPrice = new BigNumber(row.nTaxPrice ?? 0).decimalPlaces(8); // 含税单价
+      const nTaxRate = new BigNumber(row.nTaxRate ?? 0); // 税率
+      const nTaxMoney = nReceiveQuantity.multipliedBy(nTaxPrice); // 税价合计：到货数量*含税单价
+      const cDefindParm06 = nTaxMoney
+        .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+        .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+      const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+      const nPrice = nReceiveQuantity.isGreaterThan(0)
+        ? nMoney.dividedBy(nReceiveQuantity).decimalPlaces(8)
+        : 0; // 不含税单价：不含税金额/到货数量
+
+      tableDataVal.value[i].nReceiveQuantity = nReceiveQuantity.toString();
+      tableDataVal.value[i].nTaxPrice = nTaxPrice.toString();
+      tableDataVal.value[i].nTaxRate = nTaxRate.toString();
+      tableDataVal.value[i].nTaxMoney = nTaxMoney.toString();
+      tableDataVal.value[i].cDefindParm06 = cDefindParm06
+        .toFixed(2)
+        .replace(/\.?0+$/, '');
+      tableDataVal.value[i].nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+      tableDataVal.value[i].nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
+      console.log('计算完毕');
+    }
+  }
+  if (
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'AddPurchaseNote'
+  ) {
+    console.log(p);
+    if (p === 'nQuantity' || p === 'nTaxPrice') {
+      if (p === 'nQuantity' && !row.nTaxPrice) {
+        try {
+          const r = await getPrice({
+            cInvCode: row.cInvCode,
+            cVendorCode: row.cVendorCode
+          });
+          const result = r.data?.[0];
+          console.log(result);
+          tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
+          tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
+        } catch {
+          tableDataVal.value[i].nTaxPrice = 0;
+          tableDataVal.value[i].nTaxRate = 0;
+        }
+      }
+      if (!row.nQuantity || !row.nTaxPrice) {
+        tableDataVal.value[i].nTaxMoney = 0;
+        tableDataVal.value[i].cDefindParm06 = 0;
+        tableDataVal.value[i].nMoney = 0;
+        tableDataVal.value[i].nPrice = 0;
+        if (!row.nTaxRate) {
+          tableDataVal.value[i].nTaxRate = 0;
+        }
+      } else {
+        const nQuantity = new BigNumber(row.nQuantity); // 数量
+        const nTaxPrice = new BigNumber(row.nTaxPrice).decimalPlaces(8); // 含税单价
+        const nTaxRate = new BigNumber(row.nTaxRate); // 税率
+        const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+        const cDefindParm06 = nTaxMoney
+          .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+          .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+        const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+        const nPrice = nQuantity.isGreaterThan(0)
+          ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+          : 0; // 不含税单价：不含税金额/采购数量
+
+        tableDataVal.value[i].nQuantity = nQuantity.toString();
+        tableDataVal.value[i].nTaxPrice = nTaxPrice.toString();
+        tableDataVal.value[i].nTaxRate = nTaxRate.toString();
+        tableDataVal.value[i].nTaxMoney = nTaxMoney.toString();
+        tableDataVal.value[i].cDefindParm06 = cDefindParm06
+          .toFixed(2)
+          .replace(/\.?0+$/, '');
+        tableDataVal.value[i].nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+        tableDataVal.value[i].nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
+      }
+    }
+    if (p === 'nTaxRate' || p === 'cDefindParm06') {
+      if (!row.nTaxPrice || !row.nQuantity) {
+        tableDataVal.value[i].nTaxMoney = 0;
+        tableDataVal.value[i].cDefindParm06 = 0;
+        tableDataVal.value[i].nMoney = 0;
+        tableDataVal.value[i].nPrice = 0;
+      } else {
+        // 修改税率，改变税额、不含税单价、不含税金额
+        // 修改税额，改变不含税单价、不含税金额
+        const nQuantity = new BigNumber(row.nQuantity); // 数量
+        const nTaxPrice = new BigNumber(row.nTaxPrice).decimalPlaces(8); // 含税单价
+        const nTaxRate = new BigNumber(row.nTaxRate); // 税率
+        const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+        let cDefindParm06 = nTaxMoney
+          .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+          .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+        if (p === 'cDefindParm06') {
+          cDefindParm06 = new BigNumber(row.cDefindParm06); // 修改税额，则不计算
+        }
+        const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+        const nPrice = nQuantity.isGreaterThan(0)
+          ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+          : 0; // 不含税单价：不含税金额/采购数量
+
+        if (p === 'nTaxRate') {
+          tableDataVal.value[i].cDefindParm06 = cDefindParm06
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+        }
+        console.log(nMoney.toFixed(2).replace(/\.?0+$/, ''), 'nMoney');
+        tableDataVal.value[i].nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+        tableDataVal.value[i].nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
+      }
+    }
+  }
+  console.log(tableDataVal.value);
+  nextTick(() => {
+    emit('handleTableDataChange', tableDataVal.value);
+  });
+};
+const handleTextBoxInput = (i: any, scope: any) => {
+  // console.log('🚀🚀 输入框的索引', i);
+  // console.log('🚀🚀 输入框的值', scope);
 };
 const changeDatePicker = (i, scope) => {
   emit('handleTableDataChange', tableDataVal.value);
@@ -752,6 +873,48 @@ const selectDatas = (val: any) => {
             i.cInvCode === val.value[0].cInvCode &&
             i.cVendorCode === val.value[0].cVendorCode
         )?.cSAPCode || '';
+      getPrice({
+        cInvCode: val.value[0].cInvCode,
+        cVendorCode: val.value[0].cVendorCode
+      })
+        .then(res => {
+          const result = res.data?.[0];
+          tableDataVal.value[IndexType.value].nTaxPrice =
+            result?.nTaxPrice ?? 0;
+          tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+        })
+        .catch(() => {
+          tableDataVal.value[IndexType.value].nTaxPrice = 0;
+          tableDataVal.value[IndexType.value].nTaxRate = 0;
+        })
+        .finally(() => {
+          const v = tableDataVal.value[IndexType.value];
+          const nQuantity = new BigNumber(0); // 数量
+          const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+          const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+          const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+          const cDefindParm06 = nTaxMoney
+            .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+            .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+          const nPrice = nQuantity.isGreaterThan(0)
+            ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
+
+          tableDataVal.value[IndexType.value].nQuantity = nQuantity.toString();
+          tableDataVal.value[IndexType.value].nTaxPrice = nTaxPrice.toString();
+          tableDataVal.value[IndexType.value].nTaxRate = nTaxRate.toString();
+          tableDataVal.value[IndexType.value].nTaxMoney = nTaxMoney.toString();
+          tableDataVal.value[IndexType.value].cDefindParm06 = cDefindParm06
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[IndexType.value].nMoney = nMoney
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[IndexType.value].nPrice = nPrice
+            .toFixed(8)
+            .replace(/\.?0+$/, '');
+        });
     }
 
     // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
@@ -773,8 +936,46 @@ const selectDatas = (val: any) => {
                 j.cInvCode === val.value[i + 1].cInvCode &&
                 j.cVendorCode === val.value[i + 1].cVendorCode
             )?.cSAPCode || '';
+
+          getPrice({
+            cInvCode: val.value[i + 1].cInvCode,
+            cVendorCode: val.value[i + 1].cVendorCode
+          })
+            .then(res => {
+              const result = res.data?.[0];
+              emptyRow.nTaxPrice = result?.nTaxPrice ?? 0;
+              emptyRow.nTaxRate = result?.nTaxRate ?? 0;
+            })
+            .catch(() => {
+              emptyRow.nTaxPrice = 0;
+              emptyRow.nTaxRate = 0;
+            })
+            .finally(() => {
+              const v = emptyRow;
+              const nQuantity = new BigNumber(0); // 数量
+              const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+              const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+              const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+              const cDefindParm06 = nTaxMoney
+                .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+                .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+              const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+              const nPrice = nQuantity.isGreaterThan(0)
+                ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+                : 0; // 不含税单价：不含税金额/采购数量
+
+              emptyRow.nQuantity = nQuantity.toString();
+              emptyRow.nTaxPrice = nTaxPrice.toString();
+              emptyRow.nTaxRate = nTaxRate.toString();
+              emptyRow.nTaxMoney = nTaxMoney.toString();
+              emptyRow.cDefindParm06 = cDefindParm06
+                .toFixed(2)
+                .replace(/\.?0+$/, '');
+              emptyRow.nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+              emptyRow.nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
+            });
         } else {
-          tableDataVal.value.push({
+          const currentItem = {
             cInvCode: val.value[i + 1].cInvCode,
             cInvName: val.value[i + 1].cInvName,
             cInvStd: val.value[i + 1].cInvStd,
@@ -789,7 +990,45 @@ const selectDatas = (val: any) => {
                   j.cInvCode === val.value[i + 1].cInvCode &&
                   j.cVendorCode === val.value[i + 1].cVendorCode
               )?.cSAPCode || ''
-          });
+          } as any;
+          getPrice({
+            cInvCode: val.value[i + 1].cInvCode,
+            cVendorCode: val.value[i + 1].cVendorCode
+          })
+            .then(res => {
+              const result = res.data?.[0];
+              currentItem.nTaxPrice = result?.nTaxPrice ?? 0;
+              currentItem.nTaxRate = result?.nTaxRate ?? 0;
+            })
+            .catch(() => {
+              currentItem.nTaxPrice = 0;
+              currentItem.nTaxRate = 0;
+            })
+            .finally(() => {
+              const v = currentItem;
+              const nQuantity = new BigNumber(0); // 数量
+              const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+              const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+              const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+              const cDefindParm06 = nTaxMoney
+                .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+                .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+              const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+              const nPrice = nQuantity.isGreaterThan(0)
+                ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+                : 0; // 不含税单价：不含税金额/采购数量
+
+              currentItem.nQuantity = nQuantity.toString();
+              currentItem.nTaxPrice = nTaxPrice.toString();
+              currentItem.nTaxRate = nTaxRate.toString();
+              currentItem.nTaxMoney = nTaxMoney.toString();
+              currentItem.cDefindParm06 = cDefindParm06
+                .toFixed(2)
+                .replace(/\.?0+$/, '');
+              currentItem.nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+              currentItem.nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
+            });
+          tableDataVal.value.push(currentItem);
         }
       }
     }
@@ -1214,11 +1453,6 @@ const cellClick = (type: any, row: any, column: any, cell: any, event: any) => {
 };
 
 const funShow = (index: any, row: any, prop: any) => {
-  // console.log(row,"rrrr");
-  // console.log(prop,"pppp");
-  // console.log(index,"i");
-  // console.log(tableDataValCopy.value,"--===tableDataValCopy.value");
-  // console.log(tableDataVal.value,"--===aaaa");
   if (Route.name == 'ProductionOrderBG') {
     if (tableDataValCopy.value.length) {
       if (row[prop] == tableDataValCopy.value[index][prop]) {

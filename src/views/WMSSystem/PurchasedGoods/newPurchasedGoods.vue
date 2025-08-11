@@ -610,7 +610,9 @@ const Tconfirm = () => {
     tableData.value.push({
       ...item,
       nAccReceiveQuantity: item.inv_iDefindParm12,
-      nReceiveQuantity: ''
+      nReceiveQuantity: '',
+      nTaxPrice: item.nTaxPrice ?? 0,
+      nTaxRate: item.nTaxRate ?? 0
     });
   });
 
