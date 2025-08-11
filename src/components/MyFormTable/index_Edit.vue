@@ -735,7 +735,7 @@ const changeTextBox = async (i: any, scope: any, v) => {
   ) {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
-      if (p === 'nQuantity' && !row.nTaxPrice) {
+      if (p === 'nQuantity') {
         try {
           const r = await getPrice({
             cInvCode: row.cInvCode,
