@@ -108,9 +108,9 @@ export function getPrice({ cInvCode, cVendorCode }) {
       PageIndex: 1,
       PageSize: 1,
       OrderByFileds: 'dBeginDate desc',
-      Conditions: `dBeginDate>${dayjs(new Date()).format(
+      Conditions: `dBeginDate<=${dayjs(new Date()).format(
         'YYYY-MM-DD'
-      )} && dEndDate<${dayjs(new Date()).format(
+      )} && dEndDate>=${dayjs(new Date()).format(
         'YYYY-MM-DD'
       )} && cInvCode=${cInvCode} && cVendorCode=${cVendorCode}`
     }

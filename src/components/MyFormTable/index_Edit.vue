@@ -276,8 +276,7 @@ import {
   reactive,
   toRefs,
   onMounted,
-  onActivated,
-  onBeforeMount
+  onActivated
 } from 'vue';
 import {
   ElTable,
@@ -285,13 +284,11 @@ import {
   ElIcon,
   ElInput,
   ElButton,
-  ElMessage,
-  ElMessageBox
+  ElMessage
 } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import BigNumber from 'bignumber.js';
 import {
-  ParamsApi,
   InventoryInfoGetForPage,
   InventoryInfoGetForPageNoOrigin,
   getPrice
@@ -705,9 +702,16 @@ const changeTextBox = async (i: any, scope: any, v) => {
       p === 'nAccQuantity' ||
       p === 'nReceiveQuantity'
     ) {
-      const nReceiveQuantity = new BigNumber(row.nReceiveQuantity ?? 0); // 到货数量
-      const nTaxPrice = new BigNumber(row.nTaxPrice ?? 0).decimalPlaces(8); // 含税单价
-      const nTaxRate = new BigNumber(row.nTaxRate ?? 0); // 税率
+      console.log('计算', row);
+
+      const nReceiveQuantity = new BigNumber(
+        Number(tableDataVal.value[i].nAccReceiveQuantity) *
+          Number(tableDataVal.value[i].nAccQuantity)
+      ); // 到货数量
+      const nTaxPrice = new BigNumber(
+        tableDataVal.value[i].nTaxPrice ?? 0
+      ).decimalPlaces(8); // 含税单价
+      const nTaxRate = new BigNumber(tableDataVal.value[i].nTaxRate ?? 0); // 税率
       const nTaxMoney = nReceiveQuantity.multipliedBy(nTaxPrice); // 税价合计：到货数量*含税单价
       const cDefindParm06 = nTaxMoney
         .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
@@ -741,7 +745,7 @@ const changeTextBox = async (i: any, scope: any, v) => {
             cInvCode: row.cInvCode,
             cVendorCode: row.cVendorCode
           });
-          const result = r.data?.[0];
+          const result = r.data?.data?.[0];
           console.log(result);
           tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
           tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
@@ -878,7 +882,7 @@ const selectDatas = (val: any) => {
         cVendorCode: val.value[0].cVendorCode
       })
         .then(res => {
-          const result = res.data?.[0];
+          const result = res.data?.data?.[0];
           tableDataVal.value[IndexType.value].nTaxPrice =
             result?.nTaxPrice ?? 0;
           tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
@@ -942,7 +946,7 @@ const selectDatas = (val: any) => {
             cVendorCode: val.value[i + 1].cVendorCode
           })
             .then(res => {
-              const result = res.data?.[0];
+              const result = res.data?.data?.[0];
               emptyRow.nTaxPrice = result?.nTaxPrice ?? 0;
               emptyRow.nTaxRate = result?.nTaxRate ?? 0;
             })
@@ -996,7 +1000,7 @@ const selectDatas = (val: any) => {
             cVendorCode: val.value[i + 1].cVendorCode
           })
             .then(res => {
-              const result = res.data?.[0];
+              const result = res.data?.data?.[0];
               currentItem.nTaxPrice = result?.nTaxPrice ?? 0;
               currentItem.nTaxRate = result?.nTaxRate ?? 0;
             })

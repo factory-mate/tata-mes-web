@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated, watch } from 'vue';
+import { ref, toRefs, reactive, onActivated } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import FilterForm from '@/components/Filter/index.vue';
@@ -437,11 +437,11 @@ const clickHandAdd = (data: any) => {
   tableData.value.push(itemData);
 };
 const handleTableDataChange = (val: any) => {
-  TABRef.value.tableDataVal = TABRef.value.tableDataVal.map(i => ({
-    ...i,
-    nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
-  }));
-  tableData.value = TABRef.value.tableDataVal;
+  // TABRef.value.tableDataVal = TABRef.value.tableDataVal.map(i => ({
+  //   ...i,
+  //   nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
+  // }));
+  // tableData.value = TABRef.value.tableDataVal;
 };
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {

@@ -162,7 +162,7 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare, filterModel, getNTaxMoney, tableSortInit } from '@/utils';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import {
   ElButton,
   ElCard,
@@ -630,7 +630,8 @@ const Tconfirm = () => {
       cVendorCode: item.cVendorCode
     })
       .then(res => {
-        const result = res.data?.[0];
+        const result = res.data?.data?.[0];
+        console.log(res);
         item.nTaxPrice = result?.nTaxPrice ?? 0;
         item.nTaxRate = result?.nTaxRate ?? 0;
       })
