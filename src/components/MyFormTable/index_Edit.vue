@@ -1358,6 +1358,52 @@ const onKeyPressEnter = async (e, item, scope) => {
             i.cInvCode === data[0].cInvCode &&
             i.cVendorCode === data[0].cVendorCode
         )?.cSAPCode || '';
+      // 获取价格
+      getPrice({
+        cInvCode: data[0].cInvCode,
+        cVendorCode: data[0].cVendorCode
+      })
+        .then(res => {
+          const result = res.data?.data?.[0];
+          tableDataVal.value[scope.$index].nTaxPrice = result?.nTaxPrice
+            ? result?.nTaxPrice
+            : 0;
+          tableDataVal.value[scope.$index].nTaxRate = result?.nTaxRate
+            ? result?.nTaxRate
+            : 0;
+        })
+        .catch(() => {
+          tableDataVal.value[scope.$index].nTaxPrice = 0;
+          tableDataVal.value[scope.$index].nTaxRate = 0;
+        })
+        .finally(() => {
+          const v = tableDataVal.value[scope.$index];
+          const nQuantity = new BigNumber(0); // 数量
+          const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+          const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+          const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+          const cDefindParm06 = nTaxMoney
+            .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+            .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+          const nPrice = nQuantity.isGreaterThan(0)
+            ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
+
+          tableDataVal.value[scope.$index].nQuantity = nQuantity.toString();
+          tableDataVal.value[scope.$index].nTaxPrice = nTaxPrice.toString();
+          tableDataVal.value[scope.$index].nTaxRate = nTaxRate.toString();
+          tableDataVal.value[scope.$index].nTaxMoney = nTaxMoney.toString();
+          tableDataVal.value[scope.$index].cDefindParm06 = cDefindParm06
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[scope.$index].nMoney = nMoney
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[scope.$index].nPrice = nPrice
+            .toFixed(8)
+            .replace(/\.?0+$/, '');
+        });
     } else {
       // 提示错误：未找到物料
       ElMessage.error('未找到数据');

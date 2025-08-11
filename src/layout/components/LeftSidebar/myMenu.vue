@@ -55,6 +55,25 @@
             </el-icon>
           </span>
         </a>
+        <div
+          v-else-if="['PurchaseNote', 'PurchaseRequest'].includes(data.path)"
+          @click="onOuterClick(node, data)"
+        >
+          <div class="nav_box">
+            <svg-icon
+              v-if="data.meta && data.meta.icon"
+              :icon-class="data.meta.icon"
+            />
+            <span class="itemText">
+              {{ data.meta.title }}
+            </span>
+          </div>
+          <span>
+            <el-icon class="cascader_icon" v-if="data.meta && data.children">
+              <ArrowRight />
+            </el-icon>
+          </span>
+        </div>
         <!-- 内部路由 -->
         <router-link
           v-else
@@ -141,6 +160,12 @@ const setActiveData = (node: any, data: any) => {
     activeData.value = null;
     isClose();
   }
+};
+
+const onOuterClick = (node, data) => {
+  console.log('onOuterClick', node, data);
+  // 通过新标签页打开
+  window.open(router.resolve({ name: data.path }).href, '_blank');
 };
 </script>
 
