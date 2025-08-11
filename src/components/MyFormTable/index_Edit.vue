@@ -234,12 +234,13 @@
                 v-model="scope.row[item.prop]"
                 placeholder="请选择"
                 @change="e => onVendorChange(e, scope)"
+                value-key="cVendorCode"
               >
                 <el-option
-                  v-for="(selectItem, index) in scope.row['list_sap']"
-                  :key="index"
+                  v-for="selectItem in scope.row['list_sap']"
+                  :key="selectItem.cVendorCode"
                   :label="selectItem.cVendorName"
-                  :value="selectItem.cVendorCode"
+                  :value="selectItem"
                 />
               </el-select>
             </div>
@@ -735,7 +736,9 @@ const changeTextBox = async (i: any, scope: any, v) => {
   }
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNote'
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'AddPurchaseNote' ||
+    Route.name === 'AddPurchaseNoteEdit'
   ) {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
@@ -1641,6 +1644,28 @@ const onVendorChange = (e, scope) => {
   if (!['otherInNotifyAdd', 'otherInNotifyEdit'].includes(Route.name)) {
     tableDataVal.value[scope.$index].cDefindParm03 =
       scope.row.list_sap.find(i => i.cVendorCode === e)?.cSAPCode || '';
+  }
+  tableDataVal.value[scope.$index].cVendorCode = e.cVendorCode;
+  tableDataVal.value[scope.$index].cVendorName = e.cVendorName;
+  console.log(tableDataVal.value, 'tableDataVal.value onVendorChange');
+  if (
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
+  ) {
+    // 获取价格
+    getPrice({
+      cInvCode: tableDataVal.value[scope.$index].cInvCode,
+      cVendorCode: e.cVendorCode
+    })
+      .then(res => {
+        const result = res.data?.data?.[0];
+        tableDataVal.value[scope.$index].nTaxPrice = result?.nTaxPrice ?? 0;
+        tableDataVal.value[scope.$index].nTaxRate = result?.nTaxRate ?? 0;
+      })
+      .catch(() => {
+        tableDataVal.value[scope.$index].nTaxPrice = 0;
+        tableDataVal.value[scope.$index].nTaxRate = 0;
+      });
   }
 };
 
