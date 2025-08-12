@@ -708,8 +708,8 @@ const changeTextBox = async (i: any, scope: any, v) => {
       console.log('计算', row);
 
       const nReceiveQuantity = new BigNumber(
-        Number(tableDataVal.value[i].nAccReceiveQuantity) *
-          Number(tableDataVal.value[i].nAccQuantity)
+        Number(tableDataVal.value[i].nAccReceiveQuantity ?? 0) *
+          Number(tableDataVal.value[i].nAccQuantity ?? 0)
       ); // 到货数量
       const nTaxPrice = new BigNumber(
         tableDataVal.value[i].nTaxPrice ?? 0
