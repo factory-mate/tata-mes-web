@@ -239,7 +239,9 @@
                 <el-option
                   v-for="selectItem in scope.row['list_sap']"
                   :key="selectItem.cVendorCode"
-                  :label="selectItem.cVendorName"
+                  :label="`${selectItem.cVendorName}${
+                    selectItem.cSAPCode ? `(${selectItem.cSAPCode})` : ''
+                  }`"
                   :value="selectItem"
                 />
               </el-select>
