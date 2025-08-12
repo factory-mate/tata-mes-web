@@ -666,7 +666,7 @@ const SaveAdd = (obj: any, type = true) => {
     // @ts-ignore
     data: {
       ...headRef.value.ruleForm,
-      Items: TABRef.value.tableDataVal.value.map(i => {
+      Items: TABRef.value.tableDataVal.map(i => {
         i.iIndex = iIndex;
         iIndex += 10;
         return i;
