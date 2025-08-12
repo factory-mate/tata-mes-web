@@ -43,7 +43,7 @@
         >
           <div style="display: flex; flex-direction: column">
             <div style="width: 100%; display: flex; justify-content: center">
-              <qrcode-vue :value="item.cQRCode" :size="120"></qrcode-vue>
+              <qrcode-vue :value="item.cQRCode" :size="80"></qrcode-vue>
             </div>
             <div style="margin-top: 20px">箱码: {{ item.cQRCode }}</div>
             <div>物料编码: {{ item.cInvCode }}</div>
