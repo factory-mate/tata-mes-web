@@ -1688,9 +1688,7 @@ const handleAutoTextChange = item => {
 const onVendorChange = (e, scope) => {
   console.log(e, scope);
   if (!['otherInNotifyAdd', 'otherInNotifyEdit'].includes(Route.name)) {
-    tableDataVal.value[scope.$index].cDefindParm03 =
-      scope.row.list_sap.find(i => i.cVendorCode === e.cVendorCode)?.cSAPCode ||
-      '';
+    tableDataVal.value[scope.$index].cDefindParm03 = e.cSAPCode;
   }
   tableDataVal.value[scope.$index].cVendorCode = e.cVendorCode;
   tableDataVal.value[scope.$index].cVendorName = e.cVendorName;
