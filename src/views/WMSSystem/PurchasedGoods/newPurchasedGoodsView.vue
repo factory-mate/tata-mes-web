@@ -41,7 +41,14 @@
           :key="i"
           style="width: 100%; height: 100vh"
         >
-          <div style="display: flex; flex-direction: column; font-size: 10px">
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              font-size: 10px;
+              font-weight: 500;
+            "
+          >
             <div style="width: 100%; display: flex; justify-content: center">
               <qrcode-vue :value="item.cQRCode" :size="80"></qrcode-vue>
             </div>
