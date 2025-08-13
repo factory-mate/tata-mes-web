@@ -45,12 +45,12 @@
             style="
               display: flex;
               flex-direction: column;
-              font-size: 10px;
+              font-size: 8px;
               font-weight: bold;
             "
           >
             <div style="width: 100%; display: flex; justify-content: center">
-              <qrcode-vue :value="item.cQRCode" :size="80"></qrcode-vue>
+              <qrcode-vue :value="item.cQRCode" :size="50"></qrcode-vue>
             </div>
             <div style="margin-top: 4px">箱码: {{ item.cQRCode }}</div>
             <div>物料编码: {{ item.cInvCode }}</div>
