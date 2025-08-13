@@ -1620,6 +1620,13 @@ const selectData = (val: any) => {
         ruleForm.value.cPARM01 = val.value[0].cPARM01;
       }
     }
+    if (Route.name === 'AddwarehouseEdit' || Route.name === 'Addwarehouse') {
+      console.log(AttributeCode.value, 'AttributeCode.value');
+      if (AttributeCode.value === 'cDefindParm02') {
+        ruleForm.value['cDefindParm01'] = val.value[0]['cDepCode'];
+        ruleForm.value['cDefindParm02'] = val.value[0]['cDepName'];
+      }
+    }
     if (
       Route.name == 'addSupplierClass' ||
       Route.name == 'addSupplierClassEdit' ||
