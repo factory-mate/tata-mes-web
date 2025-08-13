@@ -1601,6 +1601,15 @@ const selectData = (val: any) => {
   if (val.type === false) {
     ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
     if (
+      Route.name === 'PurchaseRequestNoProdAdd' ||
+      Route.name === 'PurchaseRequestNoProdEdit'
+    ) {
+      if (AttributeCode.value === 'cDepName') {
+        ruleForm.value.cDepName = val.value[0].cDepName;
+        ruleForm.value.cDepCode = val.value[0].cDepCode;
+      }
+    }
+    if (
       Route.name === 'inspectionNormeAdd' ||
       Route.name === 'inspectionNormeEdit'
     ) {
@@ -2310,6 +2319,13 @@ const newAdd = () => {
     Route.name == 'AddPurchaseNoteEditNoOrigin'
   ) {
     ruleForm.value.cVouchSourceTypeCode = 0;
+    ruleForm.value.Items = ButObjTableData.value;
+  }
+
+  if (
+    Route.name === 'PurchaseRequestNoProdAdd' ||
+    Route.name === 'PurchaseRequestNoProdEdit'
+  ) {
     ruleForm.value.Items = ButObjTableData.value;
   }
 

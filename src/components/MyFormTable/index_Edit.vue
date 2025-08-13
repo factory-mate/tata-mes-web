@@ -1043,6 +1043,22 @@ const selectDatas = (val: any) => {
     }
   }
   if (
+    Route.name === 'PurchaseRequestNoProdAdd' ||
+    Route.name === 'PurchaseRequestNoProdEdit'
+  ) {
+    if (AttributeCode.value == 'cInvCode') {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+    }
+    if (AttributeCode.value == 'cUnitName') {
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
+    }
+  }
+  if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView'
