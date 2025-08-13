@@ -320,7 +320,7 @@ watch(
   () => props.ToolBut,
   newVal => {
     ToolButVal.value = (newVal ?? []).filter((item: any) => {
-      return item.IsShow == false;
+      return item.IsShow == true;
     });
   },
   { deep: true }

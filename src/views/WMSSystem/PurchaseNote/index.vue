@@ -431,33 +431,63 @@ const clickEditTable = (scope: any, obj: any) => {
 };
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'AddPurchaseNote',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '采购单新增',
-      type: 'add'
-    }
-  });
+  // router.push({
+  //   name: 'AddPurchaseNote',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '采购单新增',
+  //     type: 'add'
+  //   }
+  // });
+  window.open(
+    router.resolve({
+      name: 'AddPurchaseNote',
+      params: {
+        t: Date.now(),
+        rowId: ' '
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        title: '采购单新增',
+        type: 'add'
+      }
+    }).href,
+    '_blank'
+  );
 };
 
 const ItemAddOnMaterial = obj => {
-  router.push({
-    name: 'AddPurchaseNoteNoOrigin',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '采购单无来源新增',
-      type: 'add'
-    }
-  });
+  // router.push({
+  //   name: 'AddPurchaseNoteNoOrigin',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '采购单无来源新增',
+  //     type: 'add'
+  //   }
+  // });
+  window.open(
+    router.resolve({
+      name: 'AddPurchaseNoteNoOrigin',
+      params: {
+        t: Date.now(),
+        rowId: ' '
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        title: '采购单无来源新增',
+        type: 'add'
+      }
+    }).href,
+    '_blank'
+  );
 };
 
 //多选获取UID

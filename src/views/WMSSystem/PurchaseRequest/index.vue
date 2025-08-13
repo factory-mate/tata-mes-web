@@ -450,18 +450,33 @@ const Commit = (obj: any) => {
 };
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'AddPurchaseRequest',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '采购申请新增',
-      type: 'add'
-    }
-  });
+  // router.push({
+  //   name: 'AddPurchaseRequest',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '采购申请新增',
+  //     type: 'add'
+  //   }
+  // });
+  window.open(
+    router.resolve({
+      name: 'AddPurchaseRequest',
+      params: {
+        t: Date.now(),
+        rowId: ' '
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        title: '采购申请新增',
+        type: 'add'
+      }
+    }).href,
+    '_blank'
+  );
 };
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
