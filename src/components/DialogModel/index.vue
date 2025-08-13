@@ -1017,6 +1017,20 @@ const selectData = (val: any) => {
           ruleForm.value.cStoreHouseCode = val.value[0].cStoreHouseCode;
         }
       }
+      if (Route.name === 'Price') {
+        if (AttributeCode.value === 'cInvName') {
+          ruleForm.value.cInvName = val.value[0].cInvName;
+          ruleForm.value.cInvCode = val.value[0].cInvCode;
+        }
+        if (AttributeCode.value === 'cVendorName') {
+          ruleForm.value.cVendorName = val.value[0].cVendorName;
+          ruleForm.value.cVendorCode = val.value[0].cVendorCode;
+        }
+        if (AttributeCode.value === 'cUnitName') {
+          ruleForm.value.cUnitCode = val.value[0].cUnitCode;
+          ruleForm.value.cUnitName = val.value[0].cUnitName;
+        }
+      }
       // 设备编辑---添加项目
       if (Route.name == 'EditDevice') {
         // ruleForm.value.cProjectCode=val.value[0].cProjectCode
@@ -1393,7 +1407,8 @@ const getViewData = () => {
     Route.name == 'MaterialConfigGroupProcess' ||
     Route.name == 'WorkshopStatisticsUser' ||
     Route.name == 'Electric' ||
-    Route.name == 'WorkshopStatisticsCoreOrder'
+    Route.name == 'WorkshopStatisticsCoreOrder' ||
+    Route.name == 'Price'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''

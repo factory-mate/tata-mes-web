@@ -46,7 +46,7 @@
               display: flex;
               flex-direction: column;
               font-size: 10px;
-              font-weight: 500;
+              font-weight: bold;
             "
           >
             <div style="width: 100%; display: flex; justify-content: center">
