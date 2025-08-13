@@ -16,6 +16,7 @@
         @ExportOne="ExportOne"
         @Commit="Commit"
         @CustomExport="CustomExport"
+        @DownloadBarcode="DownloadBarcode"
       >
       </ButtonViem>
       <!-- 表格区域 -->
@@ -493,6 +494,28 @@ const CustomExport = (obj: any) => {
   exportAnalysisHooks(data, '到货单');
   ElLoading.service().close();
 };
+const DownloadBarcode = (obj: any) => {
+  const barCodeList = chosseData.value.map(item => item.cCode);
+  if (barCodeList.length <= 0) {
+    ElMessage({
+      type: 'warning',
+      message: '请勾选要导出的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      OrderByFileds: 'cBarCode',
+      Conditions: `cCode in (${barCodeList.join()})`
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '到货明细');
+  ElLoading.service().close();
+};
+
 //按钮导出所有
 const ExportAll = async (obj: any) => {
   let data = {

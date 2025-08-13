@@ -312,14 +312,15 @@ const emits = defineEmits([
   'MaterialChange',
   'MaterialChangeRollBack',
   'GetUpdateTemplate',
-  'ImportUpdate'
+  'ImportUpdate',
+  'DownloadBarcode'
 ]);
 
 watch(
   () => props.ToolBut,
   newVal => {
     ToolButVal.value = (newVal ?? []).filter((item: any) => {
-      return item.IsShow == true;
+      return item.IsShow == false;
     });
   },
   { deep: true }
@@ -831,6 +832,9 @@ const GetUpdateTemplate = obj => {
 const ImportUpdate = obj => {
   emits('ImportUpdate', obj);
 };
+const DownloadBarcode = obj => {
+  emits('DownloadBarcode', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1236,6 +1240,9 @@ const clickButton = (event: any) => {
       break;
     case 'ImportUpdate':
       ImportUpdate(event);
+      break;
+    case 'DownloadBarcode':
+      DownloadBarcode(event);
       break;
     default:
       break;
