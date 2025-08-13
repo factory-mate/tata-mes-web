@@ -41,11 +41,11 @@
           :key="i"
           style="width: 100%; height: 100vh"
         >
-          <div style="display: flex; flex-direction: column; font-size: 8px">
+          <div style="display: flex; flex-direction: column; font-size: 10px">
             <div style="width: 100%; display: flex; justify-content: center">
               <qrcode-vue :value="item.cQRCode" :size="80"></qrcode-vue>
             </div>
-            <div style="margin-top: 20px">箱码: {{ item.cQRCode }}</div>
+            <div style="margin-top: 4px">箱码: {{ item.cQRCode }}</div>
             <div>物料编码: {{ item.cInvCode }}</div>
             <div>物料名称：{{ item.cInvName }}</div>
             <div>数量：{{ item.iDefindParm13 }}{{ item.cDefindParm06 }}</div>
@@ -1032,7 +1032,7 @@ const setWidth = row => {
 
 @media print {
   @page {
-    margin: 5mm;
+    margin: 2mm;
   }
 
   .print-content {
