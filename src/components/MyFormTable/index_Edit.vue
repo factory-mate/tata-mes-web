@@ -1575,7 +1575,8 @@ const querySearchAsync = async (
           `cInvCode = ${scope.row.cInvCode}`,
           'cUnitTypeCode=1 '
         ];
-        if (queryString) {
+        console.log(queryString);
+        if (queryString && queryString != 'null') {
           conditions.push(`cUnitName like ${queryString}`);
         }
         queryData.conditions = conditions.join(' && ');
