@@ -880,6 +880,7 @@ const clickDonwnFile = (item: any) => {
 
 // 事件总线
 const clickButton = (event: any) => {
+  console.group(event.cAttributeCode, event);
   switch (event.cAttributeCode) {
     case 'Add': //新增
       clickAdd(event);

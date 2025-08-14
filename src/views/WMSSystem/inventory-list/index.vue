@@ -14,9 +14,9 @@
         @clickAdd="clickAdd"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
-        @Commit="Commit"
         @clickAudit="clickAudit"
         @Submit="Submit"
+        @export-detail="ExportDetail"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -500,6 +500,34 @@ const Submit = (obj: any) => {
     }
   });
 };
+const ExportDetail = obj => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要导出的数据'
+    });
+    return;
+  }
+  console.log(sendId.value, 'sendId.value');
+  let conditions = [];
+  if (sendId.value.length > 0) {
+    conditions.push(`MID in (${sendId.value.join()})`);
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: conditions.join(' && ')
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '盘点详情');
+  ElLoading.service().close();
+};
+
 //按钮导出所有
 const ExportAll = async (obj: any) => {
   let data = {
