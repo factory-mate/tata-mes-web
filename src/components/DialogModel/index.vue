@@ -111,7 +111,8 @@
                     val.cFaultName ||
                     val.cProcessName ||
                     val.cPositionName ||
-                    val.cLineName
+                    val.cLineName ||
+                    val.cSAPCode
                   "
                   :value="
                     val.cDictonaryCode ||
@@ -120,7 +121,8 @@
                     val.cFaultCode ||
                     val.cProcessCode ||
                     val.cPositionCode ||
-                    val.cLineCode
+                    val.cLineCode ||
+                    val.cSAPCode
                   "
                 />
               </template>
@@ -631,10 +633,19 @@ watch(
     if (newValue.FalutCode) {
       sendFalutCode.value = newValue.FalutCode;
     }
-
     modeCodeVal.value = newValue.modeCode;
     // getData(modeCodeVal.value)
     // headVal()
+  },
+  { deep: true }
+);
+
+watch(
+  () => ruleForm.value,
+  newValue => {
+    if (Route.name === 'Price') {
+      getSelData();
+    }
   },
   { deep: true }
 );
@@ -1018,13 +1029,21 @@ const selectData = (val: any) => {
         }
       }
       if (Route.name === 'Price') {
-        if (AttributeCode.value === 'cInvName') {
+        if (
+          item.cAttributeCode == AttributeCode.value &&
+          AttributeCode.value == 'cInvName'
+        ) {
           ruleForm.value.cInvName = val.value[0].cInvName;
           ruleForm.value.cInvCode = val.value[0].cInvCode;
+          getSelData();
         }
-        if (AttributeCode.value === 'cVendorName') {
+        if (
+          item.cAttributeCode == AttributeCode.value &&
+          AttributeCode.value == 'cVendorName'
+        ) {
           ruleForm.value.cVendorName = val.value[0].cVendorName;
           ruleForm.value.cVendorCode = val.value[0].cVendorCode;
+          getSelData();
         }
         if (AttributeCode.value === 'cUnitName') {
           ruleForm.value.cUnitCode = val.value[0].cUnitCode;
@@ -1619,6 +1638,7 @@ const disabledFun = (item: any) => {
 const getSelData = () => {
   FormDatas.value.forEach((item: any) => {
     if (item.cControlTypeCode == 'ComboBox' && item.IsShow == true) {
+      console.log(item);
       let obj = {};
       if (Route.name == 'PurchaseRequest') {
         obj = { Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus' };
@@ -1639,6 +1659,20 @@ const getSelData = () => {
         Route.name == 'FirstAndLastCheck'
       ) {
         obj = {};
+      } else if (Route.name === 'Price') {
+        if (!ruleForm.value.cInvCode && !ruleForm.value.cVendorCode) {
+          return;
+        }
+        let conditions = [];
+        if (ruleForm.value.cInvCode) {
+          conditions.push(`cInvCode=${ruleForm.value.cInvCode}`);
+        }
+        if (ruleForm.value.cVendorCode) {
+          conditions.push(`cVendorCode=${ruleForm.value.cVendorCode}`);
+        }
+        obj = {
+          Conditions: conditions.join(' && ')
+        };
       } else if (Route.name == 'InspectionPlanComparison') {
         obj = {
           LineCode: ruleForm.value.cResourceCode

@@ -465,7 +465,7 @@ const ExportAll = async (obj: any) => {
       Conditions: 'nSumQuinity>0'
     }
   };
-  exportAnalysisHooks(ExcelData, '所有');
+  exportAnalysisHooks(ExcelData, '上架记录查询-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
