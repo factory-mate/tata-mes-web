@@ -42,6 +42,9 @@
         :disabled="disa"
         :disabledHide="false"
         @handleTableDataChange="handleTableDataChange"
+        custom-width
+        :setWidth="setMainTableWidth"
+        :showIndex="false"
       >
         <template #button>
           <el-table-column
@@ -703,6 +706,27 @@ const TresetForm = (val: any) => {
   queryParams.PageSize = 20;
   TtableAxios();
   TTABRef.value.clearFilter();
+};
+
+const setMainTableWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 120;
+    case '物料编码':
+      return 90;
+    case '物料名称':
+      return 200;
+    case '供应商名称':
+      return 120;
+    case '剩余数量':
+    case '采购数量':
+    case '单位':
+      return 60;
+    case 'SAP物料编码':
+      return 90;
+    case '交货日期':
+      return 100;
+  }
 };
 </script>
 
