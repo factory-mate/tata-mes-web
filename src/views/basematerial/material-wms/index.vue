@@ -363,6 +363,7 @@ const clickDel = (obj: any) => {
             message: '删除数据成功'
           });
           tableAxios();
+          CheckDataList.value = [];
           TabRef.value.handleRemoveSelectionChange();
           sendId.value = [];
         } else {
@@ -453,6 +454,8 @@ const clickDelete = (scope: any, obj: any) => {
         });
         tableAxios();
         sendId.value = [];
+        CheckDataList.value = [];
+        TabRef.value.handleRemoveSelectionChange();
       } else {
         ElMessage.error('删除失败');
       }
