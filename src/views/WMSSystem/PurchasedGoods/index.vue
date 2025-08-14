@@ -258,6 +258,29 @@
               <div style="width: 50%">签收人：</div>
               <div style="width: 50%">签收日期：</div>
             </div>
+            <div
+              style="
+                width: 100%;
+                height: 1px;
+                background-color: #000;
+                margin: 10px 0;
+              "
+            ></div>
+            <div style="font-size: 9px">
+              <div>注：</div>
+              <div>
+                1.送货单要求打印字迹清晰、明确、不得有遗漏项目，不得有涂改迹象。
+              </div>
+              <div>
+                2.所有相关信息需与集团总部维护信息一致，包括但不限于：供应商编码/名称、物料编码、物料描述、单位等项目。
+              </div>
+              <div>
+                3.送货物料要求包装完好无损，标识清楚，物料编码及名称需与订单保持一致，送货时附带送货单及检验报告(如需要)。
+              </div>
+              <div>
+                4.送货单一式四份(供应商、物流各单位一份；收货单位两份)。
+              </div>
+            </div>
           </div>
         </div>
       </div>
