@@ -28,6 +28,9 @@
       scrollbar-always-on
       :max-height="props.maxHeight"
       size="small"
+      :show-summary="props.showSummary"
+      :summary-method="props.summaryMethod"
+      sum-text="合计"
     >
       <!-- 无数据时的插槽 -->
       <slot name="empty">{{ noData }}</slot>
@@ -496,6 +499,16 @@ const props = defineProps({
   customWidth: {
     type: Boolean,
     default: () => false
+  },
+  showSummary: {
+    type: Boolean,
+    default: () => false
+  },
+  summaryMethod: {
+    type: Function,
+    default: (data: any) => {
+      return [];
+    }
   }
 });
 const tableHeader: any = ref(
