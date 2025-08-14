@@ -313,7 +313,8 @@ const emits = defineEmits([
   'MaterialChangeRollBack',
   'GetUpdateTemplate',
   'ImportUpdate',
-  'DownloadBarcode'
+  'DownloadBarcode',
+  'PrintVouch'
 ]);
 
 watch(
@@ -542,6 +543,10 @@ const AddFile = (obj: any) => {
 };
 const Submit = (obj: any) => {
   emits('Submit', obj);
+};
+const PrintVouch = (obj: any) => {
+  // 通用点击事件
+  emits('PrintVouch', obj);
 };
 //导入
 const funAction = (obj: any) => {
@@ -1244,6 +1249,9 @@ const clickButton = (event: any) => {
       break;
     case 'DownloadBarcode':
       DownloadBarcode(event);
+      break;
+    case 'PrintVouch':
+      PrintVouch(event);
       break;
     default:
       break;

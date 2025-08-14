@@ -25,7 +25,10 @@ import QrcodeVue from 'qrcode.vue';
 const componentRef = ref();
 const { handlePrint } = useVueToPrint({
   content: componentRef,
-  documentTitle: '任务单'
+  documentTitle: '任务单',
+  onAfterPrint: () => {
+    printData.value = [];
+  }
 });
 
 const { cache } = useStore();

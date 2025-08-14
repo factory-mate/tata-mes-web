@@ -17,6 +17,7 @@
         @Commit="Commit"
         @CustomExport="CustomExport"
         @DownloadBarcode="DownloadBarcode"
+        @PrintVouch="PrintVouch"
       >
       </ButtonViem>
       <!-- 表格区域 -->
@@ -102,6 +103,164 @@
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
       />
+
+      <div ref="componentRef" class="print-content">
+        <div
+          :class="printData.length > 1 && 'per-page'"
+          v-for="(item, index) in printData"
+          :key="index"
+          style="position: relative; height: 100vh"
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div style="font-size: 48px; font-weight: 900">TATA</div>
+            <div style="font-size: 30px">送货单</div>
+            <div
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <qrcode-vue :value="item.cCode" :size="90" />
+              <span style="margin-top: 4px">
+                {{ item.cCode }}
+              </span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; font-size: 11px">
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 50%">
+                供应商编码：{{ item?.cVendorCode ?? '' }}
+              </div>
+              <div style="width: 50%">
+                供应商名称：{{ item.cVendorName ?? '' }}
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 50%">
+                SAP订单编号：{{ item?.cDefindParm04 ?? '' }}
+              </div>
+              <div style="width: 50%">送货单日期：{{ item?.dDate ?? '' }}</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 50%">发货地址：{{}}</div>
+              <div style="width: 50%">送货单编号：{{ item?.cCode ?? '' }}</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 50%">
+                收货单位名称：兰考闼闼同创工贸有限公司
+              </div>
+              <div style="width: 50%">
+                收货单位地址：兰考县产业集聚区迎宾大道004号
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 50%">收货人：{{}}</div>
+              <div style="width: 50%">收货人电话：{{}}</div>
+            </div>
+          </div>
+
+          <table
+            style="
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 10px;
+              font-size: 11px;
+            "
+          >
+            <thead>
+              <tr>
+                <th style="border: 1px solid #000; padding: 5px">序号</th>
+                <th style="border: 1px solid #000; padding: 5px">
+                  MES物料编码
+                </th>
+                <th style="border: 1px solid #000; padding: 5px">物料描述</th>
+                <th style="border: 1px solid #000; padding: 5px">订单数量</th>
+                <th style="border: 1px solid #000; padding: 5px">
+                  本次送货数量
+                </th>
+                <th style="border: 1px solid #000; padding: 5px">
+                  SAP物料编码
+                </th>
+                <th style="border: 1px solid #000; padding: 5px">单位</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(i, index) in item.list_Body"
+                :key="index"
+                style="text-align: center"
+              >
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ index + 1 }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.cInvCode }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.cInvName }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.nQuantity }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.nReceiveQuantity }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.cSAPCode }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.cUnitName }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div
+            style="
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              left: 0;
+              right: 0;
+              font-size: 11px;
+              font-weight: 400;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+              "
+            >
+              <div style="width: 100%">供应商全称(盖章)：</div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+              "
+            >
+              <div style="width: 50%">供应商经办人：</div>
+              <div style="width: 50%">司机物流经办人：</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div style="width: 50%">签收人：</div>
+              <div style="width: 50%">签收日期：</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </el-card>
   </div>
 </template>
@@ -136,6 +295,8 @@ import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import { useVueToPrint } from 'vue-to-print';
+import QrcodeVue from 'qrcode.vue';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const $bus: any =
@@ -153,6 +314,16 @@ const tabType = ref(true);
 const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
+const printData = ref([]);
+
+const componentRef = ref();
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: '送货单',
+  onAfterPrint: () => {
+    // printData.value = [];
+  }
+});
 
 const initType = ref(true);
 onActivated(() => {
@@ -595,6 +766,37 @@ const newList = (val: any) => {
 const renew = () => {
   getData(Route.meta.ModelCode);
 };
+
+const PrintVouch = obj => {
+  if (chosseData.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要打印的数据'
+    });
+    return;
+  }
+  const data = {
+    method: 'POST',
+    url: `${obj.Resource.cServerIP}${obj.Resource.cUrl}`,
+    data: {
+      OrderByFileds: '',
+      Conditions: `UID in (${chosseData.value.map(item => item.UID).join()})`
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.success) {
+      printData.value = res.data ?? [];
+      if (printData.value.length == 0) {
+        ElMessage({
+          message: '无数据',
+          type: 'warning'
+        });
+        return;
+      }
+      setTimeout(() => handlePrint(), 16);
+    }
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -633,5 +835,26 @@ const renew = () => {
 
 :deep(.el-form-item__label) {
   font-weight: bold;
+}
+
+.print-content {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 5mm;
+    // 默认 A4 纵向纸张，但是可以调整
+    size: A4 portrait;
+  }
+
+  .print-content {
+    display: block;
+  }
+
+  .per-page {
+    page-break-after: always;
+    break-after: page;
+  }
 }
 </style>
