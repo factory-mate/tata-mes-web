@@ -157,6 +157,7 @@
       :MulitChoose="MulitChoose"
       @ModelClose="ModelClose"
       @selectData="selectData"
+      :metadata="metadata"
     ></searchModel>
   </div>
 </template>
@@ -204,6 +205,7 @@ const props = defineProps({
     default: () => []
   }
 });
+const metadata = ref({}) as any; // 元数据
 const { tagsView } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
@@ -571,6 +573,11 @@ const GetTreeRoad = (item: any, value: any) => {
   if (item.cAttributeCode == 'cDefindParm29') {
     checkname.value = value;
   }
+  if (Route.name === 'MaterielStorage') {
+    if (item.cAttributeCode == 'cWareHouseCode') {
+      metadata.value.cWareHouseCode = value;
+    }
+  }
   if (
     Route.name == 'UnqualifiedOrderProcessing' ||
     Route.name == 'UnqualifiedPacketProcessing'
@@ -850,6 +857,7 @@ const resetForm = () => {
   FilterData.value.forEach((item: any) => {
     item.cAttributeCodeValue = '';
   });
+  metadata.value = {};
   emits('resetForm', { value: FilterData.value });
 };
 defineExpose({ FilterData });

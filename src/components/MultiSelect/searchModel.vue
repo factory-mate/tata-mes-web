@@ -275,6 +275,15 @@ const processFilterLogic = (val, p) => {
     }
   }
 
+  if (Route.name === 'MaterielStorage') {
+    console.log(p);
+    if (p.titleName === '库区名称') {
+      if (p.metadata?.cWareHouseCode) {
+        conditions.push(`cWareHouseCode=${p.metadata?.cWareHouseCode}`);
+      }
+    }
+  }
+
   if (
     ['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name) &&
     p.titleName === '寻线批次号'
@@ -445,7 +454,6 @@ const changPage = (val: any) => {
 };
 
 const setWidth = item => {
-  console.log(item);
   if (Route.name === 'AddPurchaseRequest') {
     switch (item.name) {
       case '物料编码':
