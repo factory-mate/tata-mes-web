@@ -480,6 +480,14 @@ const Commit = (obj: any) => {
   });
 };
 const CustomExport = (obj: any) => {
+  const chosseDataList = chosseData.value.map(item => item.UID);
+  if (chosseDataList.length <= 0) {
+    ElMessage({
+      type: 'warning',
+      message: '请勾选要导出的数据'
+    });
+    return;
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -487,7 +495,7 @@ const CustomExport = (obj: any) => {
       PageIndex: 1,
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: `MID in (${chosseDataList.join()})`
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
