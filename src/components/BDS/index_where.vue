@@ -212,6 +212,8 @@ const generateLambda = () => {
 
   recursion(lambdaData.value);
 
+  console.log(lambdaData.value);
+
   const data = {
     method: 'post',
     url:
@@ -247,6 +249,7 @@ const generateLambda = () => {
     if (res.success) {
       props.ruleForm.cLamda = res.data;
       props.ruleForm.models = models;
+      console.log(models);
     } else {
       ElMessage({
         message: res.msg || '生成失败',

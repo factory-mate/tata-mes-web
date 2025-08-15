@@ -195,6 +195,7 @@ import { configApi, DataApi, delApi, ParamsApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
+import { v4 as uuidv4 } from 'uuid';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -544,11 +545,23 @@ const TwotreeAxios = () => {
       TwoTreeAxiosData.value.Resource.cUrl,
     params: { bOMSGuidStr: treeNodeValue.value.cKey }
   };
-  console.log(data, 'ttttttt');
   ParamsApi(data).then(res => {
     if (res.status == 200) {
-      TwotreeData.value = res.data || [];
-      TwotreeData22.value = res.data || [];
+      const changedData = res.data;
+      // 递归处理将 每个节点添加 KeyGuid，使用函数递归
+      const recursiveAddKeyGuid = (items: any) => {
+        items.forEach((item: any) => {
+          item.KeyGuid = uuidv4().substring(0, 8);
+          if (item.Items && item.Items.length) {
+            recursiveAddKeyGuid(item.Items);
+          }
+        });
+      };
+      // 调用递归函数
+      recursiveAddKeyGuid(changedData);
+      console.log(changedData, '---changedData');
+      TwotreeData.value = changedData;
+      TwotreeData22.value = changedData;
       console.log(TwotreeData.value, '---TwotreeData.value');
     } else {
       console.log('请求出错');
