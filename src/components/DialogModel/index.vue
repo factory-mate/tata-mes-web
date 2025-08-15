@@ -1028,6 +1028,12 @@ const selectData = (val: any) => {
           ruleForm.value.cStoreHouseCode = val.value[0].cStoreHouseCode;
         }
       }
+      if (Route.name === 'StdSort') {
+        if (AttributeCode.value == 'cKeyName') {
+          ruleForm.value.cKeyName = val.value[0].cDictonaryName;
+          ruleForm.value.cKeyCode = val.value[0].cDictonaryCode;
+        }
+      }
       if (Route.name === 'Price') {
         if (
           item.cAttributeCode == AttributeCode.value &&
@@ -1427,7 +1433,8 @@ const getViewData = () => {
     Route.name == 'WorkshopStatisticsUser' ||
     Route.name == 'Electric' ||
     Route.name == 'WorkshopStatisticsCoreOrder' ||
-    Route.name == 'Price'
+    Route.name == 'Price' ||
+    Route.name == 'StdSort'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
