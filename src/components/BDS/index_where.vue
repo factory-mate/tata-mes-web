@@ -249,6 +249,7 @@ const generateLambda = () => {
     if (res.success) {
       props.ruleForm.cLamda = res.data;
       props.ruleForm.models = models;
+      props.ruleForm.cJsonContent = JSON.stringify(lambdaData.value);
       console.log(models);
     } else {
       ElMessage({
