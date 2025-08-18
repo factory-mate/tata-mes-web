@@ -49,6 +49,7 @@
         :disabledHide="false"
         :setWidth="setWidth"
         custom-width
+        :showIndex="false"
       >
         <!-- <template #button>
           <el-table-column
@@ -521,12 +522,16 @@ const tableHearData = (value: any) => {
 };
 const setWidth = row => {
   switch (row.label) {
+    case '申请单号':
+      return 150;
     case '物料编码':
     case 'SAP物料编码':
-      return 120;
+    case 'SAP号':
+      return 110;
     case '物料名称':
       return 250;
     case '规格型号':
+    case '不含税金额':
       return 80;
     case '数量':
     case '原始数量':
@@ -536,8 +541,13 @@ const setWidth = row => {
     case '剩余数量':
     case '到货数量':
     case '采购数量':
+    case '含税单价':
+    case '含税金额':
+    case '税额':
+    case '税率':
       return 70;
     case '交货日期':
+    case '不含税单价':
       return 120;
     default:
       return 200;

@@ -317,7 +317,7 @@ const funTable = (arr: Array<any>) => {
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       const today = dayjs(new Date()).format('YYYY-MM-DD');
       const pastTenDays = dayjs(new Date())
-        .subtract(10, 'day')
+        .subtract(20, 'day')
         .format('YYYY-MM-DD');
       Conditions.value = `PDate >= ${pastTenDays}T00:00:00 && PDate <= ${today}T23:59:59`;
       AxiosData.value = item;

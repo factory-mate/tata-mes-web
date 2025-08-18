@@ -559,7 +559,7 @@ const funHeadData = () => {
     if (Route.name === 'WareMangeReportMain') {
       if (item.cAttributeCode === 'PDate') {
         item.cAttributeCodeValue = [
-          dayjs(new Date()).subtract(10, 'day').format('YYYY-MM-DD'),
+          dayjs(new Date()).subtract(20, 'day').format('YYYY-MM-DD'),
           dayjs(new Date()).format('YYYY-MM-DD')
         ];
       }
