@@ -1337,7 +1337,9 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     Route.name === 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView' ||
+    Route.name == 'PurchaseRequestNoProdAdd' ||
+    Route.name == 'PurchaseRequestNoProdEdit'
   ) {
     const {
       data: { data }
