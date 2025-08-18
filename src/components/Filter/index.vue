@@ -573,7 +573,7 @@ const GetTreeRoad = (item: any, value: any) => {
   if (item.cAttributeCode == 'cDefindParm29') {
     checkname.value = value;
   }
-  if (Route.name === 'MaterielStorage') {
+  if (Route.name === 'MaterielStorage' || Route.name === 'MinMaterielStorage') {
     if (item.cAttributeCode == 'cWareHouseCode') {
       metadata.value.cWareHouseCode = value;
     }

@@ -275,9 +275,9 @@ const processFilterLogic = (val, p) => {
     }
   }
 
-  if (Route.name === 'MaterielStorage') {
+  if (Route.name === 'MaterielStorage' || Route.name === 'MinMaterielStorage') {
     console.log(p);
-    if (p.titleName === '库区名称') {
+    if (p.titleName === '库区名称' || p.titleName === '库区') {
       if (p.metadata?.cWareHouseCode) {
         conditions.push(`cWareHouseCode=${p.metadata?.cWareHouseCode}`);
       }
