@@ -2094,11 +2094,11 @@ const selectData = (val: any) => {
       }
     }
     if (Route.name == 'AddGrindOrder' || Route.name == 'EditGrindOrder') {
-      if (val.value[0].cVendorCode) {
-        ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
-      }
-      if (val.value[0].cWareHouseCode) {
-        ruleForm.value['cWareHouseCode'] = val.value[0].cWareHouseCode || '';
+      ruleForm.value['cVendorCode'] = val.value[0]?.cVendorCode;
+      ruleForm.value['cWareHouseCode'] = val.value[0]?.cWareHouseCode;
+      if (AttributeCode.value == 'cDefindParm02') {
+        ruleForm.value['cDefindParm01'] = val.value[0]?.cDepCode || '';
+        ruleForm.value['cDefindParm02'] = val.value[0]?.cDepName || '';
       }
     }
     if (Route.name == 'ScrapToolInfoAdd' || Route.name == 'ScrapToolInfoEdit') {

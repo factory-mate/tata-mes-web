@@ -712,6 +712,15 @@ const changeTextBox = async (i: any, scope: any, v) => {
   console.log(i, scope, v);
   const p = scope.column.property;
   const row = scope.row;
+  if (Route.name === 'AddGrindOrder' || Route.name === 'EditGrindOrder') {
+    if (p === 'nTaxPrice' || p === 'nQuantity') {
+      const nTaxMoney = new BigNumber(
+        Number(tableDataVal.value[i].nTaxPrice ?? 0) *
+          Number(tableDataVal.value[i].nQuantity ?? 0)
+      );
+      tableDataVal.value[i].nTaxMoney = nTaxMoney.toString();
+    }
+  }
   if (Route.name === 'newPurchasedGoods') {
     if (
       p === 'nAccReceiveQuantity' ||
