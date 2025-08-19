@@ -220,6 +220,7 @@
             <!-- 树形结构 -->
             <el-cascader
               v-if="item.cControlTypeCode == 'Tree'"
+              node-key="cFactoryUnitName"
               ref="cascader"
               v-model="ruleForm[item.Resource.cAttributeCode]"
               :options="optionData"
@@ -908,6 +909,12 @@ const selectData = (val: any) => {
       if (item.Resource.cAttributeName == titleName.value) {
         ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
       }
+      if (Route.name === 'ProductLinePerson') {
+        if (AttributeCode.value == 'cDefindParm04') {
+          ruleForm.value.cDefindParm04 = val.value[0].cPersonName;
+          ruleForm.value.cDefindParm03 = val.value[0].cPersonCode;
+        }
+      }
       if (
         Route.name === 'MaterialConfigGroupProcess' ||
         Route.name === 'MaterialConfigRule' ||
@@ -1434,7 +1441,9 @@ const getViewData = () => {
     Route.name == 'Electric' ||
     Route.name == 'WorkshopStatisticsCoreOrder' ||
     Route.name == 'Price' ||
-    Route.name == 'StdSort'
+    Route.name == 'StdSort' ||
+    Route.name == 'ProductLinePerson' ||
+    Route.name == 'ProductLineStandardCapacity'
   ) {
     obj = {
       val: rowVal.value?.UID || TrowVal.value?.UID || ''
@@ -1460,6 +1469,7 @@ const getViewData = () => {
     ParamsApi(data).then(res => {
       if (res.status == 200) {
         ruleForm.value = res.data || {};
+        console.log('获取详情数据', ruleForm.value);
         if (Route.name == 'FirstAndLastCheck') {
           if (ruleForm.value.cPARM06 == '是') {
             ruleForm.value.cPARM06 = true;
@@ -2271,7 +2281,11 @@ const handleChange = (value: any) => {
   console.log(value, '树结构选中数据');
   console.log(cascader.value[0].getCheckedNodes(), '--pppp');
   // TODO：
-  if (Route.name == 'ProcessRouteLine') {
+  if (
+    Route.name == 'ProcessRouteLine' ||
+    Route.name == 'WorkshopStatisticsUser' ||
+    Route.name == 'ProductLineStandardCapacity'
+  ) {
     ruleForm.value['cFactoryUnitCode'] =
       cascader.value[0].getCheckedNodes()[0].value;
     ruleForm.value['cFactoryUnitName'] =

@@ -1015,16 +1015,15 @@ const ModelClose = (val: any) => {
 };
 const selectData = (val: any) => {
   console.log(val, '---val');
-  // console.log(titleName.value, '--titleName.value ');
-  // console.log(AttributeCode.value, '-AttributeCode.value');
+  console.log(AttributeCode.value, '🚀🚀AttributeCode.value');
 
   FormData.value[AttributeCode.value] = '11';
   // 单选
   if (val.type === false) {
     if (Route.name === 'ProductLinePerson') {
       if (AttributeCode.value == 'cDefindParm04') {
-        ruleForm.value.cDefindParm04 = val.value[0].cEmployeeName;
-        ruleForm.value.cDefindParm05 = val.value[0].cEmployeeCode;
+        ruleForm.value.cDefindParm04 = val.value[0].cPersonName;
+        ruleForm.value.cDefindParm03 = val.value[0].cPersonCode;
       }
     } else if (
       titleName.value == '换算单位编码' ||
