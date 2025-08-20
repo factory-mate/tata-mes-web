@@ -2555,7 +2555,8 @@ const newAdd = () => {
     Route.name == 'otherOutNotifyDetail' ||
     Route.name == 'otherOutNotifyEdit' ||
     Route.name == 'TransferRecordAdd' ||
-    Route.name == 'TransferRecordEdit'
+    Route.name == 'TransferRecordEdit' ||
+    Route.name == 'PurchaseRequestNoProdEdit'
   ) {
     dataValue = { list_body: ButObjTableData.value };
   } else if (Route.name == 'ReturnQualityInfo') {
