@@ -3,6 +3,7 @@
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
+      ref="filterRef"
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
@@ -128,6 +129,7 @@ const $bus: any =
 const Route = useRoute();
 const router = useRouter();
 let Filter = ref([]) as any;
+const filterRef = ref(null);
 let But = ref([]) as any;
 // 表格配置数据
 const TabRef = ref();
@@ -225,6 +227,10 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  const conditions = ['nSumQuinity>0'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -232,7 +238,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: conditions.join(' && ')
     }
   };
   try {
@@ -455,6 +461,11 @@ const handleSelectionChange = (arr: any) => {
 
 //按钮导出所有
 const ExportAll = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
+  const conditions = ['nSumQuinity>0'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let ExcelData = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -462,13 +473,18 @@ const ExportAll = async (obj: any) => {
       PageIndex: 1,
       PageSize: 999999,
       OrderByFileds: 'cInvCode',
-      Conditions: 'nSumQuinity>0'
+      Conditions: conditions.join(' && ')
     }
   };
   exportAnalysisHooks(ExcelData, '上架记录查询-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
+  const conditions = ['nSumQuinity>0'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let ExcelData = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -476,7 +492,7 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: 'cInvCode',
-      Conditions: 'nSumQuinity>0'
+      Conditions: conditions.join(' && ')
     }
   };
   exportAnalysisHooks(ExcelData, '上架记录查询');
@@ -486,21 +502,19 @@ const data = reactive({
   isCollapse: false,
   dialogV: false,
   dialogTitle: '编辑',
-  Conditions: 'nSumQuinity>0',
+  Conditions: '',
   OrderByFileds: 'cInvCode'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = (val: any) => {
   queryParams.PageIndex = 1;
-  Conditions.value = filterModel(val.value)
-    ? filterModel(val.value) + ' && nSumQuinity>0'
-    : 'nSumQuinity>0';
+  Conditions.value = filterModel(val.value);
   tableAxios();
 };
 // 重置
 const resetForm = (val: any) => {
-  Conditions.value = 'nSumQuinity>0';
+  Conditions.value = '';
   OrderByFileds.value = 'cInvCode';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;

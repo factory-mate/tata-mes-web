@@ -3,6 +3,7 @@
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
+      ref="filterRef"
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
@@ -191,6 +192,7 @@ const $bus: any =
 const Route = useRoute();
 const router = useRouter();
 let Filter = ref([]) as any;
+const filterRef = ref(null);
 let But = ref([]) as any;
 // 表格配置数据
 const TabRef = ref();
@@ -584,6 +586,7 @@ const handleSelectionChange = (arr: any) => {
 
 //按钮导出所有
 const ExportAll = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
   let ExcelData = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -591,13 +594,14 @@ const ExportAll = async (obj: any) => {
       PageIndex: 1,
       PageSize: 999999,
       OrderByFileds: '',
-      Conditions: ''
+      Conditions: Conditions.value
     }
   };
   exportAnalysisHooks(ExcelData, '所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
   let ExcelData = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -605,7 +609,7 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: '',
-      Conditions: ''
+      Conditions: Conditions.value
     }
   };
   exportAnalysisHooks(ExcelData, '上架记录查询');
