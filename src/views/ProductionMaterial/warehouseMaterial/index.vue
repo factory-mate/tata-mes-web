@@ -241,6 +241,10 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  const conditions = ['cVouchTypeCode in (01,05)', 'iStatus in (5,51,6)'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -248,9 +252,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
-        ? 'cVouchTypeCode = 01 && iStatus in (5,51,6) && ' + Conditions.value
-        : 'cVouchTypeCode = 01 && iStatus in (5,51,6)'
+      Conditions: conditions.join(' && ')
     }
   };
   try {
@@ -525,6 +527,10 @@ const Commit = (obj: any) => {
 };
 //按钮导出所有
 const ExportAll = async (obj: any) => {
+  const conditions = ['cVouchTypeCode in (01,05)', 'iStatus in (5,51,6)'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -532,15 +538,17 @@ const ExportAll = async (obj: any) => {
       PageIndex: 1,
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
-        ? 'cVouchTypeCode = 01 && iStatus in (5,51,6) && ' + Conditions.value
-        : 'cVouchTypeCode = 01 && iStatus in (5,51,6)'
+      Conditions: conditions.join(' && ')
     }
   };
   exportAnalysisHooks(data, '到货单-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
+  const conditions = ['cVouchTypeCode in (01,05)', 'iStatus in (5,51,6)'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -548,9 +556,7 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
-        ? 'cVouchTypeCode = 01 && iStatus in (5,51,6) && ' + Conditions.value
-        : 'cVouchTypeCode = 01 && iStatus in (5,51,6)'
+      Conditions: conditions.join(' && ')
     }
   };
   exportAnalysisHooks(data, '到货单');
