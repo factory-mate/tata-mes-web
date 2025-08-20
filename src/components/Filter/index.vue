@@ -658,7 +658,7 @@ const getTreeDAata = (v: any) => {
           ParamsApi(data).then((res: any) => {
             item.selDataList = res.data;
           });
-          // getSelectData()
+          // getSelectData();
         }
         if (Route.name == 'File') {
           let data = {
@@ -733,6 +733,7 @@ const getSelectData = () => {
         Route.name == 'inLindReturn' ||
         Route.name == 'MinMaterielStorage' ||
         Route.name == 'MaterielStorage' ||
+        Route.name == 'InOutInventory' ||
         Route.name == 'PurchaseAudit' ||
         Route.name == 'otherInNotify' ||
         (Route.name == 'originalOrder' &&
