@@ -867,8 +867,6 @@ const PrintVouch = obj => {
 @media print {
   @page {
     margin: 5mm;
-    // 默认 A4 纵向纸张，但是可以调整
-    size: A4 portrait;
   }
 
   .print-content {
