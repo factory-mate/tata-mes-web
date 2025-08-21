@@ -183,7 +183,7 @@ const Filter = ref<any>([]);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 20
+  PageSize: 10
 });
 const data = reactive({
   isCollapse: false,
@@ -598,7 +598,7 @@ const FilresetForm = (val: any) => {
   OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
-  queryParams.PageSize = 20;
+  queryParams.PageSize = 10;
   TtableAxios();
   TABRef.value.clearFilter();
 };
@@ -608,6 +608,8 @@ const modelClose = (val: any) => {
 //新增保存
 const SaveAdd = (obj: any) => {
   // 数量 nQuantity 和单价 nTaxPrice 必填且大于 0
+  console.log(headRef.value.ruleForm, 'headRef');
+  return;
   if (
     TABRef.value.tableDataVal.some(
       (item: any) =>

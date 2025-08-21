@@ -1648,7 +1648,12 @@ const selectData = (val: any) => {
     }
     if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
       if (AttributeCode.value == 'cVendorName') {
+        ruleForm.value['cVendorName'] = val.value[0]['cVendorName'];
         ruleForm.value['cVendorCode'] = val.value[0]['cVendorCode'];
+      }
+      if (AttributeCode.value == 'cDepName') {
+        ruleForm.value['cDepCode'] = val.value[0]['cDepCode'];
+        ruleForm.value['cDepName'] = val.value[0]['cDepName'];
       }
     }
     if (Route.name === 'addSupplierEdit' || Route.name === 'addSupplier') {
@@ -2094,8 +2099,14 @@ const selectData = (val: any) => {
       }
     }
     if (Route.name == 'AddGrindOrder' || Route.name == 'EditGrindOrder') {
-      ruleForm.value['cVendorCode'] = val.value[0]?.cVendorCode;
-      ruleForm.value['cWareHouseCode'] = val.value[0]?.cWareHouseCode;
+      if (AttributeCode.value == 'cVendorName') {
+        ruleForm.value['cVendorName'] = val.value[0].cVendorName || '';
+        ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
+      }
+      if (AttributeCode.value == 'cWareHouseName') {
+        ruleForm.value['cWareHouseName'] = val.value[0].cWareHouseName || '';
+        ruleForm.value['cWareHouseCode'] = val.value[0].cWareHouseCode || '';
+      }
       if (AttributeCode.value == 'cDefindParm02') {
         ruleForm.value['cDefindParm01'] = val.value[0]?.cDepCode || '';
         ruleForm.value['cDefindParm02'] = val.value[0]?.cDepName || '';
