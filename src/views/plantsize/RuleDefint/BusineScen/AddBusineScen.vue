@@ -238,9 +238,10 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
 
   rowId.value = Route.params.rowId;
   initType.value = false;
@@ -261,6 +262,8 @@ onActivated(() => {
   // @ts-ignore
   if (Route.meta.title.match(/详情/gi)) {
     disabled.value = true;
+  } else {
+    disabled.value = false;
   }
 });
 const treeObj = ref({});
