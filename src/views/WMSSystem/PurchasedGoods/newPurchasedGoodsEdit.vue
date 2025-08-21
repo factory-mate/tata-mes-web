@@ -104,6 +104,8 @@
         :setWidth="setWidth"
         custom-width
         @handle-table-data-change="handleTableDataChange"
+        show-summary
+        :summary-method="d => summaryMethod(d)"
       >
         <template #button>
           <el-table-column
@@ -912,6 +914,33 @@ const setDialogWidth = row => {
     default:
       return 200;
   }
+};
+
+const summaryMethod = d => {
+  const { columns, data } = d;
+  const sums = [];
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计';
+      return;
+    }
+    if (
+      ['nQuantity', 'nTaxMoney', 'cDefindParm06', 'nMoney'].includes(
+        column.property
+      )
+    ) {
+      const values = data.map(item =>
+        Number.isNaN(Number(item[column.property]))
+          ? 0
+          : Number(item[column.property])
+      );
+      sums[index] = values.reduce((prev, curr) => prev + curr, 0).toFixed(2);
+    } else {
+      sums[index] = '';
+    }
+  });
+
+  return sums;
 };
 </script>
 
