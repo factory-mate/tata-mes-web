@@ -645,7 +645,7 @@ watch(
 watch(
   () => ruleForm.value,
   newValue => {
-    if (Route.name === 'Price') {
+    if (Route.name === 'Price' || Route.name === 'PriceKnife') {
       getSelData();
     }
   },
@@ -1042,7 +1042,7 @@ const selectData = (val: any) => {
           ruleForm.value.cKeyCode = val.value[0].cDictonaryCode;
         }
       }
-      if (Route.name === 'Price') {
+      if (Route.name === 'Price' || Route.name === 'PriceKnife') {
         if (
           item.cAttributeCode == AttributeCode.value &&
           AttributeCode.value == 'cInvName'
@@ -1442,6 +1442,7 @@ const getViewData = () => {
     Route.name == 'Electric' ||
     Route.name == 'WorkshopStatisticsCoreOrder' ||
     Route.name == 'Price' ||
+    Route.name == 'PriceKnife' ||
     Route.name == 'StdSort' ||
     Route.name == 'ProductLinePerson' ||
     Route.name == 'ProductLineStandardCapacity'
@@ -1677,7 +1678,7 @@ const getSelData = () => {
         Route.name == 'FirstAndLastCheck'
       ) {
         obj = {};
-      } else if (Route.name === 'Price') {
+      } else if (Route.name === 'Price' || Route.name === 'PriceKnife') {
         if (!ruleForm.value.cInvCode && !ruleForm.value.cVendorCode) {
           return;
         }
