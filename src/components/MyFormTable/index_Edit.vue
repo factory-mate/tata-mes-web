@@ -115,8 +115,12 @@
                 <el-option
                   v-for="(val, index) in item.PullData"
                   :key="index"
-                  :label="val.cDictonaryName || val.cUnitName"
-                  :value="val.cDictonaryCode || val.cUnitCode"
+                  :label="
+                    val.cDictonaryName || val.cUnitName || val.cFactoryUnitName
+                  "
+                  :value="
+                    val.cDictonaryCode || val.cUnitCode || val.cFactoryUnitCode
+                  "
                 />
               </el-select>
               <el-input-number
@@ -663,7 +667,25 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
           return item.cUnitCode == val;
         }
       }
+      if (
+        Route.name === 'WorkshopStatisticsCoreOrderEdit' ||
+        Route.name === 'WorkshopStatisticsCoreOrderAdd'
+      ) {
+        if (prop == 'cFactoryUnitCode') {
+          return item.cFactoryUnitCode == val;
+        }
+      }
     });
+  }
+  if (
+    Route.name === 'WorkshopStatisticsCoreOrderEdit' ||
+    Route.name === 'WorkshopStatisticsCoreOrderAdd'
+  ) {
+    console.log(prop, dataVal[0]);
+    if (prop == 'cFactoryUnitCode') {
+      tableDataVal.value[i]['cFactoryUnitCode'] = dataVal[0].cFactoryUnitCode;
+      tableDataVal.value[i]['cFactoryUnitName'] = dataVal[0].cFactoryUnitName;
+    }
   }
   if (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') {
     if (prop === 'cUnitCode' || prop === 'cUnitName') {
@@ -880,6 +902,17 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvstd;
+    }
+  }
+  if (
+    Route.name === 'WorkshopStatisticsCoreOrderEdit' ||
+    Route.name === 'WorkshopStatisticsCoreOrderAdd'
+  ) {
+    if (AttributeCode.value == 'cEmployeeName') {
+      tableDataVal.value[IndexType.value].cEmployeeCode =
+        val.value[0].cEmployeeCode;
+      tableDataVal.value[IndexType.value].cEmployeeName =
+        val.value[0].cEmployeeName;
     }
   }
   if (

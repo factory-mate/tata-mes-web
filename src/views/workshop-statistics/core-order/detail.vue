@@ -29,21 +29,20 @@
         @RoleBut="RoleBut"
       ></Head-View>
       <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @addorder="ItemAdd"></ButtonViem>
+        <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
       </div>
       <myTable
         ref="TABRef"
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         :disabledHide="false"
-        @handle-table-data-change="handleTableDataChange"
       >
-        <template #button>
+        <!-- <template #button>
           <el-table-column
             label="操作"
             fixed="right"
@@ -63,7 +62,7 @@
               >
             </template>
           </el-table-column>
-        </template>
+        </template> -->
       </myTable>
 
       <pop-model
@@ -86,14 +85,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
-      width="80%"
     >
-      <FilterForm
-        :Filter="Filter"
-        @ClickSearch="ClickSearch"
-        @resetForm="FilresetForm"
-      >
-      </FilterForm>
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
@@ -127,17 +119,15 @@ import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare, filterModel, tableSortInit } from '@/utils';
+import { compare } from '@/utils';
 import {
   ElButton,
   ElCard,
   ElTableColumn,
   ElMessage,
   ElMessageBox,
-  ElLoading,
-  ElPopconfirm
+  ElLoading
 } from 'element-plus';
-import FilterForm from '@/components/Filter/index.vue';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
@@ -179,11 +169,10 @@ const selectArr = ref([]) as any;
 const printData = ref([]) as any;
 const modelGridType = ref(true);
 const View1val = ref('');
-const Filter = ref<any>([]);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 10
+  PageSize: 20
 });
 const data = reactive({
   isCollapse: false,
@@ -227,12 +216,10 @@ onActivated(() => {
   //     getAddUser(Route.meta.ModelCode)
   // }
   // if (rowId.value != Route.params.rowId) {
-  //   getAddUser(Route.meta.ModelCode);
-  // }
   getAddUser(Route.meta.ModelCode);
+  //}
   rowId.value = Route.params.rowId;
   initType.value = false;
-  tableData.value = [];
   if (history.state.row) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -240,6 +227,9 @@ onActivated(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
+  }
+  if (history.state.title == '采购单详情') {
+    disabled.value = true;
   }
 });
 const clickView = (val: any) => {
@@ -429,11 +419,6 @@ const ItemAdd = async (obj: any) => {
             item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
           );
         }
-        if (item.cPropertyClassTypeCode === 'Filter') {
-          Filter.value = item[import.meta.env.VITE_APP_key].sort(
-            compare('iIndex', true)
-          );
-        }
       });
     } else {
       console.log('请求出错');
@@ -511,67 +496,13 @@ const ThandleSelectionChange = (val: any) => {
   itemData.value = val;
 };
 //弹窗确认
-const Tconfirm = async () => {
-  if (
-    headRef.value.ruleForm.cVendorName ||
-    headRef.value.ruleForm.cVendorCode
-  ) {
-    console.log(
-      '已指定供应商',
-      headRef.value.ruleForm.cVendorName,
-      headRef.value.ruleForm.cVendorCode,
-      itemData.value
-    );
-    if (
-      itemData.value.some(
-        (item: any) =>
-          item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
-          item.cVendorName !== headRef.value.ruleForm.cVendorName
-      )
-    ) {
-      try {
-        await ElMessageBox.confirm(
-          '与已指定供应商不批评，是否继续添加？',
-          '提示',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        );
-        const { cVendorCode, cVendorName } = itemData.value[0];
-        headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-      } catch {
-        return;
-      }
-    }
-  } else {
-    const { cVendorCode, cVendorName } = itemData.value[0];
-    headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-  }
-  // 判断选中的数据 cVendorCode 是否一致
-  if (
-    !itemData.value.every(
-      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '请选择同一供应商的物料'
-    });
-    return;
-  }
-
+const Tconfirm = () => {
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
     tableData.value.push(item);
   });
   TTABRef.value.handleRemoveSelectionChange();
-};
-
-const handleTableDataChange = (val: any) => {
-  tableData.value = val;
 };
 
 // 添加弹窗form
@@ -586,50 +517,18 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   TtableAxios();
 };
-// 搜索
-const ClickSearch = (val: any) => {
-  queryParams.PageIndex = 1;
-  Conditions.value = filterModel(val.value);
-  TtableAxios();
-};
-// 重置
-const FilresetForm = (val: any) => {
-  Conditions.value = '';
-  OrderByFileds.value = '';
-  tableColumns.value = tableSortInit(tableColumns.value);
-  queryParams.PageIndex = 1;
-  queryParams.PageSize = 10;
-  TtableAxios();
-  TABRef.value.clearFilter();
-};
 const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  // 数量 nQuantity 和单价 nTaxPrice 必填且大于 0
-  if (
-    TABRef.value.tableDataVal.some(
-      (item: any) =>
-        !item.nQuantity ||
-        !item.nTaxPrice ||
-        item.nQuantity <= 0 ||
-        item.nTaxPrice <= 0
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '数量和含税单价必填且大于 0'
-    });
-    return;
-  }
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'BuyOrder';
+  obj.pathName = 'AddPurchaseNoteEdit';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  // disa.value = true
+  disa.value = true;
 };
 //打印显示一个按钮
 const BtnDAel = (v: any) => {

@@ -36,11 +36,10 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
-        :disabledHide="false"
         @handle-table-data-change="handleTableDataChange"
       >
         <template #button>
@@ -287,9 +286,7 @@ const getAddUser = async (code: any) => {
           But.value = item[import.meta.env.VITE_APP_key].sort(
             compare('iIndex', true)
           );
-          ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '保存'
-          );
+          ButOne.value = item[import.meta.env.VITE_APP_key];
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
             (item: any) => item.Resource.cAttributeName == '添加'
           );
@@ -348,6 +345,7 @@ const funTable = (arr: Array<any>) => {
           cControlTypeCode: item.cControlTypeCode,
           cAttributeCode: item.Resource.cAttributeCode,
           headerSlot: false,
+          cIncludeModelCode: item.cIncludeModelCode,
           slot: ''
         };
         tableColumns.value.push(itemData);
@@ -388,7 +386,7 @@ const tableAxios = async () => {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
-      val: rowId.value
+      cCode: rowId.value
     }
   };
   try {
@@ -607,24 +605,8 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  // 数量 nQuantity 和单价 nTaxPrice 必填且大于 0
-  if (
-    TABRef.value.tableDataVal.some(
-      (item: any) =>
-        !item.nQuantity ||
-        !item.nTaxPrice ||
-        item.nQuantity <= 0 ||
-        item.nTaxPrice <= 0
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '数量和含税单价必填且大于 0'
-    });
-    return;
-  }
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'BuyOrder';
+  obj.pathName = 'WorkshopStatisticsCoreOrder';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -677,7 +659,7 @@ const handleSelectionChange = (v: any) => {
 //修改保存
 const SaveEdit = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseNote';
+  obj.pathName = 'WorkshopStatisticsCoreOrder';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -689,7 +671,7 @@ const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
   disabled.value = false;
   disa.value = false;
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
+  $bus.emit('TabTitleVal', { name: Route.name, title: '重点订单编辑' });
 };
 </script>
 

@@ -2291,6 +2291,9 @@ const newAdd = () => {
       ruleForm.value['cPolicyTypeCode'] = Idata.value[0].cDictonaryCode;
     }
   }
+  if(Route.name === 'WorkshopStatisticsCoreOrderAdd'|| Route.name === 'WorkshopStatisticsCoreOrderEdit') {
+    ruleForm.value.list_Data = ButObjTableData.value;
+  }
   //设备档案编辑(下拉框数据)-----------------------------
   if (Route.name == 'EditDevice' || Route.name == 'AddDevice') {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

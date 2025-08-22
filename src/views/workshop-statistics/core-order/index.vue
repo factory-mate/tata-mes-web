@@ -1,5 +1,5 @@
 <template>
-  <!-- 设备刀具关系配置页面 -->
+  <!-- 采购订单页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
@@ -11,10 +11,8 @@
       <!-- 按钮区域 -->
       <ButtonViem
         :ToolBut="But"
-        @clickDelete="clickDel"
         @clickAdd="clickAdd"
-        @ExportAll="ExportAll"
-        @ExportOne="ExportOne"
+        @clickDelete="clickDel"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -43,12 +41,6 @@
               ></myPopup>
             </template>
             <template #default="scope">
-              <!-- <template v-for="item in tableButton" :key="item.Resource.cAttributeName">
-                                <el-button type="primary" size="small"
-                                    @click="clickTableBut(scope, item)">
-                                    {{ item.Resource.cAttributeName }}
-                                </el-button>
-                            </template> -->
               <template
                 v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
@@ -61,33 +53,25 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <el-dropdown
-                style="margin-left: 10px"
-                v-if="tableButton.length > 3"
-              >
-                <el-button type="primary" size="small">
-                  <el-icon>
-                    <MoreFilled />
-                  </el-icon>
-                  <el-icon class="el-icon--right"><arrow-down /></el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in tableButton.slice(2)"
-                      :key="item.Resource.cAttributeName"
-                    >
-                      <el-button
-                        type="primary"
-                        size="small"
-                        @click="clickTableBut(scope, item)"
-                      >
-                        {{ item.Resource.cAttributeName }}
-                      </el-button>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+              <!-- <el-dropdown style="margin-left: 10px;" v-if="tableButton.length > 3">
+                                <el-button type="primary" size="small">
+                                    <el-icon>
+                                        <MoreFilled />
+                                    </el-icon>
+                                    <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                                </el-button>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item
+                                            v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1)"
+                                            :key="item.Resource.cAttributeName">
+                                            <el-button type="primary" size="small" @click="clickTableBut(scope, item)">
+                                                {{ item.Resource.cAttributeName }}
+                                            </el-button>
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown> -->
             </template>
           </el-table-column>
         </template>
@@ -97,34 +81,19 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
-        :page-sizes="[20, 50, 100]"
         @pagination="changPage"
       />
     </el-card>
-    <!-- 弹窗 -->
-    <Odialog
-      width="500px"
-      :dialogFormVisible="ZZdialogFormVisible"
-      :title="title"
-      :objData="objData"
-      :disabled="disabled"
-      :modeCode="objModeCode"
-      :row="Trow"
-      @FmodelClose="modelClose"
-    ></Odialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, nextTick, onActivated, provide } from 'vue';
+import { ref, toRefs, reactive, nextTick, onActivated } from 'vue';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
-import Odialog from '@/components/DialogModel/index.vue';
-import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
-import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import {
   ElButton,
@@ -133,8 +102,12 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
+import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
-import { useRoute, useRouter } from 'vue-router';
+import { sessionStorage } from '@/utils/storage';
+import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -146,20 +119,14 @@ let Filter = ref([]) as any;
 let But = ref([]) as any;
 // 表格配置数据
 const TabRef = ref();
-const objModeCode = ref('');
 const tableColumns = ref([]) as any;
 const tableButton = ref([]) as any;
 const AxiosData = ref({}) as any;
 const tabType = ref(true);
-const ZZdialogFormVisible = ref(false);
-const title = ref('优化');
-const disabled = ref(false);
-const Trow = ref({});
-const objData = ref({});
-//启用/删除传递的UID
 const CheckDataList = ref([]) as any;
+//启用传递的UID
 const sendId = ref([]) as any;
-const sendIdArr = ref([]) as any;
+
 const initType = ref(true);
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -167,26 +134,29 @@ onActivated(() => {
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (val == Route.name) {
+  //   initType.value = false;
+  //   getData(Route.meta.ModelCode);
+  // }
+  // if (initType.value) {
+  //   getData(Route.meta.ModelCode);
+  // }
+  getData(Route.meta.ModelCode);
+
   initType.value = false;
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'CauseFile') {
+    if (v.name == 'BuyOrder') {
       tableAxios();
     }
   }, 300);
 });
-//调取管理接口
+//调取供应商接口
 const getData: any = async (val: string) => {
   try {
+    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(val);
     if (res.status == 200) {
       Filter.value = [];
@@ -212,9 +182,11 @@ const getData: any = async (val: string) => {
       });
     } else {
       console.log('请求出错');
+      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错了');
+    ElLoading.service().close();
   }
 };
 //分页查询参数
@@ -228,23 +200,12 @@ const total = ref(0);
 const tableData = ref([] as any);
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
-  console.log(event.cAttributeCode, '--but');
-
   switch (event.cAttributeCode) {
     case 'View':
       clickView(scope, event);
       break;
     case 'Edit':
       clickEditTable(scope, event);
-      break;
-    case 'Delete':
-      clickDelete(scope, event);
-      break;
-    case 'Enable':
-      Enable(scope, event);
-      break;
-    case 'Disabled':
-      Disabled(scope, event);
       break;
     default:
       break;
@@ -263,6 +224,7 @@ const tableAxios = async () => {
     }
   };
   try {
+    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await DataApi(data);
     if (res.status == 200) {
       tableData.value = res.data.data.map(
@@ -276,14 +238,16 @@ const tableAxios = async () => {
       total.value = res.data.dataCount;
       tablefilter();
       TabRef.value.handleRemoveSelectionChange();
+      ElLoading.service().close();
     } else {
       console.log('请求出错');
+      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错');
+    ElLoading.service().close();
   }
 };
-provide('tableAxios', { tableAxios });
 // table filters
 const tablefilter = () => {
   tableColumns.value.forEach((aItem: any) => {
@@ -315,14 +279,13 @@ const funTable = (arr: Array<any>) => {
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
-        checkType: item.IsShow,
+        checkType: true,
         label: item.cShowName ?? item.Resource.cAttributeName,
         prop: item.Resource.cAttributeCode,
         headerSlot: true,
         slot: '',
         lock: false,
-        filters: [],
-        cFormPropertyCode: item.cFormPropertyCode
+        filters: []
       };
       tableColumns.value.push(itemData);
     }
@@ -353,22 +316,23 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   tableAxios();
 };
-//新增/编辑/详情弹窗
-const modelClose = (v: any) => {
-  ZZdialogFormVisible.value = v.type;
-};
 //按钮删除
 const clickDel = (obj: any) => {
-  console.log(sendIdArr.value, '--sendIdArr.value');
-
   sendId.value = [];
-  sendIdArr.value.forEach((item: any) => {
-    sendId.value.push(item.UID);
-  });
+  CheckDataList.value.forEach((item: { UID: any }) =>
+    sendId.value.push(item.UID)
+  );
   if (sendId.value.length <= 0) {
     ElMessage({
       type: 'info',
       message: '请勾选要删除的数据'
+    });
+    return;
+  }
+  if (CheckDataList.value.some((i: any) => i.iStatus == 1 || i.iStatus == 2)) {
+    ElMessage({
+      type: 'warning',
+      message: '存在状态为部分入库、全部入库，不能删除'
     });
     return;
   }
@@ -377,7 +341,6 @@ const clickDel = (obj: any) => {
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: sendId.value
   };
-
   ElMessageBox.confirm('确定删除数据?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -405,123 +368,95 @@ const clickDel = (obj: any) => {
       });
     });
 };
-//启用按钮
-const Enable = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
-
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
-  };
-  DataApi(data).then(res => {
-    if (res.status == 200) {
-      tableAxios();
-      ElMessage({
-        type: 'success',
-        message: '启用成功'
-      });
-      TabRef.value.handleRemoveSelectionChange();
-    } else {
-      console.log('启用出错了');
-    }
-  });
-};
-//禁用按钮
-const Disabled = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
-
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
-  };
-  DataApi(data).then(res => {
-    if (res.status == 200) {
-      tableAxios();
-      ElMessage({
-        type: 'success',
-        message: '禁用成功'
-      });
-      TabRef.value.handleRemoveSelectionChange();
-    } else {
-      console.log('禁用出错了');
-    }
-  });
-};
-//表格按钮删除
-const clickDelete = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
-  };
-  ElMessageBox.confirm('确定删除数据?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(() => {
-      ElLoading.service({ lock: true, text: '加载中.....' });
-      DataApi(data).then(res => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功'
-          });
-          tableAxios();
-          ElLoading.service().close();
-        } else {
-          ElMessage.error('删除失败');
-          ElLoading.service().close();
-        }
-      });
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除'
-      });
-      ElLoading.service().close();
-    });
-};
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
-  disabled.value = true;
-  Trow.value = scope.row;
-  ZZdialogFormVisible.value = true;
-  objData.value = obj;
-  title.value = '详情';
-  objModeCode.value = obj.cIncludeModelCode;
+  router.push({
+    name: 'WorkshopStatisticsCoreOrderDetail',
+    params: {
+      t: Date.now(),
+      rowId: scope.row.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(scope.row),
+      pathName: 'WorkshopStatisticsCoreOrder',
+      title: '重点订单详情'
+    }
+  });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
-  disabled.value = false;
-  Trow.value = scope.row;
-  ZZdialogFormVisible.value = true;
-  objData.value = obj;
-  title.value = '编辑';
-  objModeCode.value = obj.cIncludeModelCode;
+  router.push({
+    name: 'WorkshopStatisticsCoreOrderEdit',
+    params: {
+      t: Date.now(),
+      rowId: scope.row.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(scope.row),
+      pathName: 'WorkshopStatisticsCoreOrder',
+      title: '重点订单编辑'
+    }
+  });
 };
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  ZZdialogFormVisible.value = true;
-  disabled.value = false;
-  objData.value = obj;
-  title.value = '新增';
-  objModeCode.value = obj.cIncludeModelCode;
+  router.push({
+    name: 'WorkshopStatisticsCoreOrderAdd',
+    params: {
+      t: Date.now(),
+      rowId: ' '
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      title: '重点订单新增',
+      type: 'add'
+    }
+  });
 };
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
+  // arr.forEach((item: { IsValid: string; UID: any; }) => {
+  //     if (item.IsValid === '否') {
+  //         sendId.value.push(item.UID)
+  //     }
+  // })
   CheckDataList.value = arr;
-  if (arr.length) {
-    sendIdArr.value = arr;
-  } else {
-    sendIdArr.value = [];
-  }
+  sendId.value = [];
+  arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
 };
-
+//按钮提交
+const Commit = (obj: any) => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要提交的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '提交成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+      ElLoading.service().close();
+    } else {
+      console.log('提交失败');
+      ElLoading.service().close();
+    }
+  });
+};
 //按钮导出所有
 const ExportAll = async (obj: any) => {
   let data = {
@@ -532,10 +467,12 @@ const ExportAll = async (obj: any) => {
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
+        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
+        : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '物料供应商对照-所有');
+  exportAnalysisHooks(data, '采购单-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -548,10 +485,12 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
+        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
+        : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '物料供应商对照');
+  exportAnalysisHooks(data, '采购单');
   ElLoading.service().close();
 };
 
@@ -562,15 +501,13 @@ const data = reactive({
   Conditions: '',
   OrderByFileds: ''
 });
-const { Conditions, OrderByFileds } = toRefs(data);
+const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = (val: any) => {
   queryParams.PageIndex = 1;
-  let searchData = JSON.parse(JSON.stringify(val.value));
-  Conditions.value = filterModel(searchData);
+  Conditions.value = filterModel(val.value);
   tableAxios();
 };
-
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
@@ -579,6 +516,7 @@ const resetForm = (val: any) => {
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
   tableAxios();
+  TabRef.value.clearFilter();
 };
 
 // 列表排序
@@ -610,6 +548,7 @@ const renew = () => {
     :deep(.el-card__body) {
       display: flex;
       justify-content: space-between;
+
       .search_main {
         flex: 1;
 
