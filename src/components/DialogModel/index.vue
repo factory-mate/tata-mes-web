@@ -227,6 +227,7 @@
               :props="prop"
               @change="handleChange"
               clearable
+              :disabled="disabledFun(item)"
             />
             <!-- <el-tree-select ref="treeRef" node-key="cFactoryUnitCode" v-if="item.cControlTypeCode == 'Tree'"
                             :props="prop" v-model="ruleForm[item.Resource.cAttributeCode]" :default-checked-keys="treeVal"
