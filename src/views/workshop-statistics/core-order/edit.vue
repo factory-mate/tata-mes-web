@@ -376,7 +376,8 @@ const tableAxios = async () => {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
-      cCode: rowId.value
+      Conditions: `cCode=${row.value.cCode}`,
+      OrderByFileds: ''
     }
   };
   try {
