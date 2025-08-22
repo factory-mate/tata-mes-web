@@ -223,17 +223,7 @@
             </tbody>
           </table>
 
-          <div
-            style="
-              position: absolute;
-              bottom: 0;
-              width: 100%;
-              left: 0;
-              right: 0;
-              font-size: 11px;
-              font-weight: 400;
-            "
-          >
+          <div style="font-size: 11px; font-weight: 400; margin-top: 40px">
             <div
               style="
                 display: flex;
