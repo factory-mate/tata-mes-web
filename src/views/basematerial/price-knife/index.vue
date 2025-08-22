@@ -535,7 +535,7 @@ const ExportAll = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '价格-所有');
+  exportAnalysisHooks(data, '刀具价格-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -551,7 +551,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '物料供应商对照');
+  exportAnalysisHooks(data, '刀具价格');
   ElLoading.service().close();
 };
 

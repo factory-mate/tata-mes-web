@@ -551,7 +551,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '物料供应商对照');
+  exportAnalysisHooks(data, '价格');
   ElLoading.service().close();
 };
 
