@@ -130,7 +130,7 @@
             <el-cascader
               v-if="item.cControlTypeCode == 'Tree'"
               v-model="item.cAttributeCodeValue"
-              :options="options"
+              :options="item.options ?? []"
               :props="getTreeProps()"
               @change="(value:any) => handleChange(item, value)"
               @visible-change="getTreeDAata"
@@ -817,6 +817,7 @@ const getTreeData = (newValue: any) => {
           label: i.cInvClassName,
           value: i.cInvClassCode
         }));
+        item.options = options.value;
         item.optionsDataList = res.data;
       });
     }
