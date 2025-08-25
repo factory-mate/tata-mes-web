@@ -2291,7 +2291,10 @@ const newAdd = () => {
       ruleForm.value['cPolicyTypeCode'] = Idata.value[0].cDictonaryCode;
     }
   }
-  if(Route.name === 'WorkshopStatisticsCoreOrderAdd'|| Route.name === 'WorkshopStatisticsCoreOrderEdit') {
+  if (
+    Route.name === 'WorkshopStatisticsCoreOrderAdd' ||
+    Route.name === 'WorkshopStatisticsCoreOrderEdit'
+  ) {
     ruleForm.value.list_Data = ButObjTableData.value;
   }
   //设备档案编辑(下拉框数据)-----------------------------
@@ -2666,7 +2669,8 @@ const newAdd = () => {
   // return false
   DataApi(data)
     .then((res: any) => {
-      if (res.success) {
+      console.log(res, '---res');
+      if (res?.success) {
         ElMessage({
           message: res.msg,
           type: 'success'
@@ -2797,13 +2801,19 @@ const newAdd = () => {
         // 更新列表数据
         $bus.emit('tableUpData', { name: pathName.value });
       } else {
-        console.log(1);
         ElMessage({
-          message: res.msg,
+          message: res?.msg || '操作失败',
           type: 'error'
         });
       }
       ruleForm.value = {};
+    })
+    .catch((err: any) => {
+      console.log(err, '---err');
+      ElMessage({
+        message: err?.msg || '操作失败',
+        type: 'error'
+      });
     })
     .finally(() => loading.close());
 };

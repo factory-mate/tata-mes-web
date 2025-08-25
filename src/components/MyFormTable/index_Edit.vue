@@ -1767,6 +1767,10 @@ const onVendorChange = (e, scope) => {
   if (!['otherInNotifyAdd', 'otherInNotifyEdit'].includes(Route.name)) {
     tableDataVal.value[scope.$index].cDefindParm03 = e.cSAPCode;
   }
+  if (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') {
+    tableDataVal.value[scope.$index].cDefindParm05 = e.cVendorCode;
+    tableDataVal.value[scope.$index].cDefindParm06 = e.cVendorName;
+  }
   tableDataVal.value[scope.$index].cVendorCode = e.cVendorCode;
   tableDataVal.value[scope.$index].cVendorName = e.cVendorName;
   console.log(tableDataVal.value, 'tableDataVal.value onVendorChange');
