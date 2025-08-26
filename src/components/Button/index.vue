@@ -314,7 +314,8 @@ const emits = defineEmits([
   'GetUpdateTemplate',
   'ImportUpdate',
   'DownloadBarcode',
-  'PrintVouch'
+  'PrintVouch',
+  'MakeMaterial'
 ]);
 
 watch(
@@ -840,6 +841,9 @@ const ImportUpdate = obj => {
 const DownloadBarcode = obj => {
   emits('DownloadBarcode', obj);
 };
+const MakeMaterial = obj => {
+  emits('MakeMaterial', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1252,6 +1256,9 @@ const clickButton = (event: any) => {
       break;
     case 'PrintVouch':
       PrintVouch(event);
+      break;
+    case 'MakeMaterial':
+      MakeMaterial(event);
       break;
     default:
       break;
