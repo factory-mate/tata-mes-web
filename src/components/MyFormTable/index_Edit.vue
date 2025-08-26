@@ -228,7 +228,8 @@
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
                   'newPurchaseAuditEdit',
-                  'AddPurchaseRequestEdit'
+                  'AddPurchaseRequestEdit',
+                  'AddPurchaseRequest'
                 ].includes(Route.name as any) &&
                   item.cAttributeCode === 'cVendorName') ||
                 (['otherInNotifyAdd', 'otherInNotifyEdit'].includes(
