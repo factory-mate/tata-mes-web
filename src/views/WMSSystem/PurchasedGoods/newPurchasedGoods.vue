@@ -606,9 +606,13 @@ const Tconfirm = () => {
   }
 
   TdialogFormVisible.value = false;
-
+  const sortData = [...itemData.value].sort((a: any, b: any) => {
+    if (!a.iIndex) return 1;
+    if (!b.iIndex) return -1;
+    return a.iIndex - b.iIndex;
+  });
   // 表格添加数据
-  itemData.value.forEach((item: any) => {
+  sortData.forEach((item: any) => {
     tableData.value.push({
       ...item,
       nAccReceiveQuantity: item.inv_iDefindParm12,
