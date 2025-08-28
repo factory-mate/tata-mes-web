@@ -1440,6 +1440,7 @@ const getViewData = () => {
     Route.name == 'MaterialConfigGroupProcess' ||
     Route.name == 'WorkshopStatisticsUser' ||
     Route.name == 'Electric' ||
+    Route.name == 'NoPush' ||
     Route.name == 'WorkshopStatisticsCoreOrder' ||
     Route.name == 'Price' ||
     Route.name == 'PriceKnife' ||
