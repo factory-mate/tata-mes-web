@@ -298,15 +298,15 @@ const processFilterLogic = (val, p) => {
       }`
     );
   }
-  if (
-    Route.name == 'AddPurchaseRequest' ||
-    Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
-  ) {
-    if (p.metadata?.cInvCode) {
-      conditions.push(`cInvCode=${p.metadata.cInvCode}`);
-    }
-  }
+  // if (
+  //   Route.name == 'AddPurchaseRequest' ||
+  //   Route.name == 'AddPurchaseRequestEdit' ||
+  //   Route.name == 'AddPurchaseRequestView'
+  // ) {
+  //   if (p.metadata?.cInvCode) {
+  //     conditions.push(`cInvCode=${p.metadata.cInvCode}`);
+  //   }
+  // }
   if (
     (Route.name === 'AddBusineScen' ||
       Route.name === 'RuleAuditEdit' ||
