@@ -56,7 +56,7 @@
           </span>
         </a>
         <div
-          v-else-if="['PurchaseNote', 'PurchaseRequest'].includes(data.path)"
+          v-else-if="[].includes(data.path)"
           @click="onOuterClick(node, data)"
         >
           <div class="nav_box">

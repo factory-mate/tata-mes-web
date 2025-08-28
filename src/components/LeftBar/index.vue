@@ -115,7 +115,7 @@ const createFilter = queryString => {
 };
 
 const handleSelect = (item: any) => {
-  if (['PurchaseNote', 'PurchaseRequest'].includes(item.link)) {
+  if ([].includes(item.link)) {
     window.open(router.resolve({ name: item.link }).href, '_blank');
     return;
   }
