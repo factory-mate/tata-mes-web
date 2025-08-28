@@ -13,6 +13,7 @@
         :ToolBut="But"
         @clickDelete="clickDel"
         @clickAdd="clickAdd"
+        @pull="pullData"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -130,7 +131,7 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
-import { configApi, DataApi, delApi } from '@/api/configApi/index';
+import { configApi, DataApi, delApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -512,6 +513,29 @@ const clickAdd = (obj: { cIncludeModelCode: any }) => {
   objData.value = obj;
   title.value = '新增';
   objModeCode.value = obj.cIncludeModelCode;
+};
+const pullData = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: {}
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  ParamsApi(data)
+    .then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '拉取成功'
+        });
+      } else {
+        ElMessage.error('拉取失败');
+      }
+    })
+    .finally(() => {
+      tableAxios();
+      loading.close();
+    });
 };
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
