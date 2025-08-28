@@ -14,6 +14,8 @@
         @clickDelete="clickDel"
         @clickAdd="clickAdd"
         @pull="pullData"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -134,6 +136,7 @@ import {
 import { configApi, DataApi, delApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const $bus: any =
@@ -537,6 +540,39 @@ const pullData = (obj: any) => {
       loading.close();
     });
 };
+//按钮导出所有
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '工位报修设备对照-所有');
+  ElLoading.service().close();
+};
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '工位报修设备对照');
+  ElLoading.service().close();
+};
+
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
   CheckDataList.value = arr;
