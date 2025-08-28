@@ -311,6 +311,9 @@ const funTable = (arr: Array<any>) => {
           cUrl: item.Resource.cUrl,
           cAttributeCode: item.Resource.cAttributeCode
         };
+        if (item.cAttributeCode == 'cVendorName') {
+          itemData.edit = '';
+        }
         tableColumns.value.push(itemData);
         tableColumns.value.push({
           checkType: true,

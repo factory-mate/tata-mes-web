@@ -228,8 +228,7 @@
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
                   'newPurchaseAuditEdit',
-                  'AddPurchaseRequestEdit',
-                  'AddPurchaseRequest'
+                  'AddPurchaseRequestEdit'
                 ].includes(Route.name as any) &&
                   item.cAttributeCode === 'cVendorName') ||
                 (['otherInNotifyAdd', 'otherInNotifyEdit'].includes(
@@ -1165,13 +1164,66 @@ const selectDatas = (val: any) => {
         }
       }
     }
-    if (AttributeCode.value == 'cVendorName') {
-      tableDataVal.value[IndexType.value].cVendorName =
-        val.value[0].cVendorName;
-      tableDataVal.value[IndexType.value].cVendorCode =
-        val.value[0].cVendorCode;
+    if (Route.name == 'AddPurchaseRequest') {
+      if (AttributeCode.value == 'cVendorName') {
+        tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+        tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+        tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+        tableDataVal.value[IndexType.value].cUnitCode =
+          val.value[0].CG_UnitCode;
+        tableDataVal.value[IndexType.value].cUnitName =
+          val.value[0].CG_UnitName;
+        metadata.value.cInvCode = val.value[0].cInvCode;
+        tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
+        tableDataVal.value[IndexType.value].cDefindParm03 =
+          val.value[0].SAPCode;
+        tableDataVal.value[IndexType.value].cVendorName =
+          val.value[0].cVendorName;
+        tableDataVal.value[IndexType.value].cVendorCode =
+          val.value[0].cVendorCode;
+
+        // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
+        if (val.value.length > 1) {
+          for (let i = 0; i < val.value.length - 1; i++) {
+            const emptyRow = tableDataVal.value.find(
+              (item: any) => !item.cInvCode
+            );
+            if (emptyRow) {
+              emptyRow.cInvCode = val.value[i + 1].cInvCode;
+              emptyRow.cInvName = val.value[i + 1].cInvName;
+              emptyRow.cInvStd = val.value[i + 1].cInvStd;
+              emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
+              emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
+              emptyRow.list_sap = val.value[i + 1].list_sap;
+              emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
+              emptyRow.cVendorName = val.value[i + 1].cVendorName;
+              emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
+            } else {
+              tableDataVal.value.push({
+                cInvCode: val.value[i + 1].cInvCode,
+                cInvName: val.value[i + 1].cInvName,
+                cInvStd: val.value[i + 1].cInvStd,
+                cUnitCode: val.value[i + 1].CG_UnitCode,
+                cUnitName: val.value[i + 1].CG_UnitName,
+                list_sap: val.value[i + 1].list_sap,
+                cDefindParm03: val.value[i + 1].SAPCode,
+                cVendorName: val.value[i + 1].cVendorName,
+                cVendorCode: val.value[i + 1].cVendorCode
+              });
+            }
+          }
+        }
+      }
+    } else {
+      if (AttributeCode.value == 'cVendorName') {
+        tableDataVal.value[IndexType.value].cVendorName =
+          val.value[0].cVendorName;
+        tableDataVal.value[IndexType.value].cVendorCode =
+          val.value[0].cVendorCode;
+      }
     }
   }
+
   if (
     Route.name == 'checkBillsAdd' ||
     Route.name == 'checkBillsEdit' ||
