@@ -189,6 +189,9 @@
                 <th style="border: 1px solid #000; padding: 5px">
                   SAP物料编码
                 </th>
+                <th style="border: 1px solid #000; padding: 5px">
+                  SAP物料名称
+                </th>
                 <th style="border: 1px solid #000; padding: 5px">单位</th>
               </tr>
             </thead>
@@ -215,6 +218,9 @@
                 </td>
                 <td style="border: 1px solid #000; padding: 5px">
                   {{ i.cSAPCode }}
+                </td>
+                <td style="border: 1px solid #000; padding: 5px">
+                  {{ i.cSAPName }}
                 </td>
                 <td style="border: 1px solid #000; padding: 5px">
                   {{ i.cUnitName }}
