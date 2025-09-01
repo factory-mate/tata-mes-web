@@ -490,7 +490,7 @@ const ExportAll = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'cDepCode',
       Conditions: ''
     }
   };
@@ -513,7 +513,7 @@ const ExportOne = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'cDepCode',
       Conditions: ''
     }
   };
@@ -534,7 +534,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cDepCode'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -546,7 +546,7 @@ const ClickSearch = (val: any) => {
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'cDepCode';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
