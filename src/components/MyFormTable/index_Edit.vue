@@ -209,21 +209,6 @@
             </div>
             <div
               v-else-if="
-                Route.name === 'AddPurchaseNote' &&
-                item.cAttributeCode === 'cDefindParm03'
-              "
-            >
-              <el-select v-model="scope.row[item.prop]" placeholder="请选择">
-                <el-option
-                  v-for="selectItem in scope.row['cDefindParm03List']"
-                  :key="selectItem"
-                  :label="selectItem"
-                  :value="selectItem"
-                />
-              </el-select>
-            </div>
-            <div
-              v-else-if="
                 ([
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
@@ -915,6 +900,30 @@ const selectDatas = (val: any) => {
         val.value[0].cEmployeeName;
     }
   }
+  if (Route.name === 'AddPurchaseNote') {
+    if (AttributeCode.value == 'cVendorName') {
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+      // 获取价格
+      getPrice({
+        cInvCode: tableDataVal.value[IndexType.value].cInvCode,
+        cVendorCode: val.value[0].cVendorCode
+      })
+        .then(res => {
+          const result = res.data?.data?.[0];
+          tableDataVal.value[IndexType.value].nTaxPrice =
+            result?.nTaxPrice ?? 0;
+          tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+        })
+        .catch(() => {
+          tableDataVal.value[IndexType.value].nTaxPrice = 0;
+          tableDataVal.value[IndexType.value].nTaxRate = 0;
+        });
+    }
+  }
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin'
@@ -1585,6 +1594,9 @@ const onKeyPressEnter = async (e, item, scope) => {
 // 搜索弹框事件
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
   console.log(obj);
+  if (Route.name === 'AddPurchaseNote') {
+    metadata.value.cInvCode = scope.row.cInvCode;
+  }
   ajax.value = obj.ajax;
   IndexType.value = i;
   MulitChoose.value =

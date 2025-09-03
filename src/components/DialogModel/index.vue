@@ -1950,6 +1950,11 @@ const SaveAdd = (item: any) => {
           PeriodUnitType.value[0]?.cDictonaryCode;
       }
     }
+    // if (Route.name === 'NoPush') {
+    //   console.log('ruleForm', ruleForm.value);
+    //   ruleForm.value.dDateBegin = `${ruleForm.value.dDate[0]}T00:00:00`;
+    //   ruleForm.value.dDateEnd = `${ruleForm.value.dDate[1]}T23:59:59`;
+    // }
     let data = {
       method: item.Resource.cHttpTypeCode,
       url: item.Resource.cServerIP + item.Resource.cUrl,

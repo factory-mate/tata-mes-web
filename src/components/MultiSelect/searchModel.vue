@@ -288,6 +288,12 @@ const processFilterLogic = (val, p) => {
     }
   }
 
+  if (Route.name === 'AddPurchaseNote') {
+    if (p.titleName.includes('供应商')) {
+      conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
+    }
+  }
+
   if (
     ['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name) &&
     p.titleName === '寻线批次号'

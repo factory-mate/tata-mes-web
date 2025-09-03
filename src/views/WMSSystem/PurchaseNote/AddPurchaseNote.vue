@@ -385,6 +385,7 @@ const funTable = (arr: Array<any>) => {
           cHttpTypeCode: item.Resource.cHttpTypeCode,
           cControlTypeCode: item.cControlTypeCode,
           cAttributeCode: item.Resource.cAttributeCode,
+          cIncludeModelCode: item.cIncludeModelCode,
           headerSlot: false,
           slot: ''
         };
