@@ -530,7 +530,7 @@ const Tconfirm = async () => {
     ) {
       try {
         await ElMessageBox.confirm(
-          '与已指定供应商不批评，是否继续添加？',
+          '与已指定供应商不匹配，是否继续添加？',
           '提示',
           {
             confirmButtonText: '确定',

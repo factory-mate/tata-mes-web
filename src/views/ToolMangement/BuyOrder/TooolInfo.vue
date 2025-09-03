@@ -42,6 +42,8 @@
         :disabled="disa"
         :disabledHide="false"
         @handle-table-data-change="handleTableDataChange"
+        show-summary
+        :summary-method="d => summaryMethod(d)"
       >
         <template #button>
           <el-table-column
@@ -143,6 +145,7 @@ import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
+import BigNumber from 'bignumber.js';
 const { tagsView, permission } = useStore();
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -325,9 +328,11 @@ const getComboBoxFun = async () => {
         url: item.cServerIP + item.cUrl,
         params: obj
       };
-      await ParamsApi(data).then((res: any) => {
-        item.PullData = res.data || [];
-      });
+      if (data.url) {
+        await ParamsApi(data).then((res: any) => {
+          item.PullData = res.data || [];
+        });
+      }
     }
   });
 };
@@ -382,7 +387,7 @@ const PrintLabel = () => {
 //表格数据查询
 const tableAxios = async () => {
   if (!rowId.value) {
-    return false;
+    return;
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -420,6 +425,7 @@ const clickHandAdd = (data: any) => {
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {
   TdialogFormVisible.value = true;
+  FilresetForm(null);
   try {
     const res = await configApi(obj.cIncludeModelCode);
     if (res.status == 200) {
@@ -482,6 +488,9 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
+  if (!TAxiosData.value.Resource?.cUrl) {
+    return;
+  }
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
@@ -531,7 +540,7 @@ const Tconfirm = async () => {
     ) {
       try {
         await ElMessageBox.confirm(
-          '与已指定供应商不批评，是否继续添加？',
+          '与已指定供应商不匹配，是否继续添加？',
           '提示',
           {
             confirmButtonText: '确定',
@@ -565,7 +574,36 @@ const Tconfirm = async () => {
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
+    item.nTaxPrice = 0;
+    item.nTaxRate = 0;
+    if (item.list_price.length > 0) {
+      item.nTaxPrice = item.list_price[0].nPrice ?? 0;
+      item.nTaxRate = item.list_price[0].nTaxRate ?? 0;
+      item.cDefindParm03 = item.list_price[0].cSAPCode;
+    }
+    item.nQuantity = new BigNumber(item.nQuantity ?? 0); // 数量
+    item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
+    item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
+    item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价
+
+    item.cDefindParm06 = item.nTaxMoney
+      .dividedBy(new BigNumber(1).plus(item.nTaxRate.dividedBy(100)))
+      .multipliedBy(item.nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+    item.nMoney = item.nTaxMoney.minus(item.cDefindParm06); // 不含税金额：价税合计-税额
+    item.nPrice = item.nQuantity.isGreaterThan(0)
+      ? item.nMoney.dividedBy(item.nQuantity).decimalPlaces(8)
+      : 0; // 不含税单价：不含税金额/采购数量
+    tableData.value.push({
+      ...item,
+      nSumQuantity: item.nQuantity.toString(),
+      nQuantity: item.nQuantity.toString(),
+      nTaxPrice: item.nTaxPrice.toString(),
+      nTaxRate: item.nTaxRate.toString(),
+      nTaxMoney: item.nTaxMoney.toString(),
+      cDefindParm06: item.cDefindParm06.toFixed(2).replace(/\.?0+$/, ''),
+      nPrice: item.nPrice.toFixed(8).replace(/\.?0+$/, ''),
+      nMoney: item.nMoney.toFixed(2).replace(/\.?0+$/, '')
+    });
   });
   TTABRef.value.handleRemoveSelectionChange();
 };
@@ -608,6 +646,8 @@ const modelClose = (val: any) => {
 //新增保存
 const SaveAdd = (obj: any) => {
   // 数量 nQuantity 和单价 nTaxPrice 必填且大于 0
+  console.log(headRef.value.ruleForm, 'ruleForm');
+  console.log(TABRef.value.tableDataVal, 'tableDataVal');
   if (
     TABRef.value.tableDataVal.some(
       (item: any) =>
@@ -690,6 +730,33 @@ const clickEdit = (obj: any) => {
   disabled.value = false;
   disa.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
+};
+
+const summaryMethod = d => {
+  const { columns, data } = d;
+  const sums = [];
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计';
+      return;
+    }
+    if (
+      ['nQuantity', 'nTaxMoney', 'cDefindParm06', 'nMoney'].includes(
+        column.property
+      )
+    ) {
+      const values = data.map(item =>
+        Number.isNaN(Number(item[column.property]))
+          ? 0
+          : Number(item[column.property])
+      );
+      sums[index] = values.reduce((prev, curr) => prev + curr, 0).toFixed(2);
+    } else {
+      sums[index] = '';
+    }
+  });
+
+  return sums;
 };
 </script>
 

@@ -41,6 +41,8 @@
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         :disabledHide="false"
+        show-summary
+        :summary-method="d => summaryMethod(d)"
       >
         <template #button>
           <el-table-column
@@ -133,6 +135,7 @@ import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
+import BigNumber from 'bignumber.js';
 const { tagsView, permission } = useStore();
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -501,7 +504,36 @@ const Tconfirm = () => {
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
+    item.nTaxPrice = 0;
+    item.nTaxRate = 0;
+    if (item.list_price.length > 0) {
+      item.nTaxPrice = item.list_price[0].nPrice ?? 0;
+      item.nTaxRate = item.list_price[0].nTaxRate ?? 0;
+      item.cDefindParm03 = item.list_price[0].cSAPCode;
+    }
+    item.nQuantity = new BigNumber(item.nQuantity ?? 0); // 数量
+    item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
+    item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
+    item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价
+
+    item.cDefindParm06 = item.nTaxMoney
+      .dividedBy(new BigNumber(1).plus(item.nTaxRate.dividedBy(100)))
+      .multipliedBy(item.nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+    item.nMoney = item.nTaxMoney.minus(item.cDefindParm06); // 不含税金额：价税合计-税额
+    item.nPrice = item.nQuantity.isGreaterThan(0)
+      ? item.nMoney.dividedBy(item.nQuantity).decimalPlaces(8)
+      : 0; // 不含税单价：不含税金额/采购数量
+    tableData.value.push({
+      ...item,
+      nSumQuantity: item.nQuantity.toString(),
+      nQuantity: item.nQuantity.toString(),
+      nTaxPrice: item.nTaxPrice.toString(),
+      nTaxRate: item.nTaxRate.toString(),
+      nTaxMoney: item.nTaxMoney.toString(),
+      cDefindParm06: item.cDefindParm06.toFixed(2).replace(/\.?0+$/, ''),
+      nPrice: item.nPrice.toFixed(8).replace(/\.?0+$/, ''),
+      nMoney: item.nMoney.toFixed(2).replace(/\.?0+$/, '')
+    });
   });
   TTABRef.value.handleRemoveSelectionChange();
 };
@@ -606,6 +638,33 @@ const clickEdit = (obj: any) => {
   disabled.value = false;
   disa.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
+};
+
+const summaryMethod = d => {
+  const { columns, data } = d;
+  const sums = [];
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计';
+      return;
+    }
+    if (
+      ['nQuantity', 'nTaxMoney', 'cDefindParm06', 'nMoney'].includes(
+        column.property
+      )
+    ) {
+      const values = data.map(item =>
+        Number.isNaN(Number(item[column.property]))
+          ? 0
+          : Number(item[column.property])
+      );
+      sums[index] = values.reduce((prev, curr) => prev + curr, 0).toFixed(2);
+    } else {
+      sums[index] = '';
+    }
+  });
+
+  return sums;
 };
 </script>
 
