@@ -149,6 +149,7 @@
               value-format="YYYY-MM-DD"
               :default-value="new Date()"
               :disabled="disabledFun(item)"
+              @change="e => onDatePicker2Change(e, item)"
             />
             <el-date-picker
               v-if="item.cControlTypeCode == 'DateTimePicker'"
@@ -2515,6 +2516,18 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const onDatePicker2Change = (e, item) => {
+  console.log(e, item);
+  if (Route.name === 'NoPush' && item.cAttributeCode === 'dDate') {
+    if (e[0]) {
+      ruleForm.value['dDateBegin'] = `${e[0]}T00:00:00`;
+    }
+    if (e[1]) {
+      ruleForm.value['dDateEnd'] = `${e[1]}T23:59:59`;
+    }
+  }
 };
 </script>
 
