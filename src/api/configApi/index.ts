@@ -99,6 +99,16 @@ export function InventoryInfoGetForPageNoOrigin(cInvCode) {
 }
 
 export function getPrice({ cInvCode, cVendorCode }) {
+  const conditions = [
+    `dBeginDate<=${dayjs(new Date()).format('YYYY-MM-DD')}`,
+    `dEndDate>=${dayjs(new Date()).format('YYYY-MM-DD')}`
+  ];
+  if (cInvCode) {
+    conditions.push(`cInvCode=${cInvCode}`);
+  }
+  if (cVendorCode) {
+    conditions.push(`cVendorCode=${cVendorCode}`);
+  }
   return request({
     url: `${
       import.meta.env.VITE_APP_BASE_API
@@ -108,11 +118,7 @@ export function getPrice({ cInvCode, cVendorCode }) {
       PageIndex: 1,
       PageSize: 1,
       OrderByFileds: 'dBeginDate desc',
-      Conditions: `dBeginDate<=${dayjs(new Date()).format(
-        'YYYY-MM-DD'
-      )} && dEndDate>=${dayjs(new Date()).format(
-        'YYYY-MM-DD'
-      )} && cInvCode=${cInvCode} && cVendorCode=${cVendorCode}`
+      Conditions: conditions.join(' && ')
     }
   });
 }
