@@ -953,7 +953,7 @@ const selectDatas = (val: any) => {
     '🚀🚀 可编辑表格下拉搜索的 Key'
   );
   if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
-    if (AttributeCode.value === "cDefindParm03") {
+    if (AttributeCode.value === 'cDefindParm03') {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
     }
   }
@@ -1956,6 +1956,7 @@ const onVendorChange = (e, scope) => {
   if (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') {
     tableDataVal.value[scope.$index].cDefindParm05 = e.cVendorCode;
     tableDataVal.value[scope.$index].cDefindParm06 = e.cVendorName;
+    tableDataVal.value[scope.$index].cDefindParm08 = e.cSAPCode;
   }
   tableDataVal.value[scope.$index].cVendorCode = e.cVendorCode;
   tableDataVal.value[scope.$index].cVendorName = e.cVendorName;
