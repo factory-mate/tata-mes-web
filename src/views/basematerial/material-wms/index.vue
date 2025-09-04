@@ -17,6 +17,8 @@
         @clickStart="Start"
         @Stop="Stop"
         @clickDelete="clickDel"
+        @set-q-c="SetQC"
+        @cancel-q-c="CancelQC"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -332,6 +334,63 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   tableAxios();
 };
+
+const SetQC = (obj: any) => {
+  if (CheckDataList.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      IsQC: true,
+      list_UID: CheckDataList.value.map(item => item.UID)
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      tableAxios();
+      ElMessage({
+        type: 'success',
+        message: '质检成功'
+      });
+      TabRef.value.handleRemoveSelectionChange();
+    }
+  });
+};
+
+const CancelQC = (obj: any) => {
+  if (CheckDataList.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      IsQC: false,
+      list_UID: CheckDataList.value.map(item => item.UID)
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      tableAxios();
+      ElMessage({
+        type: 'success',
+        message: '质检成功'
+      });
+      TabRef.value.handleRemoveSelectionChange();
+    }
+  });
+};
+
 //按钮删除
 const clickDel = (obj: any) => {
   sendId.value = [];

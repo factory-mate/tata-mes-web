@@ -316,7 +316,9 @@ const emits = defineEmits([
   'DownloadBarcode',
   'PrintVouch',
   'MakeMaterial',
-  'Pull'
+  'Pull',
+  'SetQC',
+  'CancelQC'
 ]);
 
 watch(
@@ -848,6 +850,12 @@ const MakeMaterial = obj => {
 const Pull = obj => {
   emits('Pull', obj);
 };
+const SetQC = obj => {
+  emits('SetQC', obj);
+};
+const CancelQC = obj => {
+  emits('CancelQC', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1266,6 +1274,12 @@ const clickButton = (event: any) => {
       break;
     case 'Pull':
       Pull(event);
+      break;
+    case 'SetQC':
+      SetQC(event);
+      break;
+    case 'CancelQC':
+      CancelQC(event);
       break;
     default:
       break;
