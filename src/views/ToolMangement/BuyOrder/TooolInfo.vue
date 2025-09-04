@@ -578,7 +578,7 @@ const Tconfirm = async () => {
     item.nTaxPrice = 0;
     item.nTaxRate = 0;
     if (item.list_price.length > 0) {
-      item.nTaxPrice = item.list_price[0].nPrice ?? 0;
+      item.nTaxPrice = item.list_price[0].nTaxPrice ?? 0;
       item.nTaxRate = item.list_price[0].nTaxRate ?? 0;
       item.cDefindParm03 = item.list_price[0].cSAPCode;
     }
