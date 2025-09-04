@@ -628,61 +628,133 @@ const Tconfirm = () => {
     }
 
     // 计算价格
-    getPrice({
-      cInvCode: item.cInvCode,
-      cVendorCode: item.cVendorCode
-    })
-      .then(res => {
-        const result = res.data?.data?.[0];
-        console.log(res);
-        item.nTaxPrice = result?.nTaxPrice ?? 0;
-        item.nTaxRate = result?.nTaxRate ?? 0;
-      })
-      .catch(() => {
-        item.nTaxPrice = 0;
-        item.nTaxRate = 0;
-      })
-      .finally(() => {
-        item.nQuantity = new BigNumber(item.nQuantity); // 数量
-        item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
-        item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
-        item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价
+    // getPrice({
+    //   cInvCode: item.cInvCode,
+    //   cVendorCode: item.cVendorCode
+    // })
+    //   .then(res => {
+    //     const result = res.data?.data?.[0];
+    //     console.log(res);
+    //     item.nTaxPrice = result?.nTaxPrice ?? 0;
+    //     item.nTaxRate = result?.nTaxRate ?? 0;
+    //   })
+    //   .catch(() => {
+    //     item.nTaxPrice = 0;
+    //     item.nTaxRate = 0;
+    //   })
+    //   .finally(() => {
+    //     item.nQuantity = new BigNumber(item.nQuantity); // 数量
+    //     item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
+    //     item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
+    //     item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价
 
-        item.cDefindParm06 = item.nTaxMoney
-          .dividedBy(new BigNumber(1).plus(item.nTaxRate.dividedBy(100)))
-          .multipliedBy(item.nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
-        item.nMoney = item.nTaxMoney.minus(item.cDefindParm06); // 不含税金额：价税合计-税额
-        item.nPrice = item.nQuantity.isGreaterThan(0)
-          ? item.nMoney.dividedBy(item.nQuantity).decimalPlaces(8)
-          : 0; // 不含税单价：不含税金额/采购数量
+    //     item.cDefindParm06 = item.nTaxMoney
+    //       .dividedBy(new BigNumber(1).plus(item.nTaxRate.dividedBy(100)))
+    //       .multipliedBy(item.nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+    //     item.nMoney = item.nTaxMoney.minus(item.cDefindParm06); // 不含税金额：价税合计-税额
+    //     item.nPrice = item.nQuantity.isGreaterThan(0)
+    //       ? item.nMoney.dividedBy(item.nQuantity).decimalPlaces(8)
+    //       : 0; // 不含税单价：不含税金额/采购数量
 
-        console.table([
-          ['cInvCode', item.cInvCode],
-          ['cVendorCode', item.cVendorCode],
-          ['nQuantity', item.nQuantity.toString()],
-          ['nTaxPrice', item.nTaxPrice.toString()],
-          ['nTaxMoney', item.nTaxMoney.toString()],
-          ['cDefindParm06', item.cDefindParm06.toString()],
-          ['nPrice', item.nPrice.toString()],
-          ['nMoney', item.nMoney.toString()]
-        ]);
+    //     console.table([
+    //       ['cInvCode', item.cInvCode],
+    //       ['cVendorCode', item.cVendorCode],
+    //       ['nQuantity', item.nQuantity.toString()],
+    //       ['nTaxPrice', item.nTaxPrice.toString()],
+    //       ['nTaxMoney', item.nTaxMoney.toString()],
+    //       ['cDefindParm06', item.cDefindParm06.toString()],
+    //       ['nPrice', item.nPrice.toString()],
+    //       ['nMoney', item.nMoney.toString()]
+    //     ]);
 
-        tableData.value.push({
-          ...item,
-          nSumQuantity: item.nQuantity.toString(),
-          nQuantity: item.nQuantity.toString(),
-          nTaxPrice: item.nTaxPrice.toString(),
-          nTaxRate: item.nTaxRate.toString(),
-          nTaxMoney: item.nTaxMoney.toString(),
-          cDefindParm06: item.cDefindParm06.toFixed(2).replace(/\.?0+$/, ''),
-          nPrice: item.nPrice.toFixed(8).replace(/\.?0+$/, ''),
-          nMoney: item.nMoney.toFixed(2).replace(/\.?0+$/, '')
-        });
-        console.log(tableData.value, 'tableData.value');
-      });
+    //     tableData.value.push({
+    //       ...item,
+    //       nSumQuantity: item.nQuantity.toString(),
+    //       nQuantity: item.nQuantity.toString(),
+    //       nTaxPrice: item.nTaxPrice.toString(),
+    //       nTaxRate: item.nTaxRate.toString(),
+    //       nTaxMoney: item.nTaxMoney.toString(),
+    //       cDefindParm06: item.cDefindParm06.toFixed(2).replace(/\.?0+$/, ''),
+    //       nPrice: item.nPrice.toFixed(8).replace(/\.?0+$/, ''),
+    //       nMoney: item.nMoney.toFixed(2).replace(/\.?0+$/, '')
+    //     });
+    //     console.log(item.cInvCode);
+    //     console.log(tableData.value, 'tableData.value');
+    //   });
   });
 
-  TTABRef.value.handleRemoveSelectionChange();
+  // 计算价格，根据顺序带
+  const promiseList = itemData.value.map(i =>
+    getPrice({
+      cInvCode: i.cInvCode,
+      cVendorCode: i.cVendorCode
+    })
+  );
+  Promise.allSettled(promiseList)
+    .then(res => {
+      res.forEach((r, index) => {
+        if (r.status === 'fulfilled') {
+          const d = r.value.data?.data?.[0] || {};
+          itemData.value[index].nTaxPrice = d?.nTaxPrice ?? 0;
+          itemData.value[index].nTaxRate = d?.nTaxRate ?? 0;
+          itemData.value[index].nQuantity = new BigNumber(
+            itemData.value[index].nQuantity
+          ); // 数量
+          itemData.value[index].nTaxPrice = new BigNumber(
+            itemData.value[index].nTaxPrice
+          ).decimalPlaces(8); // 含税单价
+          itemData.value[index].nTaxRate = new BigNumber(
+            itemData.value[index].nTaxRate
+          ); // 税率
+          itemData.value[index].nTaxMoney = itemData.value[
+            index
+          ].nTaxPrice.multipliedBy(itemData.value[index].nQuantity); // 税价合计：采购数量*含税单价
+
+          itemData.value[index].cDefindParm06 = itemData.value[index].nTaxMoney
+            .dividedBy(
+              new BigNumber(1).plus(
+                itemData.value[index].nTaxRate.dividedBy(100)
+              )
+            )
+            .multipliedBy(itemData.value[index].nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          itemData.value[index].nMoney = itemData.value[index].nTaxMoney.minus(
+            itemData.value[index].cDefindParm06
+          ); // 不含税金额：价税合计-税额
+          itemData.value[index].nPrice = itemData.value[
+            index
+          ].nQuantity.isGreaterThan(0)
+            ? itemData.value[index].nMoney
+                .dividedBy(itemData.value[index].nQuantity)
+                .decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
+
+          console.log(itemData.value[index]);
+
+          tableData.value.push({
+            ...itemData.value[index],
+            nSumQuantity: itemData.value[index].nQuantity.toString(),
+            nQuantity: itemData.value[index].nQuantity.toString(),
+            nTaxPrice: itemData.value[index].nTaxPrice.toString(),
+            nTaxRate: itemData.value[index].nTaxRate.toString(),
+            nTaxMoney: itemData.value[index].nTaxMoney.toString(),
+            cDefindParm06: itemData.value[index].cDefindParm06
+              .toFixed(2)
+              .replace(/\.?0+$/, ''),
+            nPrice: itemData.value[index].nPrice
+              .toFixed(8)
+              .replace(/\.?0+$/, ''),
+            nMoney: itemData.value[index].nMoney
+              .toFixed(2)
+              .replace(/\.?0+$/, '')
+          });
+          console.log(itemData.value[index].cInvCode);
+          console.log(tableData.value, 'tableData.value');
+        }
+      });
+    })
+    .finally(() => {
+      TTABRef.value.handleRemoveSelectionChange();
+    });
 };
 
 // T弹窗搜索
@@ -794,22 +866,24 @@ const clickEdit = (obj: any) => {
 const setWidth = row => {
   switch (row.label) {
     case '申请单号':
-      return 120;
+      return 150;
     case '物料编码':
+    case 'SAP产品编码':
       return 90;
     case '物料名称':
       return 200;
     case '规格型号':
       return 120;
+    case '剩余数量':
+    case '数量':
     case '单位':
-    case '采购数量':
+      return 60;
     case '单价':
     case '含税单价':
     case '含税金额':
     case '税额':
     case '不含税金额':
     case '金额':
-    case 'SAP产品编码':
       return 200;
     case '交货日期':
       return 100;
