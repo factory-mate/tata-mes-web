@@ -151,6 +151,14 @@
                   <!-- {{ formatDate(scope.row[item.prop]) }} -->
                   {{ scope.row[item.prop] }}
                 </p>
+                <p
+                  v-else-if="
+                    item.prop == 'cCode' && Route.name === 'InOutInventory'
+                  "
+                  @click="navToByCode(scope.row)"
+                >
+                  {{ scope.row[item.prop] }}
+                </p>
                 <p v-else class="tableTextSty" @click="DownLoad(scope, item)">
                   {{ formatImage(scope.row[item.prop]) }}
                 </p>
@@ -206,11 +214,12 @@ import {
   ElCheckbox,
   ElButton
 } from 'element-plus';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import ImgPreview from '@/components/ImgPrive/index.vue'; //图片预览
 const disabled = ref(false);
 const myTableRef = ref();
 const Route = useRoute();
+const router = useRouter();
 //选中数据
 interface dataType {
   id?: string;
@@ -382,6 +391,14 @@ watch(
 );
 
 const calcWidth = (row: { label: any }) => {
+  if (Route.name === 'InOutInventory') {
+    switch (row.label) {
+      case '单据号':
+        return 150;
+      default:
+        break;
+    }
+  }
   if (Route.name === 'productLine') {
     switch (row.label) {
       case '生产线编号':
@@ -779,6 +796,48 @@ const funContent = (val: any, item: any) => {
 // 重置
 const clearFilter = () => {
   myTableRef.value!.clearFilter();
+};
+const navToByCode = (row: any) => {
+  console.log(row);
+  let routerName = '';
+  let title = '';
+  switch (row.cVouchSourceTypeCode) {
+    case '01': // 到货单入库
+      routerName = 'newPurchasedGoodsView';
+      title = '到货单入库详情';
+      break;
+    case '03': // 领料出库单
+      routerName = 'newMaterialOutbound';
+      title = '领料出库单详情';
+      break;
+    case '06': // 退料入库
+      routerName = 'ReturnPutView';
+      title = '退料入库详情';
+      break;
+    case '09': // 调拨出库单
+      routerName = 'TransferRecordInMaterial';
+      title = '调拨出库单详情';
+      break;
+    case '10': // 调拨入库单
+      routerName = 'TransferRecordOutMaterial';
+      title = '调拨入库单详情';
+      break;
+    default:
+      return;
+  }
+  router.push({
+    name: routerName,
+    params: {
+      t: Date.now(),
+      rowId: row.cCode
+    },
+    state: {
+      modelCode: '',
+      row: JSON.stringify(row),
+      pathName: 'InOutInventory',
+      title
+    }
+  });
 };
 // 暴露方法
 defineExpose({ handleRemoveSelectionChange, clearFilter, selectData });
