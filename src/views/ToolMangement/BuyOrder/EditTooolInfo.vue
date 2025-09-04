@@ -511,7 +511,7 @@ const Tconfirm = () => {
       item.nTaxRate = item.list_price[0].nTaxRate ?? 0;
       item.cDefindParm03 = item.list_price[0].cSAPCode;
     }
-    item.nQuantity = new BigNumber(item.nQuantity ?? 0); // 数量
+    item.nQuantity = new BigNumber(item.nQuantity ?? 1); // 数量
     item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
     item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
     item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价

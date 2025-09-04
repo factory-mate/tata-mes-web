@@ -952,6 +952,12 @@ const selectDatas = (val: any) => {
     AttributeCode.value,
     '🚀🚀 可编辑表格下拉搜索的 Key'
   );
+  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+    if (AttributeCode.value === "cDefindParm03") {
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+    }
+  }
+
   if (
     Route.name == 'newPurchaseAudit' ||
     Route.name == 'newPurchaseAuditEdit' ||
@@ -1669,9 +1675,14 @@ const onKeyPressEnter = async (e, item, scope) => {
 };
 // 搜索弹框事件
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
-  console.log(obj);
+  console.log('clickModel:obj', obj);
+  console.log('clickModel:scope.row', scope.row);
   if (Route.name === 'AddPurchaseNote') {
     metadata.value.cInvCode = scope.row.cInvCode;
+  }
+  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+    metadata.value.cInvCode = scope.row.cInvCode;
+    metadata.value.cVendorCode = scope.row.cVendorCode;
   }
   ajax.value = obj.ajax;
   IndexType.value = i;

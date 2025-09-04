@@ -294,6 +294,15 @@ const processFilterLogic = (val, p) => {
     }
   }
 
+  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+    if (p.titleName.includes('SAP')) {
+      conditions.push(
+        `cInvCode=${p.metadata?.cInvCode}`,
+        `cVendorCode=${p.metadata?.cVendorCode}`
+      );
+    }
+  }
+
   if (
     ['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name) &&
     p.titleName === '寻线批次号'
