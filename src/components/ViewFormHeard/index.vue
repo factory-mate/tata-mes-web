@@ -2546,7 +2546,7 @@ const newAdd = () => {
           }
         });
       });
-      ruleForm.value.cDefindParm01 = '';
+      // ruleForm.value.cDefindParm01 = '';
       ruleForm.value.cDefindParm01List = list;
     }
 
@@ -2563,7 +2563,7 @@ const newAdd = () => {
           }
         });
       });
-      ruleForm.value.cDefindParm01 = '';
+      // ruleForm.value.cDefindParm01 = '';
       ruleForm.value.cDefindParm01List = list;
     }
   } else if (
@@ -2820,7 +2820,9 @@ const newAdd = () => {
           type: 'error'
         });
       }
-      ruleForm.value = {};
+      if (Route.name != 'materialEdit') {
+        ruleForm.value = {};
+      }
     })
     .catch((err: any) => {
       console.log(err, '---err');
