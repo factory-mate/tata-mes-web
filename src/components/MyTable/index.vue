@@ -799,6 +799,9 @@ const clearFilter = () => {
 };
 const navToByCode = (row: any) => {
   console.log(row);
+  if (!row.cModelCode) {
+    return;
+  }
   let routerName = '';
   let title = '';
   switch (row.cVouchSourceTypeCode) {
@@ -813,6 +816,10 @@ const navToByCode = (row: any) => {
     case '06': // 退料入库
       routerName = 'ReturnPutView';
       title = '退料入库详情';
+      break;
+    case '07': // 其它入库通知单
+      routerName = 'otherInNotifyDetail';
+      title = '其它入库通知单详情';
       break;
     case '09': // 调拨出库单
       routerName = 'TransferRecordInMaterial';
@@ -829,10 +836,10 @@ const navToByCode = (row: any) => {
     name: routerName,
     params: {
       t: Date.now(),
-      rowId: row.cCode
+      rowId: row.UID
     },
     state: {
-      modelCode: '',
+      modelCode: row.cModelCode,
       row: JSON.stringify(row),
       pathName: 'InOutInventory',
       title
