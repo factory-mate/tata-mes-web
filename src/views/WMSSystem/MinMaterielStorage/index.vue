@@ -597,7 +597,7 @@ const ExportAll = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  exportAnalysisHooks(ExcelData, '所有');
+  exportAnalysisHooks(ExcelData, '物料库存查询-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -612,7 +612,7 @@ const ExportOne = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  exportAnalysisHooks(ExcelData, '上架记录查询');
+  exportAnalysisHooks(ExcelData, '物料库存查询');
 };
 
 const data = reactive({
