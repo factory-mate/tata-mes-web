@@ -1560,7 +1560,12 @@ const onKeyPressEnter = async (e, item, scope) => {
     }
   }
 
-  if (Route.name === 'otherInNotifyAdd' || Route.name === 'otherInNotifyEdit') {
+  if (
+    Route.name === 'otherInNotifyAdd' ||
+    Route.name === 'otherInNotifyEdit' ||
+    Route.name === 'otherOutNotifyAdd' ||
+    Route.name === 'otherOutNotifyEdit'
+  ) {
     const {
       data: { data }
     } = await InventoryInfoGetForPage(e.target.value);
