@@ -629,12 +629,13 @@ const Tconfirm = () => {
   });
 
   // 计算价格，根据顺序带
-  const promiseList = itemData.value.map(i =>
+  const promiseList = itemData.value.sort(compare('iIndex', true)).map(i =>
     getPrice({
       cInvCode: i.cInvCode,
       cVendorCode: i.cVendorCode
     })
   );
+
   Promise.allSettled(promiseList)
     .then(res => {
       res.forEach((r, index) => {
