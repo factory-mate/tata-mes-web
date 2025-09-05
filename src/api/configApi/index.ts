@@ -98,7 +98,7 @@ export function InventoryInfoGetForPageNoOrigin(cInvCode) {
   });
 }
 
-export function getPrice({ cInvCode, cVendorCode }) {
+export function getPrice({ cInvCode, cVendorCode, cSAPCode = '' }) {
   const conditions = [
     `dBeginDate<=${dayjs(new Date()).format('YYYY-MM-DD')}`,
     `dEndDate>=${dayjs(new Date()).format('YYYY-MM-DD')}`
@@ -108,6 +108,9 @@ export function getPrice({ cInvCode, cVendorCode }) {
   }
   if (cVendorCode) {
     conditions.push(`cVendorCode=${cVendorCode}`);
+  }
+  if (cSAPCode) {
+    conditions.push(`cSAPCode=${cSAPCode}`);
   }
   return request({
     url: `${

@@ -992,7 +992,8 @@ const selectDatas = (val: any) => {
       // 获取价格
       getPrice({
         cInvCode: tableDataVal.value[IndexType.value].cInvCode,
-        cVendorCode: val.value[0].cVendorCode
+        cVendorCode: val.value[0].cVendorCode,
+        cSAPCode: val.value[0].cSAPCode
       })
         .then(res => {
           const result = res.data?.data?.[0];
