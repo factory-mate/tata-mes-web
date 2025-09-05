@@ -2271,6 +2271,18 @@ const newAdd = () => {
       return;
     }
   }
+  if (
+    Route.name == 'AddPurchaseNote' ||
+    Route.name === 'AddPurchaseNoteNoOrigin'
+  ) {
+    if (ButObjTableData.value.some((item: any) => !item.cDefindParm03)) {
+      ElMessage({
+        type: 'error',
+        message: '请选择SAP编码'
+      });
+      return;
+    }
+  }
   if (Route.name == 'AddPartolPlan') {
     ruleForm.value.cVouchTypeCode = '01';
   }

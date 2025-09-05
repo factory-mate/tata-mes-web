@@ -641,14 +641,6 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  // 校验是否 cDefindParm03 有数据
-  if (tableData.value.some((item: any) => !item.cDefindParm03)) {
-    ElMessage({
-      type: 'error',
-      message: '请选择SAP编码'
-    });
-    return;
-  }
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'PurchaseNote';
   obj.tableData = TABRef.value.tableDataVal;
