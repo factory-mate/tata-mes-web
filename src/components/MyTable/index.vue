@@ -60,7 +60,7 @@
             v-else
             v-bind="item"
             :fixed="item.fixed"
-            :min-width="calcWidth(item)"
+            :min-width="customWidth ? setWidth(item) : calcWidth(item)"
             :width="item.minwidth"
             :sortable="item.sortable"
             filter-multiple
@@ -216,6 +216,7 @@ import {
 } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import ImgPreview from '@/components/ImgPrive/index.vue'; //图片预览
+
 const disabled = ref(false);
 const myTableRef = ref();
 const Route = useRoute();
@@ -328,6 +329,14 @@ const props = defineProps({
   showIndex: {
     type: Boolean,
     default: () => false
+  },
+  setWidth: {
+    type: Function,
+    default: () => {}
+  },
+  customWidth: {
+    type: Boolean,
+    default: () => false
   }
 });
 
@@ -377,7 +386,6 @@ watch(
     tableHeader.value = val.filter((item: any) => {
       return item.checkType;
     });
-    // demo()
   },
   { deep: true }
 );
@@ -545,35 +553,8 @@ const calcWidth = (row: { label: any }) => {
     return flexWidth + 'px';
   }
 };
-const demo = () => {
-  let len = tableHeader.value.filter((item: any) => {
-    return item.popoverVal !== '';
-  });
-  if (len.length > 1) {
-    tableHeader.value.forEach((item: any) => {
-      if (item.popoverVal) {
-        console.log(item.popoverVal, '--===item.popoverVal');
-        console.log(item, '--===item');
-        const tableDataValVVV = tableInit.value.filter(
-          (data: any) =>
-            !item.popoverVal || data[item.prop].includes(item.popoverVal)
-        );
-
-        tableDataVal.value = tableDataValVVV;
-      }
-    });
-  } else {
-    tableDataVal.value = tableInit.value;
-  }
-};
-const conRef = ref();
-const tooltipShow = ref(false);
 const headProper = ref('');
-const ShowTop = () => {
-  tooltipShow.value = !tooltipShow.value;
-};
 
-const show = ref(false);
 // table  过滤
 const tableDataValVVV = computed(() =>
   tableDataVal.value.filter(
