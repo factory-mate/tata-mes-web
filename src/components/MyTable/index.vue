@@ -787,7 +787,7 @@ const navToByCode = (row: any) => {
   let title = '';
   switch (row.cVouchSourceTypeCode) {
     case '01': // 到货单入库
-      routerName = 'newPurchasedGoodsView';
+      routerName = 'PurchasedStorageView';
       title = '到货单入库详情';
       break;
     case '03': // 领料出库单
