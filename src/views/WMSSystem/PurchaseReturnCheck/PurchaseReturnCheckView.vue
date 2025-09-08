@@ -41,6 +41,7 @@
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         :disabledHide="false"
+        :showIndex="false"
       >
         <template #button>
           <el-table-column
