@@ -392,7 +392,7 @@ const clickView = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'xx',
+    name: 'PurchaseReturnCheckEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -400,8 +400,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'xx',
-      title: '编辑'
+      pathName: 'PurchaseReturnCheck',
+      title: '退货申请物料编辑'
     }
   });
 };
