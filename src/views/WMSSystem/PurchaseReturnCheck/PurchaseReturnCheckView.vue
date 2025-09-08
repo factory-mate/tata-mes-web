@@ -42,6 +42,8 @@
         :disabled="disa"
         :disabledHide="false"
         :showIndex="false"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
@@ -692,6 +694,24 @@ const clickEdit = (obj: any) => {
     //     title: '退货质检申请编辑',
     // }
   });
+};
+const setWidth = row => {
+  switch (row.label) {
+    case '物料编号':
+      return 85;
+    case '箱码':
+    case '货位':
+      return 130;
+    case '批次号':
+      return 110;
+    case '物料名称':
+      return 200;
+    case '数量':
+    case '单位':
+      return 60;
+    default:
+      return 80;
+  }
 };
 </script>
 
