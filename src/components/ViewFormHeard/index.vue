@@ -2542,7 +2542,10 @@ const newAdd = () => {
       ruleForm.value.cDefindParm01?.forEach((aa: any) => {
         ruleForm.value.cDefindParm01_Data.forEach((bb: any) => {
           if (aa == bb.cDictonaryCode) {
-            list.push(bb);
+            list.push({
+              cDictonaryCode: bb.cDictonaryCode,
+              cDictonaryName: bb.cDictonaryName
+            });
           }
         });
       });
@@ -2559,7 +2562,10 @@ const newAdd = () => {
       ruleForm.value.cDefindParm01.forEach((aa: any) => {
         ruleForm.value.cDefindParm01_Data.forEach((bb: any) => {
           if (aa == bb.cDictonaryCode) {
-            list.push(bb);
+            list.push({
+              cDictonaryCode: bb.cDictonaryCode,
+              cDictonaryName: bb.cDictonaryName
+            });
           }
         });
       });
@@ -2661,14 +2667,23 @@ const newAdd = () => {
       )?.cWareHouseCode;
   }
 
+  const resultData = {
+    ...ruleForm.value,
+    ...dataValue
+  };
+  if (Route.name === 'materialEdit' || Route.name === 'material') {
+    resultData.cDefindParm01 = '';
+    resultData.cDefindParm01_Current_Data = undefined;
+    resultData.cDefindParm01_Data = undefined;
+  }
+
   let data = {
     method: ButObjData.value.cHttpTypeCode,
     url: ButObjData.value.cServerIP + ButObjData.value.cUrl,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     data: {
-      ...ruleForm.value,
-      ...dataValue
+      ...resultData
     },
     params: {
       ...paramsData
