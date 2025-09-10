@@ -14,11 +14,7 @@
         :size="size"
         :max-height="props.maxHeight"
         :row-class-name="tableRowClassName"
-        :cell-style="{
-          padding: '0',
-          height: '12px',
-          margin: '0'
-        }"
+        :cell-style="tableCellStyle"
         scrollbar-always-on
         v-loading="loading"
       >
@@ -339,6 +335,26 @@ const props = defineProps({
     default: () => false
   }
 });
+
+const tableCellStyle = (row: any) => {
+  if (Route.name === 'InOutInventory') {
+    if (row.column.label === '单据号') {
+      return {
+        padding: '0',
+        height: '12px',
+        margin: '0',
+        color: 'red',
+        textDecoration: 'underline',
+        cursor: 'pointer'
+      };
+    }
+  }
+  return {
+    padding: '0',
+    height: '12px',
+    margin: '0'
+  };
+};
 
 const tableRowClassName: any = ({ row, rowIndex }) => {
   let uniqueField = 'UID';
