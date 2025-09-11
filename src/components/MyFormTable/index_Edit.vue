@@ -1239,6 +1239,10 @@ const selectDatas = (val: any) => {
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView'
   ) {
+    if (AttributeCode.value == 'cUnitName') {
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
+    }
     if (AttributeCode.value == 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
@@ -1748,6 +1752,20 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
   console.log('clickModel:scope.row', scope.row);
   if (Route.name === 'AddPurchaseNote') {
     metadata.value.cInvCode = scope.row.cInvCode;
+  }
+  if (
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name === 'AddPurchaseRequestEdit'
+  ) {
+    if (obj.cAttributeCode === 'cUnitName') {
+      if (scope.row.cInvCode) {
+        metadata.value.cInvCode = scope.row.cInvCode;
+      } else {
+        metadata.value.cInvCode = '';
+        ElMessage.warning('请先选择物料编码');
+        return;
+      }
+    }
   }
   if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
     metadata.value.cInvCode = scope.row.cInvCode;

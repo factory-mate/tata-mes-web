@@ -436,12 +436,13 @@ const setWidth = row => {
     case '物料编码':
       return 100;
     case '物料名称':
-      return 250;
+      return 200;
     case '规格型号':
       return 120;
     case '数量':
-    case '单位':
       return 60;
+    case '单位':
+      return 100;
     case '交货日期':
       return 100;
     default:

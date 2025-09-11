@@ -13,6 +13,11 @@
   >
     <!-- 搜索区域 -->
     <FilterForm
+      v-if="
+        (Route.name === 'AddPurchaseRequestEdit' ||
+          Route.name === 'AddPurchaseRequest') &&
+        currentParmName !== '单位'
+      "
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
@@ -261,8 +266,26 @@ const resetForm = (val: any) => {
   myTableRef.value.clearFilter();
 };
 
+const metadataOptions = ref<any>({});
+const currentParmName = ref('');
+
 const processFilterLogic = (val, p) => {
   const conditions = [];
+  currentParmName.value = p.titleName;
+  if (
+    (Route.name === 'AddPurchaseRequestEdit' ||
+      Route.name === 'AddPurchaseRequest') &&
+    p.titleName === '单位'
+  ) {
+    if (p.metadata?.cInvCode) {
+      metadataOptions.value = {
+        ...p.metadata
+      };
+    } else {
+      metadataOptions.value = {};
+    }
+  }
+
   if (
     Route.name == 'inspectionNormeAdd' ||
     Route.name == 'inspectionNormeEdit' ||
@@ -407,11 +430,12 @@ const funTable = (arr: Array<any>) => {
     }
   });
 };
+
 // table 数据
 const tableAxios = (obj: {
   Resource: { cHttpTypeCode: any; cUrl: any; cServerIP: any };
 }) => {
-  const data = {
+  let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
@@ -429,10 +453,31 @@ const tableAxios = (obj: {
     };
     data.data = { ...data.data, ...type };
   }
-
+  if (
+    (Route.name === 'AddPurchaseRequestEdit' ||
+      Route.name === 'AddPurchaseRequest') &&
+    currentParmName.value === '单位'
+  ) {
+    data = {
+      method: data.method,
+      url: data.url,
+      params: {
+        ...metadataOptions.value
+      }
+    };
+  }
   DataApi(data).then(res => {
-    tableData.value = res.data?.data || [];
-    total.value = res.data.dataCount || 0;
+    if (
+      (Route.name === 'AddPurchaseRequestEdit' ||
+        Route.name === 'AddPurchaseRequest') &&
+      currentParmName.value === '单位'
+    ) {
+      tableData.value = res.data || [];
+      total.value = 0;
+    } else {
+      tableData.value = res.data?.data || [];
+      total.value = res.data.dataCount || 0;
+    }
   });
 };
 // table 数据
