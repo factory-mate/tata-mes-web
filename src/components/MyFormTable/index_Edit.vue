@@ -285,7 +285,6 @@ import { useRouter, useRoute } from 'vue-router';
 import BigNumber from 'bignumber.js';
 import {
   InventoryInfoGetForPage,
-  InventoryInfoGetForPageBySAPCode,
   InventoryInfoGetForPageNoOrigin,
   InventorySAPGetForPage,
   getPrice
