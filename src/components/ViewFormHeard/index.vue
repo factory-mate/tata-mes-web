@@ -2829,11 +2829,6 @@ const newAdd = () => {
         $bus.emit('clickTableUp', true);
         // 更新列表数据
         $bus.emit('tableUpData', { name: pathName.value });
-      } else {
-        ElMessage({
-          message: res?.msg || '操作失败',
-          type: 'error'
-        });
       }
       if (Route.name != 'materialEdit') {
         ruleForm.value = {};

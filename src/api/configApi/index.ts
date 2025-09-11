@@ -85,6 +85,19 @@ export function InventoryInfoGetForPage(cInvCode) {
   });
 }
 
+export function InventorySAPGetForPage(cSAPCode) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + `/api/INENTORY_SAP/GetForPage`,
+    method: 'POST',
+    data: {
+      PageIndex: 1,
+      PageSize: 20,
+      OrderByFileds: '',
+      conditions: `cSAPCode = ${cSAPCode}`
+    }
+  });
+}
+
 export function InventoryInfoGetForPageNoOrigin(cInvCode) {
   return request({
     url: import.meta.env.VITE_APP_BASE_API + `/api/Inentory_info/GetForPage`,

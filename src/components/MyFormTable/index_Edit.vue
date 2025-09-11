@@ -285,7 +285,9 @@ import { useRouter, useRoute } from 'vue-router';
 import BigNumber from 'bignumber.js';
 import {
   InventoryInfoGetForPage,
+  InventoryInfoGetForPageBySAPCode,
   InventoryInfoGetForPageNoOrigin,
+  InventorySAPGetForPage,
   getPrice
 } from '@/api/configApi/index';
 import request from '@/utils/request';
@@ -1554,9 +1556,10 @@ const onKeyPressEnter = async (e, item, scope) => {
     return;
   }
   if (
-    Route.name === 'AddPurchaseRequest' ||
-    Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView' ||
+    ((Route.name === 'AddPurchaseRequest' ||
+      Route.name == 'AddPurchaseRequestEdit' ||
+      Route.name == 'AddPurchaseRequestView') &&
+      item.prop === 'cInvCode') ||
     Route.name == 'PurchaseRequestNoProdAdd' ||
     Route.name == 'PurchaseRequestNoProdEdit' ||
     Route.name == 'InventoryListAdd'
@@ -1572,6 +1575,39 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
       tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
       tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
+      tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
+      tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
+    } else {
+      // 提示错误：未找到物料
+      ElMessage.error('未找到数据');
+      tableDataVal.value[scope.$index].cInvCode = '';
+      tableDataVal.value[scope.$index].cInvName = '';
+      tableDataVal.value[scope.$index].cInvStd = '';
+      tableDataVal.value[scope.$index].cUnitCode = '';
+      tableDataVal.value[scope.$index].cUnitName = '';
+      tableDataVal.value[scope.$index].cDefindParm03 = '';
+      tableDataVal.value[scope.$index].cVendorName = '';
+      tableDataVal.value[scope.$index].cVendorCode = '';
+    }
+  }
+
+  if (
+    (Route.name === 'AddPurchaseRequest' ||
+      Route.name == 'AddPurchaseRequestEdit' ||
+      Route.name == 'AddPurchaseRequestView') &&
+    item.prop === 'cDefindParm03'
+  ) {
+    const {
+      data: { data }
+    } = await InventorySAPGetForPage(e.target.value);
+    if (data[0]) {
+      ElMessage.success('录入成功');
+      tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
+      tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
+      tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
+      tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
+      tableDataVal.value[scope.$index].cDefindParm03 = data[0].cSAPCode;
       tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
     } else {
