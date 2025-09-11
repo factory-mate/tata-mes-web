@@ -146,14 +146,17 @@ const initType = ref(true);
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  let val = window.sessionStorage.getItem('clickSider')
-    ? JSON.parse(window.sessionStorage.getItem('clickSider'))
-    : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
+  if (Route.name === 'MaterielStorage') {
+    let val = window.sessionStorage.getItem('clickSider')
+      ? JSON.parse(window.sessionStorage.getItem('clickSider'))
+      : '';
+    // if (val == Route.name) {
+    //   initType.value = false;
+    //   getData(Route.meta.ModelCode);
+    // }
+    // if (initType.value) {
+    //   getData(Route.meta.ModelCode);
+    // }
     getData(Route.meta.ModelCode);
   }
   initType.value = false;
