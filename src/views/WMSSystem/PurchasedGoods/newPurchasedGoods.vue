@@ -611,32 +611,32 @@ const Tconfirm = () => {
     }
   }
 
-  // if (
-  //   headRef.value.ruleForm.cVendorName ||
-  //   headRef.value.ruleForm.cVendorCode
-  // ) {
-  //   // if (
-  //   //   itemData.value.some(
-  //   //     (item: any) =>
-  //   //       item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
-  //   //       item.cVendorName !== headRef.value.ruleForm.cVendorName
-  //   //   )
-  //   // ) {
-  //   //   ElMessage({
-  //   //     type: 'error',
-  //   //     message: '已指定供应商，请选择该供应商的物料'
-  //   //   });
-  //   //   return;
-  //   // }
-  // } else {
-  //   const { cVendorCode, cVendorName, cPerson, cPhone } = itemData.value[0];
-  //   headRef.value.handleChangeRuleForm({
-  //     cVendorCode,
-  //     cVendorName,
-  //     cPerson,
-  //     cPhone
-  //   });
-  // }
+  if (
+    headRef.value.ruleForm.cVendorName ||
+    headRef.value.ruleForm.cVendorCode
+  ) {
+    // if (
+    //   itemData.value.some(
+    //     (item: any) =>
+    //       item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
+    //       item.cVendorName !== headRef.value.ruleForm.cVendorName
+    //   )
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '已指定供应商，请选择该供应商的物料'
+    //   });
+    //   return;
+    // }
+  } else {
+    const { cVendorCode, cVendorName, cPerson, cPhone } = itemData.value[0];
+    headRef.value.handleChangeRuleForm({
+      cVendorCode,
+      cVendorName,
+      cPerson,
+      cPhone
+    });
+  }
 
   TdialogFormVisible.value = false;
   const sortData = [...itemData.value].sort((a: any, b: any) => {

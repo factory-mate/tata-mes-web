@@ -13,11 +13,6 @@
   >
     <!-- 搜索区域 -->
     <FilterForm
-      v-if="
-        (Route.name === 'AddPurchaseRequestEdit' ||
-          Route.name === 'AddPurchaseRequest') &&
-        currentParmName !== '单位'
-      "
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
