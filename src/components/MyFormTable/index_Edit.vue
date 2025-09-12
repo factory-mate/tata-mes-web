@@ -1270,6 +1270,19 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
     }
+    if (AttributeCode.value === 'cDefindParm03') {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+      metadata.value.cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+    }
     if (AttributeCode.value == 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
@@ -1278,7 +1291,7 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
       metadata.value.cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
-      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].SAPCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
       tableDataVal.value[IndexType.value].cVendorName =
         val.value[0].cVendorName;
       tableDataVal.value[IndexType.value].cVendorCode =
@@ -1297,7 +1310,7 @@ const selectDatas = (val: any) => {
             emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
             emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
             emptyRow.list_sap = val.value[i + 1].list_sap;
-            emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
+            emptyRow.cDefindParm03 = val.value[i + 1].cSAPCode;
             emptyRow.cVendorName = val.value[i + 1].cVendorName;
             emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
           } else {
@@ -1308,7 +1321,7 @@ const selectDatas = (val: any) => {
               cUnitCode: val.value[i + 1].CG_UnitCode,
               cUnitName: val.value[i + 1].CG_UnitName,
               list_sap: val.value[i + 1].list_sap,
-              cDefindParm03: val.value[i + 1].SAPCode,
+              cDefindParm03: val.value[i + 1].cSAPCode,
               cVendorName: val.value[i + 1].cVendorName,
               cVendorCode: val.value[i + 1].cVendorCode
             });
@@ -1328,7 +1341,7 @@ const selectDatas = (val: any) => {
         metadata.value.cInvCode = val.value[0].cInvCode;
         tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
         tableDataVal.value[IndexType.value].cDefindParm03 =
-          val.value[0].SAPCode;
+          val.value[0].cSAPCode;
         tableDataVal.value[IndexType.value].cVendorName =
           val.value[0].cVendorName;
         tableDataVal.value[IndexType.value].cVendorCode =
@@ -1347,7 +1360,7 @@ const selectDatas = (val: any) => {
               emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
               emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
               emptyRow.list_sap = val.value[i + 1].list_sap;
-              emptyRow.cDefindParm03 = val.value[i + 1].SAPCode;
+              emptyRow.cDefindParm03 = val.value[i + 1].cSAPCode;
               emptyRow.cVendorName = val.value[i + 1].cVendorName;
               emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
             } else {
@@ -1358,7 +1371,7 @@ const selectDatas = (val: any) => {
                 cUnitCode: val.value[i + 1].CG_UnitCode,
                 cUnitName: val.value[i + 1].CG_UnitName,
                 list_sap: val.value[i + 1].list_sap,
-                cDefindParm03: val.value[i + 1].SAPCode,
+                cDefindParm03: val.value[i + 1].cSAPCode,
                 cVendorName: val.value[i + 1].cVendorName,
                 cVendorCode: val.value[i + 1].cVendorCode
               });
@@ -1604,7 +1617,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
       tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
       tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
-      tableDataVal.value[scope.$index].cDefindParm03 = data[0].SAPCode;
+      tableDataVal.value[scope.$index].cDefindParm03 = data[0].cSAPCode;
       tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
     } else {
