@@ -382,8 +382,6 @@ const clickDel = (obj: any) => {
 };
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
-  console.log(obj.cIncludeModelCode, '----obj');
-
   router.push({
     name: 'PurchasedStorageView',
     params: {
@@ -394,14 +392,14 @@ const clickView = (scope: any, obj: any) => {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
       pathName: 'PurchasedStorage',
-      title: '入库详情'
+      title: '采购入库单详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'AddPurchaseNote',
+    name: 'PurchasedStorageView',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -409,8 +407,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'PurchaseNote',
-      title: '工采购单编辑'
+      pathName: 'PurchasedStorage',
+      title: '采购入库单编辑'
     }
   });
 };

@@ -1,5 +1,5 @@
 <template>
-  <!--到货新增页面 -->
+  <!--采购单新增页面 -->
   <div class="maintain">
     <el-card>
       <!-- 按钮区域 -->
@@ -29,7 +29,11 @@
         @RoleBut="RoleBut"
       ></Head-View>
       <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
+        <ButtonViem
+          :ToolBut="Buttwo"
+          @ItemAdd="ItemAdd"
+          @ItemAddOnMaterial="ItemAddOnMaterial"
+        ></ButtonViem>
       </div>
       <myTable
         ref="TABRef"
@@ -41,9 +45,10 @@
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         :disabledHide="false"
-        :setWidth="setWidth"
+        :show-index="false"
+        @handleTableDataChange="handleTableDataChange"
+        :setWidth="setMainTableWidth"
         custom-width
-        @handle-table-data-change="handleTableDataChange"
         show-summary
         :summary-method="d => summaryMethod(d)"
       >
@@ -51,16 +56,13 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
               <span>操作</span>
             </template>
             <template #default="scope">
-              <el-button type="primary" size="small" @click="copyItem(scope)"
-                >复制</el-button
-              >
               <el-button
                 type="primary"
                 :disabled="disabled"
@@ -92,14 +94,16 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
-      width="80%"
+      width="90%"
     >
       <!-- 搜索区域 -->
+
       <FilterForm
         :Filter="TFilter"
         @ClickSearch="TClickSearch"
         @resetForm="TresetForm"
       ></FilterForm>
+
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
@@ -109,11 +113,33 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
-        :showIndex="false"
         max-height="52vh"
         :setWidth="setWidth"
         custom-width
+        :show-index="false"
       >
+        <template #button>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            width="200px"
+            align="center"
+          >
+            <template #header>
+              <span>操作</span>
+            </template>
+            <template #default="scope">
+              <el-button
+                type="primary"
+                :disabled="disabled"
+                size="small"
+                @click="handleClose(scope)"
+              >
+                关闭
+              </el-button>
+            </template>
+          </el-table-column>
+        </template>
       </myTable>
       <template #footer>
         <span class="dialog-footer">
@@ -133,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated } from 'vue';
+import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import FilterForm from '@/components/Filter/index.vue';
@@ -147,9 +173,10 @@ import {
   ElMessageBox,
   ElLoading
 } from 'element-plus';
+import BigNumber from 'bignumber.js';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
-import { useRoute, useRouter } from 'vue-router';
+import { configApi, ParamsApi, DataApi, getPrice } from '@/api/configApi/index';
+import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -164,7 +191,6 @@ const modelCode = ref();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
-const router = useRouter();
 const headRef = ref(null);
 let ButOne = ref([]) as any;
 const But = ref([]) as any;
@@ -200,7 +226,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: 'cCode desc',
+  OrderByFileds: 'cVendorCode,cDefindParm01,cInvCode',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
@@ -236,12 +262,12 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  // if (rowId.value != Route.params.rowId) {
-  //   getAddUser(Route.meta.ModelCode);
-  // }
-  tableData.value = [];
-  getAddUser(Route.meta.ModelCode);
 
+  tableData.value = [];
+
+  if (rowId.value != Route.params.rowId) {
+    getAddUser(Route.meta.ModelCode);
+  }
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -255,8 +281,9 @@ onActivated(() => {
 });
 const clickView = (val: any) => {
   rowId.value = val.val;
+  disabled.value = true;
   getAddUser(View1val.value);
-  $bus.emit('TabTitleVal', { name: Route.name, title: '到货单详情' });
+  $bus.emit('TabTitleVal', { name: Route.name, title: '采购单详情' });
 };
 // 权限按钮
 const RoleBut = (v: any) => {
@@ -297,10 +324,10 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
           ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '保存'
+            (item: any) => item.Resource.cAttributeCode == 'SaveAdd'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '添加'
+            (item: any) => item.Resource.cAttributeCode != 'SaveAdd'
           );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
@@ -341,16 +368,7 @@ const getComboBoxFun = async () => {
     }
   });
 };
-const copyItem = val => {
-  tableData.value.splice(val.$index + 1, 0, {
-    ...val.row,
-    UID: '00000000-0000-0000-0000-000000000000',
-    nAccReceiveQuantity: '',
-    nReceiveQuantity: '',
-    dProductDay: '',
-    cVendorBatch: ''
-  });
-};
+
 // table 数据整合
 const funTable = (arr: Array<any>) => {
   modelGrid.value = arr;
@@ -367,6 +385,7 @@ const funTable = (arr: Array<any>) => {
           cHttpTypeCode: item.Resource.cHttpTypeCode,
           cControlTypeCode: item.cControlTypeCode,
           cAttributeCode: item.Resource.cAttributeCode,
+          cIncludeModelCode: item.cIncludeModelCode,
           headerSlot: false,
           slot: ''
         };
@@ -396,6 +415,7 @@ const funTable = (arr: Array<any>) => {
   // 获取下拉框数据
   getComboBoxFun();
 };
+const handleTableDataChange = (val: any) => {};
 
 //表格数据查询
 const tableAxios = async () => {
@@ -410,40 +430,32 @@ const tableAxios = async () => {
     }
   };
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
-      ElLoading.service().close();
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错');
-    ElLoading.service().close();
   }
 };
 
-const PrintLabel = (obj: any) => {};
-const BtnDAel = (obj: any) => {};
+const PrintLabel = (obj: any) => {
+  console.log(obj, '1111');
+};
+const BtnDAel = (obj: any) => {
+  console.log(obj, '1111');
+};
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
   tableData.value.splice(val.$index, 1);
-  TABRef.value.DelBtn(val.$index);
 };
 
 const clickHandAdd = (data: any) => {
   let itemData = JSON.parse(JSON.stringify(data.val));
   dialogFormVisible.value = data.type;
   tableData.value.push(itemData);
-};
-const handleTableDataChange = (val: any) => {
-  // TABRef.value.tableDataVal = TABRef.value.tableDataVal.map(i => ({
-  //   ...i,
-  //   nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
-  // }));
-  // tableData.value = TABRef.value.tableDataVal;
 };
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {
@@ -468,42 +480,49 @@ const ItemAdd = async (obj: any) => {
     console.log(error, '程序出错了');
   }
 };
+
+const ItemAddOnMaterial = async obj => {
+  console.log(obj);
+};
+const closeBtnConfig = ref({});
 // TTTtable 数据整合
 const funTables = (arr: Array<any>) => {
   modelGrid.value = arr;
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
-      if (item.IsShow) {
-        let itemData = {
-          checkType: true,
-          label: item.cShowName ?? item.Resource.cAttributeName,
-          prop: item.Resource.cAttributeCode,
-          edit: item.DefinedParm4,
-          cControlTypeCode: item.cControlTypeCode,
-          headerSlot: false,
-          slot: ''
-        };
-        TtableColumns.value.push(itemData);
-        TtableColumns.value.push({
-          checkType: true,
-          label: '操作',
-          slotName: 'button'
-        });
-        TtableColumns.value = TtableColumns.value.filter(
-          (item: { label: any }, index: any, self: any[]) => {
-            // 利用findIndex方法找到第一个与当前元素id相等的元素索引
-            const i = self.findIndex(
-              (t: { label: any }) => t.label === item.label
-            );
-            // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
-            return i === index;
-          }
-        );
-      }
+      let itemData = {
+        checkType: true,
+        label: item.cShowName ?? item.Resource.cAttributeName,
+        prop: item.Resource.cAttributeCode,
+        edit: item.DefinedParm4,
+        cControlTypeCode: item.cControlTypeCode,
+        headerSlot: false,
+        slot: ''
+      };
+      TtableColumns.value.push(itemData);
+      TtableColumns.value.push({
+        checkType: true,
+        label: '操作',
+        slotName: 'button'
+      });
+      TtableColumns.value = TtableColumns.value.filter(
+        (item: { label: any }, index: any, self: any[]) => {
+          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
+          const i = self.findIndex(
+            (t: { label: any }) => t.label === item.label
+          );
+          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
+          return i === index;
+        }
+      );
     }
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       TAxiosData.value = item;
       TtableAxios();
+    }
+    if (item.Resource.cAttributeTypeCode == 'method') {
+      closeBtnConfig.value = item;
+      console.log(closeBtnConfig.value);
     }
   });
 };
@@ -556,106 +575,132 @@ const tablefilter = () => {
 };
 
 const itemData = ref([]) as any;
+
 //弹窗表格选中
 const ThandleSelectionChange = (val: any) => {
   itemData.value = val;
 };
+
 //弹窗确认
 const Tconfirm = () => {
-  // 判断选中的数据 cVendorCode 是否一致
-  if (
-    !itemData.value.every(
-      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '请选择同一供应商的物料'
-    });
-    // NOTE: #2853 清除不同供应商物料的数据勾选
-    itemData.value = itemData.value.filter(
-      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
-    );
-    return;
-  }
-
-  if (headRef.value.ruleForm.cVouchTypeCode) {
-    if (
-      itemData.value.find(
-        i => i.cVouchTypeCode !== headRef.value.ruleForm.cVouchTypeCode
-      )
-    ) {
-      ElMessage({
-        type: 'warning',
-        message: '请选择相同采购类型的数据'
-      });
-      return;
-    }
-  } else {
-    if (itemData.value.filter(i => i.cVouchTypeCode).length > 0) {
-      const firstDataVouchTypeCode = itemData.value.filter(
-        i => i.cVouchTypeCode
-      )[0].cVouchTypeCode;
-      if (
-        itemData.value
-          .filter(i => i.cVouchTypeCode)
-          .find(i => i.cVouchTypeCode !== firstDataVouchTypeCode)
-      ) {
-        ElMessage({
-          type: 'warning',
-          message: '请选择相同采购类型的数据'
-        });
-        return;
-      }
-      headRef.value.ruleForm.cVouchTypeCode = firstDataVouchTypeCode;
-    }
-  }
-
   // if (
-  //   headRef.value.ruleForm.cVendorName ||
-  //   headRef.value.ruleForm.cVendorCode
+  //   !itemData.value.every(
+  //     (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+  //   )
   // ) {
-  //   // if (
-  //   //   itemData.value.some(
-  //   //     (item: any) =>
-  //   //       item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
-  //   //       item.cVendorName !== headRef.value.ruleForm.cVendorName
-  //   //   )
-  //   // ) {
-  //   //   ElMessage({
-  //   //     type: 'error',
-  //   //     message: '已指定供应商，请选择该供应商的物料'
-  //   //   });
-  //   //   return;
-  //   // }
-  // } else {
-  //   const { cVendorCode, cVendorName, cPerson, cPhone } = itemData.value[0];
-  //   headRef.value.handleChangeRuleForm({
-  //     cVendorCode,
-  //     cVendorName,
-  //     cPerson,
-  //     cPhone
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '必须同供应商且同交货日期才能一起选择'
   //   });
+  //   return;
   // }
+  if (
+    headRef.value.ruleForm.cVendorName ||
+    headRef.value.ruleForm.cVendorCode
+  ) {
+    // if (
+    //   itemData.value.some(
+    //     (item: any) =>
+    //       item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
+    //       item.cVendorName !== headRef.value.ruleForm.cVendorName
+    //   )
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '已指定供应商，请选择该供应商的物料'
+    //   });
+    //   return;
+    // }
+  } else {
+    const { cVendorCode, cVendorName } = itemData.value[0];
+    headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+  }
 
   TdialogFormVisible.value = false;
-  const sortData = [...itemData.value].sort((a: any, b: any) => {
-    if (!a.iIndex) return 1;
-    if (!b.iIndex) return -1;
-    return a.iIndex - b.iIndex;
-  });
+
   // 表格添加数据
-  sortData.forEach((item: any) => {
-    tableData.value.push({
-      ...item,
-      nAccReceiveQuantity: item.inv_iDefindParm12,
-      nReceiveQuantity: '',
-      nTaxPrice: item.nTaxPrice ?? 0,
-      nTaxRate: item.nTaxRate ?? 0
-    });
+  itemData.value.forEach((item: any) => {
+    if (item.cDefindParm03?.includes(',')) {
+      item.cDefindParm03List = item.cDefindParm03.split(',');
+      item.cDefindParm03 = null;
+    } else {
+      item.cDefindParm03List = [item.cDefindParm03];
+    }
   });
 
-  TTABRef.value.handleRemoveSelectionChange();
+  // 计算价格，根据顺序带
+  const promiseList = itemData.value.sort(compare('iIndex', true)).map(i =>
+    getPrice({
+      cInvCode: i.cInvCode,
+      cVendorCode: i.cVendorCode
+    })
+  );
+
+  Promise.allSettled(promiseList)
+    .then(res => {
+      res.forEach((r, index) => {
+        if (r.status === 'fulfilled') {
+          const d = r.value.data?.data?.[0] || {};
+          itemData.value[index].nTaxPrice = d?.nTaxPrice ?? 0;
+          itemData.value[index].nTaxRate = d?.nTaxRate ?? 0;
+          itemData.value[index].nQuantity = new BigNumber(
+            itemData.value[index].nQuantity
+          ); // 数量
+          itemData.value[index].nTaxPrice = new BigNumber(
+            itemData.value[index].nTaxPrice
+          ).decimalPlaces(8); // 含税单价
+          itemData.value[index].nTaxRate = new BigNumber(
+            itemData.value[index].nTaxRate
+          ); // 税率
+          itemData.value[index].nTaxMoney = itemData.value[
+            index
+          ].nTaxPrice.multipliedBy(itemData.value[index].nQuantity); // 税价合计：采购数量*含税单价
+
+          itemData.value[index].cDefindParm06 = itemData.value[index].nTaxMoney
+            .dividedBy(
+              new BigNumber(1).plus(
+                itemData.value[index].nTaxRate.dividedBy(100)
+              )
+            )
+            .multipliedBy(itemData.value[index].nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          itemData.value[index].nMoney = itemData.value[index].nTaxMoney.minus(
+            itemData.value[index].cDefindParm06
+          ); // 不含税金额：价税合计-税额
+          itemData.value[index].nPrice = itemData.value[
+            index
+          ].nQuantity.isGreaterThan(0)
+            ? itemData.value[index].nMoney
+                .dividedBy(itemData.value[index].nQuantity)
+                .decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
+
+          console.log(itemData.value[index]);
+
+          tableData.value.push({
+            ...itemData.value[index],
+            nSumQuantity: itemData.value[index].nQuantity.toString(),
+            nQuantity: itemData.value[index].nQuantity.toString(),
+            nTaxPrice: itemData.value[index].nTaxPrice.toString(),
+            nTaxRate: itemData.value[index].nTaxRate.toString(),
+            nTaxMoney: itemData.value[index].nTaxMoney.toString(),
+            cDefindParm06: itemData.value[index].cDefindParm06
+              .toFixed(2)
+              .replace(/\.?0+$/, ''),
+            nPrice: itemData.value[index].nPrice
+              .toFixed(8)
+              .replace(/\.?0+$/, ''),
+            nMoney: itemData.value[index].nMoney
+              .toFixed(2)
+              .replace(/\.?0+$/, '')
+          });
+          console.log(itemData.value[index].cInvCode);
+          console.log(tableData.value, 'tableData.value');
+        }
+      });
+    })
+    .finally(() => {
+      TTABRef.value.handleRemoveSelectionChange();
+    });
 };
 
 // T弹窗搜索
@@ -666,7 +711,7 @@ const TClickSearch = (val: any) => {
 // 重置
 const TresetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = 'cCode desc';
+  OrderByFileds.value = '';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
@@ -689,65 +734,16 @@ const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
-const SaveAdd = (obj: any, type = true) => {
-  // View1val.value = obj.cIncludeModelCode;
-  // obj.pathName = 'PurchasedGoods';
-  // obj.tableData = TABRef.value.tableDataVal;
-  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // // @ts-ignore
-  // headRef.value.validate(obj);
-  let iIndex = 10;
-
-  const data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    data: {
-      ...headRef.value.ruleForm,
-      Items: TABRef.value.tableDataVal.map(i => {
-        i.iIndex = iIndex;
-        iIndex += 10;
-        return i;
-      }),
-      bCheckQuantity: type
-    }
-  };
-  DataApi(data)
-    .then(res => {
-      if (res.success) {
-        ElMessage({
-          message: res.msg,
-          type: 'success'
-        });
-        $bus.emit('clickTableUp', true);
-        $bus.emit('tableUpData', { name: 'PurchasedGoods' });
-      } else {
-        ElMessage({
-          message: res.msg,
-          type: 'error'
-        });
-      }
-      headRef.value.ruleForm = {};
-      router.push({ name: 'PurchasedGoods' });
-      tagsView.delVisitedView(Route);
-    })
-    .catch(res => {
-      if (res.status === 300) {
-        ElMessageBox.confirm(res.msg, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => SaveAdd(obj, false));
-      } else {
-        ElMessage({
-          message: res.msg,
-          type: 'error'
-        });
-      }
-    });
+const SaveAdd = (obj: any) => {
+  console.log(tableData.value);
+  View1val.value = obj.cIncludeModelCode;
+  obj.pathName = 'PurchaseNote';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
+  // disa.value = true;
 };
-
 //打印显示一个按钮
 // const BtnDAel = (v: any) => {
 //     if (v > 0) {
@@ -796,47 +792,92 @@ const SaveEdit = (obj: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
+  // disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
   disabled.value = false;
   disa.value = false;
-  $bus.emit('TabTitleVal', { name: Route.name, title: '到货单编辑' });
+  $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
 };
 
 const setWidth = row => {
   switch (row.label) {
-    case '订单号':
-      return 160;
-    case '交货日期':
-      return 120;
-    case '采购日期':
-      return 180;
+    case '申请单号':
+      return 150;
     case '物料编码':
-      return 120;
-    case '质检':
-      return 60;
-    // case '物料名称':
-    //   return 200;
+    case 'SAP产品编码':
+      return 90;
+    case '物料名称':
+      return 200;
     case '规格型号':
       return 120;
-    case '未到货数量':
-    case '到货数量':
-    case '每包数量':
-    case '箱数':
-      return 100;
     case '剩余数量':
+    case '数量':
     case '单位':
-      return 85;
-    case 'SAP物料编码':
-      return 110;
-    case '生产日期':
-      return 150;
+      return 60;
+    case '单价':
+    case '含税单价':
+    case '含税金额':
+    case '税额':
+    case '不含税金额':
+    case '金额':
+      return 200;
+    case '交货日期':
+      return 100;
     default:
       return 200;
   }
+};
+
+const setMainTableWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 120;
+    case '物料编码':
+      return 90;
+    case '物料名称':
+      return 200;
+    case '供应商名称':
+      return 120;
+    case '剩余数量':
+    case '采购数量':
+    case '单位':
+      return 60;
+    case 'SAP物料编码':
+      return 90;
+    case '交货日期':
+      return 100;
+  }
+};
+
+const handleClose = scope => {
+  // 弹窗确认
+  ElMessageBox.confirm('是否关闭？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const obj: any = closeBtnConfig.value;
+    const data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      data: [scope.row.cSourceRowUID]
+    };
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+        }
+      })
+      .finally(() => {
+        TtableAxios();
+      });
+  });
 };
 
 const summaryMethod = d => {
