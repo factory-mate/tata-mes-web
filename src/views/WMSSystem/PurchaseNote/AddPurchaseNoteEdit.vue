@@ -528,6 +528,38 @@ const ThandleSelectionChange = (val: any) => {
 };
 //弹窗确认
 const Tconfirm = () => {
+  if (headRef.value.ruleForm.cVouchTypeCode) {
+    if (
+      itemData.value.find(
+        i => i.cVouchTypeCode !== headRef.value.ruleForm.cVouchTypeCode
+      )
+    ) {
+      ElMessage({
+        type: 'warning',
+        message: '请选择相同采购类型的数据'
+      });
+      return;
+    }
+  } else {
+    if (itemData.value.filter(i => i.cVouchTypeCode).length > 0) {
+      const firstDataVouchTypeCode = itemData.value.filter(
+        i => i.cVouchTypeCode
+      )[0].cVouchTypeCode;
+      if (
+        itemData.value
+          .filter(i => i.cVouchTypeCode)
+          .find(i => i.cVouchTypeCode !== firstDataVouchTypeCode)
+      ) {
+        ElMessage({
+          type: 'warning',
+          message: '请选择相同采购类型的数据'
+        });
+        return;
+      }
+      headRef.value.ruleForm.cVouchTypeCode = firstDataVouchTypeCode;
+    }
+  }
+
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
