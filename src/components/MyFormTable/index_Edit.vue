@@ -735,8 +735,6 @@ const changeTextBox = async (i: any, scope: any, v) => {
       p === 'nAccQuantity' ||
       p === 'nReceiveQuantity'
     ) {
-      console.log('计算', row);
-
       const nReceiveQuantity = new BigNumber(
         Number(tableDataVal.value[i].nAccReceiveQuantity ?? 0) *
           Number(tableDataVal.value[i].nAccQuantity ?? 0)
@@ -766,28 +764,43 @@ const changeTextBox = async (i: any, scope: any, v) => {
       console.log('计算完毕');
     }
   }
-  if (
-    Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'AddPurchaseNote' ||
-    Route.name === 'AddPurchaseNoteEdit'
-  ) {
+  if (Route.name === 'PurchaseReturnCheckEdit') {
+    console.log(p);
+    if (p === 'nQuantity' || p === 'nTaxPrice') {
+      const nQuantity = new BigNumber(tableDataVal.value[i].nQuantity ?? 0); // 到货数量
+      const nTaxPrice = new BigNumber(
+        tableDataVal.value[i].nTaxPrice ?? 0
+      ).decimalPlaces(8); // 含税单价
+      const nTaxRate = new BigNumber(tableDataVal.value[i].nTaxRate ?? 0); // 税率
+      const nTaxMoney = nQuantity.multipliedBy(nTaxPrice); // 税价合计：到货数量*含税单价
+      const cDefindParm06 = nTaxMoney
+        .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+        .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+      const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+      const nPrice = nQuantity.isGreaterThan(0)
+        ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+        : 0; // 不含税单价：不含税金额/到货数量
+
+      tableDataVal.value[i].nReceiveQuantity = nQuantity.toString();
+      tableDataVal.value[i].nTaxPrice = nTaxPrice.toString();
+      tableDataVal.value[i].nTaxRate = nTaxRate.toString();
+      tableDataVal.value[i].nTaxMoney = nTaxMoney.toString();
+      tableDataVal.value[i].cDefindParm06 = cDefindParm06
+        .toFixed(2)
+        .replace(/\.?0+$/, '');
+      tableDataVal.value[i].nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+      tableDataVal.value[i].nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
+      console.log('计算完毕');
+    }
+  }
+  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
       if (p === 'nQuantity') {
-        try {
-          const r = await getPrice({
-            cInvCode: row.cInvCode,
-            cVendorCode: row.cVendorCode
-          });
-          const result = r.data?.data?.[0];
-          console.log(result);
-          tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
-          tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
-        } catch {
-          tableDataVal.value[i].nTaxPrice = 0;
-          tableDataVal.value[i].nTaxRate = 0;
-        }
+        const result = tableDataVal.value[i].list_price?.[0];
+        console.log(result);
+        tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
+        tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
       }
       if (!row.nQuantity || !row.nTaxPrice) {
         tableDataVal.value[i].nTaxMoney = 0;
@@ -856,14 +869,28 @@ const changeTextBox = async (i: any, scope: any, v) => {
       }
     }
   }
-  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+  if (
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'AddPurchaseNote' ||
+    Route.name === 'AddPurchaseNoteEdit'
+  ) {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
       if (p === 'nQuantity') {
-        const result = tableDataVal.value[i].list_price?.[0];
-        console.log(result);
-        tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
-        tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
+        try {
+          const r = await getPrice({
+            cInvCode: row.cInvCode,
+            cVendorCode: row.cVendorCode
+          });
+          const result = r.data?.data?.[0];
+          console.log(result);
+          tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
+          tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
+        } catch {
+          tableDataVal.value[i].nTaxPrice = 0;
+          tableDataVal.value[i].nTaxRate = 0;
+        }
       }
       if (!row.nQuantity || !row.nTaxPrice) {
         tableDataVal.value[i].nTaxMoney = 0;
