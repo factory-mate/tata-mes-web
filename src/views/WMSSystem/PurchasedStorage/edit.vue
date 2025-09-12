@@ -8,7 +8,6 @@
           :ToolBut="ButOne"
           :printDis="printDis"
           @SaveAdd="SaveAdd"
-          @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
           @Commit="Commit"
@@ -31,6 +30,7 @@
       <div style="float: right">
         <ButtonViem
           :ToolBut="Buttwo"
+          @EditSave="SaveEdit"
           @ItemAdd="ItemAdd"
           @ItemAddOnMaterial="ItemAddOnMaterial"
         ></ButtonViem>
@@ -49,8 +49,6 @@
         @handleTableDataChange="handleTableDataChange"
         :setWidth="setMainTableWidth"
         custom-width
-        show-summary
-        :summary-method="d => summaryMethod(d)"
       >
         <template #button>
           <el-table-column
@@ -226,7 +224,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: 'cVendorCode,cDefindParm01,cInvCode',
+  OrderByFileds: 'dCreateTime',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
@@ -265,9 +263,11 @@ onActivated(() => {
 
   tableData.value = [];
 
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -419,25 +419,41 @@ const handleTableDataChange = (val: any) => {};
 
 //表格数据查询
 const tableAxios = async () => {
-  if (!rowId.value) {
-    return false;
-  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
-    params: {
-      val: rowId.value
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: 'cCode = ' + row.value.cCode
     }
   };
   try {
-    const res = await ParamsApi(data);
+    total.value = 0;
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    const res = await DataApi(data);
     if (res.status == 200) {
-      tableData.value = res.data;
+      tableData.value = res.data.data.map(
+        (item: { IsValid: string | boolean }) => {
+          return {
+            ...item,
+            IsValid: item.IsValid ? '是' : '否'
+          };
+        }
+      );
+      total.value = res.data.dataCount;
+
+      tablefilter();
+      // TabRef.value.handleRemoveSelectionChange();
+      ElLoading.service().close();
     } else {
       console.log('请求出错');
+      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错');
+    ElLoading.service().close();
   }
 };
 
@@ -787,7 +803,7 @@ const handleSelectionChange = (v: any) => {
 //修改保存
 const SaveEdit = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseNote';
+  obj.pathName = 'PurchasedStorage';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

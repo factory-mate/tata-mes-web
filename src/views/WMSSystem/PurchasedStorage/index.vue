@@ -399,7 +399,7 @@ const clickView = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'PurchasedStorageView',
+    name: 'PurchasedStorageEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID

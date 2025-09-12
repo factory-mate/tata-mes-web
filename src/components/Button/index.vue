@@ -318,7 +318,8 @@ const emits = defineEmits([
   'MakeMaterial',
   'Pull',
   'SetQC',
-  'CancelQC'
+  'CancelQC',
+  'EditSave'
 ]);
 
 watch(
@@ -856,6 +857,9 @@ const SetQC = obj => {
 const CancelQC = obj => {
   emits('CancelQC', obj);
 };
+const EditSave = obj => {
+  emits('EditSave', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1280,6 +1284,9 @@ const clickButton = (event: any) => {
       break;
     case 'CancelQC':
       CancelQC(event);
+      break;
+    case 'EditSave':
+      EditSave(event);
       break;
     default:
       break;

@@ -160,10 +160,10 @@ onActivated(() => {
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
+  // if (val == Route.name) {
+  //   initType.value = false;
+  //   getData(Route.meta.ModelCode);
+  // }
   modelCode.value = history.state.modelCode
     ? history.state.modelCode
     : Route.meta.ModelCode;
@@ -178,9 +178,11 @@ onActivated(() => {
   // if(initType.value){
   //     getData(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getData(Route.meta.ModelCode);
+  // }
+  getData(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (Route.params.rowId) {
