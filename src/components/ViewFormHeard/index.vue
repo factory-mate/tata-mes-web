@@ -2600,7 +2600,10 @@ const newAdd = () => {
     dataValue = { ms: ButObjTableData.value };
   } else if (Route.name == 'AddPersonTeam' || Route.name == 'EditPersonTeam') {
     dataValue = { list_s: ButObjTableData.value };
-  } else if (Route.name == 'PurchaseReturnRequestEdit') {
+  } else if (
+    Route.name == 'PurchaseReturnRequestEdit' ||
+    Route.name == 'PurchaseReturnCheckEdit'
+  ) {
     dataValue = { list: validateObj.value.tableData };
   } else if (
     Route.name == 'ScrapToolInfoAdd' ||

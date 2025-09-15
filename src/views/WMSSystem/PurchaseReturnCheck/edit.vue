@@ -671,12 +671,12 @@ const clickEditXM = (scope: any, obj: any) => {
 //修改保存
 const SaveEdit = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseReturnRequest';
+  obj.pathName = 'PurchaseReturnCheck';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
+  // disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {
