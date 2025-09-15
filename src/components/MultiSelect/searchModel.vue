@@ -293,6 +293,10 @@ const processFilterLogic = (val, p) => {
     }
   }
 
+  if (Route.name === 'LaboratoryMaterialControlAdd') {
+    conditions.push('cProjectTypeCode=2');
+  }
+
   if (
     Route.name === 'MaterielStorage' ||
     Route.name === 'MinMaterielStorage' ||

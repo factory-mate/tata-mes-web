@@ -448,13 +448,13 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  if (!TABRef.value.tableDataVal.length) {
-    ElMessage({
-      type: 'info',
-      message: '请添加列表数据'
-    });
-    return false;
-  }
+  // if (!TABRef.value.tableDataVal.length) {
+  //   ElMessage({
+  //     type: 'info',
+  //     message: '请添加列表数据'
+  //   });
+  //   return false;
+  // }
   let list = [];
   list = TABRef.value.tableDataVal.filter((item: any) => {
     return item.cInvCode == '' || item.nQuantity == '';
