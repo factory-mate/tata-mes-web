@@ -106,7 +106,8 @@ async function handleSubmit() {
   const data = {
     ...formData.value,
     singerModels: unitData.value,
-    sAPInfos: sAPInfos.value
+    sAPInfos: []
+    // sAPInfos: sAPInfos.value
   };
   try {
     const res = await updateMaterial(data);
@@ -624,7 +625,7 @@ onActivated(() => {
         </el-row>
       </el-card>
 
-      <el-card>
+      <!-- <el-card>
         <div style="display: flex; justify-content: space-between">
           <el-tag type="primary" size="large">扩展信息</el-tag>
           <el-button type="primary" @click="onClickAddExtensionBtn"
@@ -660,7 +661,7 @@ onActivated(() => {
             </template>
           </el-table-column>
         </el-table>
-      </el-card>
+      </el-card> -->
 
       <el-card>
         <div style="display: flex; justify-content: space-between">

@@ -119,7 +119,7 @@ onActivated(async () => {
       </el-row>
     </el-card>
 
-    <el-card>
+    <!-- <el-card>
       <el-tag type="primary" size="large">扩展信息</el-tag>
       <el-table :data="sAPInfos" style="width: 100%; margin-top: 20px">
         <el-table-column prop="cSAPCode" label="SAP 物料编码" />
@@ -128,7 +128,7 @@ onActivated(async () => {
         <el-table-column prop="cVendorName" label="供应商名称" />
         <el-table-column prop="cPackageNumber" label="每包数量" />
       </el-table>
-    </el-card>
+    </el-card> -->
 
     <el-card>
       <el-tag type="primary" size="large">单位信息</el-tag>
