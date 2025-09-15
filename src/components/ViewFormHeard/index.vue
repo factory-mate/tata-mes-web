@@ -2830,9 +2830,9 @@ const newAdd = () => {
         // 更新列表数据
         $bus.emit('tableUpData', { name: pathName.value });
       }
-      if (Route.name != 'materialEdit') {
-        ruleForm.value = {};
-      }
+      // if (Route.name != 'materialEdit') {
+      //   ruleForm.value = {};
+      // }
     })
     .catch((err: any) => {
       console.log(err, '---err');

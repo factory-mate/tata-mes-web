@@ -16,6 +16,7 @@
         @ExportOne="ExportOne"
         @Commit="Commit"
         @clickAudit="clickAudit"
+        @Audit_Again="Audit_Again"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -430,6 +431,39 @@ const handleSelectionChange = (arr: any) => {
   sendId.value = [];
   arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
 };
+const Audit_Again = (obj: any) => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要复核的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data)
+    .then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '复核成功'
+        });
+        tableAxios();
+        TabRef.value.handleRemoveSelectionChange();
+        sendId.value = [];
+      } else {
+        ElMessage.error('复核失败');
+      }
+    })
+    .finally(() => {
+      loading.close();
+    });
+};
+
 // 审核
 const clickAudit = (obj: any) => {
   if (sendId.value.length <= 0) {
