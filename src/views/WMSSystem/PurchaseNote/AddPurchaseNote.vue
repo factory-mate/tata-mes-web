@@ -226,7 +226,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: 'cVendorCode,cDefindParm01,cInvCode',
+  OrderByFileds: 'cSourceCode,cInvCode',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
