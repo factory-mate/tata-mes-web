@@ -307,6 +307,7 @@ const getTreeProps = () => {
   switch (Route.name) {
     case 'WMSMaterial':
     case 'AddPurchaseRequest':
+    case 'KnifeAddPurchaseRequest':
     case 'RawMaterialComparisonAdd':
     case 'RawMaterialComparisonEdit':
     case 'AddPurchaseNoteNoOrigin':
@@ -712,7 +713,10 @@ const getSelectData = () => {
     if (item.cControlTypeCode == 'ComboBox') {
       if (!item.Resource.cUrl) return false;
       let obj = {};
-      if (Route.name == 'PurchaseRequest') {
+      if (
+        Route.name == 'PurchaseRequest' ||
+        Route.name == 'KnifePurchaseRequest'
+      ) {
         obj = {
           Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus',
           OrderByFileds: 'cDictonaryCode'

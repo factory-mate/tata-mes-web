@@ -1661,7 +1661,10 @@ const getSelData = () => {
     if (item.cControlTypeCode == 'ComboBox' && item.IsShow == true) {
       console.log(item);
       let obj = {};
-      if (Route.name == 'PurchaseRequest') {
+      if (
+        Route.name == 'PurchaseRequest' ||
+        Route.name == 'KnifePurchaseRequest'
+      ) {
         obj = { Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus' };
       } else if (
         Route.name == 'workshopMaterial' ||

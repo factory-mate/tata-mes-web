@@ -779,7 +779,10 @@ const getSelData = () => {
   FormDatas.value.forEach((item: any) => {
     if (item.cControlTypeCode == 'ComboBox') {
       let obj = {};
-      if (Route.name == 'PurchaseRequest') {
+      if (
+        Route.name == 'PurchaseRequest' ||
+        Route.name == 'KnifePurchaseRequest'
+      ) {
         obj = { Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus' };
       } else if (
         Route.name == 'workshopMaterial' ||

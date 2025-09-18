@@ -758,6 +758,7 @@ const getData = (newValue: any) => {
         obj = {};
       } else if (
         Route.name == 'PurchaseRequest' ||
+        Route.name == 'KnifePurchaseRequest' ||
         Route.name == 'PurchaseAudit'
       ) {
         obj = { Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus' };
@@ -1898,7 +1899,10 @@ const selectData = (val: any) => {
     if (
       Route.name == 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView'
+      Route.name == 'AddPurchaseRequestView' ||
+      Route.name == 'KnifeAddPurchaseRequest' ||
+      Route.name == 'KnifeAddPurchaseRequestEdit' ||
+      Route.name == 'KnifeAddPurchaseRequestView'
     ) {
       //部门编码
       ruleForm.value['cDepCode'] = DepCode.value['cDepCode'] || '';
@@ -2491,7 +2495,10 @@ const newAdd = () => {
   } else if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView' ||
+    Route.name == 'KnifeAddPurchaseRequest' ||
+    Route.name == 'KnifeAddPurchaseRequestEdit' ||
+    Route.name == 'KnifeAddPurchaseRequestView'
   ) {
     ruleForm.value.IsAuth = true;
     const items = ButObjTableData.value

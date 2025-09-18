@@ -213,7 +213,8 @@
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
                   'newPurchaseAuditEdit',
-                  'AddPurchaseRequestEdit'
+                  'AddPurchaseRequestEdit',
+                  'KnifeAddPurchaseRequestEdit',
                 ].includes(Route.name as any) &&
                   item.cAttributeCode === 'cVendorName') ||
                 (['otherInNotifyAdd', 'otherInNotifyEdit'].includes(
@@ -546,7 +547,11 @@ onMounted(() => {
   }
 });
 onActivated(() => {
-  if (Route.name === 'AddPurchaseRequest' && tableDataVal.value.length === 0) {
+  if (
+    (Route.name === 'AddPurchaseRequest' ||
+      Route.name === 'KnifeAddPurchaseRequest') &&
+    tableDataVal.value.length === 0
+  ) {
     for (let i = 0; i < 10; i++) {
       tableDataVal.value.push(tableFunObj());
     }
@@ -629,7 +634,9 @@ const tableFunObj = () => {
   });
   if (
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView' ||
+    Route.name == 'KnifeAddPurchaseRequestEdit' ||
+    Route.name == 'KnifeAddPurchaseRequestView'
   ) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -646,6 +653,9 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
         Route.name == 'AddPurchaseRequest' ||
         Route.name == 'AddPurchaseRequestEdit' ||
         Route.name == 'AddPurchaseRequestView' ||
+        Route.name == 'KnifeAddPurchaseRequest' ||
+        Route.name == 'KnifeAddPurchaseRequestEdit' ||
+        Route.name == 'KnifeAddPurchaseRequestView' ||
         Route.name == 'newPurchaseAuditEdit' ||
         Route.name == 'newPurchaseAuditView'
       ) {
@@ -683,7 +693,10 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
   if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView' ||
+    Route.name == 'KnifeAddPurchaseRequest' ||
+    Route.name == 'KnifeAddPurchaseRequestEdit' ||
+    Route.name == 'KnifeAddPurchaseRequestView'
   ) {
     if (prop == 'cUnitName') {
       tableDataVal.value[i]['cUnitCode'] = dataVal[0].cUnitCode;
@@ -1264,7 +1277,10 @@ const selectDatas = (val: any) => {
   if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView' ||
+    Route.name == 'KnifeAddPurchaseRequest' ||
+    Route.name == 'KnifeAddPurchaseRequestEdit' ||
+    Route.name == 'KnifeAddPurchaseRequestView'
   ) {
     if (AttributeCode.value == 'cUnitName') {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
@@ -1329,7 +1345,10 @@ const selectDatas = (val: any) => {
         }
       }
     }
-    if (Route.name == 'AddPurchaseRequest') {
+    if (
+      Route.name == 'AddPurchaseRequest' ||
+      Route.name == 'KnifeAddPurchaseRequest'
+    ) {
       if (AttributeCode.value == 'cVendorName') {
         tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
         tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
@@ -1601,7 +1620,10 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     ((Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView') &&
+      Route.name == 'AddPurchaseRequestView' ||
+      Route.name === 'KnifeAddPurchaseRequest' ||
+      Route.name == 'KnifeAddPurchaseRequestEdit' ||
+      Route.name == 'KnifeAddPurchaseRequestView') &&
       item.prop === 'cInvCode') ||
     Route.name == 'PurchaseRequestNoProdAdd' ||
     Route.name == 'PurchaseRequestNoProdEdit' ||
@@ -1637,7 +1659,10 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     (Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView') &&
+      Route.name == 'AddPurchaseRequestView' ||
+      Route.name === 'KnifeAddPurchaseRequest' ||
+      Route.name === 'KnifeAddPurchaseRequestEdit' ||
+      Route.name === 'KnifeAddPurchaseRequestView') &&
     item.prop === 'cDefindParm03'
   ) {
     const {
@@ -1795,7 +1820,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
   }
   if (
     Route.name === 'AddPurchaseRequest' ||
-    Route.name === 'AddPurchaseRequestEdit'
+    Route.name === 'AddPurchaseRequestEdit' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit'
   ) {
     if (obj.cAttributeCode === 'cUnitName') {
       if (scope.row.cInvCode) {
@@ -1817,6 +1844,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     Route.name === 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit' ||
+    Route.name === 'KnifeAddPurchaseRequestView' ||
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin'
       ? true

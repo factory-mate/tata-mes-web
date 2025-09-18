@@ -269,7 +269,9 @@ const processFilterLogic = (val, p) => {
   currentParmName.value = p.titleName;
   if (
     (Route.name === 'AddPurchaseRequestEdit' ||
-      Route.name === 'AddPurchaseRequest') &&
+      Route.name === 'AddPurchaseRequest' ||
+      Route.name === 'KnifeAddPurchaseRequestEdit' ||
+      Route.name === 'KnifeAddPurchaseRequest') &&
     p.titleName === '单位'
   ) {
     if (p.metadata?.cInvCode) {
@@ -454,7 +456,9 @@ const tableAxios = (obj: {
   }
   if (
     (Route.name === 'AddPurchaseRequestEdit' ||
-      Route.name === 'AddPurchaseRequest') &&
+      Route.name === 'AddPurchaseRequest' ||
+      Route.name === 'KnifeAddPurchaseRequestEdit' ||
+      Route.name === 'KnifeAddPurchaseRequest') &&
     currentParmName.value === '单位'
   ) {
     data = {
@@ -468,7 +472,9 @@ const tableAxios = (obj: {
   DataApi(data).then(res => {
     if (
       (Route.name === 'AddPurchaseRequestEdit' ||
-        Route.name === 'AddPurchaseRequest') &&
+        Route.name === 'AddPurchaseRequest' ||
+        Route.name === 'KnifeAddPurchaseRequestEdit' ||
+        Route.name === 'KnifeAddPurchaseRequest') &&
       currentParmName.value === '单位'
     ) {
       tableData.value = res.data || [];
@@ -517,7 +523,10 @@ const changPage = (val: any) => {
 };
 
 const setWidth = item => {
-  if (Route.name === 'AddPurchaseRequest') {
+  if (
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequest'
+  ) {
     switch (item.name) {
       case '物料编码':
         return 60;
