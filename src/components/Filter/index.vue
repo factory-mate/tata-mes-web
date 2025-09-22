@@ -739,6 +739,7 @@ const getSelectData = () => {
         Route.name == 'MaterielStorage' ||
         Route.name == 'InOutInventory' ||
         Route.name == 'PurchaseAudit' ||
+        Route.name == 'KnifePurchaseAudit' ||
         Route.name == 'otherInNotify' ||
         (Route.name == 'originalOrder' &&
           item.Resource.cAttributeCode == 'cVouchTypeCode') ||

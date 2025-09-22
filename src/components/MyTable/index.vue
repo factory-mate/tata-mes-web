@@ -657,6 +657,7 @@ const selectDisableRoom = (row: any, index: any) => {
   if (
     Route.name == 'originalOrder' ||
     Route.name == 'PurchaseAudit' ||
+    Route.name == 'KnifePurchaseAudit' ||
     Route.name == 'markDelivery'
   ) {
     if (

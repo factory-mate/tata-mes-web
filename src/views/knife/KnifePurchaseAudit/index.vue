@@ -1,5 +1,5 @@
 <template>
-  <!-- 报废单页面 -->
+  <!-- 采购申请求审核页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
@@ -11,13 +11,12 @@
       <!-- 按钮区域 -->
       <ButtonViem
         :ToolBut="But"
-        @clickAdd="clickAdd"
+        @clickAudit="clickAudit"
+        @RejectForm="clickReject"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
-        @clickAudit="clickAudit"
-        @Submit="Submit"
-        @export-detail="ExportDetail"
-      ></ButtonViem>
+      >
+      </ButtonViem>
       <!-- 表格区域 -->
       <myTable
         ref="TabRef"
@@ -25,7 +24,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="false"
+        :selection="true"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -50,7 +49,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="showButton(scope.row, item)"
+                  v-if="item.iIndex < 3 && showBtn(scope, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -71,10 +70,11 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      v-for="item in tableButton.slice(2)"
+                      v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1)"
                       :key="item.Resource.cAttributeName"
                     >
                       <el-button
+                        v-if="showBtn(scope, item)"
                         type="primary"
                         size="small"
                         @click="clickTableBut(scope, item)"
@@ -95,9 +95,25 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
-        :page-sizes="[20, 50, 100]"
+        :page-sizes="[10, 20, 50]"
       />
     </el-card>
+  </div>
+  <div>
+    <!-- 驳回弹出框 -->
+    <el-dialog v-model="dialogFormVisible" title="驳回原因" width="30%" center>
+      <el-form :model="form" ref="ruleFormRef">
+        <el-form-item label="驳回原因:">
+          <el-input v-model="form.reason" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="submit">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,16 +124,20 @@ import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import myPopup from '@/components/Popup/index.vue';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import {
   ElButton,
   ElCard,
   ElTableColumn,
   ElMessage,
-  ElMessageBox
+  ElMessageBox,
+  ElForm,
+  ElFormItem,
+  ElInput
 } from 'element-plus';
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
-import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
+import type { FormInstance, FormRules } from 'element-plus';
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
@@ -137,48 +157,45 @@ const tableColumns = ref([]) as any;
 const tableButton = ref([]) as any;
 const AxiosData = ref({}) as any;
 const tabType = ref(true);
-const tabKey = ref(0);
-//启用传递的UID
-const sendId = ref([]) as any;
-
+const data = reactive({
+  isCollapse: false,
+  dialogV: false,
+  dialogTitle: '编辑',
+  Conditions: '',
+  OrderByFileds: ''
+});
+const { Conditions, OrderByFileds } = toRefs(data);
+//弹出框
+const dialogFormVisible = ref(false);
+const ruleFormRef = ref<FormInstance>();
+const form = reactive({
+  reason: ''
+});
 const initType = ref(true);
-
-const showButton = (obj, item) => {
-  if (item.Resource.cAttributeName === '详情') {
-    return true;
-  }
-  if (obj.iStatusName === '保存') {
-    return true;
-  } else {
-    return false;
-  }
-};
-
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  // if (val == Route.name) {
-  //   initType.value = false;
-  //   getData(Route.meta.ModelCode);
-  // }
-  // if (initType.value) {
-  //   getData(Route.meta.ModelCode);
-  // }
-  getData(Route.meta.ModelCode);
+  if (val == Route.name) {
+    initType.value = false;
+    getData(Route.meta.ModelCode);
+  }
+  if (initType.value) {
+    getData(Route.meta.ModelCode);
+  }
   initType.value = false;
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'HistoryLine') {
+    if (v.name == 'KnifePurchaseAudit') {
       tableAxios();
     }
   }, 300);
 });
-//调取供应商接口
+//调取总接口
 const getData: any = async (val: string) => {
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
@@ -225,6 +242,8 @@ const total = ref(0);
 const tableData = ref([] as any);
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
+  console.log(event.cAttributeCodem, 'but');
+
   switch (event.cAttributeCode) {
     case 'View':
       clickView(scope, event);
@@ -249,6 +268,8 @@ const tableAxios = async () => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
+        ? 'iStatus > 0 && ' + Conditions.value
+        : 'iStatus > 0'
     }
   };
   try {
@@ -344,6 +365,47 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   tableAxios();
 };
+
+// 表格按钮详情
+const clickView = (scope: any, obj: any) => {
+  router.push({
+    name: 'KnifeNewPurchaseAuditview',
+    params: {
+      t: Date.now(),
+      rowId: scope.row.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(scope.row),
+      pathName: 'KnifePurchaseAudit',
+      title: '刀具采购审核详情'
+    }
+  });
+};
+//表格按钮编辑
+const clickEditTable = (scope: any, obj: any) => {
+  if (scope.row.iStatusName == '已审核' || scope.row.iStatusName == '驳回') {
+    ElMessage({
+      type: 'error',
+      message: scope.row.iStatusName + '不能操作'
+    });
+    return false;
+  }
+
+  router.push({
+    name: 'KnifeNewPurchaseAuditEdit',
+    params: {
+      t: Date.now(),
+      rowId: scope.row.UID
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(scope.row),
+      pathName: 'KnifePurchaseAudit',
+      title: '刀具采购审核编辑'
+    }
+  });
+};
 //表格按钮删除
 const clickDelete = (scope: any, obj: any) => {
   const senid = scope.row.UID;
@@ -358,7 +420,6 @@ const clickDelete = (scope: any, obj: any) => {
     type: 'warning'
   })
     .then(() => {
-      ElLoading.service({ lock: true, text: '加载中.....' });
       DataApi(data).then(res => {
         if (res.status === 200) {
           ElMessage({
@@ -369,7 +430,6 @@ const clickDelete = (scope: any, obj: any) => {
         } else {
           ElMessage.error('删除失败');
         }
-        ElLoading.service().close();
       });
     })
     .catch(() => {
@@ -377,210 +437,143 @@ const clickDelete = (scope: any, obj: any) => {
         type: 'info',
         message: '取消删除'
       });
-      ElLoading.service().close();
     });
-};
-// 表格按钮详情
-const clickView = (scope: any, obj: any) => {
-  router.push({
-    name: 'HistoryLineDetail',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.UID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'HistoryLine',
-      title: '历史详情'
-    }
-  });
-};
-//表格按钮编辑
-const clickEditTable = (scope: any, obj: any) => {
-  router.push({
-    name: 'InventoryListEdit',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.UID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'InventoryList',
-      title: '盘点单编辑'
-    }
-  });
-};
-//按钮新增
-const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'InventoryListAdd',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '盘点单新增',
-      type: 'add'
-    }
-  });
 };
 //多选获取UID
+const selectList = ref([]) as any;
 const handleSelectionChange = (arr: any) => {
-  // arr.forEach((item: { IsValid: string; UID: any; }) => {
-  //     if (item.IsValid === '否') {
-  //         sendId.value.push(item.UID)
-  //     }
-  // })
-  sendId.value = [];
-  arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
+  selectList.value = arr;
 };
-// 审核
+//审核
 const clickAudit = (obj: any) => {
-  console.log(obj, '----oooo');
-
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要提交的数据'
-    });
-    return;
+  if (!selectList.value.length) {
+    ElMessage.info('请选择数据');
+    return false;
   }
+  let UIDS: any = [];
+  selectList.value.forEach((element: any) => {
+    UIDS.push(element.UID);
+  });
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
+    data: UIDS
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
   DataApi(data).then(res => {
-    if (res.status === 200) {
+    if (res.status == 200) {
       ElMessage({
         type: 'success',
-        message: '审核成功'
+        message: '成功'
       });
       tableAxios();
       TabRef.value.handleRemoveSelectionChange();
-      sendId.value = [];
       ElLoading.service().close();
     } else {
-      console.log('审核失败');
+      TabRef.value.handleRemoveSelectionChange();
+      ElMessage({
+        type: 'info',
+        message: res.errmsg[0].Value
+      });
       ElLoading.service().close();
     }
   });
 };
-//按钮提交
-const Submit = (obj: any) => {
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要提交的数据'
-    });
-    return;
+//驳回
+const RejectObj = ref({});
+const clickReject = (obj: any) => {
+  RejectObj.value = obj;
+  if (!selectList.value.length) {
+    ElMessage.info('请选择数据');
+    return false;
   }
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
-  };
-  ElLoading.service({ lock: true, text: '加载中.....' });
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '提交成功'
-      });
-      tableAxios();
-      TabRef.value.handleRemoveSelectionChange();
-      sendId.value = [];
-      ElLoading.service().close();
-    } else {
-      console.log('提交失败');
-      ElLoading.service().close();
-    }
-  });
+  dialogFormVisible.value = true;
 };
-const ExportDetail = obj => {
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要导出的数据'
-    });
-    return;
-  }
-  console.log(sendId.value, 'sendId.value');
-  let conditions = [];
-  if (sendId.value.length > 0) {
-    conditions.push(`MID in (${sendId.value.join()})`);
-  }
+const RejectMethod = (obj: any) => {
+  let UIDS: any = [];
+  selectList.value.forEach((element: any) => {
+    UIDS.push(element.UID);
+  });
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: 1,
-      PageSize: 999999,
-      OrderByFileds: OrderByFileds.value,
-      Conditions: conditions.join(' && ')
+      KeyVal: UIDS,
+      cMemo: form.reason
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '盘点详情');
-  ElLoading.service().close();
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      ElMessage({
+        type: 'success',
+        message: '成功'
+      });
+      tableAxios();
+      form.reason = '';
+      TabRef.value.handleRemoveSelectionChange();
+      ElLoading.service().close();
+    } else {
+      form.reason = '';
+      TabRef.value.handleRemoveSelectionChange();
+      ElMessage({
+        type: 'info',
+        message: res.errmsg[0].Value
+      });
+      ElLoading.service().close();
+    }
+  });
 };
-
+//表单原因确认
+const submit = () => {
+  if (!form.reason) {
+    ElMessage.info('请输入原因');
+    return false;
+  } else {
+    RejectMethod(RejectObj.value);
+    dialogFormVisible.value = false;
+  }
+};
 //按钮导出所有
 const ExportAll = async (obj: any) => {
-  let data = {
+  let ExcelData = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
       PageIndex: 1,
       PageSize: 999999,
-      OrderByFileds: OrderByFileds.value,
+      OrderByFileds: '',
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+        ? 'iStatus > 0 && ' + Conditions.value
+        : 'iStatus > 0'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单-所有');
+  exportAnalysisHooks(ExcelData, Route.meta.title + '所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
-  let data = {
+  let ExcelData = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value,
+      OrderByFileds: '',
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+        ? 'iStatus > 0 && ' + Conditions.value
+        : 'iStatus > 0'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单');
+  exportAnalysisHooks(ExcelData, Route.meta.title);
   ElLoading.service().close();
 };
-
-const data = reactive({
-  isCollapse: false,
-  dialogV: false,
-  dialogTitle: '编辑',
-  Conditions: '',
-  OrderByFileds: ''
-});
-const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
 const ClickSearch = (val: any) => {
-  // Conditions.value = filterModel(val.value)
-  // tableAxios()
   queryParams.PageIndex = 1;
-  let searchData = JSON.parse(JSON.stringify(val.value));
-  Conditions.value = filterModel(searchData);
+  Conditions.value = filterModel(val.value);
   tableAxios();
 };
 // 重置
@@ -606,6 +599,13 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const showBtn = (scope, item) => {
+  if (item.cAttributeCode === 'Edit' && scope.row.iStatus > 1) {
+    return false;
+  }
+  return true;
 };
 </script>
 

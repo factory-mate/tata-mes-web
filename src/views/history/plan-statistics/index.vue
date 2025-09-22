@@ -173,7 +173,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'HistoryLine') {
+    if (v.name == 'HistoryPlanStatistics') {
       tableAxios();
     }
   }, 300);

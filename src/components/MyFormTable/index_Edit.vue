@@ -213,6 +213,7 @@
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
                   'newPurchaseAuditEdit',
+                  'KnifeNewPurchaseAuditEdit',
                   'AddPurchaseRequestEdit',
                   'KnifeAddPurchaseRequestEdit',
                 ].includes(Route.name as any) &&
@@ -657,7 +658,9 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
         Route.name == 'KnifeAddPurchaseRequestEdit' ||
         Route.name == 'KnifeAddPurchaseRequestView' ||
         Route.name == 'newPurchaseAuditEdit' ||
-        Route.name == 'newPurchaseAuditView'
+        Route.name == 'newPurchaseAuditView' ||
+        Route.name == 'KnifeNewPurchaseAuditEdit' ||
+        Route.name == 'KnifeNewPurchaseAuditView'
       ) {
         if (prop == 'cUnitName') {
           return item.cUnitCode == val;
@@ -705,7 +708,9 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
   }
   if (
     Route.name == 'newPurchaseAuditEdit' ||
-    Route.name == 'newPurchaseAuditView'
+    Route.name == 'newPurchaseAuditView' ||
+    Route.name == 'KnifeNewPurchaseAuditEdit' ||
+    Route.name == 'KnifeNewPurchaseAuditView'
   ) {
     if (prop == 'cUnitName') {
       tableDataVal.value[i]['cUnitCode'] = dataVal[0].cUnitCode;
@@ -1003,6 +1008,9 @@ const selectDatas = (val: any) => {
     Route.name == 'newPurchaseAudit' ||
     Route.name == 'newPurchaseAuditEdit' ||
     Route.name == 'newPurchaseAuditView' ||
+    Route.name == 'KnifeNewPurchaseAudit' ||
+    Route.name == 'KnifeNewPurchaseAuditEdit' ||
+    Route.name == 'KnifeNewPurchaseAuditView' ||
     Route.name == 'newWorkshopMaterialEdit' ||
     Route.name == 'newWorkshopMaterialAdd'
   ) {
@@ -1424,7 +1432,10 @@ const selectDatas = (val: any) => {
       // tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode
     }
   }
-  if (Route.name == 'newPurchaseAuditEdit') {
+  if (
+    Route.name == 'newPurchaseAuditEdit' ||
+    Route.name == 'KnifeNewPurchaseAuditEdit'
+  ) {
     if (AttributeCode.value == 'cVendorName') {
       tableDataVal.value[IndexType.value][AttributeCode.value] =
         val.value[0].cVendorName;

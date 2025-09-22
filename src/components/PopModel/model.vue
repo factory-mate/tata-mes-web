@@ -764,7 +764,8 @@ const disabledFun = (item: any) => {
     Route.name == 'newApplication' ||
     Route.name == 'newWorkshopMaterialEdit' ||
     Route.name == 'newWarehouseMaterialEdit' ||
-    Route.name == 'newPurchaseAuditEdit'
+    Route.name == 'newPurchaseAuditEdit' ||
+    Route.name == 'KnifeNewPurchaseAuditEdit'
   ) {
     return item.DefinedParm4 == 1 ? false : true;
   } else if (

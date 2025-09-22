@@ -327,15 +327,17 @@ const processFilterLogic = (val, p) => {
     }
   }
 
-  if (
-    ['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name) &&
-    p.titleName === '寻线批次号'
-  ) {
-    conditions.push(
-      `cVouchTypeCode=01 && iStatus=1 && dProductDate=${
-        p.ruleForm.dProductDate.split(' ')[0]
-      }`
-    );
+  if (['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name)) {
+    if (p.titleName === '寻线批次号') {
+      conditions.push(
+        `cVouchTypeCode=01 && iStatus=1 && dProductDate=${
+          p.ruleForm.dProductDate.split(' ')[0]
+        }`
+      );
+    }
+    if (p.titleName === '方案名称') {
+      conditions.push('cProjectTypeCode=03');
+    }
   }
   // if (
   //   Route.name == 'AddPurchaseRequest' ||

@@ -759,7 +759,8 @@ const getData = (newValue: any) => {
       } else if (
         Route.name == 'PurchaseRequest' ||
         Route.name == 'KnifePurchaseRequest' ||
-        Route.name == 'PurchaseAudit'
+        Route.name == 'PurchaseAudit' ||
+        Route.name == 'KnifePurchaseAudit'
       ) {
         obj = { Conditions: 'cDictonaryTypeCode=PlanPurchaseVouchIStatus' };
       } else if (
@@ -2471,7 +2472,8 @@ const newAdd = () => {
     Route.name == 'newWorkshopMaterialView' ||
     Route.name == 'newWarehouseMaterial' ||
     Route.name == 'newWarehouseMaterialView' ||
-    Route.name == 'newPurchaseAuditEdit'
+    Route.name == 'newPurchaseAuditEdit' ||
+    Route.name == 'KnifeNewPurchaseAuditEdit'
   ) {
     ruleForm.value.IsAuth = true;
     ButObjTableData.value.forEach((item: any) => {
