@@ -1,21 +1,37 @@
 <template>
-  <!--采购单编辑页面 -->
+  <!-- 排产计划编辑新增页面 -->
   <div class="maintain">
+    <!-- 搜索区域 -->
+    <FilterForm
+      ref="filterRef"
+      :Filter="Filter"
+      @ClickSearch="ClickSearch"
+      @resetForm="resetForm"
+    ></FilterForm>
     <el-card>
       <!-- 按钮区域 -->
       <div class="bot-btn1">
         <ButtonViem
+          ButtonViem
           :ToolBut="But"
-          :printDis="printDis"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
-          @Commit="Commit"
-          @DelCheckData="DelCheckData"
-          @PrintLabel="PrintLabel"
-        >
-        </ButtonViem>
+          @Stop="Stop"
+          @Schedule="Schedule"
+          @DistributeStatus="DistributeStatus"
+          @RollBack="RollBack"
+          @DistributeRollBack="DistributeRollBack"
+          @clickStart="clickStart"
+          @clickDistribute="clickDistribute"
+          @Again="Again"
+          @AdjustLine="AdjustLine"
+          @ExportAll="ExportAll"
+          @BarcodeRevoke="BarcodeRevoke"
+          @BarcodeStatus="BarcodeStatus"
+          @BarcodeMake="BarcodeMake"
+        ></ButtonViem>
       </div>
       <Head-View
         :Head="head"
@@ -24,209 +40,130 @@
         ref="headRef"
         :disabled="disabled"
         :dialogFormVisible="dialogFormVisible"
-        :treeSelData="treeSelData"
-        @clickView="clickView"
-        @BtnDAel="BtnDAel"
         @RoleBut="RoleBut"
       ></Head-View>
+      <!-- 表格区域 -->
+      <!-- <div style="float:right;margin:10px 0"  v-if="tableColumns.length">
+                <el-button type="primary" size="small" :disabled="disabled"  @click="clickTableAdd()">添加</el-button>
+            </div> -->
 
-      <!-- tab切换 -->
-      <el-tabs
-        type="card"
-        v-model="tabVal"
-        v-if="TabPageVal.length"
-        @tab-click="clickTabs"
-      >
-        <el-tab-pane
-          v-for="item in TabPageVal"
-          :key="item.cIncludeModelCode"
-          :label="item.Resource.cAttributeName"
-          :name="item.cIncludeModelCode"
-        ></el-tab-pane>
-      </el-tabs>
-
-      <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
-      </div>
-      <myTable
-        ref="TABRef"
-        :tableData="tableData"
+      <DetailTable
+        ref="tableRef"
         :tableColumns="tableColumns"
-        :tableBorder="true"
-        :selection="true"
-        :EditType="EditType"
+        :tableData="tableData"
+        :loading="loading"
         @handleSelectionChange="handleSelectionChange"
-        :disabled="disa"
-        :disabledHide="false"
-        custom-width
-        :setWidth="setWidth"
-      >
-        <template #button>
-          <el-table-column
-            label="操作"
-            fixed="right"
-            width="200px"
-            align="center"
-          >
-            <template #header>
-              <span>操作</span>
-            </template>
-            <template #default="scope">
-              <template
-                v-for="item in tableButton"
-                :key="item.Resource.cAttributeName"
-              >
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="clickTableBut(scope, item)"
-                >
-                  {{ item.Resource.cAttributeName }}
-                </el-button>
-              </template>
-            </template>
-          </el-table-column>
-        </template>
-      </myTable>
-
-      <pop-model
-        :dialogFormVisible="dialogFormVisible"
-        :title="modelTitle"
-        :modelCIncludeModelCode="modelCIncludeModelCode"
-        :modelGridType="modelGridType"
-        :modelGrid="modelGrid"
-        @modelClose="modelClose"
-        @clickHandAdd="clickHandAdd"
-      ></pop-model>
-    </el-card>
-  </div>
-
-  <!-- 添加弹窗表格 -->
-  <div>
-    <el-dialog
-      v-model="TdialogFormVisible"
-      title="添加"
-      draggable
-      :modal="false"
-      :close-on-click-modal="false"
-    >
-      <myTable
-        ref="TTABRef"
-        :tableData="TtableData"
-        :tableColumns="TtableColumns"
-        :tableBorder="true"
-        :selection="true"
-        :EditType="EditType"
-        @handleSelectionChange="ThandleSelectionChange"
-        :disabledHide="false"
-      >
-      </myTable>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="TdialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="Tconfirm"> 确认 </el-button>
-        </span>
-      </template>
+      />
+      <ProcessDialog
+        ref="ProcessdiaRef"
+        :obj="ProcessData"
+        @CloseTC="CloseTC"
+      ></ProcessDialog>
       <pagination
         v-if="total > 0"
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[100, 500, 3000]"
       />
-    </el-dialog>
+      <pop-model
+        :dialogFormVisible="dialogFormVisible"
+        :title="modelTitle"
+        :modelCIncludeModelCode="modelCIncludeModelCode"
+        :modelGridType="modelGridType"
+        :rowId="rowId"
+        :selectData="selList"
+        :modelGrid="modelGrid"
+        @modelClose="modelClose"
+        @clickHandAdd="clickHandAdd"
+      ></pop-model>
+      <Modal
+        ref="modalRef"
+        @refetch-list="handleRefetchList"
+        :selected-ids="selList"
+      />
+    </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated, watch } from 'vue';
-import myTable from '@/components/MyFormTable/index_Edit.vue';
+import { ref, toRefs, reactive, onActivated, h } from 'vue';
+import FilterForm from '@/components/Filter/index.vue';
+import myTable from '@/components/MyFormTable/index.vue';
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare } from '@/utils';
-import {
-  ElButton,
-  ElCard,
-  ElTableColumn,
-  ElMessage,
-  ElMessageBox,
-  ElLoading
-} from 'element-plus';
+import { ElButton, ElCard, ElTableColumn, ElTooltip } from 'element-plus';
+import ProcessDialog from '@/components/ProgressDialog/index.vue';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
-import { useRoute, useRouter } from 'vue-router';
+import Modal from './components/Modal.vue';
+import DetailTable from './components/DetailTable.vue';
+import {
+  configApi,
+  ParamsApi,
+  DataApi,
+  DataParamsApi,
+  ExportApi
+} from '@/api/configApi/index';
+import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import { filterModel, tableSortModel, tableSortInit, compare } from '@/utils';
 import useStore from '@/store';
-const router = useRouter();
 const { tagsView, permission } = useStore();
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
-const TABRef = ref();
-const printDis = ref(true);
-const TTABRef = ref();
+const modalRef = ref(null);
+let Filter = ref([]) as any;
+const filterRef = ref(null);
 const modelCode = ref();
 const row = ref();
+const ProcessdiaRef = ref();
+const tableRef = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
 const headRef = ref(null);
-const tabVal = ref();
-const tabValBol = ref(true);
-let TabPageVal = ref([]) as any;
-let ButOne = ref([]) as any;
-const But = ref([]) as any;
-const Buttwo = ref([]) as any;
-const EditType = ref(false);
-//弹窗数据
-const TdialogFormVisible = ref();
-const TAxiosData = ref({}) as any;
-const TtableData = ref([]) as any;
-const TtableColumns = ref([]) as any;
-const tableButton = ref([]) as any;
+let But = ref([]) as any;
+const ProcessData = ref({}) as any;
 //表格数据
 const tableData = ref([] as any);
 //总条数
 const total = ref(0);
 // 表格配置数据
-const disa = ref(false);
 let dataVal = ref([] as any[]);
 const tableColumns = ref(dataVal);
 const AxiosData = ref({}) as any;
 const modelGrid = ref([]) as any;
-const selectArr = ref([]) as any;
-const printData = ref([]) as any;
 const modelGridType = ref(true);
-const View1val = ref('');
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
-  PageSize: 20
+  PageSize: 200
 });
 const data = reactive({
   isCollapse: false,
   dialogV: false,
   dialogTitle: '编辑',
-  Conditions: '',
+  Conditions: 'IsValid = true',
   OrderByFileds: '',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
-  modelCIncludeModelCode: '',
-  treeSelData: [] as any
+  modelCIncludeModelCode: ''
 });
 const {
+  Conditions,
+  OrderByFileds,
   disabled,
   dialogFormVisible,
   modelTitle,
-  modelCIncludeModelCode,
-  treeSelData,
-  Conditions,
-  OrderByFileds
+  modelCIncludeModelCode
 } = toRefs(data);
-
 let head = ref([]) as any;
 const initType = ref(true);
+
+const loading = ref(false);
+
 onActivated(() => {
   modelCode.value = history.state.modelCode
     ? history.state.modelCode
@@ -238,41 +175,26 @@ onActivated(() => {
     ? history.state.title
     : Route.meta.title;
   tagsView.updateVisitedView(Route);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // getAddUser(Route.meta.ModelCode)
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  // if (rowId.value != Route.params.rowId) {
-  //   getAddUser(Route.meta.ModelCode);
-  // }
-  tabVal.value = 'WMS.STOCK_TAKE.M.View.MaterialList';
-  tableColumns.value = [];
-  getAddUser(Route.meta.ModelCode);
-
+  if (rowId.value != Route.params.rowId) {
+    getAddUser(Route.meta.ModelCode);
+  }
   rowId.value = Route.params.rowId;
   initType.value = false;
+  if (Route.params.rowId) {
+    rowId.value = Route.params.rowId;
+  }
   if (history.state.row) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     row.value = JSON.parse(history.state.row);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   if (Route.meta.title.match(/详情/gi)) {
-    disabled.value = true;
+    // disabled.value=true
   }
+  firstEnter.value = true;
 });
-const clickView = (val: any) => {
-  rowId.value = val.val;
-  disabled.value = true;
-  getAddUser(View1val.value);
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购通知单物料详情' });
-};
 // 权限按钮
 const RoleBut = (v: any) => {
   let ToolData = head.value.filter((BItem: any) => {
@@ -293,12 +215,21 @@ const RoleBut = (v: any) => {
     });
   }
 };
+
 const getAddUser = async (code: any) => {
+  const loadingService = ElLoading.service({ lock: true, text: '加载中.....' });
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
     if (res.status == 200) {
+      Filter.value = [];
+      head.value = [];
+      But.value = [];
       res.data.forEach((item: any) => {
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          Filter.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
         if (item.cPropertyClassTypeCode == 'Head') {
           item[import.meta.env.VITE_APP_key].map((item: any) => {
             item.Resource[item.Resource.cAttributeCode] = '';
@@ -307,37 +238,10 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
         }
-        if (item.cPropertyClassTypeCode == 'TabPage') {
-          let itemArr = item[import.meta.env.VITE_APP_key].sort(
-            sortArr('iIndex')
-          );
-          if (tabValBol.value) {
-            tabVal.value = itemArr[0].cIncludeModelCode;
-          }
-          tabValBol.value = false;
-          TabPageVal.value = itemArr;
-          //调取第一个tab数据
-          getAddUser(TabPageVal.value[0].cIncludeModelCode);
-        }
-        console.log(item.cPropertyClassTypeCode);
         if (item.cPropertyClassTypeCode == 'ToolBut') {
-          But.value = [];
-          const iStatus = headRef.value?.ruleForm.iStatus;
-          console.log(iStatus);
-          But.value = item[import.meta.env.VITE_APP_key]
-            .sort(compare('iIndex', true))
-            .filter(i => {
-              if (
-                iStatus === 20 &&
-                (i.cAttributeName === '删除重盘' || i.cAttributeName === '审核')
-              ) {
-                return true;
-              }
-              return false;
-            });
-          console.log(But.value);
-          // ButOne.value = item[import.meta.env.VITE_APP_key].filter((item:any)=>item.Resource.cAttributeName=='保存')
-          // Buttwo.value=item[import.meta.env.VITE_APP_key].filter((item:any)=>item.Resource.cAttributeName=='添加')
+          But.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
           funTable(
@@ -347,433 +251,665 @@ const getAddUser = async (code: any) => {
       });
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错了');
-    ElLoading.service().close();
   }
+  loadingService.close();
 };
-// tabs 切换，调取对应Tab数据
-const clickTabs = (val: any) => {
-  tableColumns.value = [];
-  total.value = 0;
-  tableData.value = [];
-  tabVal.value = val.props.name;
-  getAddUser(tabVal.value);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.clearValidate();
-};
-//获取下拉框数据
-const getComboBoxFun = async () => {
-  await tableColumns.value.forEach(async (item: any, i: any) => {
-    if (item.cControlTypeCode == 'ComboBox') {
-      let obj = {};
-      if (item.label == '单位') {
-        // obj = { Conditions: "cDictonaryTypeCode=ArriveVouchcAccUnitCode" }
-        obj = { Conditions: '' };
-      } else {
-        obj = { Conditions: 'cDictonaryTypeCode=' + item.cAttributeCode };
-      }
-      let data = {
-        method: item.cHttpTypeCode,
-        url: item.cServerIP + item.cUrl,
-        params: obj
-      };
-      await ParamsApi(data).then((res: any) => {
-        item.PullData = res.data || [];
-      });
-    }
-  });
-};
+
 // table 数据整合
 const funTable = (arr: Array<any>) => {
   modelGrid.value = arr;
-  tableButton.value = [];
+  tableColumns.value = [];
+  tableData.value = [];
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
-      if (item.IsShow) {
-        let itemData = {
-          checkType: true,
-          label: item.cShowName ?? item.Resource.cAttributeName,
-          prop: item.Resource.cAttributeCode,
-          edit: item.DefinedParm4,
-          cServerIP: item.Resource.cServerIP,
-          cUrl: item.Resource.cUrl,
-          cHttpTypeCode: item.Resource.cHttpTypeCode,
-          cControlTypeCode: item.cControlTypeCode,
-          cAttributeCode: item.Resource.cAttributeCode,
-          headerSlot: false,
-          slot: ''
-        };
-        tableColumns.value.push(itemData);
-        if (tabVal.value === 'WMS.STOCK_TAKE.M.View.MaterialList') {
-          tableColumns.value.push({
-            checkType: true,
-            label: '操作',
-            slotName: 'button'
-          });
-        }
-        tableColumns.value = tableColumns.value.filter(
-          (item: { label: any }, index: any, self: any[]) => {
-            // 利用findIndex方法找到第一个与当前元素id相等的元素索引
-            const i = self.findIndex(
-              (t: { label: any }) => t.label === item.label
-            );
-            // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
-            return i === index;
-          }
-        );
-      }
-    }
-    if (item.Resource.cAttributeName == '盘点详情') {
-      let itemData = { checkType: true, label: '操作', slotName: 'button' };
-      tableButton.value.push(item);
+      const itemData = {
+        title: item.Resource.cAttributeName,
+        key: item.Resource.cAttributeCode,
+        width: 120,
+        ellipsis: {
+          tooltip: [
+            '产品名称',
+            '产品分类',
+            '加工码',
+            '门扇名称',
+            '寻线批次号',
+            '排产规则依据',
+            '排产排序值'
+          ].includes(item.Resource.cAttributeName)
+        },
+        fixed: ['cSetFactoryUnitName', 'cSetFactoryUnitCode'].includes(
+          item.Resource.cAttributeCode
+        )
+          ? 'left'
+          : undefined
+      };
       tableColumns.value.push(itemData);
-      tableColumns.value = tableColumns.value.filter(
-        (item: { label: any }, index: any, self: any[]) => {
-          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
-          const i = self.findIndex(
-            (t: { label: any }) => t.label === item.label
-          );
-          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
-          return i === index;
-        }
-      );
     }
     if (item.Resource.cAttributeTypeCode == 'binddata') {
       AxiosData.value = item;
       tableAxios();
     }
   });
-  // 获取下拉框数据
-  getComboBoxFun();
 };
-const PrintLabel = () => {
-  console.log('PrintLabel');
-};
+const firstEnter = ref(true);
 //表格数据查询
 const tableAxios = async () => {
-  if (!rowId.value) {
-    return false;
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
   }
-  let data = {
+  let params = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value + ' cFactoryUnitCode,S_S_S_iIndexs',
+      Conditions: Conditions.value
+    },
     params: {
       val: rowId.value
     }
   };
+  loading.value = true;
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
-    const res = await ParamsApi(data);
-    if (res.status == 200) {
-      tableData.value = res.data;
-      ElLoading.service().close();
+    const { status, data } = await DataApi(params);
+    if (status == 200) {
+      tableData.value =
+        data.data.map((i, idx) => {
+          let obj = { ...i };
+          // tableColumns.value.forEach(j => {
+          //   obj[j.key] = i[j.key];
+          // });
+          // obj['UID'] = i.UID;
+          // obj.ID = i.ID;
+          obj.idx = idx;
+          return obj;
+        }) || [];
+      total.value = data.dataCount;
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
-  } catch (error) {
-    console.log(error, '程序出错');
+  } catch {
+    //
+  }
+  queryParams.pageSize += 1;
+  loading.value = false;
+};
+// 搜索
+const ClickSearch = (val: any) => {
+  let searchData = JSON.parse(JSON.stringify(val.value));
+  Conditions.value = filterModel(searchData)
+    ? `${filterModel(searchData)} && IsValid = true`
+    : 'IsValid = true';
+  tableAxios();
+};
+const Stop = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    // data: [senid]
+    params: {}
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  // DataApi(data).then(res => {
+  ParamsApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '停用成功'
+      });
+      tableAxios();
+    } else {
+      ElMessage.error('停用失败');
+    }
     ElLoading.service().close();
+  });
+};
+const RollBack = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: { UID: rowId.value }
+  };
+  ElMessageBox.confirm('排产撤销?', '排产撤销', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      ElLoading.service({ lock: true, text: '加载中.....' });
+      ParamsApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '撤销成功'
+          });
+          tableAxios();
+        } else {
+          ElMessage.error('撤销失败');
+        }
+        ElLoading.service().close();
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消'
+      });
+    });
+};
+const DistributeRollBack = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: { UID: rowId.value }
+  };
+  ElMessageBox.confirm('下发撤销?', '下发撤销', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      // ElLoading.service({ lock: true, text: '加载中.....' });
+      ParamsApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '撤销成功'
+          });
+          // tableAxios();
+        } else {
+          ElMessage.error('撤销失败');
+        }
+        // ElLoading.service().close();
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消'
+      });
+    });
+};
+const clickStart = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value }
+  };
+
+  ElMessageBox.confirm('排产执行?', '排产执行', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      ElLoading.service({ lock: true, text: '加载中.....' });
+      DataApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '执行成功'
+          });
+          tableAxios();
+        } else {
+          ElMessage.error('执行失败');
+        }
+        ElLoading.service().close();
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消'
+      });
+    });
+};
+const clickDistribute = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value }
+  };
+  ElMessageBox.confirm('下发执行?', '下发执行', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      ElLoading.service({ lock: true, text: '加载中.....' });
+      DataApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '执行成功'
+          });
+          tableAxios();
+        } else {
+          ElMessage.error('执行失败');
+        }
+        ElLoading.service().close();
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消'
+      });
+    });
+};
+const Again = (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value }
+  };
+  let loadingService;
+  ElMessageBox.confirm('二次排产?', '二次排产', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      loadingService = ElLoading.service({ lock: true, text: '加载中.....' });
+      DataApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '成功'
+          });
+          tableAxios();
+        } else {
+          ElMessage.error('失败');
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消'
+      });
+    })
+    .finally(() => {
+      loadingService.close();
+    });
+};
+
+const BarcodeRevoke = (obj: any) => {
+  if (obj.Resource.cServerIP || obj.Resource.cUrl) {
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      params: { UID: rowId.value }
+    };
+    ElMessageBox.confirm('生码撤销?', '生码撤销', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(() => {
+        // ElLoading.service({ lock: true, text: '加载中.....' });
+        ParamsApi(data).then(res => {
+          if (res.status === 200) {
+            ElMessage({
+              type: 'success',
+              message: '成功'
+            });
+            // tableAxios();
+          } else {
+            ElMessage.error('失败');
+          }
+          // ElLoading.service().close();
+        });
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消'
+        });
+      });
   }
 };
 
-// table 按钮 集合
-const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
-};
-
-const clickHandAdd = (data: any) => {
-  let itemData = JSON.parse(JSON.stringify(data.val));
-  dialogFormVisible.value = data.type;
-  tableData.value.push(itemData);
-};
-//添加t弹窗表格
-const ItemAdd = async (obj: any) => {
-  TdialogFormVisible.value = true;
-  try {
-    const res = await configApi(obj.cIncludeModelCode);
+const BarcodeStatus = (obj: any) => {
+  ProcObj.value = obj;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: []
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
     if (res.status == 200) {
-      res.data.forEach((item: any) => {
-        if (item.cPropertyClassTypeCode == 'Grid') {
-          funTables(
-            item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
-          );
-        }
-      });
+      ProcessdiaRef.value.DiaOpen();
+      // ElMessage({
+      //     type: 'success',
+      //     message: res.msg||'成功',
+      // })
+      ProcessData.value = res.data;
+      count.value = 5; //倒计时
+      Verification(); //循环接口
     } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错了');
-  }
-};
-// TTTtable 数据整合
-const funTables = (arr: Array<any>) => {
-  modelGrid.value = arr;
-  arr.forEach(item => {
-    if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
-      let itemData = {
-        checkType: true,
-        label: item.cShowName ?? item.Resource.cAttributeName,
-        prop: item.Resource.cAttributeCode,
-        edit: item.DefinedParm4,
-        cControlTypeCode: item.cControlTypeCode,
-        headerSlot: false,
-        slot: ''
-      };
-      TtableColumns.value.push(itemData);
-      TtableColumns.value.push({
-        checkType: true,
-        label: '操作',
-        slotName: 'button'
+      ElMessage({
+        type: 'error',
+        message: res.msg || '失败'
       });
-      TtableColumns.value = TtableColumns.value.filter(
-        (item: { label: any }, index: any, self: any[]) => {
-          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
-          const i = self.findIndex(
-            (t: { label: any }) => t.label === item.label
-          );
-          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
-          return i === index;
-        }
-      );
+      console.log('出错了');
     }
-    if (item.Resource.cAttributeTypeCode == 'binddata') {
-      TAxiosData.value = item;
-      TtableAxios();
-    }
+    ElLoading.service().close();
   });
 };
 
-//表格数据查询
-const TtableAxios = async () => {
+const BarcodeMake = (obj: any) => {
+  if (obj.Resource.cServerIP || obj.Resource.cUrl) {
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      data: { UID: rowId.value }
+    };
+    ElMessageBox.confirm('生码执行?', '生码执行', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(() => {
+        ElLoading.service({ lock: true, text: '加载中.....' });
+        DataApi(data).then(res => {
+          if (res.status === 200) {
+            ElMessage({
+              type: 'success',
+              message: '成功'
+            });
+            tableAxios();
+          } else {
+            ElMessage.error('失败');
+          }
+          ElLoading.service().close();
+        });
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消'
+        });
+      });
+  }
+};
+
+const selList = ref([]) as any;
+const handleSelectionChange = (val: any) => {
+  selList.value = val;
+};
+
+//按钮导出当前页
+const ExportAll = async (obj: any) => {
+  let conditions = filterModel(filterRef.value.FilterData);
+
+  if (obj.cAttributeCode === 'Download_DZJ') {
+    if (conditions) {
+      conditions += ' && cFactoryUnitCode=FM01020101';
+    } else {
+      conditions = 'cFactoryUnitCode=FM01020101';
+    }
+  }
+  let orderByFileds = '';
+
+  if (obj.cAttributeCode === 'Download') {
+    orderByFileds = 'SourceIndex asc';
+  }
+
+  let url = obj.Resource.cServerIP + obj.Resource.cUrl + '&val=' + rowId.value;
+
+  if (obj.cAttributeCode === 'DownloadLX_45') {
+    url += '&cBatch=' + Route.query.cBatch;
+  }
+
   let data = {
-    method: TAxiosData.value.Resource.cHttpTypeCode,
-    url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
+    method: obj.Resource.cHttpTypeCode,
+    url,
     data: {
-      PageIndex: queryParams.PageIndex,
-      PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: orderByFileds,
+      Conditions: conditions
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      TtableData.value = res.data.data;
-      total.value = res.data.dataCount;
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错');
+
+  let excelTitle = '';
+  switch (obj.cAttributeCode) {
+    case 'DownloadLX_45':
+      excelTitle = '45°精裁1任务';
+      break;
+    case 'Download_DZJ':
+      excelTitle = '电子锯详情';
+      break;
+    default:
+      excelTitle = '排产详情';
+      break;
   }
-};
 
-const itemData = ref([]) as any;
-//弹窗表格选中
-const ThandleSelectionChange = (val: any) => {
-  itemData.value = val;
-};
-//弹窗确认
-const Tconfirm = () => {
-  TdialogFormVisible.value = false;
-  // 表格添加数据
-  itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
+  ExportApi(data).then((res: any) => {
+    if (res.status == '200') {
+      const blob = new Blob([res.data], {
+        type: 'application/vnd.ms-excel;charset=utf-8'
+      });
+      const fileName = decodeURI(excelTitle) + '.xlsx';
+      if ('download' in document.createElement('a')) {
+        // 非IE下载
+        const elink = document.createElement('a');
+        elink.download = fileName;
+        elink.style.display = 'none';
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click();
+        URL.revokeObjectURL(elink.href); // 释放URL 对象
+        document.body.removeChild(elink);
+      } else {
+        // IE10+下载
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        navigator.msSaveBlob(blob, fileName);
+      }
+    } else {
+      ElMessage.error('请求失败');
+    }
+
+    ElLoading.service().close();
   });
-  TTABRef.value.handleRemoveSelectionChange();
 };
-
-// 添加弹窗form
-const clickAddConvert = (val: any) => {
-  dialogFormVisible.value = true;
-  modelTitle.value = '新增';
-  modelCIncludeModelCode.value = val.cIncludeModelCode;
+const AdjustLine = (obj: any) => {
+  if (!selList.value.length) {
+    ElMessage({
+      type: 'error',
+      message: '请选择数据！'
+    });
+    return false;
+  }
+  modalRef.value.showModal();
+  modalRef.value.modelCode = obj.cIncludeModelCode;
+};
+//关闭弹窗，关闭定时器
+const CloseTC = (val: any) => {
+  if (val == false) {
+    clearInterval(timer.value);
+    timer.value = null;
+  }
+  // window.sessionStorage.clear('load')
+};
+const timer = ref(); // 定时器
+let count = ref(0); // 倒计时
+const ProcObj = ref({}) as any;
+//进度
+const Schedule = (obj: any) => {
+  ProcessdiaRef.value.DiaOpen();
+  // window.sessionStorage.setItem('load',true)
+  ProcObj.value = obj;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: []
+  };
+  // ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      if (!ProcessdiaRef.value.isDialogOpen()) {
+        return;
+      }
+      // ElMessage({
+      //     type: 'success',
+      //     message: res.msg||'成功',
+      // })
+      ProcessData.value = res.data;
+      count.value = 5; //倒计时
+      if (res.data.iTotalStep === res.data.iNewStep) {
+        return;
+      }
+      Verification(); //循环接口
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg || '失败'
+      });
+      console.log('出错了');
+    }
+    // ElLoading.service().close();
+  });
+};
+const DistributeStatus = (obj: any) => {
+  // window.sessionStorage.setItem('load',true)
+  ProcObj.value = obj;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: []
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      ProcessdiaRef.value.DiaOpen();
+      // ElMessage({
+      //     type: 'success',
+      //     message: res.msg||'成功',
+      // })
+      ProcessData.value = res.data;
+      count.value = 5; //倒计时
+      Verification(); //循环接口
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg || '失败'
+      });
+      console.log('出错了');
+    }
+    ElLoading.service().close();
+  });
+};
+//循环请求接口
+const Verification = () => {
+  timer.value = setInterval(() => {
+    if (count.value > 0 && count.value <= 5) {
+      count.value--;
+    } else if (count.value === 0) {
+      Schedule(ProcObj.value); // 请求数据
+      clearInterval(timer.value);
+      timer.value = null;
+    }
+  }, 1000);
 };
 //页码变化
 const changPage = (val: any) => {
   queryParams.PageIndex = val.page;
   queryParams.PageSize = val.limit;
-  TtableAxios();
+  tableAxios();
+  tableRef.value.clearSelectedRowKeys();
+};
+// 重置
+const resetForm = (val: any) => {
+  Conditions.value = 'IsValid = true';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 200;
+  tableAxios();
+};
+// table 按钮 集合
+const clickTableBut = (scope: any, event: any) => {
+  switch (event.cAttributeCode) {
+    // case "View":
+    //     clickView(scope, event)
+    //     break;
+    // case "Edit":
+    //     clickEditTable(scope, event)
+    //     break;
+    // case "Stop":
+    //     clickStop(scope, event)
+    //     break;
+    // case "Revoke":
+    //     clickRevoke(scope, event)
+    //     break;
+    // case "Scheduling":
+    //     clickScheduling(scope, event)
+    //     break;
+    default:
+      break;
+  }
+};
+// table 按钮 集合
+const clickTableHandDel = (val: any) => {
+  tableData.value.splice(val.$index, 1);
+  // total.value=total.value-1
+};
+const clickTableAdd = () => {
+  dialogFormVisible.value = true;
+  modelTitle.value = '新增';
+};
+const clickHandAdd = (data: any) => {
+  let itemData = JSON.parse(JSON.stringify(data.val));
+  dialogFormVisible.value = data.type;
+  tableData.value.push(itemData);
+};
+
+// 添加
+const clickAddConvert = (val: any) => {
+  dialogFormVisible.value = true;
+  modelTitle.value = '新增';
+  modelCIncludeModelCode.value = val.cIncludeModelCode;
 };
 const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
+  tableRef.value.clearSelectedRowKeys();
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseReturnCheck';
-  obj.tableData = TABRef.value.tableDataVal;
+  obj.pathName = 'outputPlan';
+  obj.tableData = tableData.value;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
-};
-//打印显示一个按钮
-const BtnDAel = (v: any) => {
-  if (v > 0) {
-    But.value = But.value.filter(
-      (item: { Resource: { cAttributeName: string } }) =>
-        item.Resource.cAttributeName == '打印标签'
-    );
-  }
-};
-// 删除重盘
-const DelCheckData = (obj: any) => {
-  obj.pathName = 'InventoryList';
-  obj.customData = {
-    UID: rowId.value,
-    list_S: tableData.value.map(i => ({
-      cInvCode: i.cInvCode
-    }))
-  };
-  headRef.value.validate(obj);
 };
 
-// 审核
-const Commit = (obj: any) => {
-  obj.pathName = 'InventoryList';
-  obj.customParams = {
-    val: rowId.value
-  };
-  headRef.value.validate(obj);
-  // let data = {
-  //   method: obj.Resource.cHttpTypeCode,
-  //   url: obj.Resource.cServerIP + obj.Resource.cUrl,
-  //   params: {
-  //     val: rowId.value
-  //   }
-  // };
-  // ParamsApi(data).then(res => {
-  //   if (res.status === 200) {
-  //     ElMessage({
-  //       type: 'success',
-  //       message: '提交成功'
-  //     });
-  //     router.back();
-  //     // tableAxios()
-  //     // TabRef.value.handleRemoveSelectionChange()
-  //     // sendId.value = []
-  //   } else {
-  //     console.log('提交失败');
-  //   }
-  // });
-  // console.log(obj, '提交');
-};
-
-const DYUID = ref([]) as any;
-//表格多选
-const handleSelectionChange = (v: any) => {
-  selectArr.value = v;
-  v.forEach((item: { UID: any }) => DYUID.value.push(item.UID));
-  //多选去重
-  DYUID.value = DYUID.value.filter(
-    (i: any, index: any) => DYUID.value.indexOf(i) === index
-  );
-};
-
-// table 按钮 集合
-const clickTableBut = (scope: any, event: any) => {
-  console.log(event.cAttributeCode, '--===scope');
-  switch (event.cAttributeCode) {
-    case 'OperationView':
-      clickViewXM(scope, event);
-      break;
-    case 'ViewXMEdit':
-      clickEditXM(scope, event);
-      break;
-    default:
-      break;
-  }
-};
-const clickViewXM = (scope: any, obj: any) => {
-  window.sessionStorage.setItem(
-    'PurchaseReturnRequestEdit',
-    JSON.stringify(scope.row)
-  );
-  router.push({
-    name: 'InventoryResult',
-    params: {
-      t: Date.now(),
-      rowId: Route.params.rowId
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'InventoryDetail',
-      title: '盘点结果详情'
-    }
-  });
-};
-const clickEditXM = (scope: any, obj: any) => {
-  console.log(scope, '--eeee');
-  window.sessionStorage.setItem(
-    'PurchaseReturnRequestEdit',
-    JSON.stringify(scope.row)
-  );
-  router.push({
-    name: 'PurchaseReturnCheckXMEdit',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.MID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'PurchaseReturnCheck',
-      title: '箱码修改'
-    }
-  });
-};
 //修改保存
 const SaveEdit = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseReturnRequest';
-  obj.tableData = TABRef.value.tableDataVal;
+  obj.pathName = 'outputPlan';
+  obj.tableData = tableData.value;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
 };
-// 编辑按钮
+// 编辑
 const clickEdit = (obj: any) => {
-  console.log(111);
-  router.push({
-    name: 'PurchaseReturnRequestEdit',
-    params: {
-      t: Date.now(),
-      rowId: rowId.value
-    }
-    // state: {
-    //     modelCode: obj.cIncludeModelCode,
-    //     row: JSON.stringify(scope.row),
-    //     pathName: 'PurchaseReturnRequest',
-    //     title: '退货质检申请编辑',
-    // }
-  });
-};
-//排序
-const sortArr = (property: any) => {
-  return function (a: any, b: any) {
-    var value1 = a[property];
-    var value2 = b[property];
-    return value1 - value2; //正序
-    // return value2 - value1; //倒叙
-  };
+  getAddUser(obj.cIncludeModelCode);
+  disabled.value = false;
+  $bus.emit('TabTitleVal', { name: Route.name, title: '排产计划编辑' });
 };
 
-const setWidth = row => {
-  switch (row.label) {
-    case '物料名称':
-      return 200;
-    default:
-      return 120;
-  }
+const handleRefetchList = () => {
+  tableAxios();
+  tableRef.value.clearSelectedRowKeys();
 };
 </script>
 
@@ -783,38 +919,6 @@ const setWidth = row => {
   height: 100%;
   box-sizing: border-box;
   padding: 20px;
-
-  .DY {
-    background: #fff;
-    width: 320px;
-    height: 200px;
-    border: 1px solid black;
-    font-size: 14px;
-    display: none;
-    .js_barcode {
-      height: 40%;
-
-      .imgs {
-        padding-top: 10px;
-        padding-left: 10px;
-      }
-    }
-
-    :deep(.el-col-12) {
-      margin: 10px 0;
-    }
-
-    .DY-Text {
-      height: 60%;
-
-      .Te-con {
-        padding: 10px;
-      }
-      .Qrcode {
-        margin-left: 30px;
-      }
-    }
-  }
 
   .maintain_card {
     width: 100%;
