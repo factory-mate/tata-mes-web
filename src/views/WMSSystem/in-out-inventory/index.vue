@@ -3,6 +3,7 @@
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
+      ref="filterRef"
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
@@ -136,6 +137,7 @@ const $bus: any =
 const Route = useRoute();
 const router = useRouter();
 let Filter = ref([]) as any;
+const filterRef = ref(null);
 let But = ref([]) as any;
 // 表格配置数据
 const TabRef = ref();
@@ -452,6 +454,7 @@ const Commit = (obj: any) => {
 };
 //按钮导出所有
 const ExportAll = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -468,6 +471,7 @@ const ExportAll = async (obj: any) => {
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
