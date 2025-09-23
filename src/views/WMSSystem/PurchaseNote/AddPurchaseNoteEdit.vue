@@ -647,7 +647,7 @@ const SaveEdit = (obj: any, type = true) => {
   // disa.value = false;
 
   // View1val.value = obj.cIncludeModelCode;
-  // obj.pathName = 'PurchasedGoods';
+  // obj.pathName = '';
   // obj.tableData = TABRef.value.tableDataVal;
   // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // // @ts-ignore

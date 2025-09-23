@@ -369,7 +369,7 @@ const changPage = (val: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'KnifeNewPurchaseAuditview',
+    name: 'KnifeNewPurchaseAuditView',
     params: {
       t: Date.now(),
       rowId: scope.row.UID

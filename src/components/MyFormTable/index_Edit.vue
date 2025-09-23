@@ -747,7 +747,10 @@ const changeTextBox = async (i: any, scope: any, v) => {
       tableDataVal.value[i].nTaxMoney = nTaxMoney.toString();
     }
   }
-  if (Route.name === 'newPurchasedGoods') {
+  if (
+    Route.name === 'newPurchasedGoods' ||
+    Route.name === 'KnifeNewPurchasedGoods'
+  ) {
     if (
       p === 'nAccReceiveQuantity' ||
       p === 'nAccQuantity' ||

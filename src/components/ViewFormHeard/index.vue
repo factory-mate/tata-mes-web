@@ -1226,7 +1226,10 @@ const funHeadview = () => {
     } else if (
       Route.name == 'newPurchasedGoodsView' ||
       Route.name == 'newPurchasedGoods' ||
-      Route.name == 'newPurchasedGoodsEdit'
+      Route.name == 'newPurchasedGoodsEdit' ||
+      Route.name == 'KnifeNewPurchasedGoodsView' ||
+      Route.name == 'KnifeNewPurchasedGoods' ||
+      Route.name == 'KnifeNewPurchasedGoodsEdit'
     ) {
       paramsData = { val: props.rowId };
     } else if (window.sessionStorage.getItem('RepairUID')) {
@@ -1411,9 +1414,11 @@ const funHeadview = () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       if (
-        (Route.name == 'newPurchasedGoodsView' &&
+        ((Route.name == 'newPurchasedGoodsView' ||
+          Route.name == 'KnifeNewPurchasedGoodsView') &&
           Route.meta.title.match(/详情/gi)) ||
-        (Route.name == 'newPurchasedGoodsEdit' &&
+        ((Route.name == 'newPurchasedGoodsEdit' ||
+          Route.name == 'KnifeNewPurchasedGoodsEdit') &&
           Route.meta.title.match(/详情/gi))
       ) {
         emits('BtnDAel', res.data.iStatus);
@@ -1481,7 +1486,10 @@ const headVal = () => {
   ) {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
-  if (Route.name === 'newPurchasedGoods') {
+  if (
+    Route.name === 'newPurchasedGoods' ||
+    Route.name === 'KnifeNewPurchasedGoods'
+  ) {
     ruleForm.value.dArriveDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
   if (Route.name === 'UserAddEdit') {
@@ -1972,7 +1980,9 @@ const selectData = (val: any) => {
     //到货单  供应商编码
     if (
       Route.name == 'newPurchasedGoods' ||
-      Route.name == 'newPurchasedGoodsEdit'
+      Route.name == 'newPurchasedGoodsEdit' ||
+      Route.name == 'KnifeNewPurchasedGoods' ||
+      Route.name == 'KnifeNewPurchasedGoodsEdit'
     ) {
       ruleForm.value['cPhone'] = val.value[0].cPhone || '';
       ruleForm.value['cPerson'] = val.value[0].cPerson || '';
@@ -2367,6 +2377,9 @@ const newAdd = () => {
     Route.name == 'newPurchasedGoods' ||
     Route.name == 'newPurchasedGoodsEdit' ||
     Route.name == 'newPurchasedGoodsView' ||
+    Route.name == 'KnifeNewPurchasedGoods' ||
+    Route.name == 'KnifeNewPurchasedGoodsEdit' ||
+    Route.name == 'KnifeNewPurchasedGoodsView' ||
     Route.name == 'TransferRecordAdd' ||
     Route.name == 'TransferRecordEdit' ||
     Route.name == 'AddPurchaseNote' ||
@@ -2766,7 +2779,9 @@ const newAdd = () => {
 
         if (
           Route.name == 'newPurchasedGoodsEdit' ||
-          Route.name == 'newPurchasedGoodsView'
+          Route.name == 'newPurchasedGoodsView' ||
+          Route.name == 'KnifeNewPurchasedGoodsEdit' ||
+          Route.name == 'KnifeNewPurchasedGoodsView'
         ) {
           emits('clickView', { val: res.data.UID });
         }

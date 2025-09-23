@@ -365,53 +365,12 @@ const clickDelete = (scope: any, obj: any) => {
     });
 };
 // 表格按钮详情
-const clickView = (scope: any, obj: any) => {
-  router.push({
-    name: 'newPurchasedGoods',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.UID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'PurchasedGoods',
-      title: '到货单详情'
-    }
-  });
-};
+const clickView = (scope: any, obj: any) => {};
 //表格按钮编辑
-const clickEditTable = (scope: any, obj: any) => {
-  router.push({
-    name: 'newPurchasedGoods',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.UID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'PurchasedGoods',
-      title: '到货单编辑'
-    }
-  });
-};
+const clickEditTable = (scope: any, obj: any) => {};
 
 //按钮新增
-const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'newPurchasedGoods',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '到货单新增',
-      type: 'add'
-    }
-  });
-};
+const clickAdd = (obj: { cIncludeModelCode: any }) => {};
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
   // arr.forEach((item: { IsValid: string; UID: any; }) => {
