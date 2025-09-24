@@ -569,7 +569,7 @@ const data = reactive({
   isCollapse: false,
   dialogV: false,
   dialogTitle: '编辑',
-  Conditions: '',
+  Conditions: 'cVouchTypeCode = 02 && iStatus = 3',
   OrderByFileds: 'cCode desc'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
@@ -584,7 +584,7 @@ const ClickSearch = (val: any) => {
 };
 // 重置
 const resetForm = (val: any) => {
-  Conditions.value = '';
+  Conditions.value = 'cVouchTypeCode = 02 && iStatus = 3';
   OrderByFileds.value = 'cCode desc';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
