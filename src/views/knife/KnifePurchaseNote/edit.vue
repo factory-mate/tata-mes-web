@@ -36,7 +36,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
@@ -556,12 +556,11 @@ const modelClose = (val: any) => {
 //新增保存
 const SaveAdd = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'BuyOrder';
+  obj.pathName = 'KnifePurchaseNote';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
 };
 //打印显示一个按钮
 const BtnDAel = (v: any) => {
@@ -625,12 +624,11 @@ const SaveEdit = (obj: any) => {
     return;
   }
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'BuyOrder';
+  obj.pathName = 'KnifePurchaseNote';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {

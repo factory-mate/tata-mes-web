@@ -36,7 +36,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
@@ -577,7 +577,8 @@ const Tconfirm = async () => {
   itemData.value.forEach((item: any) => {
     item.nTaxPrice = 0;
     item.nTaxRate = 0;
-    if (item.list_price.length > 0) {
+    item.nQuantity = 1;
+    if (item.list_price?.length > 0) {
       item.nTaxPrice = item.list_price[0].nTaxPrice ?? 0;
       item.nTaxRate = item.list_price[0].nTaxRate ?? 0;
       item.cDefindParm03 = item.list_price[0].cSAPCode;
@@ -665,7 +666,7 @@ const SaveAdd = (obj: any) => {
     return;
   }
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'BuyOrder';
+  obj.pathName = 'KnifePurchaseNote';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -723,7 +724,6 @@ const SaveEdit = (obj: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {

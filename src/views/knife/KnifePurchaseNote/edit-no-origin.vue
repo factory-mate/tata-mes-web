@@ -36,7 +36,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
@@ -557,7 +557,6 @@ const SaveAdd = (obj: any) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
-  disa.value = true;
 };
 //打印显示一个按钮
 const BtnDAel = (v: any) => {
@@ -610,7 +609,6 @@ const SaveEdit = (obj: any, type = false) => {
   // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // // @ts-ignore
   // headRef.value.validate(obj);
-  // disa.value = false;
 
   // View1val.value = obj.cIncludeModelCode;
   // obj.pathName = '';
@@ -667,7 +665,6 @@ const SaveEdit = (obj: any, type = false) => {
 const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
   disabled.value = false;
-  disa.value = false;
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
 };
 

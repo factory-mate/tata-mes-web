@@ -148,7 +148,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'BuyOrder') {
+    if (v.name == 'CoreOrder') {
       tableAxios();
     }
   }, 300);

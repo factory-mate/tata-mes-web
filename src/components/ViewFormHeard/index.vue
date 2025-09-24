@@ -2367,12 +2367,17 @@ const newAdd = () => {
 
   if (
     Route.name == 'AddPurchaseNoteNoOrigin' ||
-    Route.name == 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name == 'AddPurchaseNoteEditNoOrigin'
+  ) {
+    ruleForm.value.cVouchSourceTypeCode = 0;
+    ruleForm.value.Items = ButObjTableData.value;
+  }
+  if (
     Route.name == 'KnifeAddPurchaseNoteNoOrigin' ||
     Route.name == 'KnifeAddPurchaseNoteEditNoOrigin'
   ) {
     ruleForm.value.cVouchSourceTypeCode = 0;
-    ruleForm.value.Items = ButObjTableData.value;
+    ruleForm.value.models = ButObjTableData.value;
   }
 
   if (
@@ -2509,7 +2514,17 @@ const newAdd = () => {
     };
   } else if (
     Route.name == 'AddPurchaseNote' ||
-    Route.name == 'AddPurchaseNoteEdit' ||
+    Route.name == 'AddPurchaseNoteEdit'
+  ) {
+    ruleForm.value.IsAuth = true;
+    ruleForm.value.cVouchSourceTypeCode = 1;
+    ButObjTableData.value.forEach((item: any) => {
+      item.IsAuth = true;
+    });
+    dataValue = {
+      Items: ButObjTableData.value
+    };
+  } else if (
     Route.name == 'KnifeAddPurchaseNote' ||
     Route.name == 'KnifeAddPurchaseNoteEdit'
   ) {
@@ -2519,7 +2534,7 @@ const newAdd = () => {
       item.IsAuth = true;
     });
     dataValue = {
-      Items: ButObjTableData.value
+      models: ButObjTableData.value
     };
   } else if (
     Route.name == 'AddPurchaseRequest' ||
