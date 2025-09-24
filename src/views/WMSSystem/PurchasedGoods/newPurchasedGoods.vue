@@ -341,15 +341,14 @@ const getComboBoxFun = async () => {
     }
   });
 };
-const copyItem = val => {
-  tableData.value.splice(val.$index + 1, 0, {
-    ...val.row,
-    UID: '00000000-0000-0000-0000-000000000000',
-    nAccReceiveQuantity: '',
-    nReceiveQuantity: '',
-    dProductDay: '',
-    cVendorBatch: ''
-  });
+const copyItem = scope => {
+  let newObj = Object.assign({}, scope.row);
+  newObj.UID = '00000000-0000-0000-0000-000000000000';
+  newObj.nAccReceiveQuantity = '';
+  newObj.nReceiveQuantity = '';
+  newObj.dProductDay = '';
+  newObj.cVendorBatch = '';
+  TABRef.value.CoptTable(newObj, scope.$index);
 };
 // table 数据整合
 const funTable = (arr: Array<any>) => {
