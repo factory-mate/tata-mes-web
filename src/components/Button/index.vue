@@ -320,7 +320,8 @@ const emits = defineEmits([
   'SetQC',
   'CancelQC',
   'EditSave',
-  'Audit_Again'
+  'Audit_Again',
+  'AddOnSourceRow'
 ]);
 
 watch(
@@ -864,6 +865,9 @@ const EditSave = obj => {
 const Audit_Again = obj => {
   emits('Audit_Again', obj);
 };
+const AddOnSourceRow = obj => {
+  emits('AddOnSourceRow', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1294,6 +1298,9 @@ const clickButton = (event: any) => {
       break;
     case 'Audit_Again':
       Audit_Again(event);
+      break;
+    case 'AddOnSourceRow':
+      AddOnSourceRow(event);
       break;
     default:
       break;

@@ -29,7 +29,7 @@
         @RoleBut="RoleBut"
       ></Head-View>
       <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @addorder="ItemAdd"></ButtonViem>
+        <ButtonViem :ToolBut="Buttwo" @AddOnSourceRow="ItemAdd"></ButtonViem>
       </div>
       <myTable
         ref="TABRef"
@@ -294,7 +294,7 @@ const getAddUser = async (code: any) => {
             (item: any) => item.Resource.cAttributeName == '保存'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '添加'
+            (item: any) => item.Resource.cAttributeName == '参照申请单增行'
           );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
