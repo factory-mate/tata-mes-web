@@ -212,6 +212,8 @@
                 ([
                   'AddPurchaseNoteNoOrigin',
                   'AddPurchaseNoteEditNoOrigin',
+                  'KnifeAddPurchaseNoteNoOrigin',
+                  'KnifeAddPurchaseNoteEditNoOrigin',
                   'newPurchaseAuditEdit',
                   'KnifeNewPurchaseAuditEdit',
                   'AddPurchaseRequestEdit',
@@ -894,7 +896,11 @@ const changeTextBox = async (i: any, scope: any, v) => {
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin' ||
     Route.name === 'AddPurchaseNote' ||
-    Route.name === 'AddPurchaseNoteEdit'
+    Route.name === 'AddPurchaseNoteEdit' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNoteEdit'
   ) {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
@@ -1034,7 +1040,10 @@ const selectDatas = (val: any) => {
         val.value[0].cEmployeeName;
     }
   }
-  if (Route.name === 'AddPurchaseNote') {
+  if (
+    Route.name === 'AddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNote'
+  ) {
     if (AttributeCode.value == 'cVendorName') {
       tableDataVal.value[IndexType.value].cVendorName =
         val.value[0].cVendorName;
@@ -1089,7 +1098,9 @@ const selectDatas = (val: any) => {
   }
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
   ) {
     if (AttributeCode.value == 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
@@ -1743,7 +1754,9 @@ const onKeyPressEnter = async (e, item, scope) => {
 
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
   ) {
     const {
       data: { data }
@@ -1829,7 +1842,10 @@ const onKeyPressEnter = async (e, item, scope) => {
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
   console.log('clickModel:obj', obj);
   console.log('clickModel:scope.row', scope.row);
-  if (Route.name === 'AddPurchaseNote') {
+  if (
+    Route.name === 'AddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNote'
+  ) {
     metadata.value.cInvCode = scope.row.cInvCode;
   }
   if (
@@ -1862,7 +1878,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     Route.name === 'KnifeAddPurchaseRequestEdit' ||
     Route.name === 'KnifeAddPurchaseRequestView' ||
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
       ? true
       : false;
   titleName.value = obj.label;
@@ -2134,7 +2152,9 @@ const onVendorChange = (e, scope) => {
   console.log(tableDataVal.value, 'tableDataVal.value onVendorChange');
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
   ) {
     // 获取价格
     getPrice({

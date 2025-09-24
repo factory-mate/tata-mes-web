@@ -436,20 +436,7 @@ const clickStop = (scope: any, obj: any) => {
   });
 };
 //按钮新增
-const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'AddPurchaseNote',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '采购单新增',
-      type: 'add'
-    }
-  });
-};
+const clickAdd = (obj: { cIncludeModelCode: any }) => {};
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
   // arr.forEach((item: { IsValid: string; UID: any; }) => {

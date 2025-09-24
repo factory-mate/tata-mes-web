@@ -524,15 +524,7 @@ const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
-const SaveAdd = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'AddPurchaseNote';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
-  disa.value = true;
-};
+const SaveAdd = (obj: any) => {};
 //打印显示一个按钮
 const BtnDAel = (v: any) => {
   console.log(v, '-----');
@@ -576,15 +568,7 @@ const handleSelectionChange = (v: any) => {
 };
 
 //修改保存
-const SaveEdit = (obj: any) => {
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseNote';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
-  disa.value = true;
-};
+const SaveEdit = (obj: any) => {};
 // 编辑按钮
 const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);

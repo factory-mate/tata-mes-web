@@ -1479,6 +1479,8 @@ const headVal = () => {
   if (
     Route.name === 'AddPurchaseNote' ||
     Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
     Route.name === 'ScrapToolInfoAdd' ||
     Route.name === 'resizeDialAdd' ||
     Route.name === 'AddGrindOrder' ||
@@ -1991,7 +1993,10 @@ const selectData = (val: any) => {
     if (
       Route.name == 'AddPurchaseNoteEdit' ||
       Route.name == 'AddPurchaseNoteView' ||
-      Route.name == 'AddPurchaseNote'
+      Route.name == 'AddPurchaseNote' ||
+      Route.name == 'KnifeAddPurchaseNoteEdit' ||
+      Route.name == 'KnifeAddPurchaseNoteView' ||
+      Route.name == 'KnifeAddPurchaseNote'
     ) {
       ruleForm.value['cPhone'] = val.value[0].cPhone || '';
       ruleForm.value['cPerson'] = val.value[0].cPerson || '';
@@ -2288,7 +2293,9 @@ const newAdd = () => {
   }
   if (
     Route.name == 'AddPurchaseNote' ||
-    Route.name === 'AddPurchaseNoteNoOrigin'
+    Route.name === 'AddPurchaseNoteNoOrigin' ||
+    Route.name == 'KnifeAddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin'
   ) {
     if (ButObjTableData.value.some((item: any) => !item.cDefindParm03)) {
       ElMessage({
@@ -2360,7 +2367,9 @@ const newAdd = () => {
 
   if (
     Route.name == 'AddPurchaseNoteNoOrigin' ||
-    Route.name == 'AddPurchaseNoteEditNoOrigin'
+    Route.name == 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name == 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name == 'KnifeAddPurchaseNoteEditNoOrigin'
   ) {
     ruleForm.value.cVouchSourceTypeCode = 0;
     ruleForm.value.Items = ButObjTableData.value;
@@ -2383,7 +2392,9 @@ const newAdd = () => {
     Route.name == 'TransferRecordAdd' ||
     Route.name == 'TransferRecordEdit' ||
     Route.name == 'AddPurchaseNote' ||
-    Route.name == 'AddPurchaseNoteNoOrigin'
+    Route.name == 'AddPurchaseNoteNoOrigin' ||
+    Route.name == 'KnifeAddPurchaseNote' ||
+    Route.name == 'KnifeAddPurchaseNoteNoOrigin'
   ) {
     ruleForm.value.IsAuth = true;
     const items = ButObjTableData.value.map(i => ({
@@ -2481,6 +2492,7 @@ const newAdd = () => {
     dataValue = { BodyModels: ButObjTableData.value };
   } else if (
     Route.name == 'AddPurchaseNoteView' ||
+    Route.name == 'KnifeAddPurchaseNoteView' ||
     Route.name == 'newWorkshopMaterial' ||
     Route.name == 'newWorkshopMaterialView' ||
     Route.name == 'newWarehouseMaterial' ||
@@ -2497,7 +2509,9 @@ const newAdd = () => {
     };
   } else if (
     Route.name == 'AddPurchaseNote' ||
-    Route.name == 'AddPurchaseNoteEdit'
+    Route.name == 'AddPurchaseNoteEdit' ||
+    Route.name == 'KnifeAddPurchaseNote' ||
+    Route.name == 'KnifeAddPurchaseNoteEdit'
   ) {
     ruleForm.value.IsAuth = true;
     ruleForm.value.cVouchSourceTypeCode = 1;

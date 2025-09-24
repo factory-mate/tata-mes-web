@@ -312,7 +312,10 @@ const processFilterLogic = (val, p) => {
     }
   }
 
-  if (Route.name === 'AddPurchaseNote') {
+  if (
+    Route.name === 'AddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNote'
+  ) {
     if (p.titleName.includes('供应商')) {
       conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
     }

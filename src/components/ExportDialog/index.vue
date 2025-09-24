@@ -792,7 +792,10 @@ const getSelData = () => {
           Conditions:
             'cDictonaryTypeCode=MaterialApplyFor' + item.Resource.cAttributeCode
         };
-      } else if (Route.name == 'PurchaseNote') {
+      } else if (
+        Route.name == 'PurchaseNote' ||
+        Route.name == 'KnifePurchaseNote'
+      ) {
         obj = { Conditions: 'cDictonaryTypeCode=PurchaseVouchIStatus' };
       } else if (Route.name == 'TripartiteOptimize') {
         obj = { Conditions: 'cDictonaryTypeCode=DlOptimizationType' };

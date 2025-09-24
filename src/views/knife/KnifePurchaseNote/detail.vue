@@ -523,7 +523,7 @@ const modelClose = (val: any) => {
 //新增保存
 const SaveAdd = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'AddPurchaseNoteEdit';
+  obj.pathName = 'KnifeAddPurchaseNoteEdit';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -576,7 +576,7 @@ const handleSelectionChange = (v: any) => {
 //修改保存
 const SaveEdit = (obj: any) => {
   View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseNote';
+  obj.pathName = 'KnifePurchaseNote';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

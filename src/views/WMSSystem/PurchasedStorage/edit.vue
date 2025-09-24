@@ -750,16 +750,7 @@ const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
-const SaveAdd = (obj: any) => {
-  console.log(tableData.value);
-  View1val.value = obj.cIncludeModelCode;
-  obj.pathName = 'PurchaseNote';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  headRef.value.validate(obj);
-  // disa.value = true;
-};
+const SaveAdd = (obj: any) => {};
 //打印显示一个按钮
 // const BtnDAel = (v: any) => {
 //     if (v > 0) {

@@ -1,5 +1,5 @@
 <template>
-  <!--采购单新增页面 -->
+  <!--采购单编辑页面 -->
   <div class="maintain">
     <el-card>
       <!-- 按钮区域 -->
@@ -36,14 +36,14 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="false"
+        :selection="true"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
-        :disabledHide="false"
-        @tableHearData="tableHearData"
+        :disabledHide="true"
+        @handleTableDataChange="handleTableDataChange"
       >
-        <!-- <template #button>
+        <template #button>
           <el-table-column
             label="操作"
             fixed="right"
@@ -63,14 +63,9 @@
               >
             </template>
           </el-table-column>
-        </template> -->
+        </template>
       </myTable>
-      <pagination
-        v-if="total > 0"
-        :total="total"
-        v-model:page="queryParams.PageIndex"
-        v-model:limit="queryParams.PageSize"
-      />
+
       <pop-model
         :dialogFormVisible="dialogFormVisible"
         :title="modelTitle"
@@ -91,7 +86,14 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="90%"
     >
+      <FilterForm
+        :Filter="TFilter"
+        @ClickSearch="TClickSearch"
+        @resetForm="TresetForm"
+      ></FilterForm>
+
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
@@ -100,6 +102,11 @@
         :selection="true"
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
+        :disabledHide="false"
+        max-height="500"
+        :setWidth="setWidth"
+        custom-width
+        :show-index="false"
       >
       </myTable>
       <template #footer>
@@ -113,6 +120,8 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
+        @pagination="changPage"
+        :page-sizes="[10, 20, 50]"
       />
     </el-dialog>
   </div>
@@ -123,7 +132,8 @@ import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare } from '@/utils';
+import FilterForm from '@/components/Filter/index.vue';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import {
   ElButton,
   ElCard,
@@ -134,7 +144,7 @@ import {
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -149,6 +159,7 @@ const modelCode = ref();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
+const router = useRouter();
 const headRef = ref(null);
 let ButOne = ref([]) as any;
 const But = ref([]) as any;
@@ -165,6 +176,8 @@ const tableData = ref([] as any);
 const total = ref(0);
 // 表格配置数据
 const disa = ref(false);
+const TFilter = ref([]) as any;
+
 let dataVal = ref([] as any[]);
 const tableColumns = ref(dataVal);
 const AxiosData = ref({}) as any;
@@ -223,6 +236,7 @@ onActivated(() => {
   //   getAddUser(Route.meta.ModelCode);
   // }
   getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -232,9 +246,6 @@ onActivated(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
-  }
-  if (history.state.title == '采购单详情') {
-    disabled.value = true;
   }
 });
 const clickView = (val: any) => {
@@ -285,7 +296,9 @@ const getAddUser = async (code: any) => {
             (item: any) => item.Resource.cAttributeName == '保存'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '添加'
+            (item: any) =>
+              item.Resource.cAttributeName == '无来源添加' ||
+              item.Resource.cAttributeName == '参照申请单添加'
           );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
@@ -342,7 +355,8 @@ const funTable = (arr: Array<any>) => {
           cControlTypeCode: item.cControlTypeCode,
           cAttributeCode: item.Resource.cAttributeCode,
           headerSlot: false,
-          slot: ''
+          slot: '',
+          cIncludeModelCode: item.cIncludeModelCode
         };
         tableColumns.value.push(itemData);
         tableColumns.value.push({
@@ -370,7 +384,9 @@ const funTable = (arr: Array<any>) => {
   // 获取下拉框数据
   getComboBoxFun();
 };
-
+const PrintLabel = () => {
+  console.log('PrintLabel');
+};
 //表格数据查询
 const tableAxios = async () => {
   if (!rowId.value) {
@@ -380,7 +396,7 @@ const tableAxios = async () => {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
-      UID: rowId.value
+      val: rowId.value
     }
   };
   try {
@@ -388,7 +404,6 @@ const tableAxios = async () => {
     const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
-      tablefilter();
       ElLoading.service().close();
     } else {
       console.log('请求出错');
@@ -399,13 +414,15 @@ const tableAxios = async () => {
     ElLoading.service().close();
   }
 };
-
-const PrintLabel = (obj: any) => {
-  console.log(obj, '--');
+const handleTableDataChange = (val: any) => {
+  tableData.value = val.map(i => ({
+    ...i,
+    nMoney: i.nPrice * i.nQuantity
+  }));
 };
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
+  TABRef.value.tableDataVal.splice(val.$index, 1);
 };
 
 const clickHandAdd = (data: any) => {
@@ -424,6 +441,9 @@ const ItemAdd = async (obj: any) => {
           funTables(
             item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
           );
+        }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          TFilter.value = item[import.meta.env.VITE_APP_key];
         }
       });
     } else {
@@ -473,6 +493,7 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
+  console.log(row.value);
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
@@ -480,7 +501,9 @@ const TtableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: headRef.value?.ruleForm?.cVendorCode
+        ? 'cVendorCode=' + headRef.value?.ruleForm?.cVendorCode
+        : ''
     }
   };
   try {
@@ -527,14 +550,23 @@ const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
-const SaveAdd = (obj: any) => {};
+const SaveAdd = (obj: any) => {
+  View1val.value = obj.cIncludeModelCode;
+  obj.pathName = 'KnifeAddPurchaseNoteEdit';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
+  disa.value = true;
+};
 //打印显示一个按钮
 const BtnDAel = (v: any) => {
-  console.log(v, '-----');
-
-  // if (v > 0) {
-  //     But.value = But.value.filter((item: { Resource: { cAttributeName: string; }; }) => item.Resource.cAttributeName == '打印标签')
-  // }
+  if (v > 0) {
+    But.value = But.value.filter(
+      (item: { Resource: { cAttributeName: string } }) =>
+        item.Resource.cAttributeName == '打印标签'
+    );
+  }
 };
 //提交
 const Commit = (obj: any) => {
@@ -571,7 +603,66 @@ const handleSelectionChange = (v: any) => {
 };
 
 //修改保存
-const SaveEdit = (obj: any) => {};
+const SaveEdit = (obj: any, type = false) => {
+  // View1val.value = obj.cIncludeModelCode;
+  // obj.pathName = 'KnifePurchaseNote';
+  // obj.tableData = TABRef.value.tableDataVal;
+  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // // @ts-ignore
+  // headRef.value.validate(obj);
+  // disa.value = false;
+
+  // View1val.value = obj.cIncludeModelCode;
+  // obj.pathName = '';
+  // obj.tableData = TABRef.value.tableDataVal;
+  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // // @ts-ignore
+  // headRef.value.validate(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    data: {
+      ...headRef.value.ruleForm,
+      Items: TABRef.value.tableDataVal,
+      bCheckQuantity: type
+    }
+  };
+  DataApi(data)
+    .then(res => {
+      if (res.success) {
+        ElMessage({
+          message: res.msg,
+          type: 'success'
+        });
+        $bus.emit('clickTableUp', true);
+        $bus.emit('tableUpData', { name: 'KnifePurchaseNote' });
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+      headRef.value.ruleForm = {};
+      router.push({ name: 'KnifePurchaseNote' });
+      tagsView.delVisitedView(Route);
+    })
+    .catch(res => {
+      if (res.status === 300) {
+        ElMessageBox.confirm(res.msg, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => SaveEdit(obj, false));
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    });
+};
 // 编辑按钮
 const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
@@ -580,40 +671,41 @@ const clickEdit = (obj: any) => {
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
 };
 
-// table filters
-const tablefilter = () => {
-  tableColumns.value.forEach((aItem: any) => {
-    let filData = [] as any;
-    tableData.value.forEach((bItem: any) => {
-      if (bItem[aItem.prop]) {
-        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
-        aItem.filters = filData;
-      }
-    });
-    if (aItem.filters && aItem.filters.length) {
-      aItem.filters = aItem.filters.filter(
-        (item: { text: any }, index: any, self: any[]) => {
-          const i = self.findIndex((t: { text: any }) => t.text === item.text);
-          return i === index;
-        }
-      );
-    }
-  });
+const setWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 180;
+    case '物料编码':
+      return 120;
+    case '物料名称':
+      return 200;
+    case '规格型号':
+      return 120;
+    case '数量':
+    case '单位':
+      return 90;
+    case '交货日期':
+      return 120;
+    default:
+      return 200;
+  }
 };
 
-const tableHearData = (value: any) => {
-  const { prop, val } = value;
-  // 排序
-  if (val === 'asc') {
-    tableData.value.sort((a: any, b: any) => {
-      return a[prop] - b[prop];
-    });
-  }
-  if (val === 'desc') {
-    tableData.value.sort((a: any, b: any) => {
-      return b[prop] - a[prop];
-    });
-  }
+// T弹窗搜索
+const TClickSearch = (val: any) => {
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+
+// 重置
+const TresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TTABRef.value.clearFilter();
 };
 </script>
 

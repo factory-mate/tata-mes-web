@@ -12,7 +12,10 @@
       <ButtonViem
         :ToolBut="But"
         @clickAdd="clickAdd"
-        @clickDelete="clickDel"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
+        @Commit="Commit"
+        @ItemAddOnMaterial="ItemAddOnMaterial"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -42,41 +45,48 @@
             </template>
             <template #default="scope">
               <template
-                v-for="item in tableButton"
+                v-for="(item, idx) in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
+                  v-if="
+                    idx < (tableButton.length > 3 ? 2 : 3) &&
+                    showButton(scope.row, item)
+                  "
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
-                  v-if="
-                    (item.Resource.cAttributeCode == 'Edit' &&
-                      scope.row.iStatus == 0) ||
-                    item.Resource.cAttributeCode !== 'Edit'
-                  "
                 >
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <!-- <el-dropdown style="margin-left: 10px;" v-if="tableButton.length > 3">
-                                <el-button type="primary" size="small">
-                                    <el-icon>
-                                        <MoreFilled />
-                                    </el-icon>
-                                    <el-icon class="el-icon--right"><arrow-down /></el-icon>
-                                </el-button>
-                                <template #dropdown>
-                                    <el-dropdown-menu>
-                                        <el-dropdown-item
-                                            v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1)"
-                                            :key="item.Resource.cAttributeName">
-                                            <el-button type="primary" size="small" @click="clickTableBut(scope, item)">
-                                                {{ item.Resource.cAttributeName }}
-                                            </el-button>
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </template>
-                            </el-dropdown> -->
+              <el-dropdown
+                style="margin-left: 10px"
+                v-if="tableButton.length > 3"
+              >
+                <el-button type="primary" size="small">
+                  <el-icon>
+                    <MoreFilled />
+                  </el-icon>
+                  <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      v-for="item in tableButton.slice(2)"
+                      :key="item.Resource.cAttributeName"
+                    >
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="clickTableBut(scope, item)"
+                      >
+                        {{ item.Resource.cAttributeName }}
+                      </el-button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
         </template>
@@ -128,7 +138,7 @@ const tableColumns = ref([]) as any;
 const tableButton = ref([]) as any;
 const AxiosData = ref({}) as any;
 const tabType = ref(true);
-const CheckDataList = ref([]) as any;
+const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
 
@@ -139,19 +149,21 @@ onActivated(() => {
   let val = window.sessionStorage.getItem('clickSider')
     ? JSON.parse(window.sessionStorage.getItem('clickSider'))
     : '';
-  if (val == Route.name) {
-    initType.value = false;
-    getData(Route.meta.ModelCode);
-  }
-  if (initType.value) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (val == Route.name) {
+  //   initType.value = false;
+  //   getData(Route.meta.ModelCode);
+  // }
+  // if (initType.value) {
+  //   getData(Route.meta.ModelCode);
+  // }
+  getData(Route.meta.ModelCode);
+
   initType.value = false;
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'BuyOrder') {
+    if (v.name == 'KnifePurchaseNote') {
       tableAxios();
     }
   }, 300);
@@ -210,8 +222,22 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Edit':
       clickEditTable(scope, event);
       break;
+    case 'Delete':
+      clickDelete(scope, event);
+      break;
     default:
       break;
+  }
+};
+const showButton = (obj, item) => {
+  if (item.Resource.cAttributeName === '详情') {
+    return true;
+  }
+  console.log(obj);
+  if (obj.iStatusName === '提交') {
+    return false;
+  } else {
+    return true;
   }
 };
 //表格数据查询
@@ -319,30 +345,13 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   tableAxios();
 };
-//按钮删除
-const clickDel = (obj: any) => {
-  sendId.value = [];
-  CheckDataList.value.forEach((item: { UID: any }) =>
-    sendId.value.push(item.UID)
-  );
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要删除的数据'
-    });
-    return;
-  }
-  if (CheckDataList.value.some((i: any) => i.iStatus == 1 || i.iStatus == 2)) {
-    ElMessage({
-      type: 'warning',
-      message: '存在状态为部分入库、全部入库，不能删除'
-    });
-    return;
-  }
+//表格按钮删除
+const clickDelete = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
+    data: [senid]
   };
   ElMessageBox.confirm('确定删除数据?', '提示', {
     confirmButtonText: '确定',
@@ -350,18 +359,18 @@ const clickDel = (obj: any) => {
     type: 'warning'
   })
     .then(() => {
-      delApi(data).then(res => {
+      ElLoading.service({ lock: true, text: '加载中.....' });
+      DataApi(data).then(res => {
         if (res.status === 200) {
           ElMessage({
             type: 'success',
-            message: '删除数据成功'
+            message: '删除成功'
           });
           tableAxios();
-          TabRef.value.handleRemoveSelectionChange();
-          sendId.value = [];
         } else {
-          console.log('删除失败');
+          ElMessage.error('删除失败');
         }
+        ElLoading.service().close();
       });
     })
     .catch(() => {
@@ -369,12 +378,13 @@ const clickDel = (obj: any) => {
         type: 'info',
         message: '取消删除'
       });
+      ElLoading.service().close();
     });
 };
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'ViewTooolInfo',
+    name: 'KnifeAddPurchaseNoteView',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -382,42 +392,104 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'TooolInfo',
+      pathName: 'KnifePurchaseNote',
       title: '采购单详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
-  router.push({
-    name: 'EditTooolInfo',
-    params: {
-      t: Date.now(),
-      rowId: scope.row.UID
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(scope.row),
-      pathName: 'TooolInfo',
-      title: '采购单编辑'
-    }
-  });
+  if (scope.row.cVouchSourceTypeCode === '0') {
+    router.push({
+      name: 'KnifeAddPurchaseNoteEditNoOrigin',
+      params: {
+        t: Date.now(),
+        rowId: scope.row.UID
+      },
+      state: {
+        modelCode: 'WMS.PurchaseVouch.M.EditOnNoSource',
+        row: JSON.stringify(scope.row),
+        pathName: 'KnifePurchaseNote',
+        title: '采购单无来源编辑'
+      }
+    });
+  } else {
+    router.push({
+      name: 'KnifeAddPurchaseNoteEdit',
+      params: {
+        t: Date.now(),
+        rowId: scope.row.UID
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        row: JSON.stringify(scope.row),
+        pathName: 'KnifePurchaseNote',
+        title: '采购单编辑'
+      }
+    });
+  }
 };
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'TooolInfo',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '采购单新增',
-      type: 'add'
-    }
-  });
+  // router.push({
+  //   name: 'KnifeAddPurchaseNote',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '采购单新增',
+  //     type: 'add'
+  //   }
+  // });
+  window.open(
+    router.resolve({
+      name: 'KnifeAddPurchaseNote',
+      params: {
+        t: Date.now(),
+        rowId: ' '
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        title: '采购单新增',
+        type: 'add'
+      }
+    }).href,
+    '_blank'
+  );
 };
+
+const ItemAddOnMaterial = obj => {
+  // router.push({
+  //   name: 'KnifeAddPurchaseNoteNoOrigin',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '采购单无来源新增',
+  //     type: 'add'
+  //   }
+  // });
+  window.open(
+    router.resolve({
+      name: 'KnifeAddPurchaseNoteNoOrigin',
+      params: {
+        t: Date.now(),
+        rowId: ' '
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        title: '采购单无来源新增',
+        type: 'add'
+      }
+    }).href,
+    '_blank'
+  );
+};
+
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
   // arr.forEach((item: { IsValid: string; UID: any; }) => {
@@ -425,7 +497,6 @@ const handleSelectionChange = (arr: any) => {
   //         sendId.value.push(item.UID)
   //     }
   // })
-  CheckDataList.value = arr;
   sendId.value = [];
   arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
 };
@@ -470,8 +541,8 @@ const ExportAll = async (obj: any) => {
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+      // ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
+      // : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
@@ -488,8 +559,8 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+      // ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
+      // : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });

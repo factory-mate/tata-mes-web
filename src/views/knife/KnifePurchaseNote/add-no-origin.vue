@@ -29,7 +29,11 @@
         @RoleBut="RoleBut"
       ></Head-View>
       <div style="float: right">
-        <ButtonViem :ToolBut="Buttwo" @ItemAdd="ItemAdd"></ButtonViem>
+        <ButtonViem
+          :ToolBut="Buttwo"
+          @ItemAdd="ItemAdd"
+          @ItemAddOnMaterial="ItemAddOnMaterial"
+        ></ButtonViem>
       </div>
       <myTable
         ref="TABRef"
@@ -40,14 +44,19 @@
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
-        :disabledHide="false"
-        @tableHearData="tableHearData"
+        :disabledHide="true"
+        :show-index="false"
+        @handleTableDataChange="handleTableDataChange"
+        :setWidth="setMainTableWidth"
+        custom-width
+        show-summary
+        :summary-method="d => summaryMethod(d)"
       >
-        <!-- <template #button>
+        <template #button>
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
@@ -63,14 +72,8 @@
               >
             </template>
           </el-table-column>
-        </template> -->
+        </template>
       </myTable>
-      <pagination
-        v-if="total > 0"
-        :total="total"
-        v-model:page="queryParams.PageIndex"
-        v-model:limit="queryParams.PageSize"
-      />
       <pop-model
         :dialogFormVisible="dialogFormVisible"
         :title="modelTitle"
@@ -91,7 +94,16 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="90%"
     >
+      <!-- 搜索区域 -->
+
+      <FilterForm
+        :Filter="TFilter"
+        @ClickSearch="TClickSearch"
+        @resetForm="TresetForm"
+      ></FilterForm>
+
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
@@ -100,6 +112,11 @@
         :selection="true"
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
+        :disabledHide="false"
+        max-height="52vh"
+        :setWidth="setWidth"
+        custom-width
+        :show-index="false"
       >
       </myTable>
       <template #footer>
@@ -113,6 +130,7 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
+        @pagination="changPage"
       />
     </el-dialog>
   </div>
@@ -122,8 +140,9 @@
 import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
+import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare } from '@/utils';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import {
   ElButton,
   ElCard,
@@ -159,6 +178,7 @@ const TdialogFormVisible = ref();
 const TAxiosData = ref({}) as any;
 const TtableData = ref([]) as any;
 const TtableColumns = ref([]) as any;
+const TFilter = ref([]) as any;
 //表格数据
 const tableData = ref([] as any);
 //总条数
@@ -183,7 +203,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: '',
+  OrderByFileds: 'cVendorCode,cDefindParm01,cInvCode',
   disabled: false,
   dialogFormVisible: false,
   modelTitle: '标题',
@@ -219,10 +239,12 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  // if (rowId.value != Route.params.rowId) {
-  //   getAddUser(Route.meta.ModelCode);
-  // }
-  getAddUser(Route.meta.ModelCode);
+
+  tableData.value = [];
+
+  if (rowId.value != Route.params.rowId) {
+    getAddUser(Route.meta.ModelCode);
+  }
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.row) {
@@ -232,9 +254,6 @@ onActivated(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
-  }
-  if (history.state.title == '采购单详情') {
-    disabled.value = true;
   }
 });
 const clickView = (val: any) => {
@@ -285,7 +304,9 @@ const getAddUser = async (code: any) => {
             (item: any) => item.Resource.cAttributeName == '保存'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeName == '添加'
+            (item: any) =>
+              item.Resource.cAttributeName == '无来源添加' ||
+              item.Resource.cAttributeName == '参照申请单添加'
           );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
@@ -294,6 +315,7 @@ const getAddUser = async (code: any) => {
           );
         }
       });
+      ElLoading.service().close();
     } else {
       console.log('请求出错');
       ElLoading.service().close();
@@ -342,7 +364,8 @@ const funTable = (arr: Array<any>) => {
           cControlTypeCode: item.cControlTypeCode,
           cAttributeCode: item.Resource.cAttributeCode,
           headerSlot: false,
-          slot: ''
+          slot: '',
+          cIncludeModelCode: item.cIncludeModelCode
         };
         tableColumns.value.push(itemData);
         tableColumns.value.push({
@@ -370,6 +393,9 @@ const funTable = (arr: Array<any>) => {
   // 获取下拉框数据
   getComboBoxFun();
 };
+const handleTableDataChange = (val: any) => {
+  console.log(val, 'handleTableDataChange');
+};
 
 //表格数据查询
 const tableAxios = async () => {
@@ -380,32 +406,30 @@ const tableAxios = async () => {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
     params: {
-      UID: rowId.value
+      val: rowId.value
     }
   };
   try {
-    ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
-      tablefilter();
-      ElLoading.service().close();
     } else {
       console.log('请求出错');
-      ElLoading.service().close();
     }
   } catch (error) {
     console.log(error, '程序出错');
-    ElLoading.service().close();
   }
 };
 
 const PrintLabel = (obj: any) => {
-  console.log(obj, '--');
+  console.log(obj, '1111');
+};
+const BtnDAel = (obj: any) => {
+  console.log(obj, '1111');
 };
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
+  TABRef.value.tableDataVal.splice(val.$index, 1);
 };
 
 const clickHandAdd = (data: any) => {
@@ -425,6 +449,9 @@ const ItemAdd = async (obj: any) => {
             item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
           );
         }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          TFilter.value = item[import.meta.env.VITE_APP_key];
+        }
       });
     } else {
       console.log('请求出错');
@@ -433,6 +460,11 @@ const ItemAdd = async (obj: any) => {
     console.log(error, '程序出错了');
   }
 };
+
+const ItemAddOnMaterial = async obj => {
+  console.log(obj);
+};
+
 // TTTtable 数据整合
 const funTables = (arr: Array<any>) => {
   modelGrid.value = arr;
@@ -488,6 +520,7 @@ const TtableAxios = async () => {
     if (res.status == 200) {
       TtableData.value = res.data.data;
       total.value = res.data.dataCount;
+      tablefilter();
     } else {
       console.log('请求出错');
     }
@@ -496,21 +529,101 @@ const TtableAxios = async () => {
   }
 };
 
+// table filters
+const tablefilter = () => {
+  TtableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    TtableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop]) {
+        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
+        aItem.filters = filData;
+      }
+    });
+    if (aItem.filters && aItem.filters.length) {
+      aItem.filters = aItem.filters.filter(
+        (item: { text: any }, index: any, self: any[]) => {
+          const i = self.findIndex((t: { text: any }) => t.text === item.text);
+          return i === index;
+        }
+      );
+    }
+  });
+};
+
 const itemData = ref([]) as any;
+
 //弹窗表格选中
 const ThandleSelectionChange = (val: any) => {
   itemData.value = val;
 };
+
 //弹窗确认
 const Tconfirm = () => {
+  // if (
+  //   !itemData.value.every(
+  //     (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '必须同供应商且同交货日期才能一起选择'
+  //   });
+  //   return;
+  // }
+  if (
+    headRef.value.ruleForm.cVendorName ||
+    headRef.value.ruleForm.cVendorCode
+  ) {
+    // if (
+    //   itemData.value.some(
+    //     (item: any) =>
+    //       item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
+    //       item.cVendorName !== headRef.value.ruleForm.cVendorName
+    //   )
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '已指定供应商，请选择该供应商的物料'
+    //   });
+    //   return;
+    // }
+  } else {
+    const { cVendorCode, cVendorName } = itemData.value[0];
+    headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+  }
+
   TdialogFormVisible.value = false;
+
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
+    if (item.cDefindParm03?.includes(',')) {
+      item.cDefindParm03List = item.cDefindParm03.split(',');
+      item.cDefindParm03 = null;
+    } else {
+      item.cDefindParm03List = [item.cDefindParm03];
+    }
+
+    tableData.value.push({ ...item, nSumQuantity: item.nQuantity });
   });
+
   TTABRef.value.handleRemoveSelectionChange();
 };
 
+// T弹窗搜索
+const TClickSearch = (val: any) => {
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+// 重置
+const TresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TTABRef.value.clearFilter();
+};
 // 添加弹窗form
 const clickAddConvert = (val: any) => {
   dialogFormVisible.value = true;
@@ -527,15 +640,21 @@ const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;
 };
 //新增保存
-const SaveAdd = (obj: any) => {};
-//打印显示一个按钮
-const BtnDAel = (v: any) => {
-  console.log(v, '-----');
-
-  // if (v > 0) {
-  //     But.value = But.value.filter((item: { Resource: { cAttributeName: string; }; }) => item.Resource.cAttributeName == '打印标签')
-  // }
+const SaveAdd = (obj: any) => {
+  View1val.value = obj.cIncludeModelCode;
+  obj.pathName = 'KnifePurchaseNote';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
+  // disa.value = true;
 };
+//打印显示一个按钮
+// const BtnDAel = (v: any) => {
+//     if (v > 0) {
+//         But.value = But.value.filter((item: { Resource: { cAttributeName: string; }; }) => item.Resource.cAttributeName == '打印标签')
+//     }
+// }
 //提交
 const Commit = (obj: any) => {
   let data = {
@@ -571,7 +690,15 @@ const handleSelectionChange = (v: any) => {
 };
 
 //修改保存
-const SaveEdit = (obj: any) => {};
+const SaveEdit = (obj: any) => {
+  View1val.value = obj.cIncludeModelCode;
+  obj.pathName = 'KnifePurchaseNote';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
+  // disa.value = true;
+};
 // 编辑按钮
 const clickEdit = (obj: any) => {
   getAddUser(obj.cIncludeModelCode);
@@ -580,40 +707,78 @@ const clickEdit = (obj: any) => {
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购单编辑' });
 };
 
-// table filters
-const tablefilter = () => {
-  tableColumns.value.forEach((aItem: any) => {
-    let filData = [] as any;
-    tableData.value.forEach((bItem: any) => {
-      if (bItem[aItem.prop]) {
-        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
-        aItem.filters = filData;
-      }
-    });
-    if (aItem.filters && aItem.filters.length) {
-      aItem.filters = aItem.filters.filter(
-        (item: { text: any }, index: any, self: any[]) => {
-          const i = self.findIndex((t: { text: any }) => t.text === item.text);
-          return i === index;
-        }
-      );
-    }
-  });
+const setWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 120;
+    case '物料编码':
+      return 90;
+    case '物料名称':
+      return 200;
+    case '规格型号':
+      return 120;
+    case '单位':
+    case '采购数量':
+    case '单价':
+    case '含税单价':
+    case '含税金额':
+    case '税额':
+    case '不含税金额':
+    case '金额':
+    case 'SAP产品编码':
+      return 90;
+    case '交货日期':
+      return 100;
+    default:
+      return 200;
+  }
 };
 
-const tableHearData = (value: any) => {
-  const { prop, val } = value;
-  // 排序
-  if (val === 'asc') {
-    tableData.value.sort((a: any, b: any) => {
-      return a[prop] - b[prop];
-    });
+const setMainTableWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+      return 120;
+    case '物料编码':
+      return 90;
+    case '物料名称':
+      return 200;
+    case '供应商名称':
+      return 120;
+    case '剩余数量':
+    case '采购数量':
+    case '单位':
+      return 50;
+    case 'SAP物料编码':
+      return 90;
+    case '交货日期':
+      return 100;
   }
-  if (val === 'desc') {
-    tableData.value.sort((a: any, b: any) => {
-      return b[prop] - a[prop];
-    });
-  }
+};
+
+const summaryMethod = d => {
+  const { columns, data } = d;
+  const sums = [];
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计';
+      return;
+    }
+    if (
+      ['nQuantity', 'nTaxMoney', 'cDefindParm06', 'nMoney'].includes(
+        column.property
+      )
+    ) {
+      const values = data.map(item =>
+        Number.isNaN(Number(item[column.property]))
+          ? 0
+          : Number(item[column.property])
+      );
+      sums[index] = values.reduce((prev, curr) => prev + curr, 0).toFixed(2);
+    } else {
+      sums[index] = '';
+    }
+  });
+  return sums;
 };
 </script>
 
