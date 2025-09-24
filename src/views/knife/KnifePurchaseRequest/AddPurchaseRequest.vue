@@ -403,9 +403,9 @@ const SaveAdd = (obj: any) => {
   if (
     TABRef.value.tableDataVal
       .filter(i => i.cInvCode)
-      .some(i => !i.nQuantity || !i.cUnitName || !i.cDefindParm01)
+      .some(i => !i.nQuantity || !i.cDefindParm01)
   ) {
-    ElMessage.error('存在数据未填写完整，物料编码、数量、单位、交货日期必填');
+    ElMessage.error('存在数据未填写完整，物料编码、数量、交货日期必填');
     return;
   }
 
