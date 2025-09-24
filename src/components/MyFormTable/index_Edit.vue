@@ -1892,7 +1892,12 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
       }
     }
   }
-  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+  if (
+    Route.name === 'TooolInfo' ||
+    Route.name === 'EditTooolInfo' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit'
+  ) {
     metadata.value.cInvCode = scope.row.cInvCode;
     metadata.value.cVendorCode = scope.row.cVendorCode;
   }

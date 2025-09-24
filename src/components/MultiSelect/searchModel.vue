@@ -321,12 +321,19 @@ const processFilterLogic = (val, p) => {
     }
   }
 
-  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+  if (
+    Route.name === 'TooolInfo' ||
+    Route.name === 'EditTooolInfo' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit'
+  ) {
     if (p.titleName.includes('SAP')) {
-      conditions.push(
-        `cInvCode=${p.metadata?.cInvCode}`,
-        `cVendorCode=${p.metadata?.cVendorCode}`
-      );
+      if (p.metadata?.cInvCode) {
+        conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
+      }
+      if (p.metadata?.cVendorCode) {
+        conditions.push(`cVendorCode=${p.metadata?.cVendorCode}`);
+      }
     }
   }
 
