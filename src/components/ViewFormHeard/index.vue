@@ -2102,6 +2102,12 @@ const selectData = (val: any) => {
       if (AttributeCode.value === 'cInvClassName') {
         ruleForm.value['cInvClassCode'] = val.value[0].cInvClassCode || '';
       }
+      if (AttributeCode.value === 'cDefindParm03') {
+        ruleForm.value['cDefindParm02'] =
+          val.value[0].cWareHouseLocationCode || '';
+        ruleForm.value['cDefindParm03'] =
+          val.value[0].cWareHouseLocationName || '';
+      }
     }
     // 调拨单
     if (

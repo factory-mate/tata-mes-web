@@ -484,6 +484,7 @@ const clickAudit = (obj: any) => {
 const RejectObj = ref({});
 const clickReject = (obj: any) => {
   RejectObj.value = obj;
+  console.log(obj);
   if (!selectList.value.length) {
     ElMessage.info('请选择数据');
     return false;
