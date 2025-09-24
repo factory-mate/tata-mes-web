@@ -1901,6 +1901,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     metadata.value.cInvCode = scope.row.cInvCode;
     metadata.value.cVendorCode = scope.row.cVendorCode;
   }
+  if (Route.name === 'KnifeAddPurchaseNoteNoOrigin') {
+    metadata.value.cInvCode = scope.row.cInvCode;
+  }
   ajax.value = obj.ajax;
   IndexType.value = i;
   MulitChoose.value =

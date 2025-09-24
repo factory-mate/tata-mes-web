@@ -325,7 +325,8 @@ const processFilterLogic = (val, p) => {
     Route.name === 'TooolInfo' ||
     Route.name === 'EditTooolInfo' ||
     Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit'
+    Route.name === 'KnifeAddPurchaseRequestEdit' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin'
   ) {
     if (p.titleName.includes('SAP')) {
       if (p.metadata?.cInvCode) {
