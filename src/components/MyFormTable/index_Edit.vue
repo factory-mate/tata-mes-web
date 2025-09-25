@@ -1139,12 +1139,7 @@ const selectDatas = (val: any) => {
         })
         .finally(() => {
           const v = tableDataVal.value[IndexType.value];
-          const defaultNumber =
-            Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-            Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
-              ? 1
-              : 0;
-          const nQuantity = new BigNumber(defaultNumber); // 数量
+          const nQuantity = new BigNumber(0); // 数量
           const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
           const nTaxRate = new BigNumber(v.nTaxRate); // 税率
           const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
@@ -1175,7 +1170,9 @@ const selectDatas = (val: any) => {
     // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
     if (val.value.length > 1) {
       for (let i = 0; i < val.value.length - 1; i++) {
-        const emptyRow = tableDataVal.value.find((item: any) => !item.cInvCode);
+        const emptyRow = tableDataVal.value?.find(
+          (item: any) => !item.cInvCode
+        );
         if (emptyRow) {
           emptyRow.cInvCode = val.value[i + 1].cInvCode;
           emptyRow.cInvName = val.value[i + 1].cInvName;
@@ -1207,12 +1204,7 @@ const selectDatas = (val: any) => {
             })
             .finally(() => {
               const v = emptyRow;
-              const defaultNumber =
-                Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-                Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
-                  ? 1
-                  : 0;
-              const nQuantity = new BigNumber(defaultNumber); // 数量
+              const nQuantity = new BigNumber(0); // 数量
               const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
               const nTaxRate = new BigNumber(v.nTaxRate); // 税率
               const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
@@ -1245,7 +1237,7 @@ const selectDatas = (val: any) => {
             cVendorCode: val.value[i + 1].cVendorCode,
             list_sap: val.value[i + 1].list_sap,
             cDefindParm03:
-              val.value[i + 1].list_sap.find(
+              val.value[i + 1]?.list_sap?.find(
                 j =>
                   j.cInvCode === val.value[i + 1].cInvCode &&
                   j.cVendorCode === val.value[i + 1].cVendorCode
@@ -1266,12 +1258,7 @@ const selectDatas = (val: any) => {
             })
             .finally(() => {
               const v = currentItem;
-              const defaultNumber =
-                Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-                Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
-                  ? 1
-                  : 0;
-              const nQuantity = new BigNumber(defaultNumber); // 数量
+              const nQuantity = new BigNumber(0); // 数量
               const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
               const nTaxRate = new BigNumber(v.nTaxRate); // 税率
               const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
@@ -1366,7 +1353,7 @@ const selectDatas = (val: any) => {
       // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
       if (val.value.length > 1) {
         for (let i = 0; i < val.value.length - 1; i++) {
-          const emptyRow = tableDataVal.value.find(
+          const emptyRow = tableDataVal.value?.find(
             (item: any) => !item.cInvCode
           );
           if (emptyRow) {
@@ -1419,7 +1406,7 @@ const selectDatas = (val: any) => {
         // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
         if (val.value.length > 1) {
           for (let i = 0; i < val.value.length - 1; i++) {
-            const emptyRow = tableDataVal.value.find(
+            const emptyRow = tableDataVal.value?.find(
               (item: any) => !item.cInvCode
             );
             if (emptyRow) {
@@ -1800,7 +1787,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
       tableDataVal.value[scope.$index].list_sap = data[0].list_sap;
       tableDataVal.value[scope.$index].cDefindParm03 =
-        data[0].list_sap.find(
+        data[0]?.list_sap?.find(
           i =>
             i.cInvCode === data[0].cInvCode &&
             i.cVendorCode === data[0].cVendorCode

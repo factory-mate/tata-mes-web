@@ -541,6 +541,7 @@ const clickHandAdd = (data: any) => {
 };
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {
+  Conditions.value = '';
   TdialogFormVisible.value = true;
   try {
     const res = await configApi(obj.cIncludeModelCode);
