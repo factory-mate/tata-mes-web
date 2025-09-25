@@ -317,7 +317,9 @@ const processFilterLogic = (val, p) => {
     Route.name === 'KnifeAddPurchaseNote'
   ) {
     if (p.titleName.includes('供应商')) {
-      conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
+      if (p.metadata?.cInvCode) {
+        conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
+      }
     }
   }
 
