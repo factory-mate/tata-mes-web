@@ -421,7 +421,7 @@ const clickEditTable = (scope: any, obj: any) => {
         rowId: scope.row.UID
       },
       state: {
-        modelCode: 'TMS.PurchaseVouch.M.AddOnSource',
+        modelCode: 'TMS.PurchaseVouch.M.EditOnSource',
         row: JSON.stringify(scope.row),
         pathName: 'KnifePurchaseNote',
         title: '采购单编辑'
