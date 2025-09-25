@@ -240,6 +240,10 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  const conditions = ['cVouchTypeCode = 02 && iStatus = 3'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
@@ -247,7 +251,7 @@ const tableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: conditions.join(' && ')
     }
   };
   try {
@@ -569,7 +573,7 @@ const data = reactive({
   isCollapse: false,
   dialogV: false,
   dialogTitle: '编辑',
-  Conditions: 'cVouchTypeCode = 02 && iStatus = 3',
+  Conditions: '',
   OrderByFileds: 'cCode desc'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
@@ -584,7 +588,7 @@ const ClickSearch = (val: any) => {
 };
 // 重置
 const resetForm = (val: any) => {
-  Conditions.value = 'cVouchTypeCode = 02 && iStatus = 3';
+  Conditions.value = '';
   OrderByFileds.value = 'cCode desc';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;

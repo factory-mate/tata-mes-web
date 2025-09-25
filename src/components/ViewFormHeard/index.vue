@@ -2297,6 +2297,9 @@ const newAdd = () => {
       return;
     }
   }
+  if (Route.name === 'LaboratoryMaterialControlEdit') {
+    ruleForm.value.isEdit = true;
+  }
   if (
     Route.name == 'AddPurchaseNote' ||
     Route.name === 'AddPurchaseNoteNoOrigin' ||
