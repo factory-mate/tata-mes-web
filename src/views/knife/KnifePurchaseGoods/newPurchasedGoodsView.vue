@@ -53,15 +53,13 @@
               <qrcode-vue :value="item.cQRCode" :size="50"></qrcode-vue>
             </div>
             <div style="margin-top: 4px">箱码: {{ item.cQRCode }}</div>
-            <div>物料编码: {{ item.cInvCode }}</div>
-            <div>物料名称：{{ item.cInvName }}</div>
+            <div>刀具编码: {{ item.cInvCode }}</div>
+            <div>刀具名称：{{ item.cInvName }}</div>
             <div>数量：{{ item.iDefindParm13 }}{{ item.cDefindParm06 }}</div>
-            <div>物料规格: {{ item.cDefindParm03 }}</div>
+            <div>刀具规格: {{ item.cDefindParm03 }}</div>
             <div>批次号: {{ item.cDefindParm01 }}</div>
-            <div>生产日期: {{ item.cDefindParm04 }}</div>
             <div>采购订单号: {{ item.cSourceCode }}</div>
             <div>供应商: {{ item.cVendorName }}</div>
-            <div>供应商批号: {{ item.cVendorBatch }}</div>
           </div>
         </div>
       </div>
@@ -77,7 +75,7 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <div class="grid-content ep-bg-purple">
-                    物料编码: {{ item.cInvCode }}
+                    刀具编码: {{ item.cInvCode }}
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -87,7 +85,7 @@
                 </el-col>
                 <el-col :span="21">
                   <div class="grid-content ep-bg-purple">
-                    物料名称：{{ item.cInvName }}
+                    刀具名称：{{ item.cInvName }}
                   </div>
                 </el-col>
                 <el-col :span="2" style="position: relative">
@@ -111,14 +109,10 @@
                   </div>
                 </el-col>
               </el-row>
-              <div>物料规格: {{ item.cDefindParm03 }}</div>
+              <div>刀具规格: {{ item.cDefindParm03 }}</div>
               <div>批次号: {{ item.cDefindParm01 }}</div>
-              <div>生产日期: {{ item.cDefindParm04 }}</div>
               <div>采购订单号: {{ item.cSourceCode }}</div>
               <div>供应商: {{ item.cVendorName }}</div>
-              <div style="margin-bottom: 20px">
-                供应商批号: {{ item.cVendorBatch }}
-              </div>
             </div>
           </div>
         </div>
@@ -850,7 +844,7 @@ const printajax = () => {
   }
   let data = {
     method: 'post',
-    url: import.meta.env.VITE_APP_DY_API + '/api/ArriveVouch/PrintItemsLabel',
+    url: import.meta.env.VITE_TMS_API + '/api/ArriveVouch/PrintItemsLabel',
     data: DYUID.value
   };
   DataApi(data).then(res => {
@@ -934,11 +928,11 @@ const clickEdit = (obj: any) => {
 
 const setWidth = row => {
   switch (row.label) {
-    case '物料编码':
+    case '刀具编码':
       return 120;
     case '质检':
       return 60;
-    case '物料名称':
+    case '刀具名称':
       return 250;
     case '订单号':
       return 170;
@@ -953,8 +947,6 @@ const setWidth = row => {
       return 90;
     case '单位':
       return 80;
-    case '生产日期':
-      return 150;
     default:
       return 200;
   }

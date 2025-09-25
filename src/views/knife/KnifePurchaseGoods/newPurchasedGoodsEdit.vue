@@ -77,12 +77,8 @@
               </el-row>
               <div>物料规格: {{ item.cDefindParm03 }}</div>
               <div>批次号: {{ item.cDefindParm01 }}</div>
-              <div>生产日期: {{ item.cDefindParm04 }}</div>
               <div>采购订单号: {{ item.cSourceCode }}</div>
               <div>供应商: {{ item.cVendorName }}</div>
-              <div style="margin-bottom: 20px">
-                供应商批号: {{ item.cVendorBatch }}
-              </div>
             </div>
           </div>
         </div>
@@ -773,7 +769,7 @@ const printajax = () => {
   }
   let data = {
     method: 'post',
-    url: import.meta.env.VITE_APP_DY_API + '/api/ArriveVouch/PrintItemsLabel',
+    url: import.meta.env.VITE_TMS_API + '/api/ArriveVouch/PrintItemsLabel',
     data: DYUID.value
   };
   // let data = {
@@ -922,8 +918,6 @@ const setWidth = row => {
       return 85;
     case 'SAP物料编码':
       return 110;
-    case '生产日期':
-      return 150;
     default:
       return 200;
   }
@@ -952,8 +946,6 @@ const setDialogWidth = row => {
       return 85;
     case 'SAP物料编码':
       return 110;
-    case '生产日期':
-      return 150;
     default:
       return 200;
   }
