@@ -577,7 +577,6 @@ const Tconfirm = async () => {
   itemData.value.forEach((item: any) => {
     item.nTaxPrice = 0;
     item.nTaxRate = 0;
-    item.nQuantity = 1;
     if (item.list_price?.length > 0) {
       item.nTaxPrice = item.list_price[0].nTaxPrice ?? 0;
       item.nTaxRate = item.list_price[0].nTaxRate ?? 0;

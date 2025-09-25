@@ -645,9 +645,9 @@ const tableFunObj = () => {
     // @ts-ignore
     obj.UID = '00000000-0000-0000-0000-000000000000';
   }
-  if (Route.name === 'KnifeAddPurchaseNoteNoOrigin') {
-    obj.nQuantity = 1;
-  }
+  // if (Route.name === 'KnifeAddPurchaseNoteNoOrigin') {
+  //   obj.nQuantity = 1;
+  // }
   return obj;
 };
 const tableSelect = (val: any, prop: any, i: any, list: any) => {
