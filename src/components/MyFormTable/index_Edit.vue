@@ -761,8 +761,12 @@ const changeTextBox = async (i: any, scope: any, v) => {
       p === 'nAccQuantity' ||
       p === 'nReceiveQuantity'
     ) {
+      const nAccReceiveQuantity =
+        Route.name === 'KnifeNewPurchasedGoods'
+          ? 1
+          : tableDataVal.value[i].nAccReceiveQuantity;
       const nReceiveQuantity = new BigNumber(
-        Number(tableDataVal.value[i].nAccReceiveQuantity ?? 0) *
+        Number(nAccReceiveQuantity ?? 0) *
           Number(tableDataVal.value[i].nAccQuantity ?? 0)
       ); // 到货数量
       const nTaxPrice = new BigNumber(

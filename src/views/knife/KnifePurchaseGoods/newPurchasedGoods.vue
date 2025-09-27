@@ -139,6 +139,7 @@ import HeadView from '@/components/ViewFormHeard/index.vue';
 import FilterForm from '@/components/Filter/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare, filterModel, tableSortInit } from '@/utils';
+import BigNumber from 'bignumber.js';
 import {
   ElButton,
   ElCard,
@@ -344,8 +345,8 @@ const getComboBoxFun = async () => {
 const copyItem = scope => {
   let newObj = Object.assign({}, scope.row);
   newObj.UID = '00000000-0000-0000-0000-000000000000';
-  newObj.nAccReceiveQuantity = '';
-  newObj.nReceiveQuantity = '';
+  newObj.nAccReceiveQuantity = 1;
+  newObj.nReceiveQuantity = new BigNumber(1 * Number(newObj.nAccQuantity ?? 0));
   newObj.dProductDay = '';
   newObj.cVendorBatch = '';
   TABRef.value.CoptTable(newObj, scope.$index);
@@ -428,7 +429,6 @@ const PrintLabel = (obj: any) => {};
 const BtnDAel = (obj: any) => {};
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
   TABRef.value.DelBtn(val.$index);
 };
 
