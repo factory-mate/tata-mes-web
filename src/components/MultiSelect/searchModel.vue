@@ -351,6 +351,10 @@ const processFilterLogic = (val, p) => {
     if (p.titleName === '方案名称') {
       conditions.push('cProjectTypeCode=03');
     }
+    if (p.titleName === '版本号') {
+      console.log(p.ruleForm);
+      conditions.push(`MID = ${p.ruleForm.cProjectUID}`);
+    }
   }
   // if (
   //   Route.name == 'AddPurchaseRequest' ||

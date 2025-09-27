@@ -1967,6 +1967,7 @@ const selectData = (val: any) => {
       Route.name == 'newOutputPlanView'
     ) {
       if (AttributeCode.value == 'cProjectName') {
+        ruleForm.value['cProjectUID'] = val.value[0].UID || '';
         ruleForm.value['cProjectCode'] = val.value[0].cProjectCode || '';
       }
     }
