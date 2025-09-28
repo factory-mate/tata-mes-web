@@ -823,7 +823,16 @@ const changeTextBox = async (i: any, scope: any, v) => {
       console.log('计算完毕');
     }
   }
-  if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
+  if (
+    Route.name === 'TooolInfo' ||
+    Route.name === 'EditTooolInfo' ||
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNoteEdit' ||
+    Route.name === 'AddGrindOrder' ||
+    Route.name === 'EditGrindOrder'
+  ) {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
       if (p === 'nQuantity') {
@@ -903,11 +912,7 @@ const changeTextBox = async (i: any, scope: any, v) => {
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin' ||
     Route.name === 'AddPurchaseNote' ||
-    Route.name === 'AddPurchaseNoteEdit' ||
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNote' ||
-    Route.name === 'KnifeAddPurchaseNoteEdit'
+    Route.name === 'AddPurchaseNoteEdit'
   ) {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
@@ -1047,10 +1052,7 @@ const selectDatas = (val: any) => {
         val.value[0].cEmployeeName;
     }
   }
-  if (
-    Route.name === 'AddPurchaseNote' ||
-    Route.name === 'KnifeAddPurchaseNote'
-  ) {
+  if (Route.name === 'AddPurchaseNote') {
     if (AttributeCode.value == 'cVendorName') {
       tableDataVal.value[IndexType.value].cVendorName =
         val.value[0].cVendorName;
@@ -1107,9 +1109,16 @@ const selectDatas = (val: any) => {
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin' ||
     Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNoteEdit' ||
+    Route.name == 'AddGrindOrder' ||
+    Route.name == 'EditGrindOrder'
   ) {
-    if (AttributeCode.value == 'cInvCode') {
+    if (
+      AttributeCode.value == 'cInvCode' ||
+      AttributeCode.value == 'cInvName'
+    ) {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
@@ -1121,54 +1130,81 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cVendorCode =
         val.value[0].cVendorCode;
       tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
-      tableDataVal.value[IndexType.value].cDefindParm03 =
-        val.value[0]?.list_sap?.find(
-          i =>
-            i.cInvCode === val.value[0].cInvCode &&
-            i.cVendorCode === val.value[0].cVendorCode
-        )?.cSAPCode || '';
-      getPrice({
-        cInvCode: val.value[0].cInvCode,
-        cVendorCode: val.value[0].cVendorCode
-      })
-        .then(res => {
-          const result = res.data?.data?.[0];
-          tableDataVal.value[IndexType.value].nTaxPrice =
-            result?.nTaxPrice ?? 0;
-          tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
-        })
-        .catch(() => {
-          tableDataVal.value[IndexType.value].nTaxPrice = 0;
-          tableDataVal.value[IndexType.value].nTaxRate = 0;
-        })
-        .finally(() => {
-          const v = tableDataVal.value[IndexType.value];
-          const nQuantity = new BigNumber(0); // 数量
-          const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
-          const nTaxRate = new BigNumber(v.nTaxRate); // 税率
-          const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
-          const cDefindParm06 = nTaxMoney
-            .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
-            .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
-          const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
-          const nPrice = nQuantity.isGreaterThan(0)
-            ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
-            : 0; // 不含税单价：不含税金额/采购数量
+      tableDataVal.value[IndexType.value].list_price = val.value[0].list_price;
 
-          tableDataVal.value[IndexType.value].nQuantity = nQuantity.toString();
-          tableDataVal.value[IndexType.value].nTaxPrice = nTaxPrice.toString();
-          tableDataVal.value[IndexType.value].nTaxRate = nTaxRate.toString();
-          tableDataVal.value[IndexType.value].nTaxMoney = nTaxMoney.toString();
-          tableDataVal.value[IndexType.value].cDefindParm06 = cDefindParm06
-            .toFixed(2)
-            .replace(/\.?0+$/, '');
-          tableDataVal.value[IndexType.value].nMoney = nMoney
-            .toFixed(2)
-            .replace(/\.?0+$/, '');
-          tableDataVal.value[IndexType.value].nPrice = nPrice
-            .toFixed(8)
-            .replace(/\.?0+$/, '');
-        });
+      if (
+        Route.name === 'AddPurchaseNoteNoOrigin' ||
+        Route.name === 'AddPurchaseNoteEditNoOrigin'
+      ) {
+        tableDataVal.value[IndexType.value].cDefindParm03 =
+          val.value[0]?.list_sap?.find(
+            i =>
+              i.cInvCode === val.value[0].cInvCode &&
+              i.cVendorCode === val.value[0].cVendorCode
+          )?.cSAPCode || '';
+        getPrice({
+          cInvCode: val.value[0].cInvCode,
+          cVendorCode: val.value[0].cVendorCode
+        })
+          .then(res => {
+            const result = res.data?.data?.[0];
+            tableDataVal.value[IndexType.value].nTaxPrice =
+              result?.nTaxPrice ?? 0;
+            tableDataVal.value[IndexType.value].nTaxRate =
+              result?.nTaxRate ?? 0;
+          })
+          .catch(() => {
+            tableDataVal.value[IndexType.value].nTaxPrice = 0;
+            tableDataVal.value[IndexType.value].nTaxRate = 0;
+          })
+          .finally(() => {
+            const v = tableDataVal.value[IndexType.value];
+            const nQuantity = new BigNumber(0); // 数量
+            const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+            const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+            const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+            const cDefindParm06 = nTaxMoney
+              .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+              .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+            const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+            const nPrice = nQuantity.isGreaterThan(0)
+              ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+              : 0; // 不含税单价：不含税金额/采购数量
+
+            tableDataVal.value[IndexType.value].nQuantity =
+              nQuantity.toString();
+            tableDataVal.value[IndexType.value].nTaxPrice =
+              nTaxPrice.toString();
+            tableDataVal.value[IndexType.value].nTaxRate = nTaxRate.toString();
+            tableDataVal.value[IndexType.value].nTaxMoney =
+              nTaxMoney.toString();
+            tableDataVal.value[IndexType.value].cDefindParm06 = cDefindParm06
+              .toFixed(2)
+              .replace(/\.?0+$/, '');
+            tableDataVal.value[IndexType.value].nMoney = nMoney
+              .toFixed(2)
+              .replace(/\.?0+$/, '');
+            tableDataVal.value[IndexType.value].nPrice = nPrice
+              .toFixed(8)
+              .replace(/\.?0+$/, '');
+          });
+      }
+      if (
+        Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+        Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+        Route.name == 'AddGrindOrder' ||
+        Route.name == 'EditGrindOrder'
+      ) {
+        tableDataVal.value[IndexType.value].cDefindParm03 =
+          val.value[0]?.list_price?.find(
+            i =>
+              i.cInvCode === val.value[0].cInvCode &&
+              i.cVendorCode === val.value[0].cVendorCode
+          )?.cSAPCode || '';
+        const result = val.value[0].list_price?.[0];
+        tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
+        tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+      }
     }
 
     // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
@@ -1289,6 +1325,7 @@ const selectDatas = (val: any) => {
       }
     }
   }
+
   if (
     Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
     Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
@@ -1555,11 +1592,6 @@ const selectDatas = (val: any) => {
     }
   }
 
-  if (Route.name == 'AddGrindOrder' || Route.name == 'EditGrindOrder') {
-    tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
-    tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
-    tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
-  }
   if (Route.name == 'ScrapToolInfoAdd' || Route.name == 'ScrapToolInfoEdit') {
     tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
     tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
@@ -1773,9 +1805,7 @@ const onKeyPressEnter = async (e, item, scope) => {
 
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
   ) {
     const {
       data: { data }
@@ -2179,9 +2209,7 @@ const onVendorChange = (e, scope) => {
   console.log(tableDataVal.value, 'tableDataVal.value onVendorChange');
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
   ) {
     // 获取价格
     getPrice({
