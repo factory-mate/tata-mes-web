@@ -1917,7 +1917,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     Route.name === 'TooolInfo' ||
     Route.name === 'EditTooolInfo' ||
     Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit'
+    Route.name === 'KnifeAddPurchaseRequestEdit' ||
+    Route.name === 'AddGrindOrder' ||
+    Route.name === 'EditGrindOrder'
   ) {
     metadata.value.cInvCode = scope.row.cInvCode;
     metadata.value.cVendorCode = scope.row.cVendorCode;
