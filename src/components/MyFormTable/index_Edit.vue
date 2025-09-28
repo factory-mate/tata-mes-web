@@ -1113,7 +1113,10 @@ const selectDatas = (val: any) => {
     Route.name === 'KnifeAddPurchaseNote' ||
     Route.name === 'KnifeAddPurchaseNoteEdit' ||
     Route.name == 'AddGrindOrder' ||
-    Route.name == 'EditGrindOrder'
+    Route.name == 'EditGrindOrder' ||
+    Route.name == 'KnifeAddPurchaseRequest' ||
+    Route.name == 'KnifeAddPurchaseRequestEdit' ||
+    Route.name == 'KnifeAddPurchaseRequestView'
   ) {
     if (
       AttributeCode.value == 'cInvCode' ||
@@ -1193,7 +1196,10 @@ const selectDatas = (val: any) => {
         Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
         Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
         Route.name == 'AddGrindOrder' ||
-        Route.name == 'EditGrindOrder'
+        Route.name == 'EditGrindOrder' ||
+        Route.name == 'KnifeAddPurchaseRequest' ||
+        Route.name == 'KnifeAddPurchaseRequestEdit' ||
+        Route.name == 'KnifeAddPurchaseRequestView'
       ) {
         tableDataVal.value[IndexType.value].cDefindParm03 =
           val.value[0]?.list_price?.find(
@@ -1355,10 +1361,7 @@ const selectDatas = (val: any) => {
   if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView' ||
-    Route.name == 'KnifeAddPurchaseRequest' ||
-    Route.name == 'KnifeAddPurchaseRequestEdit' ||
-    Route.name == 'KnifeAddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView'
   ) {
     if (AttributeCode.value == 'cUnitName') {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
