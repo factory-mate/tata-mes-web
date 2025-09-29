@@ -692,10 +692,7 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
   if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
-    Route.name == 'AddPurchaseRequestView' ||
-    Route.name == 'KnifeAddPurchaseRequest' ||
-    Route.name == 'KnifeAddPurchaseRequestEdit' ||
-    Route.name == 'KnifeAddPurchaseRequestView'
+    Route.name == 'AddPurchaseRequestView'
   ) {
     if (prop == 'cUnitName') {
       tableDataVal.value[i]['cUnitCode'] = dataVal[0].cUnitCode;
@@ -1050,6 +1047,20 @@ const selectDatas = (val: any) => {
             i.cInvCode === val.value[0].cInvCode &&
             i.cVendorCode === val.value[0].cVendorCode
         )?.cSAPCode || '';
+      if (
+        Route.name == 'KnifeAddPurchaseRequest' ||
+        Route.name == 'KnifeAddPurchaseRequestEdit' ||
+        Route.name == 'KnifeAddPurchaseRequestView'
+      ) {
+        tableDataVal.value[IndexType.value].cDefindParm03 =
+          val.value[0]?.list_price?.find(
+            i =>
+              i.cInvCode === val.value[0].cInvCode &&
+              i.cVendorCode === val.value[0].cVendorCode
+          )?.cSAPCode ||
+          val.value[0].cDefindParm01 ||
+          '';
+      }
       const result = val.value[0].list_price?.[0];
       tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
       tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
@@ -1708,10 +1719,7 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     ((Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView' ||
-      Route.name === 'KnifeAddPurchaseRequest' ||
-      Route.name == 'KnifeAddPurchaseRequestEdit' ||
-      Route.name == 'KnifeAddPurchaseRequestView') &&
+      Route.name == 'AddPurchaseRequestView') &&
       item.prop === 'cInvCode') ||
     Route.name == 'PurchaseRequestNoProdAdd' ||
     Route.name == 'PurchaseRequestNoProdEdit' ||
@@ -1747,10 +1755,7 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     (Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView' ||
-      Route.name === 'KnifeAddPurchaseRequest' ||
-      Route.name === 'KnifeAddPurchaseRequestEdit' ||
-      Route.name === 'KnifeAddPurchaseRequestView') &&
+      Route.name == 'AddPurchaseRequestView') &&
     item.prop === 'cDefindParm03'
   ) {
     const {
@@ -1923,11 +1928,7 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
       }
     }
   }
-  if (
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit'
-  ) {
+  if (Route.name === 'KnifeAddPurchaseNoteNoOrigin') {
     if (obj.cAttributeCode === 'cVendorName') {
       if (scope.row.cInvCode) {
         metadata.value.cInvCode = scope.row.cInvCode;
@@ -1940,12 +1941,7 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
       }
     }
   }
-  if (
-    Route.name === 'EditGrindOrder' ||
-    Route.name === 'AddGrindOrder' ||
-    Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit'
-  ) {
+  if (Route.name === 'EditGrindOrder' || Route.name === 'AddGrindOrder') {
     if (obj.cAttributeCode === 'cDefindParm03') {
       if (scope.row.cInvCode) {
         metadata.value.cInvCode = scope.row.cInvCode;
@@ -1962,8 +1958,6 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
   if (
     Route.name === 'TooolInfo' ||
     Route.name === 'EditTooolInfo' ||
-    Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit' ||
     Route.name === 'AddGrindOrder' ||
     Route.name === 'EditGrindOrder'
   ) {
