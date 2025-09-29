@@ -291,7 +291,8 @@ import {
   InventoryInfoGetForPage,
   InventoryInfoGetForPageNoOrigin,
   InventorySAPGetForPage,
-  getPrice
+  getPrice,
+  getKnifePrice
 } from '@/api/configApi/index';
 import request from '@/utils/request';
 import {
@@ -622,8 +623,6 @@ const funEdit = (v: any) => {
 const tableFunObj = () => {
   let obj = {};
   tableHeader.value.forEach((item: any) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     obj[item.prop] = '';
   });
   if (
@@ -632,13 +631,8 @@ const tableFunObj = () => {
     Route.name == 'KnifeAddPurchaseRequestEdit' ||
     Route.name == 'KnifeAddPurchaseRequestView'
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     obj.UID = '00000000-0000-0000-0000-000000000000';
   }
-  // if (Route.name === 'KnifeAddPurchaseNoteNoOrigin') {
-  //   obj.nQuantity = 1;
-  // }
   return obj;
 };
 const tableSelect = (val: any, prop: any, i: any, list: any) => {
@@ -1013,6 +1007,59 @@ const selectDatas = (val: any) => {
     }
   }
   //#region 刀具
+  if (Route.name === 'KnifeAddPurchaseNote') {
+    if (AttributeCode.value == 'cVendorName') {
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+      // 获取价格
+      getKnifePrice({
+        cInvCode: tableDataVal.value[IndexType.value].cInvCode,
+        cVendorCode: val.value[0].cVendorCode,
+        cSAPCode: val.value[0].cSAPCode
+      })
+        .then(res => {
+          const result = res.data?.data?.[0];
+          tableDataVal.value[IndexType.value].nTaxPrice =
+            result?.nTaxPrice ?? 0;
+          tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+        })
+        .catch(() => {
+          tableDataVal.value[IndexType.value].nTaxPrice = 0;
+          tableDataVal.value[IndexType.value].nTaxRate = 0;
+        })
+        .finally(() => {
+          const v = tableDataVal.value[IndexType.value];
+          const nQuantity = new BigNumber(v.nQuantity ?? 0); // 数量
+          const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+          const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+          const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+          const cDefindParm06 = nTaxMoney
+            .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+            .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+          const nPrice = nQuantity.isGreaterThan(0)
+            ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
+
+          tableDataVal.value[IndexType.value].nQuantity = nQuantity.toString();
+          tableDataVal.value[IndexType.value].nTaxPrice = nTaxPrice.toString();
+          tableDataVal.value[IndexType.value].nTaxRate = nTaxRate.toString();
+          tableDataVal.value[IndexType.value].nTaxMoney = nTaxMoney.toString();
+          tableDataVal.value[IndexType.value].cDefindParm06 = cDefindParm06
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[IndexType.value].nMoney = nMoney
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[IndexType.value].nPrice = nPrice
+            .toFixed(8)
+            .replace(/\.?0+$/, '');
+        });
+    }
+  }
   if (
     Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
     Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||

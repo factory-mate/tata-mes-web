@@ -141,7 +141,12 @@ import {
 } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
+import {
+  configApi,
+  ParamsApi,
+  DataApi,
+  getKnifePrice
+} from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
@@ -573,40 +578,79 @@ const Tconfirm = async () => {
   }
 
   TdialogFormVisible.value = false;
-  // 表格添加数据
-  itemData.value.forEach((item: any) => {
-    item.nTaxPrice = 0;
-    item.nTaxRate = 0;
-    if (item.list_price?.length > 0) {
-      item.nTaxPrice = item.list_price[0].nTaxPrice ?? 0;
-      item.nTaxRate = item.list_price[0].nTaxRate ?? 0;
-      item.cDefindParm03 = item.list_price[0].cSAPCode;
-    }
-    item.nQuantity = new BigNumber(item.nQuantity ?? 1); // 数量
-    item.nTaxPrice = new BigNumber(item.nTaxPrice).decimalPlaces(8); // 含税单价
-    item.nTaxRate = new BigNumber(item.nTaxRate); // 税率
-    item.nTaxMoney = item.nTaxPrice.multipliedBy(item.nQuantity); // 税价合计：采购数量*含税单价
+  // 计算价格，根据顺序带
+  const promiseList = itemData.value.sort(compare('iIndex', true)).map(i =>
+    getKnifePrice({
+      cInvCode: i.cInvCode,
+      cVendorCode: i.cVendorCode
+    })
+  );
 
-    item.cDefindParm06 = item.nTaxMoney
-      .dividedBy(new BigNumber(1).plus(item.nTaxRate.dividedBy(100)))
-      .multipliedBy(item.nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
-    item.nMoney = item.nTaxMoney.minus(item.cDefindParm06); // 不含税金额：价税合计-税额
-    item.nPrice = item.nQuantity.isGreaterThan(0)
-      ? item.nMoney.dividedBy(item.nQuantity).decimalPlaces(8)
-      : 0; // 不含税单价：不含税金额/采购数量
-    tableData.value.push({
-      ...item,
-      nSumQuantity: item.nQuantity.toString(),
-      nQuantity: item.nQuantity.toString(),
-      nTaxPrice: item.nTaxPrice.toString(),
-      nTaxRate: item.nTaxRate.toString(),
-      nTaxMoney: item.nTaxMoney.toString(),
-      cDefindParm06: item.cDefindParm06.toFixed(2).replace(/\.?0+$/, ''),
-      nPrice: item.nPrice.toFixed(8).replace(/\.?0+$/, ''),
-      nMoney: item.nMoney.toFixed(2).replace(/\.?0+$/, '')
+  Promise.allSettled(promiseList)
+    .then(res => {
+      res.forEach((r, index) => {
+        if (r.status === 'fulfilled') {
+          const d = r.value.data?.data?.[0] || {};
+          itemData.value[index].nTaxPrice = d?.nTaxPrice ?? 0;
+          itemData.value[index].nTaxRate = d?.nTaxRate ?? 0;
+          itemData.value[index].nQuantity = new BigNumber(
+            itemData.value[index].nQuantity
+          ); // 数量
+          itemData.value[index].nTaxPrice = new BigNumber(
+            itemData.value[index].nTaxPrice
+          ).decimalPlaces(8); // 含税单价
+          itemData.value[index].nTaxRate = new BigNumber(
+            itemData.value[index].nTaxRate
+          ); // 税率
+          itemData.value[index].nTaxMoney = itemData.value[
+            index
+          ].nTaxPrice.multipliedBy(itemData.value[index].nQuantity); // 税价合计：采购数量*含税单价
+
+          itemData.value[index].cDefindParm06 = itemData.value[index].nTaxMoney
+            .dividedBy(
+              new BigNumber(1).plus(
+                itemData.value[index].nTaxRate.dividedBy(100)
+              )
+            )
+            .multipliedBy(itemData.value[index].nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          itemData.value[index].nMoney = itemData.value[index].nTaxMoney.minus(
+            itemData.value[index].cDefindParm06
+          ); // 不含税金额：价税合计-税额
+          itemData.value[index].nPrice = itemData.value[
+            index
+          ].nQuantity.isGreaterThan(0)
+            ? itemData.value[index].nMoney
+                .dividedBy(itemData.value[index].nQuantity)
+                .decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
+
+          console.log(itemData.value[index]);
+
+          tableData.value.push({
+            ...itemData.value[index],
+            nSumQuantity: itemData.value[index].nQuantity.toString(),
+            nQuantity: itemData.value[index].nQuantity.toString(),
+            nTaxPrice: itemData.value[index].nTaxPrice.toString(),
+            nTaxRate: itemData.value[index].nTaxRate.toString(),
+            nTaxMoney: itemData.value[index].nTaxMoney.toString(),
+            cDefindParm06: itemData.value[index].cDefindParm06
+              .toFixed(2)
+              .replace(/\.?0+$/, ''),
+            nPrice: itemData.value[index].nPrice
+              .toFixed(8)
+              .replace(/\.?0+$/, ''),
+            nMoney: itemData.value[index].nMoney
+              .toFixed(2)
+              .replace(/\.?0+$/, '')
+          });
+          console.log(itemData.value[index].cInvCode);
+          console.log(tableData.value, 'tableData.value');
+        }
+      });
+    })
+    .finally(() => {
+      TTABRef.value.handleRemoveSelectionChange();
     });
-  });
-  TTABRef.value.handleRemoveSelectionChange();
 };
 
 const handleTableDataChange = (val: any) => {
