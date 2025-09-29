@@ -138,3 +138,31 @@ export function getPrice({ cInvCode, cVendorCode, cSAPCode = '' }) {
     }
   });
 }
+
+export function getKnifePrice({ cInvCode, cVendorCode, cSAPCode = '' }) {
+  const conditions = [
+    `dBeginDate<=${dayjs(new Date()).format('YYYY-MM-DD')}`,
+    `dEndDate>=${dayjs(new Date()).format('YYYY-MM-DD')}`
+  ];
+  if (cInvCode) {
+    conditions.push(`cInvCode=${cInvCode}`);
+  }
+  if (cVendorCode) {
+    conditions.push(`cVendorCode=${cVendorCode}`);
+  }
+  if (cSAPCode) {
+    conditions.push(`cSAPCode=${cSAPCode}`);
+  }
+  return request({
+    url: `${
+      import.meta.env.VITE_TMS_API
+    }/api/TMS_INVENTORY_PURCHASEPRICE/GetForPage`,
+    method: 'post',
+    data: {
+      PageIndex: 1,
+      PageSize: 1,
+      OrderByFileds: 'dBeginDate desc',
+      Conditions: conditions.join(' && ')
+    }
+  });
+}

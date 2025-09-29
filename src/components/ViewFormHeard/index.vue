@@ -2109,6 +2109,10 @@ const selectData = (val: any) => {
         ruleForm.value['cDefindParm03'] =
           val.value[0].cWareHouseLocationName || '';
       }
+      if (AttributeCode.value === 'cVendorName') {
+        ruleForm.value['cVendorName'] = val.value[0].cVendorName || '';
+        ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
+      }
     }
     // 调拨单
     if (

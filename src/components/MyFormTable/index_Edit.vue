@@ -1054,6 +1054,17 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
       tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
     }
+
+    if (AttributeCode.value == 'cVendorName') {
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+      tableDataVal.value[IndexType.value].nTaxPrice =
+        val.value[0].nTaxPrice ?? 0;
+      tableDataVal.value[IndexType.value].nTaxRate = val.value[0].nTaxRate ?? 0;
+    }
   }
 
   // SAP 编码选择
