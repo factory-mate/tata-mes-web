@@ -342,6 +342,18 @@ const processFilterLogic = (val, p) => {
     }
   }
 
+  if (
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit'
+  ) {
+    if (p.titleName.includes('供应商')) {
+      if (p.metadata?.cInvCode) {
+        conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
+      }
+    }
+  }
+
   if (['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name)) {
     if (p.titleName === '寻线批次号') {
       conditions.push(

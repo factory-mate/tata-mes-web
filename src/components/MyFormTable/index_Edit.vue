@@ -560,15 +560,6 @@ onActivated(() => {
     }
   }
 });
-/**
- * 加载更多数据
- * https://www.jianshu.com/p/b685ed997a64
- */
-const handloadMore = async (newPage: number) => {
-  console.log(newPage, '00--000');
-
-  //   await loadDataList(newPage);
-};
 //增加行
 const clickTableAdd = () => {
   // if (Route.name === 'AddPurchaseRequest') {
@@ -1024,34 +1015,61 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
     }
   }
-
+  //#region 刀具
   if (
-    Route.name == 'newPurchaseAudit' ||
-    Route.name == 'newPurchaseAuditEdit' ||
-    Route.name == 'newPurchaseAuditView' ||
-    Route.name == 'KnifeNewPurchaseAudit' ||
-    Route.name == 'KnifeNewPurchaseAuditEdit' ||
-    Route.name == 'KnifeNewPurchaseAuditView' ||
-    Route.name == 'newWorkshopMaterialEdit' ||
-    Route.name == 'newWorkshopMaterialAdd'
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNote' ||
+    Route.name === 'KnifeAddPurchaseNoteEdit' ||
+    Route.name == 'AddGrindOrder' ||
+    Route.name == 'EditGrindOrder' ||
+    Route.name == 'KnifeAddPurchaseRequest' ||
+    Route.name == 'KnifeAddPurchaseRequestEdit' ||
+    Route.name == 'KnifeAddPurchaseRequestView'
   ) {
-    if (val.value.length && !val.value[0].cVendorName) {
+    if (
+      AttributeCode.value == 'cInvCode' ||
+      AttributeCode.value == 'cInvName'
+    ) {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
       tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
-      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvstd;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+      metadata.value.cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
+      tableDataVal.value[IndexType.value].list_price = val.value[0].list_price;
+
+      tableDataVal.value[IndexType.value].cDefindParm03 =
+        val.value[0]?.list_price?.find(
+          i =>
+            i.cInvCode === val.value[0].cInvCode &&
+            i.cVendorCode === val.value[0].cVendorCode
+        )?.cSAPCode || '';
+      const result = val.value[0].list_price?.[0];
+      tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
+      tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
     }
   }
+
+  // SAP 编码选择
   if (
-    Route.name === 'WorkshopStatisticsCoreOrderEdit' ||
-    Route.name === 'WorkshopStatisticsCoreOrderAdd'
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseNoteEdit' ||
+    Route.name === 'KnifeAddPurchaseNote'
   ) {
-    if (AttributeCode.value == 'cEmployeeName') {
-      tableDataVal.value[IndexType.value].cEmployeeCode =
-        val.value[0].cEmployeeCode;
-      tableDataVal.value[IndexType.value].cEmployeeName =
-        val.value[0].cEmployeeName;
+    if (AttributeCode.value == 'cDefindParm03') {
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
     }
   }
+  //#endregion
+
+  //#region WMS
   if (Route.name === 'AddPurchaseNote') {
     if (AttributeCode.value == 'cVendorName') {
       tableDataVal.value[IndexType.value].cVendorName =
@@ -1107,16 +1125,7 @@ const selectDatas = (val: any) => {
   }
   if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNote' ||
-    Route.name === 'KnifeAddPurchaseNoteEdit' ||
-    Route.name == 'AddGrindOrder' ||
-    Route.name == 'EditGrindOrder' ||
-    Route.name == 'KnifeAddPurchaseRequest' ||
-    Route.name == 'KnifeAddPurchaseRequestEdit' ||
-    Route.name == 'KnifeAddPurchaseRequestView'
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
   ) {
     if (
       AttributeCode.value == 'cInvCode' ||
@@ -1135,82 +1144,54 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
       tableDataVal.value[IndexType.value].list_price = val.value[0].list_price;
 
-      if (
-        Route.name === 'AddPurchaseNoteNoOrigin' ||
-        Route.name === 'AddPurchaseNoteEditNoOrigin'
-      ) {
-        tableDataVal.value[IndexType.value].cDefindParm03 =
-          val.value[0]?.list_sap?.find(
-            i =>
-              i.cInvCode === val.value[0].cInvCode &&
-              i.cVendorCode === val.value[0].cVendorCode
-          )?.cSAPCode || '';
-        getPrice({
-          cInvCode: val.value[0].cInvCode,
-          cVendorCode: val.value[0].cVendorCode
+      tableDataVal.value[IndexType.value].cDefindParm03 =
+        val.value[0]?.list_sap?.find(
+          i =>
+            i.cInvCode === val.value[0].cInvCode &&
+            i.cVendorCode === val.value[0].cVendorCode
+        )?.cSAPCode || '';
+      getPrice({
+        cInvCode: val.value[0].cInvCode,
+        cVendorCode: val.value[0].cVendorCode
+      })
+        .then(res => {
+          const result = res.data?.data?.[0];
+          tableDataVal.value[IndexType.value].nTaxPrice =
+            result?.nTaxPrice ?? 0;
+          tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
         })
-          .then(res => {
-            const result = res.data?.data?.[0];
-            tableDataVal.value[IndexType.value].nTaxPrice =
-              result?.nTaxPrice ?? 0;
-            tableDataVal.value[IndexType.value].nTaxRate =
-              result?.nTaxRate ?? 0;
-          })
-          .catch(() => {
-            tableDataVal.value[IndexType.value].nTaxPrice = 0;
-            tableDataVal.value[IndexType.value].nTaxRate = 0;
-          })
-          .finally(() => {
-            const v = tableDataVal.value[IndexType.value];
-            const nQuantity = new BigNumber(0); // 数量
-            const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
-            const nTaxRate = new BigNumber(v.nTaxRate); // 税率
-            const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
-            const cDefindParm06 = nTaxMoney
-              .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
-              .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
-            const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
-            const nPrice = nQuantity.isGreaterThan(0)
-              ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
-              : 0; // 不含税单价：不含税金额/采购数量
+        .catch(() => {
+          tableDataVal.value[IndexType.value].nTaxPrice = 0;
+          tableDataVal.value[IndexType.value].nTaxRate = 0;
+        })
+        .finally(() => {
+          const v = tableDataVal.value[IndexType.value];
+          const nQuantity = new BigNumber(0); // 数量
+          const nTaxPrice = new BigNumber(v.nTaxPrice).decimalPlaces(8); // 含税单价
+          const nTaxRate = new BigNumber(v.nTaxRate); // 税率
+          const nTaxMoney = nTaxPrice.multipliedBy(nQuantity); // 税价合计：采购数量*含税单价
+          const cDefindParm06 = nTaxMoney
+            .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+            .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+          const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+          const nPrice = nQuantity.isGreaterThan(0)
+            ? nMoney.dividedBy(nQuantity).decimalPlaces(8)
+            : 0; // 不含税单价：不含税金额/采购数量
 
-            tableDataVal.value[IndexType.value].nQuantity =
-              nQuantity.toString();
-            tableDataVal.value[IndexType.value].nTaxPrice =
-              nTaxPrice.toString();
-            tableDataVal.value[IndexType.value].nTaxRate = nTaxRate.toString();
-            tableDataVal.value[IndexType.value].nTaxMoney =
-              nTaxMoney.toString();
-            tableDataVal.value[IndexType.value].cDefindParm06 = cDefindParm06
-              .toFixed(2)
-              .replace(/\.?0+$/, '');
-            tableDataVal.value[IndexType.value].nMoney = nMoney
-              .toFixed(2)
-              .replace(/\.?0+$/, '');
-            tableDataVal.value[IndexType.value].nPrice = nPrice
-              .toFixed(8)
-              .replace(/\.?0+$/, '');
-          });
-      }
-      if (
-        Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-        Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
-        Route.name == 'AddGrindOrder' ||
-        Route.name == 'EditGrindOrder' ||
-        Route.name == 'KnifeAddPurchaseRequest' ||
-        Route.name == 'KnifeAddPurchaseRequestEdit' ||
-        Route.name == 'KnifeAddPurchaseRequestView'
-      ) {
-        tableDataVal.value[IndexType.value].cDefindParm03 =
-          val.value[0]?.list_price?.find(
-            i =>
-              i.cInvCode === val.value[0].cInvCode &&
-              i.cVendorCode === val.value[0].cVendorCode
-          )?.cSAPCode || '';
-        const result = val.value[0].list_price?.[0];
-        tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
-        tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
-      }
+          tableDataVal.value[IndexType.value].nQuantity = nQuantity.toString();
+          tableDataVal.value[IndexType.value].nTaxPrice = nTaxPrice.toString();
+          tableDataVal.value[IndexType.value].nTaxRate = nTaxRate.toString();
+          tableDataVal.value[IndexType.value].nTaxMoney = nTaxMoney.toString();
+          tableDataVal.value[IndexType.value].cDefindParm06 = cDefindParm06
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[IndexType.value].nMoney = nMoney
+            .toFixed(2)
+            .replace(/\.?0+$/, '');
+          tableDataVal.value[IndexType.value].nPrice = nPrice
+            .toFixed(8)
+            .replace(/\.?0+$/, '');
+        });
     }
 
     // 将 val.value 里的索引不为0的所有值依次填充到列表中的其他 cInvCode 不存在的行里，为 0 就填充到当前行
@@ -1333,16 +1314,6 @@ const selectDatas = (val: any) => {
   }
 
   if (
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEdit' ||
-    Route.name === 'KnifeAddPurchaseNote'
-  ) {
-    if (AttributeCode.value == 'cDefindParm03') {
-      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
-    }
-  }
-  if (
     Route.name === 'PurchaseRequestNoProdAdd' ||
     Route.name === 'PurchaseRequestNoProdEdit'
   ) {
@@ -1358,6 +1329,7 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
     }
   }
+
   if (
     Route.name == 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
@@ -1426,10 +1398,7 @@ const selectDatas = (val: any) => {
         }
       }
     }
-    if (
-      Route.name == 'AddPurchaseRequest' ||
-      Route.name == 'KnifeAddPurchaseRequest'
-    ) {
+    if (Route.name == 'AddPurchaseRequest') {
       if (AttributeCode.value == 'cVendorName') {
         tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
         tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
@@ -1486,6 +1455,35 @@ const selectDatas = (val: any) => {
         tableDataVal.value[IndexType.value].cVendorCode =
           val.value[0].cVendorCode;
       }
+    }
+  }
+  //#endregion
+
+  if (
+    Route.name == 'newPurchaseAudit' ||
+    Route.name == 'newPurchaseAuditEdit' ||
+    Route.name == 'newPurchaseAuditView' ||
+    Route.name == 'KnifeNewPurchaseAudit' ||
+    Route.name == 'KnifeNewPurchaseAuditEdit' ||
+    Route.name == 'KnifeNewPurchaseAuditView' ||
+    Route.name == 'newWorkshopMaterialEdit' ||
+    Route.name == 'newWorkshopMaterialAdd'
+  ) {
+    if (val.value.length && !val.value[0].cVendorName) {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvstd;
+    }
+  }
+  if (
+    Route.name === 'WorkshopStatisticsCoreOrderEdit' ||
+    Route.name === 'WorkshopStatisticsCoreOrderAdd'
+  ) {
+    if (AttributeCode.value == 'cEmployeeName') {
+      tableDataVal.value[IndexType.value].cEmployeeCode =
+        val.value[0].cEmployeeCode;
+      tableDataVal.value[IndexType.value].cEmployeeName =
+        val.value[0].cEmployeeName;
     }
   }
 
@@ -1902,20 +1900,54 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
   }
   if (
     Route.name === 'AddPurchaseRequest' ||
-    Route.name === 'AddPurchaseRequestEdit' ||
-    Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit'
+    Route.name === 'AddPurchaseRequestEdit'
   ) {
     if (obj.cAttributeCode === 'cUnitName') {
       if (scope.row.cInvCode) {
         metadata.value.cInvCode = scope.row.cInvCode;
       } else {
         metadata.value.cInvCode = '';
-        ElMessage.warning('请先选择物料编码');
+        ElMessage.warning('请先选择物料');
         return;
       }
     }
   }
+  if (
+    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit'
+  ) {
+    if (obj.cAttributeCode === 'cVendorName') {
+      if (scope.row.cInvCode) {
+        metadata.value.cInvCode = scope.row.cInvCode;
+        metadata.value.cVendorCode = scope.row.cVendorCode;
+      } else {
+        metadata.value.cInvCode = '';
+        metadata.value.cVendorCode = '';
+        ElMessage.warning('请先选择刀具');
+        return;
+      }
+    }
+  }
+  if (
+    Route.name === 'EditGrindOrder' ||
+    Route.name === 'AddGrindOrder' ||
+    Route.name === 'KnifeAddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit'
+  ) {
+    if (obj.cAttributeCode === 'cDefindParm03') {
+      if (scope.row.cInvCode) {
+        metadata.value.cInvCode = scope.row.cInvCode;
+        metadata.value.cVendorCode = scope.row.cVendorCode;
+      } else {
+        metadata.value.cInvCode = '';
+        metadata.value.cVendorCode = '';
+        ElMessage.warning('请先选择刀具');
+        return;
+      }
+    }
+  }
+
   if (
     Route.name === 'TooolInfo' ||
     Route.name === 'EditTooolInfo' ||
@@ -1927,22 +1959,15 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     metadata.value.cInvCode = scope.row.cInvCode;
     metadata.value.cVendorCode = scope.row.cVendorCode;
   }
-  if (Route.name === 'KnifeAddPurchaseNoteNoOrigin') {
-    metadata.value.cInvCode = scope.row.cInvCode;
-  }
+
   ajax.value = obj.ajax;
   IndexType.value = i;
   MulitChoose.value =
     Route.name === 'AddPurchaseRequest' ||
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView' ||
-    Route.name === 'KnifeAddPurchaseRequest' ||
-    Route.name === 'KnifeAddPurchaseRequestEdit' ||
-    Route.name === 'KnifeAddPurchaseRequestView' ||
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
-    Route.name === 'KnifeAddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin'
       ? true
       : false;
   titleName.value = obj.label;
@@ -1974,7 +1999,6 @@ const handleRemoveSelectionChange = () => {
   });
 };
 const rowInt = ref('');
-const colInt = ref('');
 
 const clickSort = (i: number, val: string) => {
   tableHeader.value[i].slot = val;
@@ -1982,40 +2006,20 @@ const clickSort = (i: number, val: string) => {
   emit('tableHearData', { prop, val });
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const cellStyle = ({ row, column, rowIndex, columnIndex }) => {
-  // console.log(row,"---row");
-  // console.log(column,"---column");
-  // console.log(rowIndex,"---行-rowIndex");
-  // console.log(columnIndex,"--列-columnIndex");
-  // if(Route.name=='ProductionOrderBG'){
-  // console.log(tableDataVal.value,"--===tableDataVal.value");
-};
 const rowVal = ref({});
 const columnVal = ref({});
 const cellVal = ref({});
 const eventVal = ref({});
 // 操作完成后添加样式
 const cellClick = (type: any, row: any, column: any, cell: any, event: any) => {
-  // console.log(row,"---row");
-  // console.log(column.no,"---column");
-  // console.log(cell,"---cell");
-  // console.log(event,"---event");
-  // console.log(type,"---type");
-
   rowInt.value = row.int;
   rowVal.value = row;
   columnVal.value = column;
   cellVal.value = cell;
   eventVal.value = event;
-
   if (type) {
     cell.style = 'background:pink';
   }
-  // if(column.no>=3){
-  //     cell.style="background:pink"
-  // }
 };
 
 const funShow = (index: any, row: any, prop: any) => {
@@ -2029,12 +2033,11 @@ const funShow = (index: any, row: any, prop: any) => {
     }
   }
 };
-// Math.random()
+
 $bus.on('tablecopy', (val: any) => {
   tableDataValCopy.value = tableDataVal.value;
   myTableRef.value!.clearSelection();
 });
-// 重置
 const clearFilter = () => {
   myTableRef.value!.clearFilter();
 };
