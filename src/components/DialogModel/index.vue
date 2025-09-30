@@ -101,31 +101,39 @@
               clearable
               @change="(value:any)=>GetSelectData(item,value)"
             >
-              <template v-for="val in item?.selDataList" :key="val.UID">
-                <!-- v-if="item.Resource.cAttributeCode == val.cDictonaryTypeCode" -->
-                <el-option
-                  :label="
-                    val.cDictonaryName ||
-                    val.cBomClassName ||
-                    val.cDimensionalityName ||
-                    val.cFaultName ||
-                    val.cProcessName ||
-                    val.cPositionName ||
-                    val.cLineName ||
-                    val.cSAPCode
-                  "
-                  :value="
-                    val.cDictonaryCode ||
-                    val.cBomClassCode ||
-                    val.cDimensionalityCode ||
-                    val.cFaultCode ||
-                    val.cProcessCode ||
-                    val.cPositionCode ||
-                    val.cLineCode ||
-                    val.cSAPCode
-                  "
-                />
-              </template>
+              <el-option
+                v-for="val in item?.selDataList"
+                :key="
+                  val.cDictonaryCode ||
+                  val.cBomClassCode ||
+                  val.cDimensionalityCode ||
+                  val.cFaultCode ||
+                  val.cProcessCode ||
+                  val.cPositionCode ||
+                  val.cLineCode ||
+                  val.cSAPCode
+                "
+                :label="
+                  val.cDictonaryName ||
+                  val.cBomClassName ||
+                  val.cDimensionalityName ||
+                  val.cFaultName ||
+                  val.cProcessName ||
+                  val.cPositionName ||
+                  val.cLineName ||
+                  val.cSAPCode
+                "
+                :value="
+                  val.cDictonaryCode ||
+                  val.cBomClassCode ||
+                  val.cDimensionalityCode ||
+                  val.cFaultCode ||
+                  val.cProcessCode ||
+                  val.cPositionCode ||
+                  val.cLineCode ||
+                  val.cSAPCode
+                "
+              />
             </el-select>
             <!-- 日期 -->
             <el-date-picker
@@ -1657,6 +1665,7 @@ const disabledFun = (item: any) => {
 const getSelData = () => {
   FormDatas.value.forEach((item: any) => {
     if (item.cControlTypeCode == 'ComboBox' && item.IsShow == true) {
+      item.selDataList = [];
       console.log(item);
       let obj = {};
       if (
@@ -1720,18 +1729,22 @@ const getSelData = () => {
           url: item.Resource.cServerIP + item.Resource.cUrl,
           params: obj
         };
-        ParamsApi(data).then((res: any) => {
-          item.selDataList = res.data;
-        });
+        ParamsApi(data)
+          .then((res: any) => {
+            item.selDataList = res.data;
+          })
+          .finally(() => {});
       } else {
         let data = {
           method: item.Resource.cHttpTypeCode,
           url: item.Resource.cServerIP + item.Resource.cUrl,
           data: obj
         };
-        DataApi(data).then((res: any) => {
-          item.selDataList = res.data;
-        });
+        DataApi(data)
+          .then((res: any) => {
+            item.selDataList = res.data;
+          })
+          .finally(() => {});
       }
     }
   });
