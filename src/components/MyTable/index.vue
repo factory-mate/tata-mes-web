@@ -149,7 +149,9 @@
                 </p>
                 <p
                   v-else-if="
-                    item.prop == 'cCode' && Route.name === 'InOutInventory'
+                    item.prop == 'cCode' &&
+                    (Route.name === 'InOutInventory' ||
+                      Route.name === 'ToolHistory')
                   "
                   @click="navToByCode(scope.row)"
                 >
@@ -339,6 +341,18 @@ const props = defineProps({
 const tableCellStyle = (row: any) => {
   if (Route.name === 'InOutInventory') {
     if (row.column.label === '单据号') {
+      return {
+        padding: '0',
+        height: '12px',
+        margin: '0',
+        color: 'red',
+        textDecoration: 'underline',
+        cursor: 'pointer'
+      };
+    }
+  }
+  if (Route.name === 'ToolHistory') {
+    if (row.column.label === '单号') {
       return {
         padding: '0',
         height: '12px',
@@ -802,33 +816,39 @@ const navToByCode = (row: any) => {
   }
   let routerName = '';
   let title = '';
-  switch (row.cVouchSourceTypeCode) {
-    case '01': // 到货单入库
-      routerName = 'PurchasedStorageView';
-      title = '到货单入库详情';
-      break;
-    case '03': // 领料出库单
-      routerName = 'newMaterialOutbound';
-      title = '领料出库单详情';
-      break;
-    case '06': // 退料入库
-      routerName = 'ReturnPutView';
-      title = '退料入库详情';
-      break;
-    case '07': // 其它入库通知单
-      routerName = 'otherInNotifyDetail';
-      title = '其它入库通知单详情';
-      break;
-    case '09': // 调拨出库单
-      routerName = 'TransferRecordInMaterial';
-      title = '调拨出库单详情';
-      break;
-    case '10': // 调拨入库单
-      routerName = 'TransferRecordOutMaterial';
-      title = '调拨入库单详情';
-      break;
-    default:
-      return;
+  if (Route.name === 'ToolHistory') {
+    routerName = row.cPath;
+    title = row.cVouchTypeCode;
+  }
+  if (Route.name === 'InOutInventory') {
+    switch (row.cVouchSourceTypeCode) {
+      case '01': // 到货单入库
+        routerName = 'PurchasedStorageView';
+        title = '到货单入库详情';
+        break;
+      case '03': // 领料出库单
+        routerName = 'newMaterialOutbound';
+        title = '领料出库单详情';
+        break;
+      case '06': // 退料入库
+        routerName = 'ReturnPutView';
+        title = '退料入库详情';
+        break;
+      case '07': // 其它入库通知单
+        routerName = 'otherInNotifyDetail';
+        title = '其它入库通知单详情';
+        break;
+      case '09': // 调拨出库单
+        routerName = 'TransferRecordInMaterial';
+        title = '调拨出库单详情';
+        break;
+      case '10': // 调拨入库单
+        routerName = 'TransferRecordOutMaterial';
+        title = '调拨入库单详情';
+        break;
+      default:
+        return;
+    }
   }
   router.push({
     name: routerName,
