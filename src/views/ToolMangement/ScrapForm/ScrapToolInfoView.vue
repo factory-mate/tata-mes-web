@@ -3,7 +3,7 @@
   <div class="maintain">
     <el-card>
       <!-- 按钮区域 -->
-      <div class="bot-btn1">
+      <!-- <div class="bot-btn1">
         <ButtonViem
           :ToolBut="But"
           @SaveAdd="SaveAdd"
@@ -11,7 +11,7 @@
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
         ></ButtonViem>
-      </div>
+      </div> -->
       <Head-View
         :Head="head"
         :row="row"
@@ -43,9 +43,10 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
+        :disabledHide="false"
       >
-        <template #button>
+        <!-- <template #button>
           <el-table-column
             label="操作"
             fixed="right"
@@ -65,7 +66,7 @@
               >
             </template>
           </el-table-column>
-        </template>
+        </template> -->
       </myTable>
       <pagination
         v-if="total > 0"
