@@ -101,7 +101,7 @@
               clearable
               @change="(value:any)=>GetSelectData(item,value)"
             >
-              <template v-for="(val, index) in item.selDataList" :key="index">
+              <template v-for="val in item?.selDataList" :key="val.UID">
                 <!-- v-if="item.Resource.cAttributeCode == val.cDictonaryTypeCode" -->
                 <el-option
                   :label="
@@ -1050,7 +1050,6 @@ const selectData = (val: any) => {
         ) {
           ruleForm.value.cInvName = val.value[0].cInvName;
           ruleForm.value.cInvCode = val.value[0].cInvCode;
-          getSelData();
         }
         if (
           item.cAttributeCode == AttributeCode.value &&
@@ -1058,7 +1057,6 @@ const selectData = (val: any) => {
         ) {
           ruleForm.value.cVendorName = val.value[0].cVendorName;
           ruleForm.value.cVendorCode = val.value[0].cVendorCode;
-          getSelData();
         }
         if (AttributeCode.value === 'cUnitName') {
           ruleForm.value.cUnitCode = val.value[0].cUnitCode;
