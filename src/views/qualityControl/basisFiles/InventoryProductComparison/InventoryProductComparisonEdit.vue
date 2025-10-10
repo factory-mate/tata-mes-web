@@ -41,7 +41,7 @@
         ></el-tab-pane>
       </el-tabs>
       <!-- 表格区域 -->
-      <myTable
+      <!-- <myTable
         ref="TABRef"
         :tableData="tableData"
         :tableColumns="tableColumns"
@@ -77,7 +77,7 @@
         :total="total"
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
-      />
+      /> -->
       <pop-model
         :dialogFormVisible="dialogFormVisible"
         :title="modelTitle"
@@ -523,29 +523,29 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  if (!TABRef.value.tableDataVal.length) {
-    ElMessage({
-      type: 'info',
-      message: '请添加列表数据'
-    });
-    return false;
-  }
-  let list = [];
-  list = TABRef.value.tableDataVal.filter((item: any) => {
-    return item.cInvCode == '' || item.nQuantity == '';
-  });
-  if (list.length) {
-    ElMessage({
-      type: 'error',
-      message: '编号/数量不能为空！'
-    });
-  } else {
-    obj.pathName = 'InventoryProductComparison';
-    obj.tableData = TABRef.value.tableDataVal;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    headRef.value.validate(obj);
-  }
+  // if (!TABRef.value.tableDataVal.length) {
+  //   ElMessage({
+  //     type: 'info',
+  //     message: '请添加列表数据'
+  //   });
+  //   return false;
+  // }
+  // let list = [];
+  // list = TABRef.value.tableDataVal.filter((item: any) => {
+  //   return item.cInvCode == '' || item.nQuantity == '';
+  // });
+  // if (list.length) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '编号/数量不能为空！'
+  //   });
+  // } else {
+  // }
+  obj.pathName = 'InventoryProductComparison';
+  obj.tableData = TABRef.value.tableDataVal;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  headRef.value.validate(obj);
 };
 
 //修改保存
