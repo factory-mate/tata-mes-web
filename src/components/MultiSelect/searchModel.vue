@@ -12,11 +12,13 @@
     width="70%"
   >
     <!-- 搜索区域 -->
-    <FilterForm
-      :Filter="Filter"
-      @ClickSearch="ClickSearch"
-      @resetForm="resetForm"
-    ></FilterForm>
+    <div v-show="Filter.length > 0">
+      <FilterForm
+        :Filter="Filter"
+        @ClickSearch="ClickSearch"
+        @resetForm="resetForm"
+      ></FilterForm>
+    </div>
     <el-card>
       <el-table
         ref="myTableRef"
@@ -280,6 +282,12 @@ const processFilterLogic = (val, p) => {
       };
     } else {
       metadataOptions.value = {};
+    }
+  }
+
+  if (Route.name == 'MaterialConfigRule') {
+    if (p.titleName === '维度名称') {
+      conditions.push('cModelCode=KL001');
     }
   }
 
