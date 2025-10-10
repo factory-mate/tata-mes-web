@@ -385,6 +385,9 @@ const tableRowClassName: any = ({ row, rowIndex }) => {
     if (row.iStatus == '1') {
       return 'success-row';
     }
+    if (row.iStatus == '3') {
+      return 'cancel-row';
+    }
   }
   return '';
 };
@@ -901,6 +904,11 @@ defineExpose({ handleRemoveSelectionChange, clearFilter, selectData });
 ::v-deep .el-table__row.success-row {
   --el-table-tr-bg-color: #32cd32 !important;
   --el-bg-color: #32cd32 !important;
+}
+
+::v-deep .el-table__row.cancel-row {
+  --el-table-tr-bg-color: red !important;
+  --el-bg-color: red !important;
 }
 
 ::v-deep .el-table__cell {
