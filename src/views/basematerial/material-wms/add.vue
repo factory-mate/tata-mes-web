@@ -17,7 +17,7 @@ import WarehouseAreaModal from './components/WarehouseAreaModal.vue';
 import WarehouseLocationModal from './components/WarehouseLocationModal.vue';
 import MaterialModal from './components/MaterialModal.vue';
 import useStore from '@/store';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { getCurrentInstance } from '@vue/runtime-core';
 
 const $bus = getCurrentInstance()?.appContext.config.globalProperties.mittBus;
@@ -104,11 +104,12 @@ function fetchUnitTypes() {
   });
 }
 
-async function handleSubmit() {
+async function handleSubmit(bCheckPosition) {
   const data = {
     ...formData.value,
     singerModels: unitData.value,
-    sAPInfos: []
+    sAPInfos: [],
+    bCheckPosition
     // sAPInfos: sAPInfos.value
   };
   try {
@@ -132,7 +133,13 @@ async function handleSubmit() {
       $bus.emit('tableUpData', { name: 'WMSMaterial' });
     }
   } catch {
-    //
+    ElMessageBox.confirm('所选货位无货，是否继续', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      handleSubmit(false);
+    });
   }
 }
 
@@ -703,7 +710,7 @@ onActivated(() => {
       </el-card>
 
       <div style="display: flex; justify-content: center">
-        <el-button type="primary" @click="handleSubmit"> 保存 </el-button>
+        <el-button type="primary" @click="handleSubmit(true)"> 保存 </el-button>
       </div>
     </div>
   </el-form>
