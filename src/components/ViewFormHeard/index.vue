@@ -661,8 +661,7 @@ const disabledFun = (item: any) => {
   if (
     Route.name === 'DeviceProgram' ||
     Route.name == 'RawMaterialComparisonEdit' ||
-    Route.name == 'LaboratoryMaterialControlEdit' ||
-    Route.name == 'InventoryProductComparisonEdit'
+    Route.name == 'LaboratoryMaterialControlEdit'
   ) {
     return true;
   } else {
@@ -912,6 +911,21 @@ const GetTreeRoad = (item: any, value: any) => {
     );
     ruleForm.value.cNodeTypeCode = valData[0].cDictonaryCode;
     ruleForm.value.cNodeTypeName = valData[0].cDictonaryName;
+  }
+  if (
+    Route.name == 'InventoryProductComparisonAdd' ||
+    Route.name == 'InventoryProductComparisonEdit'
+  ) {
+    let valData: any = [];
+    valData =
+      ruleForm.value[item.cAttributeCode + '_Data']?.filter(
+        (v: any) => v.cDictonaryCode == value
+      ) ?? [];
+
+    if (item.cAttributeName == '产品类型') {
+      ruleForm.value.cResourceCode = valData[0].cDictonaryCode;
+      ruleForm.value.cResourceName = valData[0].cDictonaryName;
+    }
   }
   // WMS 调拨单
   if (
