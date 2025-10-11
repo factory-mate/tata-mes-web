@@ -473,7 +473,7 @@ const SaveAdd = (obj: any) => {
   // }
 
   obj.pathName = 'InventoryProductComparison';
-  obj.tableData = TABRef.value.tableDataVal;
+  // obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
@@ -482,7 +482,7 @@ const SaveAdd = (obj: any) => {
 //修改保存
 const SaveEdit = (obj: any) => {
   obj.pathName = 'InventoryProductComparison';
-  obj.tableData = TABRef.value.tableDataVal;
+  // obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   headRef.value.validate(obj);
