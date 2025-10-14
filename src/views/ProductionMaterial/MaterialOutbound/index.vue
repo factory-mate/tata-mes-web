@@ -215,6 +215,7 @@ const total = ref(0);
 const tableData = ref([] as any);
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
+  console.log(event);
   switch (event.cAttributeCode) {
     case 'View':
       clickView(scope, event);
@@ -224,6 +225,9 @@ const clickTableBut = (scope: any, event: any) => {
       break;
     case 'Delete':
       clickDelete(scope, event);
+      break;
+    case 'Verify':
+      clickVerify(scope, event);
       break;
     default:
       break;
@@ -345,27 +349,49 @@ const clickDelete = (scope: any, obj: any) => {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  })
-    .then(() => {
-      DataApi(data).then(res => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功'
-          });
-          tableAxios();
-        } else {
-          ElMessage.error('删除失败');
-        }
-      });
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除'
-      });
+  }).then(() => {
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        });
+        tableAxios();
+      } else {
+        ElMessage.error('删除失败');
+      }
     });
+  });
 };
+
+const clickVerify = (scope: any, obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: scope.row.UID,
+      utfs: scope.row.utfs
+    }
+  };
+  ElMessageBox.confirm('确定审核数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '审核成功'
+        });
+        tableAxios();
+      } else {
+        ElMessage.error('审核失败');
+      }
+    });
+  });
+};
+
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
