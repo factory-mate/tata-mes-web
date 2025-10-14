@@ -316,6 +316,8 @@ const getTreeProps = () => {
     case 'KnifeAddPurchaseNoteEditNoOrigin':
     case 'otherInNotifyAdd':
     case 'otherInNotifyEdit':
+    case 'MaterialOutboundAdd':
+    case 'MaterialOutboundEdit':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':

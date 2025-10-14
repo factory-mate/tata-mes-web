@@ -338,9 +338,7 @@ const processFilterLogic = (val, p) => {
     Route.name === 'KnifeAddPurchaseRequestEdit' ||
     Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
     Route.name === 'AddGrindOrder' ||
-    Route.name === 'EditGrindOrder' ||
-    Route.name === 'MaterialOutboundAdd' ||
-    Route.name === 'MaterialOutboundEdit'
+    Route.name === 'EditGrindOrder'
   ) {
     if (p.titleName.includes('SAP')) {
       if (p.metadata?.cInvCode) {
@@ -348,6 +346,17 @@ const processFilterLogic = (val, p) => {
       }
       if (p.metadata?.cVendorCode) {
         conditions.push(`cVendorCode=${p.metadata?.cVendorCode}`);
+      }
+    }
+  }
+
+  if (
+    Route.name === 'MaterialOutboundAdd' ||
+    Route.name === 'MaterialOutboundEdit'
+  ) {
+    if (p.titleName.includes('SAP')) {
+      if (p.metadata?.cInvCode) {
+        conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
       }
     }
   }

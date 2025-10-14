@@ -1205,18 +1205,44 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
-      metadata.value.cInvCode = val.value[0].cInvCode;
-      tableDataVal.value[IndexType.value].cVendorName =
-        val.value[0].cVendorName;
-      tableDataVal.value[IndexType.value].cVendorCode =
-        val.value[0].cVendorCode;
       tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
       tableDataVal.value[IndexType.value].cDefindParm03 =
-        val.value[0]?.list_sap?.find(
-          i =>
-            i.cInvCode === val.value[0].cInvCode &&
-            i.cVendorCode === val.value[0].cVendorCode
-        )?.cSAPCode || '';
+        val.value[0]?.list_sap?.find(i => i.cInvCode === val.value[0].cInvCode)
+          ?.cSAPCode || '';
+
+      if (val.value.length > 1) {
+        for (let i = 0; i < val.value.length - 1; i++) {
+          const emptyRow = tableDataVal.value?.find(
+            (item: any) => !item.cInvCode
+          );
+          if (emptyRow) {
+            emptyRow.cInvCode = val.value[i + 1].cInvCode;
+            emptyRow.cInvName = val.value[i + 1].cInvName;
+            emptyRow.cInvStd = val.value[i + 1].cInvStd;
+            emptyRow.cUnitCode = val.value[i + 1].CG_UnitCode;
+            emptyRow.cUnitName = val.value[i + 1].CG_UnitName;
+            emptyRow.list_sap = val.value[i + 1].list_sap;
+            emptyRow.cDefindParm03 =
+              val.value[i + 1]?.list_sap?.find(
+                j => j.cInvCode === val.value[i + 1].cInvCode
+              )?.cSAPCode || '';
+          } else {
+            const currentItem = {
+              cInvCode: val.value[i + 1].cInvCode,
+              cInvName: val.value[i + 1].cInvName,
+              cInvStd: val.value[i + 1].cInvStd,
+              cUnitCode: val.value[i + 1].CG_UnitCode,
+              cUnitName: val.value[i + 1].CG_UnitName,
+              list_sap: val.value[i + 1].list_sap,
+              cDefindParm03:
+                val.value[i + 1]?.list_sap?.find(
+                  j => j.cInvCode === val.value[i + 1].cInvCode
+                )?.cSAPCode || ''
+            } as any;
+            tableDataVal.value.push(currentItem);
+          }
+        }
+      }
     }
     if (AttributeCode.value === 'cDefindParm03') {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
@@ -2036,12 +2062,17 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     Route.name === 'TooolInfo' ||
     Route.name === 'EditTooolInfo' ||
     Route.name === 'AddGrindOrder' ||
-    Route.name === 'EditGrindOrder' ||
+    Route.name === 'EditGrindOrder'
+  ) {
+    metadata.value.cInvCode = scope.row.cInvCode;
+    metadata.value.cVendorCode = scope.row.cVendorCode;
+  }
+
+  if (
     Route.name === 'MaterialOutboundAdd' ||
     Route.name === 'MaterialOutboundEdit'
   ) {
     metadata.value.cInvCode = scope.row.cInvCode;
-    metadata.value.cVendorCode = scope.row.cVendorCode;
   }
 
   ajax.value = obj.ajax;
@@ -2051,7 +2082,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     Route.name == 'AddPurchaseRequestEdit' ||
     Route.name == 'AddPurchaseRequestView' ||
     Route.name === 'AddPurchaseNoteNoOrigin' ||
-    Route.name === 'AddPurchaseNoteEditNoOrigin'
+    Route.name === 'AddPurchaseNoteEditNoOrigin' ||
+    Route.name === 'MaterialOutboundEdit' ||
+    Route.name === 'MaterialOutboundAdd'
       ? true
       : false;
   titleName.value = obj.label;
