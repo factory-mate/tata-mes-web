@@ -49,7 +49,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="item.iIndex < 3"
+                  v-if="showButton(scope.row, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -522,6 +522,20 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const showButton = (obj, item) => {
+  if (
+    item.Resource.cAttributeName === '详情' ||
+    item.Resource.cAttributeName === '审核'
+  ) {
+    return true;
+  }
+  if (obj.iStatusName === '保存') {
+    return true;
+  } else {
+    return false;
+  }
 };
 </script>
 
