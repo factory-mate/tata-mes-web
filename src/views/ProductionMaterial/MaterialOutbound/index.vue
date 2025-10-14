@@ -385,7 +385,7 @@ const clickView = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'newMaterialOutbound',
+    name: 'MaterialOutboundEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -394,7 +394,7 @@ const clickEditTable = (scope: any, obj: any) => {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
       pathName: 'MaterialOutbound',
-      title: '领料出库编辑'
+      title: '辅料出库编辑'
     }
   });
 };
@@ -402,14 +402,14 @@ const clickEditTable = (scope: any, obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'newMaterialOutbound',
+    name: 'MaterialOutboundAdd',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '领料出库新增',
+      title: '辅料出库新增',
       type: 'add'
     }
   });

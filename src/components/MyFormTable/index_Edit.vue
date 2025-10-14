@@ -1193,6 +1193,36 @@ const selectDatas = (val: any) => {
     }
   }
   if (
+    Route.name == 'MaterialOutboundAdd' ||
+    Route.name == 'MaterialOutboundEdit'
+  ) {
+    if (
+      AttributeCode.value == 'cInvCode' ||
+      AttributeCode.value == 'cInvName'
+    ) {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+      metadata.value.cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].list_sap = val.value[0].list_sap;
+      tableDataVal.value[IndexType.value].cDefindParm03 =
+        val.value[0]?.list_sap?.find(
+          i =>
+            i.cInvCode === val.value[0].cInvCode &&
+            i.cVendorCode === val.value[0].cVendorCode
+        )?.cSAPCode || '';
+    }
+    if (AttributeCode.value === 'cDefindParm03') {
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+    }
+  }
+  if (
     Route.name === 'AddPurchaseNoteNoOrigin' ||
     Route.name === 'AddPurchaseNoteEditNoOrigin'
   ) {
@@ -2006,7 +2036,9 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     Route.name === 'TooolInfo' ||
     Route.name === 'EditTooolInfo' ||
     Route.name === 'AddGrindOrder' ||
-    Route.name === 'EditGrindOrder'
+    Route.name === 'EditGrindOrder' ||
+    Route.name === 'MaterialOutboundAdd' ||
+    Route.name === 'MaterialOutboundEdit'
   ) {
     metadata.value.cInvCode = scope.row.cInvCode;
     metadata.value.cVendorCode = scope.row.cVendorCode;
