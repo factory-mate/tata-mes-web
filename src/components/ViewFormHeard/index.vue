@@ -1220,6 +1220,12 @@ const treeChange = (valKey: any) => {
       .map(i => i.cMenuName)
       .join();
   }
+  if (
+    Route.name === 'MaterialOutboundEdit' ||
+    Route.name === 'MaterialOutboundAdd'
+  ) {
+    ruleForm.value['cDefindParm04'] = childrenName?.at(-1).cFactoryUnitName;
+  }
 };
 
 // 编辑/详情的数据
