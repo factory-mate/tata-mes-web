@@ -25,7 +25,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -178,10 +178,12 @@ onActivated(() => {
   // if(initType.value){
   //     getData(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getData(Route.meta.ModelCode);
+  // }
   rowId.value = Route.params.rowId;
+  getData(Route.meta.ModelCode);
+
   initType.value = false;
   if (Route.params.rowId) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -219,9 +221,6 @@ const getData: any = async (val: string) => {
           Filter.value = item[import.meta.env.VITE_APP_key].sort(
             compare('iIndex', true)
           );
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          Filter.value[0].cAttributeCodeValue = row.value.cCode;
         }
         if (item.cPropertyClassTypeCode == 'ToolBut') {
           But.value = item[import.meta.env.VITE_APP_key].sort(
