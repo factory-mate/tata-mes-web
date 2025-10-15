@@ -1819,6 +1819,7 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (!e.target.value) {
     return;
   }
+
   if (
     ((Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
@@ -1858,7 +1859,9 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     (Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView') &&
+      Route.name == 'AddPurchaseRequestView' ||
+      Route.name == 'MaterialOutboundAdd' ||
+      Route.name == 'MaterialOutboundEdit') &&
     item.prop === 'cDefindParm03'
   ) {
     const {
