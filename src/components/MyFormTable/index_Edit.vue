@@ -1108,6 +1108,18 @@ const selectDatas = (val: any) => {
           val.value[0].cDefindParm01 ||
           '';
       }
+      if (
+        Route.name == 'KnifeAddPurchaseRequest' ||
+        Route.name == 'KnifeAddPurchaseRequestEdit' ||
+        Route.name == 'KnifeAddPurchaseRequestView' ||
+        Route.name === 'KnifeAddPurchaseNoteNoOrigin' ||
+        Route.name === 'KnifeAddPurchaseNoteEditNoOrigin' ||
+        Route.name == 'AddGrindOrder' ||
+        Route.name == 'EditGrindOrder'
+      ) {
+        tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
+        tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
+      }
       const result = val.value[0].list_price?.[0];
       tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
       tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
@@ -1722,7 +1734,10 @@ const selectDatas = (val: any) => {
     tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
     tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
     tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+    tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
+    tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
   }
+
   if (Route.name == 'memAdminAdd' || Route.name == 'memAdminEdit') {
     tableDataVal.value[IndexType.value].cLableCode = val.value[0].cLableCode;
     tableDataVal.value[IndexType.value].cLableName = val.value[0].cLableName;
