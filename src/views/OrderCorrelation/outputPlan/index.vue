@@ -270,7 +270,7 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
-  const conditions = ['cVouchTypeCode = 02'];
+  const conditions = ['cVouchTypeCode = 02 && iStatus != 3'];
   // && iStatus != 3'];
   if (Conditions.value) {
     conditions.push(Conditions.value);

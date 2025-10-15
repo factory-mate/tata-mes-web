@@ -49,10 +49,24 @@
   display: table-cell !important;
 }
 
-// 李华提出的 #1907
 .el-table__body tr.hover-row > td.el-table__cell {
   background-color: #fab6b6 !important;
 }
+
+// .el-table {
+//   --el-table-row-hover-bg-color: transparent;
+//   --el-table-current-row-bg-color: transparent;
+// }
+
+// .el-table__body {
+//   tr {
+//     &:hover {
+//       td.el-table__cell {
+//         background-color: #fab6b6;
+//       }
+//     }
+//   }
+// }
 
 .el-button {
   border-color: var(--el-button-hover-border-color);
