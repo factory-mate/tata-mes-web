@@ -10,7 +10,7 @@ const infoData = ref({});
 const extendData = ref({});
 const unitData = ref([]);
 const wmsData = ref({});
-const sAPInfos = ref([]);
+const list_price_Log = ref([]);
 
 onActivated(async () => {
   const { rowId } = route.params;
@@ -20,7 +20,7 @@ onActivated(async () => {
     extendData.value = res.data.iNENTORY_EXTEND ?? {};
     unitData.value = res.data.iNENTORY_UNIT ?? [];
     wmsData.value = res.data.iNENTORY_WMS ?? {};
-    sAPInfos.value = res.data.sAPInfos ?? [];
+    list_price_Log.value = res.data.list_price_Log ?? [];
   });
 });
 </script>
@@ -120,17 +120,6 @@ onActivated(async () => {
       </el-row>
     </el-card>
 
-    <!-- <el-card>
-      <el-tag type="primary" size="large">扩展信息</el-tag>
-      <el-table :data="sAPInfos" style="width: 100%; margin-top: 20px">
-        <el-table-column prop="cSAPCode" label="SAP 物料编码" />
-        <el-table-column prop="cSAPName" label="SAP 物料名称" />
-        <el-table-column prop="cVendorCode" label="供应商编码" />
-        <el-table-column prop="cVendorName" label="供应商名称" />
-        <el-table-column prop="cPackageNumber" label="每包数量" />
-      </el-table>
-    </el-card> -->
-
     <el-card>
       <el-tag type="primary" size="large">单位信息</el-tag>
       <el-table :data="unitData" style="width: 100%; margin-top: 20px">
@@ -139,6 +128,20 @@ onActivated(async () => {
         <el-table-column prop="cAssUnitName" label="辅计量单位名称" />
         <el-table-column prop="iChangeRate" label="换算率" />
         <el-table-column prop="IsDefaultName" label="是否默认" />
+      </el-table>
+    </el-card>
+
+    <el-card>
+      <el-tag type="primary" size="large">供应商物料价格对照</el-tag>
+      <el-table :data="list_price_Log" style="width: 100%; margin-top: 20px">
+        <el-table-column prop="cVendorCode" label="供应商编码" />
+        <el-table-column prop="cVendorName" label="供应商名称" />
+        <el-table-column prop="cSAPCode" label="SAP 编码" />
+        <el-table-column prop="cSAPName" label="SAP 名称" />
+        <el-table-column prop="nTaxPrice" label="含税价" />
+        <el-table-column prop="nTaxRate" label="税率" />
+        <el-table-column prop="dBeginDate" label="生效日" />
+        <el-table-column prop="dEndDate" label="失效日" />
       </el-table>
     </el-card>
   </div>

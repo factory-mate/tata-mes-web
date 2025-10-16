@@ -36,7 +36,7 @@ const formData = ref({
   IsStore: false,
   IsQC: false
 });
-const sAPInfos = ref([]);
+const list_price_Log = ref([]);
 const extensionItemData = ref({});
 const unitData = ref([]);
 const unitItemData = ref({});
@@ -106,9 +106,8 @@ async function handleSubmit(bCheckPosition) {
   const data = {
     ...formData.value,
     singerModels: unitData.value,
-    sAPInfos: [],
-    bCheckPosition
-    // sAPInfos: sAPInfos.value
+    bCheckPosition,
+    list_price_Log: list_price_Log.value
   };
   try {
     const res = await updateMaterial(data);
@@ -145,11 +144,11 @@ function onClickAddExtensionBtn() {
 }
 
 function handleDeleteExtensionItem(index) {
-  sAPInfos.value.splice(index, 1);
+  list_price_Log.value.splice(index, 1);
 }
 
 function handleSaveAddExtensionData() {
-  sAPInfos.value.push(extensionItemData.value);
+  list_price_Log.value.push(extensionItemData.value);
   showAddExtensionDialog.value = false;
 }
 
@@ -273,7 +272,7 @@ onActivated(() => {
     const wmsData = res.data.iNENTORY_WMS ?? {};
     formData.value = { ...extendData, ...wmsData, ...infoData };
     unitData.value = res.data.iNENTORY_UNIT ?? [];
-    sAPInfos.value = res.data.sAPInfos ?? [];
+    list_price_Log.value = res.data.list_price_Log ?? [];
   });
 });
 </script>
@@ -637,44 +636,6 @@ onActivated(() => {
         </el-row>
       </el-card>
 
-      <!-- <el-card>
-        <div style="display: flex; justify-content: space-between">
-          <el-tag type="primary" size="large">扩展信息</el-tag>
-          <el-button type="primary" @click="onClickAddExtensionBtn"
-            >添加</el-button
-          >
-        </div>
-        <el-table :data="sAPInfos" style="width: 100%; margin-top: 20px">
-          <el-table-column width="60" fixed>
-            <template #header> 序号 </template>
-            <template #default="scope">
-              {{ scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="cSAPCode" label="SAP 物料编码" />
-          <el-table-column prop="cVendorCode" label="供应商编码" />
-          <el-table-column prop="cVendorName" label="供应商名称" />
-          <el-table-column prop="cPackageNumber" label="每包数量">
-            <template #default="scope">
-              <el-input-number
-                v-model="scope.row['cPackageNumber']"
-                placeholder="请输入"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="100">
-            <template #default="scope">
-              <el-button
-                type="primary"
-                @click="handleDeleteExtensionItem(scope.$index)"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card> -->
-
       <el-card>
         <div style="display: flex; justify-content: space-between">
           <el-tag type="primary" size="large">单位信息</el-tag>
@@ -709,6 +670,55 @@ onActivated(() => {
         </el-table>
       </el-card>
 
+      <el-card>
+        <div style="display: flex; justify-content: space-between">
+          <el-tag type="primary" size="large">供应商物料价格对照</el-tag>
+          <el-button type="primary" @click="onClickAddExtensionBtn"
+            >添加</el-button
+          >
+        </div>
+        <el-table :data="list_price_Log" style="width: 100%; margin-top: 20px">
+          <el-table-column width="60" fixed>
+            <template #header> 序号 </template>
+            <template #default="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="cVendorCode" label="供应商编码" />
+          <el-table-column prop="cVendorName" label="供应商名称" />
+          <el-table-column prop="cSAPCode" label="SAP 编码" />
+          <el-table-column prop="cSAPName" label="SAP 名称" />
+          <el-table-column prop="nTaxPrice" label="含税价">
+            <!-- <template #default="scope">
+              <el-input-number
+                v-model="scope.row['nTaxPrice']"
+                placeholder="请输入"
+              />
+            </template> -->
+          </el-table-column>
+          <el-table-column prop="nTaxRate" label="税率">
+            <!-- <template #default="scope">
+              <el-input-number
+                v-model="scope.row['nTaxRate']"
+                placeholder="请输入"
+              />
+            </template> -->
+          </el-table-column>
+          <el-table-column prop="dBeginDate" label="生效日" />
+          <el-table-column prop="dEndDate" label="失效日" />
+          <el-table-column label="操作" width="100">
+            <template #default="scope">
+              <el-button
+                type="primary"
+                @click="handleDeleteExtensionItem(scope.$index)"
+              >
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+
       <div style="display: flex; justify-content: center">
         <el-button type="primary" @click="handleSubmit(true)"> 保存 </el-button>
       </div>
@@ -717,10 +727,6 @@ onActivated(() => {
 
   <el-dialog v-model="showAddExtensionDialog" title="添加" width="600">
     <el-form :model="extensionItemData">
-      <el-form-item label="SAP 物料编码" label-width="150">
-        <el-input v-model="extensionItemData.cSAPCode" />
-      </el-form-item>
-
       <el-form-item label="供应商名称" label-width="150">
         <el-input
           v-model="extensionItemData.cVendorName"
@@ -739,8 +745,40 @@ onActivated(() => {
         <el-input v-model="extensionItemData.cVendorCode" disabled />
       </el-form-item>
 
-      <el-form-item label="每包数量" label-width="150">
-        <el-input-number v-model="extensionItemData.cPackageNumber" />
+      <el-form-item label="SAP 编码" label-width="150">
+        <el-input v-model="extensionItemData.cSAPCode" />
+      </el-form-item>
+
+      <el-form-item label="SAP 名称" label-width="150">
+        <el-input v-model="extensionItemData.cSAPName" />
+      </el-form-item>
+
+      <el-form-item label="含税价" label-width="150">
+        <el-input-number v-model="extensionItemData.nTaxPrice" />
+      </el-form-item>
+
+      <el-form-item label="税率" label-width="150">
+        <el-input-number v-model="extensionItemData.nTaxRate" />
+      </el-form-item>
+
+      <el-form-item label="生效日" label-width="150">
+        <el-date-picker
+          v-model="extensionItemData.dBeginDate"
+          type="date"
+          placeholder="请选择"
+          format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
+        />
+      </el-form-item>
+
+      <el-form-item label="失效日" label-width="150">
+        <el-date-picker
+          v-model="extensionItemData.dEndDate"
+          type="date"
+          placeholder="请选择"
+          format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
+        />
       </el-form-item>
     </el-form>
     <template #footer>
