@@ -547,6 +547,7 @@ const funHeadData = () => {
         'ScheduleMaterialSeq',
         'SpecialLine',
         'StaticTable',
+        'HistoryPlanStatistics',
         'SpecialWorkshop'
       ].includes(Route.name)
     ) {
