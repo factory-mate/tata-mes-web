@@ -60,6 +60,7 @@ onActivated(async () => {
         <el-col :span="6"> 供应商名称：{{ infoData.cVendorName }} </el-col>
         <el-col :span="6"> 质检：{{ infoData.IsQCName }} </el-col>
         <el-col :span="6"> 物料类型：{{ infoData.cMaterialTypeName }} </el-col>
+        <el-col :span="6"> 物料别名：{{ infoData.cReName }} </el-col>
       </el-row>
     </el-card>
 

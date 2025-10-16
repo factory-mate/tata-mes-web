@@ -411,6 +411,11 @@ onActivated(() => {
               />
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="物料别名" label-width="150" prop="cReName">
+              <el-input v-model="formData.cReName" autocomplete="off" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-card>
 
