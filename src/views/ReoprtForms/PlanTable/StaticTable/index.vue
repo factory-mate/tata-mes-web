@@ -142,13 +142,14 @@ onActivated(() => {
     let val = window.sessionStorage.getItem('clickSider')
       ? JSON.parse(window.sessionStorage.getItem('clickSider'))
       : '';
-    if (val == Route.name) {
-      initType.value = false;
-      getData(Route.meta.ModelCode);
-    }
-    if (initType.value) {
-      getData(Route.meta.ModelCode);
-    }
+    // if (val == Route.name) {
+    //   initType.value = false;
+    //   getData(Route.meta.ModelCode);
+    // }
+    // if (initType.value) {
+    //   getData(Route.meta.ModelCode);
+    // }
+    getData(Route.meta.ModelCode);
     initType.value = false;
   }
 });
