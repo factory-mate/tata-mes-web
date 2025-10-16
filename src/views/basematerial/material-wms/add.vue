@@ -133,7 +133,7 @@ async function handleSubmit(bCheckPosition) {
       $bus.emit('tableUpData', { name: 'WMSMaterial' });
     }
   } catch {
-    ElMessageBox.confirm('所选货位无货，是否继续', '提示', {
+    ElMessageBox.confirm('该库位已经有物料数据，是否继续', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
