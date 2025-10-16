@@ -1159,6 +1159,10 @@ const selectData = (val: any) => {
           ruleForm.value.cProjectName = val.value[0].cProjectName;
           ruleForm.value.cProjectCode = val.value[0].cProjectCode;
         }
+        if (AttributeCode.value == 'cResourceName') {
+          ruleForm.value.cResourceName = val.value[0].cProcessName;
+          ruleForm.value.cResourceCode = val.value[0].cProcessCode;
+        }
       }
       if (Route.name == 'DictionaryFile') {
         if (AttributeCode.value == 'cDictonaryTypeName') {
