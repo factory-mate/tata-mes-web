@@ -396,6 +396,9 @@ const clickView = (scope: any, obj: any) => {
       row: JSON.stringify(scope.row),
       pathName: 'HistoryDailyPlan',
       title: '历史详情'
+    },
+    query: {
+      cBatch: scope.row.cBatch
     }
   });
 };
