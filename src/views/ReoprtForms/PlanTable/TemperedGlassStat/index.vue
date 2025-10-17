@@ -11,6 +11,7 @@
       <ButtonView
         :ToolBut="But"
         @clickDelete="clickDel"
+        @PushPurcharse="PushPurcharse"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
       />
@@ -299,7 +300,34 @@ const changPage = val => {
 const modelClose = v => {
   ZZdialogFormVisible.value = v.type;
 };
-
+const PushPurcharse = obj => {
+  if (sendIdArr.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要推送的数据'
+    });
+    return;
+  }
+  DataApi({
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      list_uid: sendIdArr.value.map(i => i.UID)
+    }
+  }).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '推送成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendIdArr.value = [];
+    } else {
+      console.log('推送失败');
+    }
+  });
+};
 //按钮删除
 const clickDel = obj => {
   if (sendId.value.length <= 0) {

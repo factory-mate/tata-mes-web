@@ -321,7 +321,8 @@ const emits = defineEmits([
   'CancelQC',
   'EditSave',
   'Audit_Again',
-  'AddOnSourceRow'
+  'AddOnSourceRow',
+  'PushPurcharse'
 ]);
 
 watch(
@@ -868,6 +869,9 @@ const Audit_Again = obj => {
 const AddOnSourceRow = obj => {
   emits('AddOnSourceRow', obj);
 };
+const PushPurcharse = obj => {
+  emits('PushPurcharse', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1301,6 +1305,9 @@ const clickButton = (event: any) => {
       break;
     case 'AddOnSourceRow':
       AddOnSourceRow(event);
+      break;
+    case 'PushPurcharse':
+      PushPurcharse(event);
       break;
     default:
       break;
