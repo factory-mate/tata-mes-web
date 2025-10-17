@@ -614,7 +614,7 @@ const TtableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: 'cVouchTypeCode=1'
+      Conditions: 'cVouchTypeCode in (1,4)'
     }
   };
   try {
