@@ -19,6 +19,7 @@
           @Commit="Commit"
           @PrintLabel="PrintLabel"
           @PrintOutLabel="onClickPrintOutLabel"
+          @PrintClassLable="PrintClassLable"
         >
         </ButtonViem>
       </div>
@@ -62,6 +63,46 @@
             <div>采购订单号: {{ item.cSourceCode }}</div>
             <div>供应商: {{ item.cVendorName }}</div>
             <div>供应商批号: {{ item.cVendorBatch }}</div>
+          </div>
+        </div>
+      </div>
+      <div ref="componentGlassRef" class="print-content">
+        <div
+          :class="printData.length > 1 && 'per-page'"
+          v-for="(item, i) in printData"
+          :key="i"
+          style="width: 100%; height: 100vh"
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              font-size: 8px;
+              font-weight: bold;
+            "
+          >
+            <div style="width: 100%; display: flex; justify-content: center">
+              <qrcode-vue :value="item.cQRCode" :size="50"></qrcode-vue>
+            </div>
+            <div style="margin-top: 4px">箱码: {{ item.cQRCode }}</div>
+            <div>物料编码: {{ item.cInvCode }}</div>
+            <div>物料名称：{{ item.cInvName }}</div>
+            <div>数量：{{ item.iDefindParm13Name }}{{ item.cUnitName }}</div>
+            <div>加工尺寸: {{ item.cDefindParm06 }}</div>
+            <div>任务号: {{ item.cDefindParm08 }}</div>
+            <div>生产日期: {{ item.cDefindParm03 }}</div>
+            <div>
+              产线号及序号: {{ item.cDefindParm04 }} {{ item.cDefindParm05 }}
+            </div>
+            <div>
+              生产单号及序号: {{ item.cDefindParm01 }} {{ item.cDefindParm02 }}
+            </div>
+            <div>
+              <span style="margin-right: 4px"
+                >开向: {{ item.cDefindParm07 }}</span
+              >
+              <span>工厂代号: TATA25</span>
+            </div>
           </div>
         </div>
       </div>
@@ -273,7 +314,11 @@ const { handlePrint } = useVueToPrint({
   content: componentRef,
   documentTitle: '外包标签'
 });
-
+const componentGlassRef = ref();
+const { handlePrint: handlePrintGlass } = useVueToPrint({
+  content: componentGlassRef,
+  documentTitle: '玻璃标签'
+});
 const { tagsView, permission } = useStore();
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -877,6 +922,17 @@ const onClickPrintOutLabel = () => {
     return;
   }
   setTimeout(() => handlePrint(), 16);
+};
+
+const PrintClassLable = () => {
+  if (DYUID.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请选择打印数据'
+    });
+    return;
+  }
+  setTimeout(() => handlePrintGlass(), 16);
 };
 
 //打印标签

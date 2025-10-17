@@ -322,7 +322,8 @@ const emits = defineEmits([
   'EditSave',
   'Audit_Again',
   'AddOnSourceRow',
-  'PushPurcharse'
+  'PushPurcharse',
+  'PrintClassLable'
 ]);
 
 watch(
@@ -872,6 +873,9 @@ const AddOnSourceRow = obj => {
 const PushPurcharse = obj => {
   emits('PushPurcharse', obj);
 };
+const PrintClassLable = obj => {
+  emits('PrintClassLable', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1308,6 +1312,9 @@ const clickButton = (event: any) => {
       break;
     case 'PushPurcharse':
       PushPurcharse(event);
+      break;
+    case 'PrintClassLable':
+      PrintClassLable(event);
       break;
     default:
       break;
