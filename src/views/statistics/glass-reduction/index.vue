@@ -46,10 +46,11 @@ const tableQueryConfig = ref({});
 const modalRef = ref(null);
 const modalResource = ref(null);
 const rowData = ref({});
+const firstEnter = ref(true);
 
 // 获取数据
 const getData = async () => {
-  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  // const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   const { data, success } = await configApi(route.meta.ModelCode);
   if (success) {
     data.forEach(i => {
@@ -114,6 +115,10 @@ const getData = async () => {
 
 // 表格数据
 const getTableData = async () => {
+  if (firstEnter.value) {
+    firstEnter.value = false;
+    return;
+  }
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
   const params = {
     method: tableQueryConfig.value.Resource.cHttpTypeCode,
