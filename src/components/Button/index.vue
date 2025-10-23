@@ -323,7 +323,9 @@ const emits = defineEmits([
   'Audit_Again',
   'AddOnSourceRow',
   'PushPurcharse',
-  'PrintClassLable'
+  'PrintClassLable',
+  'Sync',
+  'SyncStatus'
 ]);
 
 watch(
@@ -876,6 +878,12 @@ const PushPurcharse = obj => {
 const PrintClassLable = obj => {
   emits('PrintClassLable', obj);
 };
+const Sync = obj => {
+  emits('Sync', obj);
+};
+const SyncStatus = obj => {
+  emits('SyncStatus', obj);
+};
 
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1315,6 +1323,12 @@ const clickButton = (event: any) => {
       break;
     case 'PrintClassLable':
       PrintClassLable(event);
+      break;
+    case 'Sync':
+      Sync(event);
+      break;
+    case 'SyncStatus':
+      SyncStatus(event);
       break;
     default:
       break;
