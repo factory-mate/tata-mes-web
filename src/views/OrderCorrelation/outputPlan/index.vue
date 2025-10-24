@@ -272,7 +272,7 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
-  const conditions = ['cVouchTypeCode = 02 && iStatus != 3'];
+  const conditions = ['cVouchTypeCode = 02'];
   // && iStatus != 3'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
@@ -632,26 +632,40 @@ const Sync = (obj: any) => {
   }
 };
 const SyncStatus = obj => {
-  if (obj.Resource.cServerIP || obj.Resource.cUrl) {
-    let data = {
-      method: obj.Resource.cHttpTypeCode,
-      url: obj.Resource.cServerIP + obj.Resource.cUrl
-    };
-    ElLoading.service({ lock: true, text: '加载中.....' });
-    DataApi(data).then(res => {
-      if (res.status === 200) {
-        ElMessage({
-          type: 'success',
-          message: '同步状态成功'
-        });
-        tableAxios();
-      } else {
-        ElMessage.error('失败');
-      }
-      ElLoading.service().close();
-    });
-  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: []
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      ProcessdiaRef.value.DiaOpen();
+      ProcessData.value = res.data;
+      count.value = 5;
+      autoFetchSyncStatus(obj);
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg || '失败'
+      });
+    }
+    loading.close();
+  });
 };
+
+const autoFetchSyncStatus = obj => {
+  timer.value = setInterval(() => {
+    if (count.value > 0 && count.value <= 5) {
+      count.value--;
+    } else if (count.value === 0) {
+      SyncStatus(obj);
+      clearInterval(timer.value);
+      timer.value = null;
+    }
+  }, 1000);
+};
+
 const MaterialChangeStatus = obj => {
   console.log('MaterialChangeStatus');
   let data = {
