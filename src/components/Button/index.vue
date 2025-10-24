@@ -325,7 +325,8 @@ const emits = defineEmits([
   'PushPurcharse',
   'PrintClassLable',
   'Sync',
-  'SyncStatus'
+  'SyncStatus',
+  'PushGlass'
 ]);
 
 watch(
@@ -884,7 +885,9 @@ const Sync = obj => {
 const SyncStatus = obj => {
   emits('SyncStatus', obj);
 };
-
+const PushGlass = obj => {
+  emits('PushGlass', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1329,6 +1332,9 @@ const clickButton = (event: any) => {
       break;
     case 'SyncStatus':
       SyncStatus(event);
+      break;
+    case 'PushGlass':
+      PushGlass(event);
       break;
     default:
       break;

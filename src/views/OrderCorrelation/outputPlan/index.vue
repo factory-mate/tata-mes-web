@@ -23,6 +23,7 @@
         @MaterialChangeRollBack="MaterialChangeRollBack"
         @Sync="Sync"
         @SyncStatus="SyncStatus"
+        @PushGlass="PushGlass"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -590,6 +591,46 @@ const SendPlanStatus = obj => {
     }
     loading.close();
   });
+};
+const PushGlass = (obj: any) => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要操作的数据'
+    });
+    return;
+  }
+  if (sendId.value.length > 1) {
+    ElMessage({
+      type: 'info',
+      message: '只能选择一条数据操作'
+    });
+    return;
+  }
+  if (obj.Resource.cServerIP || obj.Resource.cUrl) {
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      data: {
+        UID: sendId.value[0]
+      }
+    };
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        sendId.value = [];
+        TabRef.value.handleRemoveSelectionChange();
+      } else {
+        ElMessage.error(res.msg || '失败');
+      }
+      ElLoading.service().close();
+    });
+  }
 };
 const Sync = (obj: any) => {
   if (sendId.value.length <= 0) {
