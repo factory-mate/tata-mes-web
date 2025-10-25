@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
-const exportAnalysisHooks = (data: any, title: any) => {
+const exportAnalysisHooks = (data: any, title: any, method = 'post') => {
   //   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   axios.defaults.responseType = 'blob';
   axios
-    .post(data.url, data.data, {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+    .request({
+      url: data.url,
       headers: {
         Authorization: JSON.parse(window.localStorage.getItem('token'))
-      }
+      },
+      data: method === 'post' ? data.data : undefined,
+      params: method === 'get' ? data.data : undefined
     })
     .then(res => {
       console.log(res);
@@ -28,7 +29,9 @@ const exportAnalysisHooks = (data: any, title: any) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
       } else if (res.status == '200') {
-        const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
+        const blob = new Blob([res.data], {
+          type: 'application/vnd.ms-excel'
+        });
         const fileName = decodeURI(res.headers['content-disposition'] || title);
         if ('download' in document.createElement('a')) {
           // 非IE下载

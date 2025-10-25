@@ -25,6 +25,14 @@
           {{ item.Resource.cAttributeName }}
         </el-button>
       </el-upload>
+      <el-button
+        v-if="
+          Route.name === 'PVCCut' && item.Resource.cAttributeCode == 'Export'
+        "
+        @click="ExportAll(item)"
+      >
+        {{ item.Resource.cAttributeName }}
+      </el-button>
       <el-dropdown
         v-else-if="item.Resource.cAttributeCode == 'Export'"
         @command="HandExport($event, item)"
