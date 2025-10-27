@@ -1838,7 +1838,9 @@ const onKeyPressEnter = async (e, item, scope) => {
   if (
     ((Route.name === 'AddPurchaseRequest' ||
       Route.name == 'AddPurchaseRequestEdit' ||
-      Route.name == 'AddPurchaseRequestView') &&
+      Route.name == 'AddPurchaseRequestView' ||
+      Route.name === 'MaterialOutboundAdd' ||
+      Route.name === 'MaterialOutboundEdit') &&
       item.prop === 'cInvCode') ||
     Route.name == 'PurchaseRequestNoProdAdd' ||
     Route.name == 'PurchaseRequestNoProdEdit' ||
