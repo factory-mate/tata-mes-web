@@ -848,6 +848,7 @@ const setWidth = row => {
     case '剩余数量':
     case '数量':
     case '单位':
+    case '采购类型':
       return 60;
     case '单价':
     case '含税单价':
