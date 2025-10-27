@@ -26,7 +26,7 @@
         </el-button>
       </el-upload>
       <el-button
-        v-if="
+        v-else-if="
           Route.name === 'PVCCut' && item.Resource.cAttributeCode == 'Export'
         "
         @click="ExportAll(item)"

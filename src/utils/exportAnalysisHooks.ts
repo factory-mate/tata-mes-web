@@ -1,16 +1,18 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
-const exportAnalysisHooks = (data: any, title: any, method = 'post') => {
+const exportAnalysisHooks = (data: any, title: any) => {
   //   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   axios.defaults.responseType = 'blob';
+  console.log(data);
   axios
     .request({
       url: data.url,
       headers: {
         Authorization: JSON.parse(window.localStorage.getItem('token'))
       },
-      data: method === 'post' ? data.data : undefined,
-      params: method === 'get' ? data.data : undefined
+      method: data.method,
+      data: data.method === 'post' ? data.data : undefined,
+      params: data.method === 'get' ? data.data : undefined
     })
     .then(res => {
       console.log(res);

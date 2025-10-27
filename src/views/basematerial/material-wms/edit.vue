@@ -56,6 +56,7 @@ const warehouseModalRef = ref();
 const warehouseAreaModalRef = ref();
 const warehouseLocationModalRef = ref();
 const materialModalRef = ref();
+const isChangeHW = ref(false);
 
 const rules = ref({
   cInvCode: [{ required: true, message: '请输入物料编号', trigger: 'change' }],
@@ -103,10 +104,16 @@ function fetchUnitTypes() {
 }
 
 async function handleSubmit(bCheckPosition) {
+  let bc = false;
+  if (bCheckPosition) {
+    if (isChangeHW.value) {
+      bc = true;
+    }
+  }
   const data = {
     ...formData.value,
     singerModels: unitData.value,
-    bCheckPosition,
+    bCheckPosition: bc,
     list_price_Log: list_price_Log.value
   };
   try {
@@ -244,6 +251,7 @@ function handleWarehouseLocationModalConfirm(data) {
   console.log(data);
   formData.value.cWareHouseLocationCode = data?.cWareHouseLocationCode;
   formData.value.cWareHouseLocationName = data?.cWareHouseLocationName;
+  isChangeHW.value = true;
 }
 
 function handleClickMaterialModal() {

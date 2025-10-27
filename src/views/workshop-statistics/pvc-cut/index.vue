@@ -446,7 +446,7 @@ const ExportOne = obj => {
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, 'PVC裁切明细', obj.Resource.cHttpTypeCode);
+  exportAnalysisHooks(data, 'PVC裁切明细');
   loading.close();
 };
 const ExportAll = obj => {
@@ -462,7 +462,7 @@ const ExportAll = obj => {
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, 'PVC裁切明细', obj.Resource.cHttpTypeCode);
+  exportAnalysisHooks(data, 'PVC裁切明细');
   loading.close();
 };
 provide('tableAxios', { tableAxios });
