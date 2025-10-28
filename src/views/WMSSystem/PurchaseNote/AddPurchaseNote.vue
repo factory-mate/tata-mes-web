@@ -415,7 +415,9 @@ const funTable = (arr: Array<any>) => {
   // 获取下拉框数据
   getComboBoxFun();
 };
-const handleTableDataChange = (val: any) => {};
+const handleTableDataChange = (val: any) => {
+  tableData.value = val;
+};
 
 //表格数据查询
 const tableAxios = async () => {

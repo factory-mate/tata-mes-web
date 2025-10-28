@@ -395,6 +395,7 @@ const funTable = (arr: Array<any>) => {
 };
 const handleTableDataChange = (val: any) => {
   console.log(val, 'handleTableDataChange');
+  tableData.value = val;
 };
 
 //表格数据查询
