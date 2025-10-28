@@ -268,20 +268,25 @@ const currentParmName = ref('');
 
 const processFilterLogic = (val, p) => {
   const conditions = [];
+  OrderByFileds.value = '';
   currentParmName.value = p.titleName;
   if (
-    (Route.name === 'AddPurchaseRequestEdit' ||
-      Route.name === 'AddPurchaseRequest' ||
-      Route.name === 'KnifeAddPurchaseRequestEdit' ||
-      Route.name === 'KnifeAddPurchaseRequest') &&
-    p.titleName === '单位'
+    Route.name === 'AddPurchaseRequestEdit' ||
+    Route.name === 'AddPurchaseRequest' ||
+    Route.name === 'KnifeAddPurchaseRequestEdit' ||
+    Route.name === 'KnifeAddPurchaseRequest'
   ) {
-    if (p.metadata?.cInvCode) {
-      metadataOptions.value = {
-        ...p.metadata
-      };
-    } else {
-      metadataOptions.value = {};
+    if (p.titleName === '单位') {
+      if (p.metadata?.cInvCode) {
+        metadataOptions.value = {
+          ...p.metadata
+        };
+      } else {
+        metadataOptions.value = {};
+      }
+    }
+    if (p.titleName === '申请部门') {
+      OrderByFileds.value = 'iIndex';
     }
   }
 
@@ -494,7 +499,7 @@ const tableAxios = (obj: {
     data: {
       PageIndex: queryParams.value.PageIndex,
       PageSize: queryParams.value.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
   };
