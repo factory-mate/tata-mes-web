@@ -2,11 +2,12 @@
   <!-- 排产统计报表页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
-    <!-- <FilterForm
+    <FilterForm
+      v-show="false"
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
-    ></FilterForm> -->
+    ></FilterForm>
     <el-card>
       <!-- 按钮区域 -->
       <ButtonViem
@@ -432,7 +433,7 @@ const renew = () => {
   getData(Route.meta.ModelCode);
 };
 const ExportAll = obj => {
-  Conditions.value = filterModel(filterRef.value.FilterData);
+  // Conditions.value = filterModel(filterRef.value.FilterData);
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -440,7 +441,7 @@ const ExportAll = obj => {
       PageIndex: 1,
       PageSize: 999999,
       OrderByFileds: '',
-      Conditions: Conditions.value
+      Conditions: ''
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
