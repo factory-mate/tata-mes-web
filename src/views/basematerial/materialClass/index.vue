@@ -120,6 +120,7 @@ import {
   onActivated,
   provide
 } from 'vue';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
@@ -512,30 +513,23 @@ const Start = (obj: any) => {
   });
 };
 //按钮导出所有
-const ExportAll = async (obj: any) => {
+const ExportAll = (obj: any) => {
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      PageIndex: queryParams.PageIndex,
-      PageSize: queryParams.PageSize,
+      PageIndex: 1,
+      PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      console.log(res, '导出所有-----');
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '物料分类-所有');
+  ElLoading.service().close();
 };
 //按钮导出当前页
-const ExportOne = async (obj: any) => {
+const ExportOne = (obj: any) => {
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -546,16 +540,9 @@ const ExportOne = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  try {
-    const res = await DataApi(data);
-    if (res.status == 200) {
-      console.log(res, '导出当前页-----');
-    } else {
-      console.log('请求出错');
-    }
-  } catch (error) {
-    console.log(error, '程序出错');
-  }
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '物料分类');
+  ElLoading.service().close();
 };
 
 const data = reactive({

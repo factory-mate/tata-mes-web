@@ -77,13 +77,13 @@ service.interceptors.response.use(
       }
     } else if (errmsg?.[0]?.Value) {
       try {
-        const errormsgParsedJSON = JSON.parse(errmsg[0].Value);
+        const errormsgParsedJSON = JSON.parse(errmsg?.[0]?.Value);
         errorMsg = errormsgParsedJSON?.[0]?.name + errormsgParsedJSON?.[0]?.msg;
       } catch {
-        errorMsg = errmsg[0].Value;
+        errorMsg = errmsg?.[0]?.Value;
       }
       if (!errorMsg) {
-        errorMsg = errmsg[0].Value;
+        errorMsg = errmsg?.[0]?.Value;
       }
       if (errorMsg.length > MESSAGE_LENGTH) {
         isLongMessage = true;
@@ -122,7 +122,7 @@ service.interceptors.response.use(
         return Promise.reject(response.data);
       } else {
         ElMessage({
-          message: response.data.errmsg[0].Value,
+          message: response.data.errmsg?.[0].Value,
           type: 'error',
           showClose: true,
           duration: isLongMessage ? 0 : 10000
