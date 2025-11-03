@@ -291,6 +291,7 @@ import {
   InventoryInfoGetForPage,
   InventoryInfoGetForPageNoOrigin,
   InventorySAPGetForPage,
+  InventorySAPGetForList,
   getPrice,
   getKnifePrice
 } from '@/api/configApi/index';
@@ -504,6 +505,10 @@ const props = defineProps({
     default: (data: any) => {
       return [];
     }
+  },
+  headData: {
+    type: Object,
+    default: () => {}
   }
 });
 const tableHeader: any = ref(
@@ -1202,6 +1207,14 @@ const selectDatas = (val: any) => {
             .toFixed(8)
             .replace(/\.?0+$/, '');
         });
+      // #4200 辅料逻辑
+      InventorySAPGetForList(tableDataVal.value[IndexType.value].cInvCode)
+        .then(res => {
+          console.log(res);
+          const result = res.data?.[0];
+          tableDataVal.value[IndexType.value].cDefindParm03 = result?.cSAPCode;
+        })
+        .catch(() => {});
     }
   }
   if (
@@ -2029,13 +2042,21 @@ const onKeyPressEnter = async (e, item, scope) => {
 };
 // 搜索弹框事件
 const clickModel = (obj: any, type: any, i: any, scope: any) => {
+  console.log();
   console.log('clickModel:obj', obj);
   console.log('clickModel:scope.row', scope.row);
-  if (
-    Route.name === 'AddPurchaseNote' ||
-    Route.name === 'KnifeAddPurchaseNote'
-  ) {
+  if (Route.name === 'KnifeAddPurchaseNote') {
     metadata.value.cInvCode = scope.row.cInvCode;
+  }
+  // #4200 辅料特殊处理
+  if (Route.name === 'AddPurchaseNote') {
+    if (props.headData.cVouchTypeCode == '2') {
+      console.log('辅料');
+      obj.cIncludeModelCode = 'ManageCenter.Vendor.M.FormList';
+    } else {
+      metadata.value.cInvCode = scope.row.cInvCode;
+      console.log('原料');
+    }
   }
   if (
     Route.name === 'AddPurchaseRequest' ||

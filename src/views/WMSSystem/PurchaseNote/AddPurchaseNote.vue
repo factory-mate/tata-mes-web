@@ -51,6 +51,7 @@
         custom-width
         show-summary
         :summary-method="d => summaryMethod(d)"
+        :head-data="headData"
       >
         <template #button>
           <el-table-column
@@ -216,6 +217,7 @@ const selectArr = ref([]) as any;
 const printData = ref([]) as any;
 const modelGridType = ref(true);
 const View1val = ref('');
+const headData = ref({});
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
@@ -614,6 +616,7 @@ const Tconfirm = () => {
         return;
       }
       headRef.value.ruleForm.cVouchTypeCode = firstDataVouchTypeCode;
+      headData.value = { ...headRef.value.ruleForm };
     }
   }
 
