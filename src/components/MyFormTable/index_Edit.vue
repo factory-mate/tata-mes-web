@@ -187,7 +187,33 @@
                   </el-icon>
                 </template>
               </el-autocomplete>
-
+              <el-input
+                v-if="item.cControlTypeCode == 'TextBoxLink'"
+                :disabled="props.disabled"
+                v-model="scope.row[item.prop]"
+                :placeholder="disabled ? '' : '请输入'"
+                :style="
+                  funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
+                "
+                @keyup.enter.native="e => onKeyPressEnter(e, item, scope)"
+              >
+                <template #append>
+                  <el-icon
+                    @click="clickModel(item, item.prop, scope.$index, scope)"
+                  >
+                    <MoreFilled />
+                  </el-icon>
+                </template>
+              </el-input>
+            </div>
+            <div
+              v-else-if="
+                (Route.name === 'AddPurchaseNoteNoOrigin' ||
+                  Route.name === 'AddPurchaseNoteEditNoOrigin') &&
+                item.cAttributeCode === 'cVendorName' &&
+                props.headData.cVouchTypeCode == '2'
+              "
+            >
               <el-input
                 v-if="item.cControlTypeCode == 'TextBoxLink'"
                 :disabled="props.disabled"
@@ -1460,6 +1486,21 @@ const selectDatas = (val: any) => {
           tableDataVal.value.push(currentItem);
         }
       }
+    }
+
+    // #4200 辅料逻辑
+    if (AttributeCode.value == 'cVendorName') {
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      InventorySAPGetForList(tableDataVal.value[IndexType.value].cInvCode)
+        .then(res => {
+          console.log(res);
+          const result = res.data?.[0];
+          tableDataVal.value[IndexType.value].cDefindParm03 = result?.cSAPCode;
+        })
+        .catch(() => {});
     }
   }
 
