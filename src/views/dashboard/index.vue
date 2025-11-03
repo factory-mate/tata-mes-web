@@ -237,9 +237,9 @@ const renew = () => {
       <div class="IMG-BG">
         <!-- <img url="../../assets/img/home.png"/> -->
       </div>
-      <div style="text-align: center; width: 100%">
+      <div style="text-align: center; width: 100%; color: #767373">
         <p>
-          联系我们：19919980909 4000153699<br />
+          联系人：顾海勤 联系电话：13611961608<br />
           Copyright © 慧友科技股份有限公司 版权所有
         </p>
       </div>
@@ -263,8 +263,8 @@ const renew = () => {
       text-align: center;
     }
     .IMG-BG {
-      width: 30px;
-      height: 30px;
+      width: 44px;
+      height: 44px;
       background: url('../../assets/img/home.jpg') no-repeat;
       background-size: 100%;
       -moz-background-size: 100% 100%;

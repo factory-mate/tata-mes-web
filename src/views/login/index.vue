@@ -77,7 +77,7 @@
       <div class="logo_hint">
         <img src="../../assets/img/home.jpg" alt="" />
         <p>
-          联系我们：19919980909 4000153699<br />
+          联系人：顾海勤 联系电话：13611961608<br />
           Copyright © 慧友科技股份有限公司 版权所有
         </p>
       </div>
