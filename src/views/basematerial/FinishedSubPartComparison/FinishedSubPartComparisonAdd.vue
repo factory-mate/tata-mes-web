@@ -409,6 +409,15 @@ const SaveAdd = (obj: any) => {
     });
     return false;
   }
+  if (
+    TABRef.value.tableDataVal.find(i => !i.cStructureCode || !i.cInvCodeChild)
+  ) {
+    ElMessage({
+      type: 'info',
+      message: '结构编码和子件编码不允许为空'
+    });
+    return;
+  }
 
   obj.pathName = 'FinishedSubPartComparison';
   obj.tableData = TABRef.value.tableDataVal;
