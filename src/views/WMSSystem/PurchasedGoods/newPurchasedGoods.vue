@@ -509,6 +509,10 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
+  const conditions = ['cVouchTypeCode in (1,4)'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
@@ -516,7 +520,7 @@ const TtableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: 'cVouchTypeCode in (1,4)'
+      Conditions: conditions.join(' && ')
     }
   };
   try {
