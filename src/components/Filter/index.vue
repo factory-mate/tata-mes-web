@@ -46,6 +46,15 @@
                 </el-icon>
               </template>
             </el-input>
+            <!-- <el-select
+              v-if="item.cControlTypeCode == 'ComboBox'"
+              v-model="item.cAttributeCodeValue"
+              placeholder="请输入"
+              clearable
+              :options="[]"
+              @change="() => {}"
+            /> -->
+
             <!-- 下拉选择 -->
             <el-select
               v-if="item.cControlTypeCode == 'ComboBox'"
@@ -318,6 +327,8 @@ const getTreeProps = () => {
     case 'otherInNotifyEdit':
     case 'MaterialOutboundAdd':
     case 'MaterialOutboundEdit':
+    case 'PurchaseRequestNoProdAdd':
+    case 'PurchaseRequestNoProdEdit':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':
