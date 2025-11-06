@@ -15,7 +15,7 @@
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
         @Commit="Commit"
-        @ItemAddOnMaterial="ItemAddOnMaterial"
+        @AddOnSource="ItemAddOnMaterial"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -432,36 +432,6 @@ const clickEditTable = (scope: any, obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   // router.push({
-  //   name: 'KnifeAddPurchaseNote',
-  //   params: {
-  //     t: Date.now(),
-  //     rowId: ' '
-  //   },
-  //   state: {
-  //     modelCode: obj.cIncludeModelCode,
-  //     title: '采购单新增',
-  //     type: 'add'
-  //   }
-  // });
-  window.open(
-    router.resolve({
-      name: 'KnifeAddPurchaseNote',
-      params: {
-        t: Date.now(),
-        rowId: ' '
-      },
-      state: {
-        modelCode: obj.cIncludeModelCode,
-        title: '采购单新增',
-        type: 'add'
-      }
-    }).href,
-    '_blank'
-  );
-};
-
-const ItemAddOnMaterial = obj => {
-  // router.push({
   //   name: 'KnifeAddPurchaseNoteNoOrigin',
   //   params: {
   //     t: Date.now(),
@@ -482,7 +452,37 @@ const ItemAddOnMaterial = obj => {
       },
       state: {
         modelCode: obj.cIncludeModelCode,
-        title: '采购单无来源新增',
+        title: '刀具采购单无来源新增',
+        type: 'add'
+      }
+    }).href,
+    '_blank'
+  );
+};
+
+const ItemAddOnMaterial = obj => {
+  // router.push({
+  //   name: 'KnifeAddPurchaseNote',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '采购单新增',
+  //     type: 'add'
+  //   }
+  // });
+  window.open(
+    router.resolve({
+      name: 'KnifeAddPurchaseNote',
+      params: {
+        t: Date.now(),
+        rowId: ' '
+      },
+      state: {
+        modelCode: obj.cIncludeModelCode,
+        title: '刀具采购单新增',
         type: 'add'
       }
     }).href,

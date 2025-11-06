@@ -334,7 +334,8 @@ const emits = defineEmits([
   'PrintClassLable',
   'Sync',
   'SyncStatus',
-  'PushGlass'
+  'PushGlass',
+  'AddOnSource'
 ]);
 
 watch(
@@ -896,6 +897,9 @@ const SyncStatus = obj => {
 const PushGlass = obj => {
   emits('PushGlass', obj);
 };
+const AddOnSource = obj => {
+  emits('AddOnSource', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1343,6 +1347,9 @@ const clickButton = (event: any) => {
       break;
     case 'PushGlass':
       PushGlass(event);
+      break;
+    case 'AddOnSource':
+      AddOnSource(event);
       break;
     default:
       break;
