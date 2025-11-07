@@ -147,6 +147,13 @@ const showButton = (obj, item) => {
   if (item.Resource.cAttributeName === '详情') {
     return true;
   }
+  if (item.Resource.cAttributeName === '删除') {
+    if (obj.iStatus < 30) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   if (obj.iStatusName === '保存') {
     return true;
   } else {
