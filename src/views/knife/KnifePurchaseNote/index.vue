@@ -16,6 +16,7 @@
         @ExportOne="ExportOne"
         @Commit="Commit"
         @AddOnSource="ItemAddOnMaterial"
+        @clickDelete="clickDelete"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -222,9 +223,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Edit':
       clickEditTable(scope, event);
       break;
-    case 'Delete':
-      clickDelete(scope, event);
-      break;
+    // case 'Delete':
+    //   clickDelete(scope, event);
+    //   break;
     default:
       break;
   }
@@ -346,12 +347,18 @@ const changPage = (val: any) => {
   tableAxios();
 };
 //表格按钮删除
-const clickDelete = (scope: any, obj: any) => {
-  const senid = scope.row.UID;
+const clickDelete = (obj: any) => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要删除的数据'
+    });
+    return;
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
+    data: sendId.value
   };
   ElMessageBox.confirm('确定删除数据?', '提示', {
     confirmButtonText: '确定',
@@ -366,6 +373,8 @@ const clickDelete = (scope: any, obj: any) => {
             type: 'success',
             message: '删除成功'
           });
+          TabRef.value.handleRemoveSelectionChange();
+          sendId.value = [];
           tableAxios();
         } else {
           ElMessage.error('删除失败');
