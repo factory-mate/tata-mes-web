@@ -1790,6 +1790,8 @@ const selectDatas = (val: any) => {
     tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
     tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
     tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
+    tableDataVal.value[IndexType.value].cDefindParm03 =
+      val.value[0]?.list_price?.[0].cSAPCode;
   }
 
   if (Route.name == 'memAdminAdd' || Route.name == 'memAdminEdit') {
