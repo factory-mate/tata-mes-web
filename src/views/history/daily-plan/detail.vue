@@ -31,6 +31,7 @@
           @BarcodeRevoke="BarcodeRevoke"
           @BarcodeStatus="BarcodeStatus"
           @BarcodeMake="BarcodeMake"
+          @PushGlass="PushGlass"
         ></ButtonViem>
       </div>
       <Head-View
@@ -643,6 +644,47 @@ const BarcodeMake = (obj: any) => {
 const selList = ref([]) as any;
 const handleSelectionChange = (val: any) => {
   selList.value = val;
+};
+
+const PushGlass = (obj: any) => {
+  if (selList.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要操作的数据'
+    });
+    return;
+  }
+  if (selList.value.length > 1) {
+    ElMessage({
+      type: 'info',
+      message: '只能选择一条数据操作'
+    });
+    return;
+  }
+  if (obj.Resource.cServerIP || obj.Resource.cUrl) {
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      data: {
+        UID: selList.value[0]
+      }
+    };
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        selList.value = [];
+        tableRef.value.clearSelectedRowKeys();
+      } else {
+        ElMessage.error(res.msg || '失败');
+      }
+      ElLoading.service().close();
+    });
+  }
 };
 
 //按钮导出当前页
