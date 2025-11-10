@@ -666,7 +666,7 @@ const PushGlass = (obj: any) => {
       method: obj.Resource.cHttpTypeCode,
       url: obj.Resource.cServerIP + obj.Resource.cUrl,
       data: {
-        UID: selList.value[0]
+        UID: selList.value[0].UID
       }
     };
     ElLoading.service({ lock: true, text: '加载中.....' });
