@@ -1234,13 +1234,16 @@ const selectDatas = (val: any) => {
             .replace(/\.?0+$/, '');
         });
       // #4200 辅料逻辑
-      InventorySAPGetForList(tableDataVal.value[IndexType.value].cInvCode)
-        .then(res => {
-          console.log(res);
-          const result = res.data?.[0];
-          tableDataVal.value[IndexType.value].cDefindParm03 = result?.cSAPCode;
-        })
-        .catch(() => {});
+      if (props.headData.cVouchTypeCode == '2') {
+        InventorySAPGetForList(tableDataVal.value[IndexType.value].cInvCode)
+          .then(res => {
+            console.log(res);
+            const result = res.data?.[0];
+            tableDataVal.value[IndexType.value].cDefindParm03 =
+              result?.cSAPCode;
+          })
+          .catch(() => {});
+      }
     }
   }
   if (
@@ -1489,18 +1492,21 @@ const selectDatas = (val: any) => {
     }
 
     // #4200 辅料逻辑
-    if (AttributeCode.value == 'cVendorName') {
-      tableDataVal.value[IndexType.value].cVendorName =
-        val.value[0].cVendorName;
-      tableDataVal.value[IndexType.value].cVendorCode =
-        val.value[0].cVendorCode;
-      InventorySAPGetForList(tableDataVal.value[IndexType.value].cInvCode)
-        .then(res => {
-          console.log(res);
-          const result = res.data?.[0];
-          tableDataVal.value[IndexType.value].cDefindParm03 = result?.cSAPCode;
-        })
-        .catch(() => {});
+    if (props.headData.cVouchTypeCode == '2') {
+      if (AttributeCode.value == 'cVendorName') {
+        tableDataVal.value[IndexType.value].cVendorName =
+          val.value[0].cVendorName;
+        tableDataVal.value[IndexType.value].cVendorCode =
+          val.value[0].cVendorCode;
+        InventorySAPGetForList(tableDataVal.value[IndexType.value].cInvCode)
+          .then(res => {
+            console.log(res);
+            const result = res.data?.[0];
+            tableDataVal.value[IndexType.value].cDefindParm03 =
+              result?.cSAPCode;
+          })
+          .catch(() => {});
+      }
     }
   }
 
