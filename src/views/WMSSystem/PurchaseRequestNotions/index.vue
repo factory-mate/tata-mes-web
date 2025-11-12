@@ -236,7 +236,7 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
-  const conditions = ['cVouchTypeCode = 05'];
+  const conditions = ['cVouchTypeCode = 06'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }
@@ -347,7 +347,7 @@ const changPage = (val: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'PurchaseRequestNoProdDetail',
+    name: 'PurchaseRequestNotionsDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -355,15 +355,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'PurchaseRequestNoProd',
-      title: '原料领料申请详情'
+      pathName: 'PurchaseRequestNotions',
+      title: '辅料领料申请详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'PurchaseRequestNoProdEdit',
+    name: 'PurchaseRequestNotionsEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -371,8 +371,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'PurchaseRequestNoProd',
-      title: '原料领料申请编辑'
+      pathName: 'PurchaseRequestNotions',
+      title: '辅料领料申请编辑'
     }
   });
 };
@@ -459,14 +459,14 @@ const Commit = (obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'PurchaseRequestNoProdAdd',
+    name: 'PurchaseRequestNotionsAdd',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '原料领料申请新增',
+      title: '辅料领料申请新增',
       type: 'add'
     }
   });
@@ -493,7 +493,7 @@ const handleSelectionChange = (arr: any) => {
 
 //按钮导出所有
 const ExportAll = async (obj: any) => {
-  const conditions = ['cVouchTypeCode = 05'];
+  const conditions = ['cVouchTypeCode = 06'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }
@@ -513,7 +513,7 @@ const ExportAll = async (obj: any) => {
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
-  const conditions = ['cVouchTypeCode = 05'];
+  const conditions = ['cVouchTypeCode = 06'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }

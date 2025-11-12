@@ -1517,7 +1517,9 @@ const selectDatas = (val: any) => {
 
   if (
     Route.name === 'PurchaseRequestNoProdAdd' ||
-    Route.name === 'PurchaseRequestNoProdEdit'
+    Route.name === 'PurchaseRequestNoProdEdit' ||
+    Route.name === 'PurchaseRequestNotionsAdd' ||
+    Route.name === 'PurchaseRequestNotionsEdit'
   ) {
     if (AttributeCode.value == 'cInvCode') {
       tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
@@ -1911,6 +1913,8 @@ const onKeyPressEnter = async (e, item, scope) => {
       item.prop === 'cInvCode') ||
     Route.name == 'PurchaseRequestNoProdAdd' ||
     Route.name == 'PurchaseRequestNoProdEdit' ||
+    Route.name == 'PurchaseRequestNotionsAdd' ||
+    Route.name == 'PurchaseRequestNotionsEdit' ||
     Route.name == 'InventoryListAdd'
   ) {
     const {

@@ -329,6 +329,8 @@ const getTreeProps = () => {
     case 'MaterialOutboundEdit':
     case 'PurchaseRequestNoProdAdd':
     case 'PurchaseRequestNoProdEdit':
+    case 'PurchaseRequestNotionsAdd':
+    case 'PurchaseRequestNotionsEdit':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':

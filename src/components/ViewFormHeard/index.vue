@@ -1634,7 +1634,9 @@ const selectData = (val: any) => {
     ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
     if (
       Route.name === 'PurchaseRequestNoProdAdd' ||
-      Route.name === 'PurchaseRequestNoProdEdit'
+      Route.name === 'PurchaseRequestNoProdEdit' ||
+      Route.name === 'PurchaseRequestNotionsAdd' ||
+      Route.name === 'PurchaseRequestNotionsEdit'
     ) {
       if (AttributeCode.value === 'cDepName') {
         ruleForm.value.cDepName = val.value[0].cDepName;
@@ -2429,6 +2431,15 @@ const newAdd = () => {
     Route.name === 'PurchaseRequestNoProdAdd' ||
     Route.name === 'PurchaseRequestNoProdEdit'
   ) {
+    ruleForm.value.cVouchTypeCode = '05';
+    ruleForm.value.Items = ButObjTableData.value;
+  }
+
+  if (
+    Route.name === 'PurchaseRequestNotionsAdd' ||
+    Route.name === 'PurchaseRequestNotionsEdit'
+  ) {
+    ruleForm.value.cVouchTypeCode = '06';
     ruleForm.value.Items = ButObjTableData.value;
   }
 
@@ -2689,7 +2700,8 @@ const newAdd = () => {
     Route.name == 'otherOutNotifyEdit' ||
     Route.name == 'TransferRecordAdd' ||
     Route.name == 'TransferRecordEdit' ||
-    Route.name == 'PurchaseRequestNoProdEdit'
+    Route.name == 'PurchaseRequestNoProdEdit' ||
+    Route.name == 'PurchaseRequestNotionsEdit'
   ) {
     dataValue = { list_body: ButObjTableData.value };
   } else if (Route.name == 'ReturnQualityInfo') {
