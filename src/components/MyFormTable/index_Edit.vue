@@ -1152,8 +1152,13 @@ const selectDatas = (val: any) => {
         tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
       }
       const result = val.value[0].list_price?.[0];
-      tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
-      tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+      // 研磨单不带单价
+      if (Route.name == 'AddGrindOrder' || Route.name == 'EditGrindOrder') {
+        tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+      } else {
+        tableDataVal.value[IndexType.value].nTaxPrice = result?.nTaxPrice ?? 0;
+        tableDataVal.value[IndexType.value].nTaxRate = result?.nTaxRate ?? 0;
+      }
     }
 
     if (AttributeCode.value == 'cVendorName') {
