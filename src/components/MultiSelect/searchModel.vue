@@ -378,6 +378,16 @@ const processFilterLogic = (val, p) => {
     }
   }
 
+  if (
+    ['FinishedSubPartComparisonAdd', 'FinishedSubPartComparisonEdit'].includes(
+      Route.name
+    )
+  ) {
+    if (p.titleName === '子件编码') {
+      conditions.push('iStatus = 1');
+    }
+  }
+
   if (['newOutputPlan', 'newOutputPlanEdit'].includes(Route.name)) {
     if (p.titleName === '寻线批次号') {
       conditions.push(
