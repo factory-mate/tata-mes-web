@@ -325,8 +325,6 @@ const getTreeProps = () => {
     case 'KnifeAddPurchaseNoteEditNoOrigin':
     case 'otherInNotifyAdd':
     case 'otherInNotifyEdit':
-    case 'MaterialOutboundAdd':
-    case 'MaterialOutboundEdit':
     case 'PurchaseRequestNoProdAdd':
     case 'PurchaseRequestNoProdEdit':
     case 'PurchaseRequestNotionsAdd':

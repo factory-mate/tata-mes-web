@@ -241,7 +241,7 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
-  const conditions = ['cVouchTypeCode in (01,05)', 'iStatus in (5,51,6)'];
+  const conditions = ['cVouchTypeCode in (01,05,06)', 'iStatus in (5,51,6)'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }
@@ -527,7 +527,7 @@ const Commit = (obj: any) => {
 };
 //按钮导出所有
 const ExportAll = async (obj: any) => {
-  const conditions = ['cVouchTypeCode in (01,05)', 'iStatus in (5,51,6)'];
+  const conditions = ['cVouchTypeCode in (01,05,06)', 'iStatus in (5,51,6)'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }
@@ -545,7 +545,7 @@ const ExportAll = async (obj: any) => {
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
-  const conditions = ['cVouchTypeCode in (01,05)', 'iStatus in (5,51,6)'];
+  const conditions = ['cVouchTypeCode in (01,05,06)', 'iStatus in (5,51,6)'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }

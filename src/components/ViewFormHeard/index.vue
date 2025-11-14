@@ -1504,7 +1504,8 @@ const headVal = () => {
     Route.name === 'ScrapToolInfoAdd' ||
     Route.name === 'resizeDialAdd' ||
     Route.name === 'AddGrindOrder' ||
-    Route.name === 'TooolInfo'
+    Route.name === 'TooolInfo' ||
+    Route.name === 'MaterialOutboundAdd'
   ) {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
@@ -1726,6 +1727,10 @@ const selectData = (val: any) => {
       }
       if (AttributeCode.value == 'cDepName') {
         ruleForm.value['cDepCode'] = val.value[0].cDepCode || '';
+      }
+      if (AttributeCode.value == 'cDefindParm07'|| AttributeCode.value == 'cDefindParm08') {
+        ruleForm.value['cDefindParm07'] = val.value[0].cWareHouseAreaCode || '';
+        ruleForm.value['cDefindParm08'] = val.value[0].cWareHouseAreaName || '';
       }
     }
     // 物料的新增/编辑

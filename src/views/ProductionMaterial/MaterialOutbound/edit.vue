@@ -13,6 +13,7 @@
           @clickAddConvert="clickAddConvert"
           @Commit="Commit"
           @PrintLabel="PrintLabel"
+          @AddItem="ItemAdd"
         >
         </ButtonViem>
       </div>
@@ -84,7 +85,14 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
+      width="90%"
     >
+      <FilterForm
+        :Filter="TFilter"
+        @ClickSearch="TClickSearch"
+        @resetForm="TresetForm"
+      ></FilterForm>
+
       <myTable
         ref="TTABRef"
         :tableData="TtableData"
@@ -94,6 +102,7 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        max-height="52vh"
       >
       </myTable>
       <template #footer>
@@ -118,7 +127,7 @@ import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare } from '@/utils';
+import { compare, filterModel, tableSortInit } from '@/utils';
 import {
   ElButton,
   ElCard,
@@ -127,6 +136,7 @@ import {
   ElMessageBox,
   ElLoading
 } from 'element-plus';
+import FilterForm from '@/components/Filter/index.vue';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
@@ -154,6 +164,7 @@ const TdialogFormVisible = ref();
 const TAxiosData = ref({}) as any;
 const TtableData = ref([]) as any;
 const TtableColumns = ref([]) as any;
+const TFilter = ref([]) as any;
 //表格数据
 const tableData = ref([] as any);
 //总条数
@@ -400,7 +411,7 @@ const tableAxios = async () => {
 
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
+  TABRef.value.DelBtn(val);
 };
 
 const clickHandAdd = (data: any) => {
@@ -419,6 +430,9 @@ const ItemAdd = async (obj: any) => {
           funTables(
             item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
           );
+        }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          TFilter.value = item[import.meta.env.VITE_APP_key];
         }
       });
     } else {
@@ -468,6 +482,10 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
+  const conditions = ['cVouchTypeCode=06 && Head_iStatus=6'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
@@ -475,7 +493,7 @@ const TtableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: conditions.join(' && ')
     }
   };
   try {
@@ -498,12 +516,42 @@ const ThandleSelectionChange = (val: any) => {
 };
 //弹窗确认
 const Tconfirm = () => {
+  if (
+    itemData.value.some(
+      i =>
+        i.cDefindParm07 !== itemData.value[0].cDefindParm07 ||
+        i.cDepCode !== itemData.value[0].cDepCode ||
+        i.cDynamicsParm01 !== itemData.value[0].cDynamicsParm01
+    )
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '请选择相同的部门、工位、默认货位'
+    });
+    return;
+  }
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
+    tableData.value.push({ ...item, cSourceCode: item.cCode, PID: item.UID });
   });
   TTABRef.value.handleRemoveSelectionChange();
+};
+
+// T弹窗搜索
+const TClickSearch = (val: any) => {
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+// 重置
+const TresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TTABRef.value.clearFilter();
 };
 
 // 添加弹窗form

@@ -13,6 +13,7 @@
           @clickAddConvert="clickAddConvert"
           @Commit="Commit"
           @PrintLabel="PrintLabel"
+          @AddItem="ItemAdd"
         >
         </ButtonViem>
       </div>
@@ -85,10 +86,10 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
-      width="80%"
+      width="90%"
     >
       <FilterForm
-        :Filter="Filter"
+        :Filter="TFilter"
         @ClickSearch="ClickSearch"
         @resetForm="FilresetForm"
       >
@@ -102,6 +103,7 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        max-height="52vh"
       >
       </myTable>
       <template #footer>
@@ -178,7 +180,7 @@ const selectArr = ref([]) as any;
 const printData = ref([]) as any;
 const modelGridType = ref(true);
 const View1val = ref('');
-const Filter = ref<any>([]);
+const TFilter = ref<any>([]);
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
@@ -408,7 +410,7 @@ const tableAxios = async () => {
 
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
+  TABRef.value.DelBtn(val);
 };
 
 const clickHandAdd = (data: any) => {
@@ -429,7 +431,7 @@ const ItemAdd = async (obj: any) => {
           );
         }
         if (item.cPropertyClassTypeCode === 'Filter') {
-          Filter.value = item[import.meta.env.VITE_APP_key].sort(
+          TFilter.value = item[import.meta.env.VITE_APP_key].sort(
             compare('iIndex', true)
           );
         }
@@ -481,6 +483,10 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
+  const conditions = ['cVouchTypeCode=06 && Head_iStatus=6'];
+  if (Conditions.value) {
+    conditions.push(Conditions.value);
+  }
   let data = {
     method: TAxiosData.value.Resource.cHttpTypeCode,
     url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
@@ -488,7 +494,7 @@ const TtableAxios = async () => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
-      Conditions: Conditions.value
+      Conditions: conditions.join(' && ')
     }
   };
   try {
@@ -511,52 +517,67 @@ const ThandleSelectionChange = (val: any) => {
 };
 //弹窗确认
 const Tconfirm = async () => {
+  // if (
+  //   headRef.value.ruleForm.cVendorName ||
+  //   headRef.value.ruleForm.cVendorCode
+  // ) {
+  //   console.log(
+  //     '已指定供应商',
+  //     headRef.value.ruleForm.cVendorName,
+  //     headRef.value.ruleForm.cVendorCode,
+  //     itemData.value
+  //   );
+  //   if (
+  //     itemData.value.some(
+  //       (item: any) =>
+  //         item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
+  //         item.cVendorName !== headRef.value.ruleForm.cVendorName
+  //     )
+  //   ) {
+  //     try {
+  //       await ElMessageBox.confirm(
+  //         '与已指定供应商不匹配，是否继续添加？',
+  //         '提示',
+  //         {
+  //           confirmButtonText: '确定',
+  //           cancelButtonText: '取消',
+  //           type: 'warning'
+  //         }
+  //       );
+  //       const { cVendorCode, cVendorName } = itemData.value[0];
+  //       headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+  //     } catch {
+  //       return;
+  //     }
+  //   }
+  // } else {
+  //   const { cVendorCode, cVendorName } = itemData.value[0];
+  //   headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
+  // }
+  // // 判断选中的数据 cVendorCode 是否一致
+  // if (
+  //   !itemData.value.every(
+  //     (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '请选择同一供应商的物料'
+  //   });
+  //   return;
+  // }
+
   if (
-    headRef.value.ruleForm.cVendorName ||
-    headRef.value.ruleForm.cVendorCode
-  ) {
-    console.log(
-      '已指定供应商',
-      headRef.value.ruleForm.cVendorName,
-      headRef.value.ruleForm.cVendorCode,
-      itemData.value
-    );
-    if (
-      itemData.value.some(
-        (item: any) =>
-          item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
-          item.cVendorName !== headRef.value.ruleForm.cVendorName
-      )
-    ) {
-      try {
-        await ElMessageBox.confirm(
-          '与已指定供应商不匹配，是否继续添加？',
-          '提示',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        );
-        const { cVendorCode, cVendorName } = itemData.value[0];
-        headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-      } catch {
-        return;
-      }
-    }
-  } else {
-    const { cVendorCode, cVendorName } = itemData.value[0];
-    headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-  }
-  // 判断选中的数据 cVendorCode 是否一致
-  if (
-    !itemData.value.every(
-      (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
+    itemData.value.some(
+      i =>
+        i.cDefindParm07 !== itemData.value[0].cDefindParm07 ||
+        i.cDepCode !== itemData.value[0].cDepCode ||
+        i.cDynamicsParm01 !== itemData.value[0].cDynamicsParm01
     )
   ) {
     ElMessage({
       type: 'error',
-      message: '请选择同一供应商的物料'
+      message: '请选择相同的部门、工位、默认货位'
     });
     return;
   }
@@ -564,7 +585,7 @@ const Tconfirm = async () => {
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    tableData.value.push(item);
+    tableData.value.push({ ...item, cSourceCode: item.cCode, PID: item.UID });
   });
   TTABRef.value.handleRemoveSelectionChange();
 };
@@ -599,7 +620,8 @@ const FilresetForm = (val: any) => {
   queryParams.PageIndex = 1;
   queryParams.PageSize = 10;
   TtableAxios();
-  TABRef.value.clearFilter();
+  // TABRef.value.clearFilter();
+  TTABRef.value.clearFilter();
 };
 const modelClose = (val: any) => {
   dialogFormVisible.value = val.type;

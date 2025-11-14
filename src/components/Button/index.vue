@@ -335,7 +335,8 @@ const emits = defineEmits([
   'Sync',
   'SyncStatus',
   'PushGlass',
-  'AddOnSource'
+  'AddOnSource',
+  'AddItem'
 ]);
 
 watch(
@@ -900,6 +901,9 @@ const PushGlass = obj => {
 const AddOnSource = obj => {
   emits('AddOnSource', obj);
 };
+const AddItem = obj => {
+  emits('AddItem', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1350,6 +1354,9 @@ const clickButton = (event: any) => {
       break;
     case 'AddOnSource':
       AddOnSource(event);
+      break;
+    case 'AddItem':
+      AddItem(event);
       break;
     default:
       break;
