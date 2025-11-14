@@ -67,11 +67,11 @@ defineExpose({ clearSelectedRowKeys });
       "
       :columns="
         [
-          {
-            type: 'selection',
-            fixed: 'left',
-            options: ['all', 'none']
-          },
+          // {
+          //   type: 'selection',
+          //   fixed: 'left',
+          //   options: ['all', 'none']
+          // },
           {
             key: 'column-index',
             width: 50,
