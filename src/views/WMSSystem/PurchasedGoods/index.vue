@@ -18,6 +18,7 @@
         @CustomExport="CustomExport"
         @DownloadBarcode="DownloadBarcode"
         @PrintVouch="PrintVouch"
+        @Verify="Verify"
       >
       </ButtonViem>
       <!-- 表格区域 -->
@@ -637,6 +638,39 @@ const chosseData = ref([]) as any;
 const handleSelectionChange = (arr: any) => {
   chosseData.value = arr;
 };
+
+const Verify = (obj: any) => {
+  sendId.value = [];
+  chosseData.value.forEach((item: { UID: any }) => sendId.value.push(item.UID));
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要审核的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '审核成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+    } else {
+      console.log('审核失败');
+    }
+    ElLoading.service().close();
+  });
+};
+
 //按钮提交
 const Commit = (obj: any) => {
   sendId.value = [];

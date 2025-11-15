@@ -336,7 +336,8 @@ const emits = defineEmits([
   'SyncStatus',
   'PushGlass',
   'AddOnSource',
-  'AddItem'
+  'AddItem',
+  'Verify'
 ]);
 
 watch(
@@ -567,7 +568,6 @@ const Submit = (obj: any) => {
   emits('Submit', obj);
 };
 const PrintVouch = (obj: any) => {
-  // 通用点击事件
   emits('PrintVouch', obj);
 };
 //导入
@@ -903,6 +903,9 @@ const AddOnSource = obj => {
 };
 const AddItem = obj => {
   emits('AddItem', obj);
+};
+const Verify = (obj: any) => {
+  emits('Verify', obj);
 };
 const HandExport = (command: any, event: any) => {
   switch (command) {
@@ -1357,6 +1360,9 @@ const clickButton = (event: any) => {
       break;
     case 'AddItem':
       AddItem(event);
+      break;
+    case 'Verify':
+      Verify(event);
       break;
     default:
       break;
