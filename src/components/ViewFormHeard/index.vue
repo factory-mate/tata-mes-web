@@ -1509,6 +1509,10 @@ const headVal = () => {
   ) {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
+  if (Route.name === 'MaterialOutboundAdd') {
+    ruleForm.value.cDefindParm07 = '20';
+    ruleForm.value.cDefindParm08 = '辅原材料库';
+  }
   if (
     Route.name === 'newPurchasedGoods' ||
     Route.name === 'KnifeNewPurchasedGoods'
@@ -1728,7 +1732,10 @@ const selectData = (val: any) => {
       if (AttributeCode.value == 'cDepName') {
         ruleForm.value['cDepCode'] = val.value[0].cDepCode || '';
       }
-      if (AttributeCode.value == 'cDefindParm07'|| AttributeCode.value == 'cDefindParm08') {
+      if (
+        AttributeCode.value == 'cDefindParm07' ||
+        AttributeCode.value == 'cDefindParm08'
+      ) {
         ruleForm.value['cDefindParm07'] = val.value[0].cWareHouseAreaCode || '';
         ruleForm.value['cDefindParm08'] = val.value[0].cWareHouseAreaName || '';
       }

@@ -2175,6 +2175,21 @@ const clickModel = (obj: any, type: any, i: any, scope: any) => {
     metadata.value.cInvCode = scope.row.cInvCode;
   }
 
+  if (
+    Route.name === 'PurchaseRequestNotionsAdd' ||
+    Route.name === 'PurchaseRequestNotionsEdit'
+  ) {
+    if (obj.cAttributeCode === 'cUnitName') {
+      if (scope.row.cInvCode) {
+        metadata.value.cInvCode = scope.row.cInvCode;
+      } else {
+        metadata.value.cInvCode = '';
+        ElMessage.warning('请先选择物料');
+        return;
+      }
+    }
+  }
+
   ajax.value = obj.ajax;
   IndexType.value = i;
   MulitChoose.value =

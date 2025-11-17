@@ -271,6 +271,16 @@ const processFilterLogic = (val, p) => {
   OrderByFileds.value = '';
   currentParmName.value = p.titleName;
   if (
+    Route.name === 'PurchaseRequestNotionsAdd' ||
+    Route.name === 'PurchaseRequestNotionsEdit'
+  ) {
+    if (p.titleName === '单位') {
+      if (p.metadata?.cInvCode) {
+        conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
+      }
+    }
+  }
+  if (
     Route.name === 'AddPurchaseRequestEdit' ||
     Route.name === 'AddPurchaseRequest' ||
     Route.name === 'KnifeAddPurchaseRequestEdit' ||
@@ -363,6 +373,9 @@ const processFilterLogic = (val, p) => {
       if (p.metadata?.cInvCode) {
         conditions.push(`cInvCode=${p.metadata?.cInvCode}`);
       }
+    }
+    if (p.titleName === '部门') {
+      OrderByFileds.value = 'iIndex';
     }
   }
 
