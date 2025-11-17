@@ -604,6 +604,7 @@ const clickTableAdd = () => {
   // }
   if (!Route.meta.title.match(/详情/gi)) {
     tableDataVal.value.push(tableFunObj());
+    emit('handleTableDataChange', tableDataVal.value);
   }
   console.log('🚀🚀 增行后新增的数据');
   console.table(tableDataVal.value);

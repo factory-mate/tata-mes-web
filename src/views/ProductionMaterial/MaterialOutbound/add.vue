@@ -42,7 +42,6 @@
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
         @handle-table-data-change="handleTableDataChange"
-        :disabledHide="false"
       >
         <template #button>
           <el-table-column
@@ -290,10 +289,10 @@ const getAddUser = async (code: any) => {
             compare('iIndex', true)
           );
           ButOne.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeCode == 'SaveEdit'
+            (item: any) => item.Resource.cAttributeCode == 'SaveAdd'
           );
           Buttwo.value = item[import.meta.env.VITE_APP_key].filter(
-            (item: any) => item.Resource.cAttributeCode !== 'SaveEdit'
+            (item: any) => item.Resource.cAttributeCode !== 'SaveAdd'
           );
         }
         if (item.cPropertyClassTypeCode == 'Grid') {
@@ -413,7 +412,7 @@ const tableAxios = async () => {
 
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  tableData.value.splice(val.$index, 1);
+  TABRef.value.tableDataVal.splice(val.$index, 1);
 };
 
 const clickHandAdd = (data: any) => {
@@ -588,7 +587,11 @@ const Tconfirm = async () => {
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
-    tableData.value.push({ ...item, cSourceCode: item.cCode, PID: item.UID });
+    TABRef.value.tableDataVal.push({
+      ...item,
+      cSourceCode: item.cCode,
+      PID: item.UID
+    });
   });
   TTABRef.value.handleRemoveSelectionChange();
 };
