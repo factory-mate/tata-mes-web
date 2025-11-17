@@ -218,9 +218,11 @@ onActivated(() => {
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
   }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   if (history.state.title == '采购单详情') {
     disabled.value = true;
