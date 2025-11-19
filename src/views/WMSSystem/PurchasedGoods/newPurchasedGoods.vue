@@ -716,6 +716,7 @@ const SaveAdd = (obj: any, type = true) => {
       bCheckQuantity: type
     }
   };
+  const loading = ElLoading.service({ lock: true, text: '保存中.....' });
   DataApi(data)
     .then(res => {
       if (res.success) {
@@ -748,6 +749,9 @@ const SaveAdd = (obj: any, type = true) => {
           type: 'error'
         });
       }
+    })
+    .finally(() => {
+      loading.close();
     });
 };
 

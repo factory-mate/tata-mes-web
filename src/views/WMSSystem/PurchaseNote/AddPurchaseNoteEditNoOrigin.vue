@@ -639,6 +639,7 @@ const SaveEdit = (obj: any, type = false) => {
       bCheckQuantity: type
     }
   };
+  const loading = ElLoading.service({ lock: true, text: '保存中.....' });
   DataApi(data)
     .then(res => {
       if (res.success) {
@@ -671,6 +672,9 @@ const SaveEdit = (obj: any, type = false) => {
           type: 'error'
         });
       }
+    })
+    .finally(() => {
+      loading.close();
     });
 };
 // 编辑按钮
