@@ -3,6 +3,7 @@
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
+      v-show="row.cDefindParm06 !== '3'"
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
@@ -23,7 +24,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -116,12 +117,10 @@ import {
 import { ArrowDown, MoreFilled } from '@element-plus/icons-vue';
 import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
-import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const Route = useRoute();
@@ -134,30 +133,19 @@ const tableColumns = ref([]) as any;
 const tableButton = ref([]) as any;
 const AxiosData = ref({}) as any;
 const tabType = ref(true);
-const tabKey = ref(0);
 const rowId = ref('') as any;
 //启用传递的UID
 const sendId = ref([]) as any;
-
-const initType = ref(true);
+const row = ref({}) as any;
 onActivated(() => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  let val = window.sessionStorage.getItem('clickSider')
-    ? JSON.parse(window.sessionStorage.getItem('clickSider'))
-    : '';
-
   rowId.value = Route.params.rowId;
-  // if (val == Route.name) {
-  //   initType.value = false;
-  //   getData(Route.meta.ModelCode);
-  // }
-  // if (initType.value) {
-  //   getData(Route.meta.ModelCode);
-  // }
-  getData(Route.meta.ModelCode);
 
-  initType.value = false;
+  row.value = JSON.parse(history.state.row);
+  if (row.value.cDefindParm06 === '3') {
+    getData('WMS.RDRECORD_OUT.M.View');
+  } else {
+    getData(Route.meta.ModelCode);
+  }
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
@@ -242,6 +230,9 @@ const tableAxios = async () => {
       Conditions: Conditions.value
         ? 'MID=' + rowId.value + '&&' + Conditions.value
         : 'MID=' + rowId.value
+    },
+    params: {
+      MID: rowId.value
     }
   };
   try {

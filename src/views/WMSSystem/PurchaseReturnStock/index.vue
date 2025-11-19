@@ -44,11 +44,10 @@
             </template>
             <template #default="scope">
               <template
-                v-for="(item, i) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="i == 0 || i == 1"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -380,7 +379,7 @@ const clickView = (scope: any, obj: any) => {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
       pathName: 'PurchaseReturnStock',
-      title: '采购退货单详情'
+      title: '采购退货详情'
     }
   });
 };
@@ -396,7 +395,7 @@ const clickEditTable = (scope: any, obj: any) => {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
       pathName: 'PurchaseReturnStock',
-      title: '编辑'
+      title: '采购退货编辑'
     }
   });
 };
@@ -410,7 +409,8 @@ const clickAdd = (obj: { cIncludeModelCode: any }) => {
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '新增',
+      title: '采购退货新增',
+      pathName: 'PurchaseReturnStock',
       type: 'add'
     }
   });

@@ -337,7 +337,8 @@ const emits = defineEmits([
   'PushGlass',
   'AddOnSource',
   'AddItem',
-  'Verify'
+  'Verify',
+  'ItemForm'
 ]);
 
 watch(
@@ -907,6 +908,9 @@ const AddItem = obj => {
 const Verify = (obj: any) => {
   emits('Verify', obj);
 };
+const ItemForm = (obj: any) => {
+  emits('ItemForm', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1363,6 +1367,9 @@ const clickButton = (event: any) => {
       break;
     case 'Verify':
       Verify(event);
+      break;
+    case 'ItemForm':
+      ItemForm(event);
       break;
     default:
       break;

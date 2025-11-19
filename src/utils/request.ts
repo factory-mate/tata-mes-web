@@ -23,7 +23,7 @@ declare module 'axios' {
 
 const service = axios.create({
   // baseURL: import.meta.env.VITE_APP_BASE_API,
-  // timeout: 120000  //后端要定义2分钟
+  timeout: 120000 //后端要定义2分钟
 });
 
 // 请求拦截器

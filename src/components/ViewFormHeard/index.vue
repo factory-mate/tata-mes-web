@@ -1724,7 +1724,9 @@ const selectData = (val: any) => {
     }
     if (
       Route.name === 'MaterialOutboundAdd' ||
-      Route.name === 'MaterialOutboundEdit'
+      Route.name === 'MaterialOutboundEdit' ||
+      Route.name === 'PurchaseReturnStockAdd' ||
+      Route.name === 'PurchaseReturnStockEdit'
     ) {
       if (AttributeCode.value == 'cWareHouseName') {
         ruleForm.value['cWareHouseCode'] = val.value[0].cWareHouseCode || '';
@@ -1738,6 +1740,9 @@ const selectData = (val: any) => {
       ) {
         ruleForm.value['cDefindParm07'] = val.value[0].cWareHouseAreaCode || '';
         ruleForm.value['cDefindParm08'] = val.value[0].cWareHouseAreaName || '';
+      }
+      if (AttributeCode.value == 'cVendorName') {
+        ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
       }
     }
     // 物料的新增/编辑
@@ -2747,7 +2752,9 @@ const newAdd = () => {
     Route.name == 'newWorkshopMaterialEdit' ||
     Route.name == 'warehouseMaterialEdit' ||
     Route.name == 'MaterialOutboundEdit' ||
-    Route.name == 'MaterialOutboundAdd'
+    Route.name == 'MaterialOutboundAdd'||
+    Route.name == 'PurchaseReturnStockAdd'||
+    Route.name == 'PurchaseReturnStockEdit'
   ) {
     dataValue = { list_body: validateObj.value.tableData };
   } else if (

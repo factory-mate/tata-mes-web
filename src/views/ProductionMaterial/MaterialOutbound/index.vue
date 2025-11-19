@@ -436,6 +436,7 @@ const clickAdd = (obj: { cIncludeModelCode: any }) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       title: '辅料出库新增',
+      pathName: 'MaterialOutbound',
       type: 'add'
     }
   });
