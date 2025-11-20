@@ -1505,7 +1505,8 @@ const headVal = () => {
     Route.name === 'resizeDialAdd' ||
     Route.name === 'AddGrindOrder' ||
     Route.name === 'TooolInfo' ||
-    Route.name === 'MaterialOutboundAdd'
+    Route.name === 'MaterialOutboundAdd' ||
+    Route.name === 'PurchaseReturnStockAdd'
   ) {
     ruleForm.value.dDate = dayjs(new Date()).format('YYYY-MM-DD');
   }
@@ -2752,8 +2753,8 @@ const newAdd = () => {
     Route.name == 'newWorkshopMaterialEdit' ||
     Route.name == 'warehouseMaterialEdit' ||
     Route.name == 'MaterialOutboundEdit' ||
-    Route.name == 'MaterialOutboundAdd'||
-    Route.name == 'PurchaseReturnStockAdd'||
+    Route.name == 'MaterialOutboundAdd' ||
+    Route.name == 'PurchaseReturnStockAdd' ||
     Route.name == 'PurchaseReturnStockEdit'
   ) {
     dataValue = { list_body: validateObj.value.tableData };

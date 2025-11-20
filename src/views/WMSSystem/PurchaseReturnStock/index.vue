@@ -220,6 +220,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Delete':
       clickDelete(scope, event);
       break;
+    case 'Commit':
+      Commit(scope, event);
+      break;
     default:
       break;
   }
@@ -426,18 +429,14 @@ const handleSelectionChange = (arr: any) => {
   arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
 };
 //按钮提交
-const Commit = (obj: any) => {
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要提交的数据'
-    });
-    return;
-  }
+const Commit = (scope: any, obj: any) => {
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
+    data: {
+      UID: scope.row.UID,
+      utfs: scope.row.utfs
+    }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
   DataApi(data).then(res => {
