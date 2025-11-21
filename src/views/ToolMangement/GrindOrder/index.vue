@@ -29,7 +29,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="250px"
             align="center"
           >
             <template #header>
@@ -194,6 +194,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Delete':
       clickDelete(scope, event);
       break;
+    case 'Commit':
+      clickCommit(scope, event);
+      break;
     default:
       break;
   }
@@ -303,6 +306,35 @@ const changPage = (val: any) => {
   queryParams.PageSize = val.limit;
   tableAxios();
 };
+
+const clickCommit = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [senid]
+  };
+  ElMessageBox.confirm('确定审核?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '审核成功'
+        });
+        tableAxios();
+        ElLoading.service().close();
+      } else {
+        ElMessage.error('审核失败');
+        ElLoading.service().close();
+      }
+    });
+  });
+};
 //表格按钮删除
 const clickDelete = (scope: any, obj: any) => {
   const senid = scope.row.UID;
@@ -315,30 +347,22 @@ const clickDelete = (scope: any, obj: any) => {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  })
-    .then(() => {
-      ElLoading.service({ lock: true, text: '加载中.....' });
-      DataApi(data).then(res => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功'
-          });
-          tableAxios();
-          ElLoading.service().close();
-        } else {
-          ElMessage.error('删除失败');
-          ElLoading.service().close();
-        }
-      });
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除'
-      });
-      ElLoading.service().close();
+  }).then(() => {
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        });
+        tableAxios();
+        ElLoading.service().close();
+      } else {
+        ElMessage.error('删除失败');
+        ElLoading.service().close();
+      }
     });
+  });
 };
 //按钮删除
 const clickDel = (obj: any) => {
