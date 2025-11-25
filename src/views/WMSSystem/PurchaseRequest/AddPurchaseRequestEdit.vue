@@ -428,6 +428,9 @@ const setWidth = row => {
     case '数量':
       return 60;
     case '单位':
+    case '长':
+    case '宽':
+    case '厚':
       return 100;
     case '交货日期':
       return 100;
