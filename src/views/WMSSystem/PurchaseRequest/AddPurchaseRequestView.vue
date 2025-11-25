@@ -529,6 +529,9 @@ const setWidth = row => {
     case '数量':
     case '原始数量':
     case '单位':
+    case '长':
+    case '宽':
+    case '厚':
       return 50;
     case '交货日期':
       return 70;

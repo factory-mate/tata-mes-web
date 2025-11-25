@@ -420,17 +420,18 @@ const clickEdit = (obj: any) => {
 const setWidth = row => {
   switch (row.label) {
     case '物料编码':
+    case 'SAP编码':
       return 100;
     case '物料名称':
       return 200;
     case '规格型号':
-      return 120;
+      return 180;
     case '数量':
-      return 60;
-    case '单位':
     case '长':
     case '宽':
     case '厚':
+      return 60;
+    case '单位':
       return 100;
     case '交货日期':
       return 100;
