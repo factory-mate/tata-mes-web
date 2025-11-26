@@ -939,7 +939,7 @@ const setWidth = row => {
 
 const setDialogWidth = row => {
   switch (row.label) {
-    case '申请单号':
+    case '采购单号':
       return 170;
     case '交货日期':
       return 120;
@@ -954,11 +954,12 @@ const setDialogWidth = row => {
     case '未到货数量':
     case '到货数量':
     case '每包数量':
+    case '采购类型':
       return 100;
     case '剩余数量':
     case '单位':
       return 85;
-    case 'SAP物料编码':
+    case 'SAP号':
       return 110;
     case '生产日期':
       return 150;

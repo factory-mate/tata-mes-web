@@ -92,7 +92,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
-      width="80%"
+      width="95%"
     >
       <!-- 搜索区域 -->
       <FilterForm
@@ -807,7 +807,7 @@ const clickEdit = (obj: any) => {
 
 const setWidth = row => {
   switch (row.label) {
-    case '订单号':
+    case '采购单号':
       return 160;
     case '交货日期':
       return 120;
@@ -825,6 +825,7 @@ const setWidth = row => {
     case '到货数量':
     case '每包数量':
     case '箱数':
+    case '采购类型':
       return 100;
     case '剩余数量':
     case '单位':
@@ -834,7 +835,7 @@ const setWidth = row => {
     case '生产日期':
       return 150;
     default:
-      return 200;
+      return 150;
   }
 };
 
