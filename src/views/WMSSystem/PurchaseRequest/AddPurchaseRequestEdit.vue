@@ -421,7 +421,7 @@ const setWidth = row => {
   switch (row.label) {
     case '物料编码':
     case 'SAP编码':
-      return 100;
+      return 110;
     case '物料名称':
       return 200;
     case '规格型号':

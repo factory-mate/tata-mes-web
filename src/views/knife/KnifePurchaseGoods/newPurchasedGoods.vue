@@ -811,7 +811,7 @@ const setWidth = row => {
     case '采购日期':
       return 180;
     case '物料编码':
-      return 120;
+      return 130;
     case '质检':
       return 60;
     // case '物料名称':
