@@ -302,7 +302,7 @@ const funTable = (arr: Array<any>) => {
           prop: item.Resource.cAttributeCode,
           headerSlot: false,
           slot: '',
-          edit: item.DefinedParm4 == '1' ? true : false,
+          edit: item.DefinedParm4,
           cControlTypeCode: item.cControlTypeCode,
           cIncludeModelCode: item.cIncludeModelCode,
           cHttpTypeCode: item.Resource.cHttpTypeCode,

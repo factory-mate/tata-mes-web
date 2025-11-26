@@ -70,8 +70,8 @@ onActivated(async () => {
         :gutter="24"
         style="margin-top: 12px; font-weight: 700; font-size: 14px"
       >
-        <el-col :span="6"> 物料长：{{ extendData.iDefindParm11 }} </el-col>
-        <el-col :span="6"> 物料宽：{{ extendData.iDefindParm12 }} </el-col>
+        <el-col :span="6"> 物料长：{{ extendData.cDynamicsParm05 }} </el-col>
+        <el-col :span="6"> 物料宽：{{ extendData.cDynamicsParm06 }} </el-col>
         <el-col :span="6"> 物料厚：{{ extendData.iDefindParm13 }} </el-col>
         <el-col :span="6"> 板材等级：{{ extendData.cDynamicsParm01 }} </el-col>
       </el-row>

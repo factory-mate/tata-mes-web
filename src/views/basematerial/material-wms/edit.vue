@@ -430,13 +430,21 @@ onActivated(() => {
         <el-tag type="primary" size="large">物料规格</el-tag>
         <el-row :gutter="24" style="margin-top: 12px">
           <el-col :span="6">
-            <el-form-item label="物料长" label-width="150" prop="nSafeQuinity">
-              <el-input v-model="formData.iDefindParm11" autocomplete="off" />
+            <el-form-item
+              label="物料长"
+              label-width="150"
+              prop="cDynamicsParm05"
+            >
+              <el-input v-model="formData.cDynamicsParm05" autocomplete="off" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="物料宽" label-width="150" prop="nSafeQuinity">
-              <el-input v-model="formData.iDefindParm12" autocomplete="off" />
+            <el-form-item
+              label="物料宽"
+              label-width="150"
+              prop="cDynamicsParm06"
+            >
+              <el-input v-model="formData.cDynamicsParm06" autocomplete="off" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
