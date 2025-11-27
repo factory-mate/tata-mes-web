@@ -55,8 +55,9 @@
                       size="small"
                       v-for="item in tableButton"
                       :key="item.Resource.cAttributeName"
-                      @click="clickTableBut(scope)"
-                      >{{ item.Resource.cAttributeName }}</el-button
+                      @click="clickTableBut(item, scope)"
+                    >
+                      {{ item.Resource.cAttributeName }}</el-button
                     >
                   </template>
                 </el-table-column>
@@ -112,7 +113,7 @@
                       size="small"
                       v-for="item in tableButton"
                       :key="item.Resource.cAttributeName"
-                      @click="clickTableBut(scope)"
+                      @click="clickTableBut(item, scope)"
                       >{{ item.Resource.cAttributeName }}</el-button
                     >
                   </template>
@@ -150,6 +151,24 @@
             <ButtonViem
               :ToolBut="PolicBtn"
               @UserPolicySaveAdd="UserPolicySaveAdd"
+            >
+            </ButtonViem>
+          </div>
+        </el-dialog>
+      </div>
+
+      <div>
+        <el-dialog v-model="CLEditdialogFormVisible" title="编辑策略">
+          <FHead
+            :Head="clHead"
+            ref="clHeadRef"
+            :disabled="false"
+            :row="policyRow"
+          ></FHead>
+          <div class="bot-btn">
+            <ButtonViem
+              :ToolBut="PolicBtn"
+              @UserPolicySaveEdit="UserPolicySaveEdit"
             >
             </ButtonViem>
           </div>
@@ -220,6 +239,7 @@ const TRref = ref();
 const TrRef = ref();
 const modelCode = ref();
 const row = ref();
+const policyRow = ref();
 const rowId = ref('');
 const Route = useRoute();
 const headRef = ref();
@@ -267,6 +287,7 @@ const SelectRoleList = ref([]) as any;
 const sendId = ref([]) as any;
 //添加策略弹框
 const CLAdddialogFormVisible = ref(false);
+const CLEditdialogFormVisible = ref(false);
 const AddusertableColumns = ref([]) as any;
 const cltotal = ref(0) as any;
 const TCUsertableData = ref([]) as any;
@@ -408,6 +429,25 @@ const funTable = (arr: Array<any>) => {
       };
       UsertableColumns.value.push(itemDatas);
     }
+    if (
+      item.cFormPropertyCode == 'ManageCenter.User.M.Edit.Policy.Grid' &&
+      item.Resource.cAttributeTypeCode == 'method'
+    ) {
+      console.log(item);
+      let itemData = { checkType: true, label: '操作', slotName: 'button' };
+      tableButton.value.push(item);
+      UsertableColumns.value.push(itemData);
+      UsertableColumns.value = UsertableColumns.value.filter(
+        (item: { label: any }, index: any, self: any[]) => {
+          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
+          const i = self.findIndex(
+            (t: { label: any }) => t.label === item.label
+          );
+          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
+          return i === index;
+        }
+      );
+    }
     // TODO
     if (
       (item.cFormPropertyCode === 'ManageCenter.User.M.Add.Role.Grid' &&
@@ -469,6 +509,32 @@ const funBtn = (arr: Array<any>) => {
     }
   });
 };
+
+function handleEditStrategy(item, scope) {
+  policyRow.value = scope.row;
+  CLEditdialogFormVisible.value = true;
+  objModelCode.value = item.cIncludeModelCode;
+  configApi(objModelCode.value).then(res => {
+    if (res.status == 200) {
+      res.data.forEach((item: any) => {
+        if (item.cPropertyClassTypeCode == 'ToolBut') {
+          PolicBtn.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+        if (item.cPropertyClassTypeCode == 'Head') {
+          item[import.meta.env.VITE_APP_key].map((item: any) => {
+            item.Resource[item.Resource.cAttributeCode] = '';
+          });
+          clHead.value = item[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+      });
+    }
+  });
+}
+
 // 用户策略table filters
 const usertablefilter = () => {
   if (!UsertableColumns.value.length) {
@@ -613,11 +679,12 @@ const clRoleChange = (val: any) => {
   TCtableAxios();
 };
 // table 按钮 集合
-const clickTableBut = (val: string) => {
-  switch (val) {
-    // case "View":
-    //     clickView()
-    //     break;
+const clickTableBut = (item, scope) => {
+  console.log(item, scope);
+  switch (item.cAttributeCode) {
+    case 'UserPolicyEdit':
+      handleEditStrategy(item, scope);
+      break;
     default:
       break;
   }
@@ -752,6 +819,27 @@ const UThandleSelectionChange = (arr: any) => {
       TUref.value.handleRemoveSelectionChange();
     }
   });
+};
+const UserPolicySaveEdit = async obj => {
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { ...clHeadRef.value.ruleForm }
+  };
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  try {
+    const res = await DataApi(data);
+    if (res.success) {
+      ElMessage.success('编辑策略成功');
+      usertableAxios();
+      CLEditdialogFormVisible.value = false;
+    } else {
+      ElMessage.error(res.msg);
+    }
+  } catch {
+    //
+  }
+  loading.close();
 };
 
 //弹窗用户添加策略保存

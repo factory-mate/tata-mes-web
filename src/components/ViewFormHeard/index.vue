@@ -346,6 +346,7 @@ import {
   DataApi,
   commonApi
 } from '@/api/configApi/index';
+import request from '@/utils/request';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 import { localStorage, sessionStorage } from '@/utils/storage';
@@ -1233,6 +1234,7 @@ const funHeadview = () => {
   if (HeadViewData.value.length > 0) {
     let AxiosData = HeadViewData.value[0];
     let paramsData = {};
+    let bodyData = {};
     if (
       props.tabVal == 'ManageCenter.Inentory.M.Edit.WMS' ||
       props.tabVal == 'ManageCenter.Inentory.M.Edit.Extend' ||
@@ -1273,6 +1275,12 @@ const funHeadview = () => {
         paramsData = { cBomCode: row.value.cKey };
       }
     } else if (
+      Route.name === 'UserAddEdit' &&
+      props.Head?.[0].cFormPropertyCode ===
+        'ManageCenter.User.M.EditPolicy.Head'
+    ) {
+      bodyData = { conditions: `UID = ${props.row?.UID}` };
+    } else if (
       Route.name == 'BomDoorInfoCLView' ||
       Route.name == 'BomDoorInfoGZView' ||
       Route.name == 'BomDoorInfoBDSView' ||
@@ -1299,11 +1307,20 @@ const funHeadview = () => {
     let dataVal = {
       method: AxiosData.Resource.cHttpTypeCode,
       url: AxiosData.Resource.cServerIP + AxiosData.Resource.cUrl,
-      params: paramsData
+      params: paramsData,
+      data: bodyData
     };
-    ParamsApi(dataVal).then((res: any) => {
-      ruleForm.value = { ...res.data, ...ruleFormData.value };
+    request(dataVal).then((res: any) => {
       // ruleForm.value.dProductDate='2024-04-11'
+      if (
+        Route.name === 'UserAddEdit' &&
+        props.Head?.[0].cFormPropertyCode ===
+          'ManageCenter.User.M.EditPolicy.Head'
+      ) {
+        ruleForm.value = { ...res?.data?.data[0], ...ruleFormData.value };
+      } else {
+        ruleForm.value = { ...res.data, ...ruleFormData.value };
+      }
       if (
         Route.name == 'AddPartolPlan' ||
         Route.name == 'EditPatrolPlan' ||

@@ -223,6 +223,7 @@ const emits = defineEmits([
   'UserRoleDelete',
   'UserPolicyAdd',
   'UserPolicySaveAdd',
+  'UserPolicySaveEdit',
   'UserRoleAdd',
   'clickAddConvert',
   'UserRoleSaveAdd',
@@ -489,6 +490,9 @@ const UserPolicyAdd = (obj: any) => {
 //用户策略添加保存
 const UserPolicySaveAdd = (obj: any) => {
   emits('UserPolicySaveAdd', obj);
+};
+const UserPolicySaveEdit = (obj: any) => {
+  emits('UserPolicySaveEdit', obj);
 };
 //用户角色添加
 const UserRoleAdd = (obj: any) => {
@@ -998,6 +1002,9 @@ const clickButton = (event: any) => {
       break;
     case 'UserPolicySaveAdd':
       UserPolicySaveAdd(event);
+      break;
+    case 'UserPolicySaveEdit':
+      UserPolicySaveEdit(event);
       break;
     case 'UserRoleAdd':
       UserRoleAdd(event);

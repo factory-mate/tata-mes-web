@@ -11,7 +11,7 @@
         </ButtonViem>
         <!-- </el-card> -->
       </div>
-      <div class="two-Grid">
+      <div class="two-Grid" v-if="false">
         <!-- 用户策略表格 -->
         <div class="LeftUser">
           <!-- 按钮区域 -->
