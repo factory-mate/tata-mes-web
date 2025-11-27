@@ -344,7 +344,8 @@ import {
   configApi,
   ParamsApi,
   DataApi,
-  commonApi
+  commonApi,
+  getEmployeeList
 } from '@/api/configApi/index';
 import request from '@/utils/request';
 import router from '@/router';
@@ -1539,6 +1540,17 @@ const headVal = () => {
   }
   if (Route.name === 'UserAddEdit') {
     ruleForm.value.cResourcesName = '';
+  }
+  if (Route.name === 'PurchaseRequestNotionsAdd') {
+    const username = localStorage.get('user').UserCode;
+    getEmployeeList({ conditions: 'cEmployeeCode=' + username }).then(res => {
+      const d = res.data[0];
+      ruleForm.value = {
+        ...ruleForm.value,
+        cDepName: d.cDepName,
+        cDepCode: d.cDepCode
+      };
+    });
   }
   setTimeout(() => {
     ruleFormRef.value?.clearValidate();

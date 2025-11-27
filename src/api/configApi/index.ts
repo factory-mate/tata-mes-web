@@ -177,3 +177,11 @@ export function getKnifePrice({ cInvCode, cVendorCode, cSAPCode = '' }) {
     }
   });
 }
+
+export function getEmployeeList(params) {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + `/api/Employee/GetForList`,
+    method: 'GET',
+    params
+  });
+}
