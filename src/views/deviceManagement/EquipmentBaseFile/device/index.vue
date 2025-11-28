@@ -57,6 +57,7 @@
           @clickDelete="clickDel"
           @export-all="Export"
           @export-one="ExportOne"
+          @print="handlePrintFn"
         ></ButtonViem>
         <!-- 表格区域 -->
         <myTable
@@ -129,6 +130,68 @@
           @pagination="changPage"
         />
       </el-card>
+
+      <div ref="componentRef" class="print-content">
+        <div
+          :class="printData.length > 1 && 'per-page'"
+          v-for="(item, index) in printData"
+          :key="index"
+        >
+          <table
+            border="1"
+            style="border-collapse: collapse; width: 100%; height: 100vh"
+          >
+            <tbody>
+              <tr>
+                <td colspan="5" style="text-align: center">
+                  TATA木门25厂固定资产标识卡
+                </td>
+              </tr>
+              <tr>
+                <td>资产编号</td>
+                <td colspan="2">{{ item.cPARM01 }}</td>
+                <td>设备编号</td>
+                <td>{{ item.cDeviceCode }}</td>
+              </tr>
+              <tr>
+                <td>资产名称</td>
+                <td colspan="2">{{ item.cDeviceName }}</td>
+                <td>设备类型</td>
+                <td>{{ item.cDeviceTypeName }}</td>
+              </tr>
+              <tr>
+                <td>使用日期</td>
+                <td>{{ item.dStartDateStr }}</td>
+                <td>车间</td>
+                <td>{{ item.cPARM03 }}</td>
+                <td rowspan="3" colspan="3">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <qrcode-vue :value="item.cQRCode" :size="80"></qrcode-vue>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>设备状态</td>
+                <td>{{ item.IsValidName }}</td>
+                <td>组别</td>
+                <td>{{ item.cPARM04 }}</td>
+              </tr>
+              <tr>
+                <td>生产主管</td>
+                <td>{{ item.cPARM06 }}</td>
+                <td>责任保全</td>
+                <td>{{ item.cPARM08 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
     <!-- 弹窗 -->
     <Odialog
@@ -182,8 +245,21 @@ import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import { useVueToPrint } from 'vue-to-print';
+import QrcodeVue from 'qrcode.vue';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+
+const componentRef = ref();
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: '设备标签',
+  onAfterPrint: () => {
+    // printData.value = [];
+  }
+});
+
+const printData = ref([]);
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const Route = useRoute();
@@ -765,6 +841,39 @@ const Export = async (obj: any) => {
   exportAnalysisHooks(data, excelTitle);
 };
 
+const handlePrintFn = obj => {
+  sendId.value = [];
+  SElectdATA.value.forEach((item: { UID: any }) => sendId.value.push(item.UID));
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要打印的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: {
+      conditions: `UID in (${sendId.value.join(',')})`
+    }
+  };
+
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      printData.value = res.data ?? [];
+      if (printData.value.length == 0) {
+        ElMessage({
+          message: '无数据',
+          type: 'warning'
+        });
+        return;
+      }
+      setTimeout(() => handlePrint(), 16);
+    }
+  });
+};
+
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
   let conditions = Conditions.value;
@@ -829,5 +938,24 @@ const ExportOne = async (obj: any) => {
 
 :deep(.el-form-item__label) {
   font-weight: bold;
+}
+
+.print-content {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 5mm;
+  }
+
+  .print-content {
+    display: block;
+  }
+
+  .per-page {
+    page-break-after: always;
+    break-after: page;
+  }
 }
 </style>
