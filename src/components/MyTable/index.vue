@@ -391,9 +391,9 @@ const tableRowClassName: any = ({ row, rowIndex }) => {
   if (Route.name === 'ProjectMaintain') {
     uniqueField = 'DevProPersonUID';
   }
-  if (selectData.value.map(i => i[uniqueField]).includes(row[uniqueField])) {
-    return 'hover-row';
-  }
+  // if (selectData.value.map(i => i[uniqueField]).includes(row[uniqueField])) {
+  //   return 'hover-row';
+  // }
   if (Route.name == 'TaskListQuery') {
     if (row.iStatus == '1') {
       return 'success-row';
@@ -910,8 +910,8 @@ defineExpose({ handleRemoveSelectionChange, clearFilter, selectData });
 }
 
 ::v-deep .el-table__row.hover-row {
-  --el-table-tr-bg-color: #fab6b6 !important;
-  --el-bg-color: #fab6b6 !important;
+  // --el-table-tr-bg-color: #fab6b6 !important;
+  // --el-bg-color: #fab6b6 !important;
 }
 
 ::v-deep .el-table__row.success-row {
