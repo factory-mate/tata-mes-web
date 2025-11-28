@@ -50,36 +50,12 @@
                 (Route.name == 'neworiginalOrder' ||
                   Route.name == 'neworiginalOrderFX' ||
                   Route.name == 'newProductionOrder') &&
-                item.label == '取消单号' &&
-                item.prop == 'cCode'
-              "
-            >
-              <span style="color: red" @click="clickCode(scope, item)">{{
-                scope.row[item.prop]
-              }}</span>
-            </span>
-            <span
-              class="butPP"
-              v-if="
-                (Route.name == 'neworiginalOrder' ||
-                  Route.name == 'neworiginalOrderFX' ||
-                  Route.name == 'newProductionOrder') &&
-                item.label == '变更单号' &&
-                item.prop == 'cSourceCode'
-              "
-            >
-              <span style="color: red" @click="clickCode(scope, item)">
-                {{ scope.row[item.prop] }}</span
-              >
-            </span>
-            <span
-              class="butPP"
-              v-if="
-                (Route.name == 'neworiginalOrder' ||
-                  Route.name == 'neworiginalOrderFX' ||
-                  Route.name == 'newProductionOrder') &&
-                item.label == '订单号' &&
-                item.prop == 'cCode'
+                ((item.label == '取消单号' && item.prop == 'cCode') ||
+                  (item.label == '备注' &&
+                    item.cFormPropertyCode ===
+                      'MES.PRODUCTVOUCH_LLOW.M.List.Grid') ||
+                  (item.label == '变更单号' && item.prop == 'cSourceCode') ||
+                  (item.label == '订单号' && item.prop == 'cCode'))
               "
             >
               <span style="color: red" @click="clickCode(scope, item)">{{
@@ -97,6 +73,7 @@
 import { ref, nextTick, PropType, watch, defineEmits } from 'vue';
 import { ElTable, ElTableColumn } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
+import { GetPRODUCTVOUCHForPage } from '@/api/configApi';
 const Route = useRoute();
 const myTableRef = ref();
 const pagePath = ref();
@@ -388,109 +365,77 @@ const selectClick = (selection: any[], row: any) => {
   // }
 };
 //点击单号跳转
-const clickCode = (scope: any, item: any) => {
-  if (scope.row.cVouchTypeName == '总部变更单' && item.label == '订单号') {
-    router.push({
-      name: 'newproductionChangeOrder',
-      params: {
-        t: Date.now(),
-        rowId: scope.row.UID
-      },
-      state: {
-        modelCode: scope.row.cModelCode,
-        row: JSON.stringify(scope.row),
-        pathName: 'originalOrder'
-        // title: '变更单详情'
+const clickCode = async (scope: any, item: any) => {
+  let UID = scope.row.UID;
+  let r = scope.row;
+  let pathName;
+  let routerName;
+  if (item.label === '备注') {
+    if (scope.row.cMemo) {
+      try {
+        const { data } = await GetPRODUCTVOUCHForPage({
+          Conditions: 'cCode = ' + scope.row.cMemo,
+          OrderByFileds: '',
+          PageIndex: 1,
+          PageSize: 20
+        });
+        UID = data?.data?.[0].UID;
+        r = data?.data?.[0];
+      } catch {
+        //
       }
-    });
-  } else if (
-    scope.row.cVouchTypeName == '工厂变更单' &&
-    item.label == '订单号'
-  ) {
-    router.push({
-      name: 'newProductionOrderChange',
-      params: {
-        t: Date.now(),
-        rowId: scope.row.UID
-      },
-      state: {
-        modelCode: scope.row.cModelCode,
-        row: JSON.stringify(scope.row),
-        pathName: 'originalOrder'
-        // title: '变更单详情',
-      }
-    });
-  } else if (
-    scope.row.cVouchTypeName == '工厂取消单' &&
-    item.label == '取消单号'
-  ) {
-    router.push({
-      name: 'FactoryCancellationNoteView',
-      params: {
-        t: Date.now(),
-        rowId: scope.row.UID
-      },
-      state: {
-        modelCode: scope.row.cModelCode,
-        pageType: 'view',
-        row: JSON.stringify(scope.row),
-        pathName: 'originalOrder'
-        // title: '取消单详情',
-      }
-    });
-  } else if (
-    scope.row.cVouchTypeName == '总部取消单' &&
-    item.label == '取消单号'
-  ) {
-    console.log('22');
-    router.push({
-      name: 'newproductionCancellationOrder',
-      params: {
-        t: Date.now(),
-        rowId: scope.row.UID
-      },
-      state: {
-        modelCode: scope.row.cModelCode,
-        row: JSON.stringify(scope.row),
-        pathName: 'originalOrder'
-        // title: '取消单详情'
-      }
-    });
-    //返修单
-  } else if (
-    scope.row.cVouchTypeName == '生产反馈单' &&
-    item.label == '订单号'
-  ) {
-    if (Route.name == 'neworiginalOrder') {
-      router.push({
-        name: 'neworiginalOrderFX',
-        params: {
-          t: Date.now(),
-          rowId: scope.row.UID
-        },
-        state: {
-          modelCode: scope.row.cModelCode,
-          row: JSON.stringify(scope.row),
-          pathName: 'neworiginalOrder'
-          // title: '返修单详情'
-        }
-      });
-    } else if (Route.name == 'newProductionOrder') {
-      router.push({
-        name: 'newProductOrderFX',
-        params: {
-          t: Date.now(),
-          rowId: scope.row.UID
-        },
-        state: {
-          modelCode: scope.row.cModelCode,
-          row: JSON.stringify(scope.row),
-          pathName: 'newProductionOrder'
-          // title: '返修单详情'
-        }
-      });
     }
   }
+
+  if (Route.name === 'neworiginalOrder') {
+    pathName = 'neworiginalOrder';
+  } else if (Route.name === 'newProductionOrder') {
+    pathName = 'newProductionOrder';
+  }
+
+  if (
+    (scope.row.cVouchTypeName == '总部变更单' && item.label == '订单号') ||
+    (scope.row.cSetValue == '总部变更' && item.label == '备注')
+  ) {
+    routerName = 'newproductionChangeOrder';
+  }
+  if (
+    (scope.row.cVouchTypeName == '工厂变更单' && item.label == '订单号') ||
+    (scope.row.cSetValue == '工厂变更' && item.label == '备注')
+  ) {
+    routerName = 'newProductionOrderChange';
+  }
+  if (
+    (scope.row.cVouchTypeName == '工厂取消单' && item.label == '取消单号') ||
+    (scope.row.cSetValue == '工厂取消' && item.label == '备注')
+  ) {
+    routerName = 'FactoryCancellationNoteView';
+  }
+  if (
+    (scope.row.cVouchTypeName == '总部取消单' && item.label == '取消单号') ||
+    (scope.row.cSetValue == '总部取消' && item.label == '备注')
+  ) {
+    routerName = 'newproductionCancellationOrder';
+  }
+  if (
+    (scope.row.cVouchTypeName == '生产反馈单' && item.label == '订单号') ||
+    (scope.row.cSetValue == '生产反馈' && item.label == '备注')
+  ) {
+    routerName = 'neworiginalOrderFX';
+  }
+
+  router.push({
+    name: routerName,
+    params: {
+      t: Date.now(),
+      rowId: UID
+    },
+    state: {
+      modelCode: scope.row.cModelCode,
+      row: JSON.stringify(r),
+      pathName
+    }
+  });
 };
 
 // 重置

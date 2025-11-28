@@ -185,3 +185,13 @@ export function getEmployeeList(params) {
     params
   });
 }
+
+export function GetPRODUCTVOUCHForPage(data) {
+  return request({
+    url:
+      import.meta.env.VITE_APP_DY_100_API +
+      `/api/PRODUCTVOUCH/GetPRODUCTVOUCHForPage`,
+    method: 'POST',
+    data
+  });
+}

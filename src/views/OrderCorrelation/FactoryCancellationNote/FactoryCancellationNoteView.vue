@@ -140,9 +140,11 @@ onActivated(() => {
   //     getAddUser(Route.meta.ModelCode)
   // }
   initType.value = false;
-  if (Route.params.rowId != rowId.value) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (Route.params.rowId != rowId.value) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   if (Route.params.rowId) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
