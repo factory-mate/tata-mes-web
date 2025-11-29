@@ -1228,6 +1228,9 @@ const treeChange = (valKey: any) => {
   ) {
     ruleForm.value['cDefindParm04'] = childrenName?.at(-1).cFactoryUnitName;
   }
+  if (Route.name === 'PurchaseRequestNotionsAdd') {
+    ruleForm.value['cDefindParm05'] = childrenName?.at(-1).cFactoryUnitName;
+  }
 };
 
 // 编辑/详情的数据

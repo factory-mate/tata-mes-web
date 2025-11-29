@@ -273,6 +273,7 @@ const emits = defineEmits([
   'ButClose',
   'ImportData',
   'closeCancel',
+  'Close',
   'ExpotrTableData',
   'ExpotrFile',
   'ClickExportSave',
@@ -677,6 +678,9 @@ const ManualReview = (obj: any) => {
 };
 const closeCancel = (obj: any) => {
   emits('closeCancel', obj);
+};
+const Close = obj => {
+  emits('Close', obj);
 };
 //生产同步上游
 const ProductionUP = (obj: any) => {
@@ -1167,6 +1171,9 @@ const clickButton = (event: any) => {
       break;
     case 'Cancel':
       closeCancel(event);
+      break;
+    case 'Close':
+      Close(event);
       break;
     case 'Save':
       ClickExportSave(event);

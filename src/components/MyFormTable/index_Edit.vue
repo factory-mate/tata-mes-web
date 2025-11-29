@@ -1530,6 +1530,9 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
       tableDataVal.value[IndexType.value].cUnitCode = val.value[0].CG_UnitCode;
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].CG_UnitName;
+      const sapFirst = val.value[0]?.list_sap?.[0];
+      tableDataVal.value[IndexType.value].cDefindParm08 = sapFirst?.cSAPCode;
+      tableDataVal.value[IndexType.value].cDefindParm10 = sapFirst?.cSAPName;
     }
     if (AttributeCode.value == 'cUnitName') {
       tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;

@@ -15,6 +15,7 @@
         @Commit="Commit"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @close="HandleClose"
       >
       </ButtonViem>
       <!-- 表格区域 -->
@@ -412,6 +413,46 @@ const clickDelete = (scope: any, obj: any) => {
       });
       ElLoading.service().close();
     });
+};
+const HandleClose = (obj: any) => {
+  sendId.value = [];
+  CheckDataList.value.forEach((item: { UID: any }) =>
+    sendId.value.push(item.UID)
+  );
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要关闭的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UIDs: sendId.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status == 200) {
+      ElMessage({
+        type: 'success',
+        message: '关闭成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+    } else {
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+      ElMessage({
+        type: 'info',
+        message: res.errmsg[0].Value
+      });
+    }
+    ElLoading.service().close();
+  });
 };
 //按钮提交
 const Commit = (obj: any) => {
