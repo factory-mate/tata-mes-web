@@ -58,6 +58,7 @@
           @closeCancel="closeCancel"
           @ChangeOrde="ChangeOrde"
           @BatchInspection="BatchInspection"
+          @ExpotrFile="exportFile"
         >
         </ButtonViem>
       </div>
@@ -395,6 +396,7 @@ onActivated(() => {
 });
 // tabs 切换，调取对应Tab数据
 const clickTabs = (val: any) => {
+  console.log(val);
   head.value = [];
   tableColumns.value = [];
   total.value = 0;
@@ -1099,6 +1101,10 @@ const SysReview = (obj: any) => {
         message: '取消审单'
       });
     });
+};
+const exportFile = () => {
+  console.log(1);
+  getAddUser(TabPageVal.value[0].cIncludeModelCode);
 };
 //审单
 const BatchInspection = (obj: any) => {
