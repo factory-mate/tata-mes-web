@@ -419,21 +419,24 @@ const clickEdit = (obj: any) => {
 
 const setWidth = row => {
   switch (row.label) {
+    case '项号':
+      return 60;
+    case '单号':
+      return 80;
+    case '规格型号':
+      return 80;
     case '物料编码':
     case 'SAP编码':
-      return 110;
+    case '交货日期':
+      return 130;
     case '物料名称':
-      return 200;
-    case '规格型号':
       return 180;
     case '数量':
     case '长':
     case '宽':
     case '厚':
-      return 60;
     case '单位':
-      return 100;
-    case '交货日期':
+    case '供应商':
       return 100;
     default:
       return 200;

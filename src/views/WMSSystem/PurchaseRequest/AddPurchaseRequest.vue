@@ -51,7 +51,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="160px"
+            width="100px"
             align="center"
           >
             <template #header>
@@ -437,14 +437,15 @@ const setWidth = row => {
     case 'SAP编码':
       return 110;
     case '物料名称':
-      return 200;
+      return 150;
     case '规格型号':
       return 80;
+    case '供应商':
     case '数量':
     case '长':
     case '宽':
     case '厚':
-      return 60;
+      return 100;
     case '单位':
       return 100;
     case '交货日期':
