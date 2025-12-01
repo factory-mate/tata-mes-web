@@ -3067,7 +3067,9 @@ const materialFunData = (data: any) => {
 };
 const downFile = (v: any) => {
   if (ruleForm.value[v]) {
-    window.location.href = ruleForm.value[v];
+    // window.location.href = ruleForm.value[v];
+    const fileUrl = ruleForm.value[v];
+    window.open(fileUrl, '_blank');
   } else {
     ElMessage({
       message: '没有下载的文件',

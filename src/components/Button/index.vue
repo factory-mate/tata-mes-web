@@ -83,7 +83,8 @@
           item.Resource.cAttributeCode == 'ImportOrder' ||
           item.Resource.cAttributeCode == 'Import' ||
           item.Resource.cAttributeCode == 'UploadFile' ||
-          item.Resource.cAttributeCode == 'ImportUpdate'
+          item.Resource.cAttributeCode == 'ImportUpdate' ||
+          item.Resource.cAttributeCode == 'HeadUpLoad'
         "
         v-model:file-list="fileList"
         class="fileSty"
@@ -370,6 +371,11 @@ const beforeUpload = () => {
   ) {
     uploadFiledata.value = {
       uid: guid()
+    };
+  }
+  if (Route.name === 'neworiginalOrder') {
+    uploadFiledata.value = {
+      UID: Route.params.rowId
     };
   }
 };
