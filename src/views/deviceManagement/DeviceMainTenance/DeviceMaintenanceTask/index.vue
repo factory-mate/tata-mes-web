@@ -12,7 +12,7 @@
       <!-- 按钮区域 -->
       <ButtonViem
         :ToolBut="But"
-        @EquipmentClose="EquipmentClose"
+        @Close="EquipmentClose"
         @EqupimentRead="EqupimentRead"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"

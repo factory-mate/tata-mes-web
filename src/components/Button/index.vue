@@ -199,7 +199,6 @@ const emits = defineEmits([
   'Delay',
   'AllOut',
   'EqupimentRead',
-  'EquipmentClose',
   'AddFile',
   'clickAdd',
   'AddPersonGroup',
@@ -742,9 +741,6 @@ const ChangeOrde = (obj: any) => {
 const AddIncludMode = (obj: any) => {
   emits('AddIncludMode', obj);
 };
-const EquipmentClose = (obj: any) => {
-  emits('EquipmentClose', obj);
-};
 const EqupimentRead = (obj: any) => {
   emits('EqupimentRead', obj);
 };
@@ -1204,9 +1200,6 @@ const clickButton = (event: any) => {
       break;
     case 'AddFile':
       AddFile(event);
-      break;
-    case 'Close':
-      EquipmentClose(event);
       break;
     case 'Read':
       EqupimentRead(event);
