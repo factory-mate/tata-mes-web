@@ -85,6 +85,16 @@ export function InventoryInfoGetForPage(cInvCode) {
   });
 }
 
+export function KnifeInventoryInfoGetForPage(cInvCode) {
+  return request({
+    url: import.meta.env.VITE_TMS_API + `/api/INVETORY/GetForPage`,
+    method: 'POST',
+    data: {
+      conditions: `cInvCode = ${cInvCode}`
+    }
+  });
+}
+
 export function InventorySAPGetForPage(cSAPCode) {
   return request({
     url: import.meta.env.VITE_APP_BASE_API + `/api/INENTORY_SAP/GetForPage`,
