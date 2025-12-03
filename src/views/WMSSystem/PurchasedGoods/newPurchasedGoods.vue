@@ -649,13 +649,19 @@ const Tconfirm = () => {
   });
   // 表格添加数据
   sortData.forEach((item: any) => {
-    tableData.value.push({
+    const d = {
       ...item,
       nAccReceiveQuantity: item.inv_iDefindParm12,
       nReceiveQuantity: '',
       nTaxPrice: item.nTaxPrice ?? 0,
       nTaxRate: item.nTaxRate ?? 0
-    });
+    };
+    if (item.cVouchTypeCode == '4') {
+      d.nAccReceiveQuantity = item.nSumQuantity;
+      d.nAccQuantity = 1;
+    }
+    console.log(item);
+    tableData.value.push(d);
   });
 
   TTABRef.value.handleRemoveSelectionChange();

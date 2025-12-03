@@ -87,20 +87,22 @@
             <div style="margin-top: 4px">箱码: {{ item.cQRCode }}</div>
             <div>物料编码: {{ item.cInvCode }}</div>
             <div>物料名称：{{ item.cInvName }}</div>
-            <div>数量：{{ item.iDefindParm13Name }}{{ item.cUnitName }}</div>
-            <div>加工尺寸: {{ item.cDefindParm06 }}</div>
-            <div>任务号: {{ item.cDefindParm08 }}</div>
-            <div>生产日期: {{ item.cDefindParm03 }}</div>
+            <div>数量：{{ item.iDefindParm13Name }}</div>
+            <div>加工尺寸: {{ item.X }}*{{ item.Y }}*{{ item.Z }}</div>
+            <div>任务号: {{ item.cDynamicsParm08 }}</div>
+            <div>生产日期: {{ item.cDynamicsParm03 }}</div>
             <div>
-              产线号及序号: {{ item.cDefindParm04 }} {{ item.cDefindParm05 }}
+              产线号及序号: {{ item.cDynamicsParm04 }}
+              {{ item.cDynamicsParm05 }}
             </div>
             <div>
-              生产单号及序号: {{ item.cDefindParm01 }} {{ item.cDefindParm02 }}
+              生产单号及序号: {{ item.cDynamicsParm01 }}
+              {{ item.cDynamicsParm02 }}
             </div>
             <div>
               <span style="margin-right: 4px"
-                >开向: {{ item.cDefindParm07 }}</span
-              >
+                >开向: {{ item.cDynamicsParm07 }}
+              </span>
               <span>工厂代号: TATA25</span>
             </div>
           </div>
