@@ -659,6 +659,7 @@ const Tconfirm = () => {
     if (item.cVouchTypeCode == '4') {
       d.nAccReceiveQuantity = item.nSumQuantity;
       d.nAccQuantity = 1;
+      d.nReceiveQuantity = item.nSumQuantity;
     }
     console.log(item);
     tableData.value.push(d);
