@@ -519,78 +519,26 @@ const ThandleSelectionChange = (val: any) => {
 };
 //弹窗确认
 const Tconfirm = async () => {
-  // if (
-  //   headRef.value.ruleForm.cVendorName ||
-  //   headRef.value.ruleForm.cVendorCode
-  // ) {
-  //   console.log(
-  //     '已指定供应商',
-  //     headRef.value.ruleForm.cVendorName,
-  //     headRef.value.ruleForm.cVendorCode,
-  //     itemData.value
-  //   );
-  //   if (
-  //     itemData.value.some(
-  //       (item: any) =>
-  //         item.cVendorCode !== headRef.value.ruleForm.cVendorCode ||
-  //         item.cVendorName !== headRef.value.ruleForm.cVendorName
-  //     )
-  //   ) {
-  //     try {
-  //       await ElMessageBox.confirm(
-  //         '与已指定供应商不匹配，是否继续添加？',
-  //         '提示',
-  //         {
-  //           confirmButtonText: '确定',
-  //           cancelButtonText: '取消',
-  //           type: 'warning'
-  //         }
-  //       );
-  //       const { cVendorCode, cVendorName } = itemData.value[0];
-  //       headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-  //     } catch {
-  //       return;
-  //     }
-  //   }
-  // } else {
-  //   const { cVendorCode, cVendorName } = itemData.value[0];
-  //   headRef.value.handleChangeRuleForm({ cVendorCode, cVendorName });
-  // }
-  // // 判断选中的数据 cVendorCode 是否一致
-  // if (
-  //   !itemData.value.every(
-  //     (item: any) => item.cVendorCode === itemData.value[0].cVendorCode
-  //   )
-  // ) {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '请选择同一供应商的物料'
-  //   });
-  //   return;
-  // }
-
-  if (
-    itemData.value.some(
-      i =>
-        i.cDefindParm07 !== itemData.value[0].cDefindParm07 ||
-        i.cDepCode !== itemData.value[0].cDepCode ||
-        i.cDynamicsParm01 !== itemData.value[0].cDynamicsParm01
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '请选择相同的部门、工位、默认货位'
+  if (!headRef.value.ruleForm.cDefindParm03) {
+    headRef.value.handleChangeRuleForm({
+      cDefindParm03: itemData.value[0].Head_cDefindParm04,
+      cDefindParm04: itemData.value[0].Head_cDefindParm05
     });
-    return;
   }
-
+  if (!headRef.value.ruleForm.cDepCode) {
+    headRef.value.handleChangeRuleForm({
+      cDepCode: itemData.value[0].cDepCode,
+      cDepName: itemData.value[0].cDepName
+    });
+  }
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
     TABRef.value.tableDataVal.push({
       ...item,
       cSourceCode: item.cCode,
-      PID: item.UID
+      PID: item.UID,
+      cDefindParm03: item.cDefindParm08
     });
   });
   TTABRef.value.handleRemoveSelectionChange();
@@ -634,6 +582,39 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
+  // if (
+  //   TABRef.value.tableDataVal.find(
+  //     i => i.cDefindParm03 != headRef.value.ruleForm.cDefindParm03
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '存在数据：工位不同'
+  //   });
+  //   return;
+  // }
+  // if (
+  //   TABRef.value.tableDataVal.find(
+  //     i => i.cDynamicsParm01 != headRef.value.ruleForm.cDefindParm07
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '存在数据：库区不同'
+  //   });
+  //   return;
+  // }
+  // if (
+  //   TABRef.value.tableDataVal.find(
+  //     i => i.cDepCode != headRef.value.ruleForm.cDepCode
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '存在数据：部门不同'
+  //   });
+  //   return;
+  // }
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'MaterialOutbound';
   obj.tableData = TABRef.value.tableDataVal;

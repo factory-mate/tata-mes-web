@@ -519,27 +519,14 @@ const ThandleSelectionChange = (val: any) => {
 };
 //弹窗确认
 const Tconfirm = () => {
-  if (
-    itemData.value.some(
-      i =>
-        i.cDefindParm07 !== itemData.value[0].cDefindParm07 ||
-        i.cDepCode !== itemData.value[0].cDepCode ||
-        i.cDynamicsParm01 !== itemData.value[0].cDynamicsParm01
-    )
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '请选择相同的部门、工位、默认货位'
-    });
-    return;
-  }
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
     TABRef.value.tableDataVal.push({
       ...item,
       cSourceCode: item.cCode,
-      PID: item.UID
+      PID: item.UID,
+      cDefindParm03: item.cDefindParm08
     });
   });
   TTABRef.value.handleRemoveSelectionChange();
@@ -627,6 +614,39 @@ const handleSelectionChange = (v: any) => {
 
 //修改保存
 const SaveEdit = (obj: any) => {
+  // if (
+  //   TABRef.value.tableDataVal.find(
+  //     i => i.Head_cDefindParm04 != headRef.value.ruleForm.cDefindParm03
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '存在数据：工位不同'
+  //   });
+  //   return;
+  // }
+  // if (
+  //   TABRef.value.tableDataVal.find(
+  //     i => i.cDynamicsParm01 != headRef.value.ruleForm.cDefindParm07
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '存在数据：库区不同'
+  //   });
+  //   return;
+  // }
+  // if (
+  //   TABRef.value.tableDataVal.find(
+  //     i => i.cDepCode != headRef.value.ruleForm.cDepCode
+  //   )
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '存在数据：部门不同'
+  //   });
+  //   return;
+  // }
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'MaterialOutbound';
   obj.tableData = TABRef.value.tableDataVal;
