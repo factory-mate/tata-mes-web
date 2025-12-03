@@ -95,7 +95,7 @@
       draggable
       :modal="false"
       :close-on-click-modal="false"
-      width="90%"
+      width="98%"
     >
       <!-- 搜索区域 -->
 
@@ -123,7 +123,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="80px"
             align="center"
           >
             <template #header>
@@ -847,14 +847,19 @@ const setWidth = row => {
     case 'SAP产品编码':
       return 90;
     case '物料名称':
-      return 200;
+      return 240;
     case '规格型号':
       return 120;
     case '剩余数量':
     case '数量':
     case '单位':
     case '采购类型':
-      return 60;
+    case '单号':
+    case '项号':
+    case '长':
+    case '宽':
+    case '厚':
+      return 65;
     case '单价':
     case '含税单价':
     case '含税金额':
