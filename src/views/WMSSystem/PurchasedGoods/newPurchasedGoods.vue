@@ -151,6 +151,7 @@ import {
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, ParamsApi, DataApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
+import BigNumber from 'bignumber.js';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -661,6 +662,27 @@ const Tconfirm = () => {
       d.nAccReceiveQuantity = item.nSumQuantity;
       d.nAccQuantity = 1;
       d.nReceiveQuantity = item.nSumQuantity;
+      const nAccReceiveQuantity = d.nReceiveQuantity;
+      const nReceiveQuantity = new BigNumber(
+        Number(nAccReceiveQuantity ?? 0) * Number(d.nAccQuantity ?? 0)
+      ); // 到货数量
+      const nTaxPrice = new BigNumber(d.nTaxPrice ?? 0).decimalPlaces(8); // 含税单价
+      const nTaxRate = new BigNumber(d.nTaxRate ?? 0); // 税率
+      const nTaxMoney = nReceiveQuantity.multipliedBy(nTaxPrice); // 税价合计：到货数量*含税单价
+      const cDefindParm06 = nTaxMoney
+        .dividedBy(new BigNumber(1).plus(nTaxRate.dividedBy(100)))
+        .multipliedBy(nTaxRate.dividedBy(100)); // 税额：（价税合计/（1+税率/100））*税率/100
+      const nMoney = nTaxMoney.minus(cDefindParm06); // 不含税金额：价税合计-税额
+      const nPrice = nReceiveQuantity.isGreaterThan(0)
+        ? nMoney.dividedBy(nReceiveQuantity).decimalPlaces(8)
+        : 0; // 不含税单价：不含税金额/到货数量
+      d.nReceiveQuantity = nReceiveQuantity.toString();
+      d.nTaxPrice = nTaxPrice.toString();
+      d.nTaxRate = nTaxRate.toString();
+      d.nTaxMoney = nTaxMoney.toString();
+      d.cDefindParm06 = cDefindParm06.toFixed(2).replace(/\.?0+$/, '');
+      d.nMoney = nMoney.toFixed(2).replace(/\.?0+$/, '');
+      d.nPrice = nPrice.toFixed(8).replace(/\.?0+$/, '');
     }
     console.log(item);
     tableData.value.push(d);
