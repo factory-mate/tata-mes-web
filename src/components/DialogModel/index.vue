@@ -938,6 +938,7 @@ const selectData = (val: any) => {
         }
         if (titleName.value === '维度名称') {
           ruleForm.value.cDimensionalityCode = val.value[0].cDimensionalityCode;
+          ruleForm.value.cModelCode = val.value[0].cModelCode;
         }
         if (titleName.value === '物料名称') {
           ruleForm.value.cInvCode = val.value[0].cInvCode;
