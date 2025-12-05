@@ -519,6 +519,47 @@ const ThandleSelectionChange = (val: any) => {
 };
 //弹窗确认
 const Tconfirm = () => {
+  if (!headRef.value.ruleForm.cDefindParm03) {
+    headRef.value.handleChangeRuleForm({
+      cDefindParm03: itemData.value[0].Head_cDefindParm04,
+      cDefindParm04: itemData.value[0].Head_cDefindParm05
+    });
+  } else {
+    if (
+      itemData.value.find(
+        i => i.Head_cDefindParm04 !== headRef.value.ruleForm.cDefindParm03
+      )
+    ) {
+      ElMessage({
+        message: '工位与已选择的不一致！',
+        type: 'error'
+      });
+      return;
+    }
+  }
+  if (!headRef.value.ruleForm.cDepCode) {
+    if (itemData.value.find(i => i.cDepCode !== itemData.value[0].cDepCode)) {
+      ElMessage({
+        message: '请选择同一个工位下的数据！',
+        type: 'error'
+      });
+      return;
+    }
+    headRef.value.handleChangeRuleForm({
+      cDepCode: itemData.value[0].cDepCode,
+      cDepName: itemData.value[0].cDepName
+    });
+  } else {
+    if (
+      itemData.value.find(i => i.cDepCode !== headRef.value.ruleForm.cDepCode)
+    ) {
+      ElMessage({
+        message: '部门与已选择的不一致！',
+        type: 'error'
+      });
+      return;
+    }
+  }
   TdialogFormVisible.value = false;
   // 表格添加数据
   itemData.value.forEach((item: any) => {
