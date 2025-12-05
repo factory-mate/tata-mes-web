@@ -96,8 +96,9 @@
               {{ item.cDynamicsParm05 }}
             </div>
             <div>
-              生产单号及序号: {{ item.cDynamicsParm01 }}
-              {{ item.cDynamicsParm02 }}
+              生产单号及序号: {{ item.cDynamicsParm01 }}-{{
+                item.cDynamicsParm02
+              }}
             </div>
             <div>
               <span style="margin-right: 4px"
