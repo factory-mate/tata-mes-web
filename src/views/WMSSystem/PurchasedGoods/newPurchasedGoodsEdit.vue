@@ -483,7 +483,7 @@ const tableAxios = async () => {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await ParamsApi(data);
     if (res.status == 200) {
-      tableData.value = res.data;
+      tableData.value = res.data ?? [];
       ElLoading.service().close();
     } else {
       console.log('请求出错');
