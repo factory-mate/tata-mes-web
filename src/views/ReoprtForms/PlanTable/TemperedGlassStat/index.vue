@@ -14,6 +14,7 @@
         @PushPurcharse="PushPurcharse"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @ImportPush="ImportPush"
       />
       <!-- 表格区域 -->
       <MyTable
@@ -414,6 +415,51 @@ const ExportOne = async obj => {
   };
   exportAnalysisHooks(data, '库房明细-当前');
 };
+
+function ImportPush(obj) {
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+
+  const formData = new FormData();
+  formData.append('cfile', obj.files[0].raw);
+
+  let url = obj.Resource.cServerIP + obj.Resource.cUrl;
+
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url,
+    data: formData
+  };
+
+  DataApi(data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+    .then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: res.msg || '操作成功'
+        });
+        close();
+        tableAxios();
+      } else {
+        ElMessage({
+          message: res.msg || '操作失败',
+          type: 'error'
+        });
+      }
+    })
+    .catch(err => {
+      ElMessage({
+        message: '操作失败',
+        type: 'error'
+      });
+    })
+    .finally(() => {
+      loading.close();
+    });
+}
 
 //多选获取UID
 const handleSelectionChange = arr => {

@@ -7,7 +7,8 @@
         v-if="
           item.cAttributeCode === 'ImportIn' ||
           item.cAttributeCode === 'ImportInOnKF' ||
-          item.cAttributeCode === 'Import_GZ'
+          item.cAttributeCode === 'Import_GZ' ||
+          item.cAttributeCode === 'ImportPush'
         "
         ref="importUploadRef"
         v-model:file-list="importFileList"
@@ -340,7 +341,8 @@ const emits = defineEmits([
   'AddOnSource',
   'AddItem',
   'Verify',
-  'ItemForm'
+  'ItemForm',
+  'ImportPush'
 ]);
 
 watch(
@@ -921,6 +923,9 @@ const Verify = (obj: any) => {
 const ItemForm = (obj: any) => {
   emits('ItemForm', obj);
 };
+const ImportPush = (obj: any) => {
+  emits('ImportPush', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1383,6 +1388,9 @@ const clickButton = (event: any) => {
       break;
     case 'ItemForm':
       ItemForm(event);
+      break;
+    case 'ImportPush':
+      ImportPush(event);
       break;
     default:
       break;
