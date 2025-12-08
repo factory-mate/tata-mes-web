@@ -136,6 +136,7 @@
           :class="printData.length > 1 && 'per-page'"
           v-for="(item, index) in printData"
           :key="index"
+          style="transform: rotate(90deg)"
         >
           <table
             border="1"
