@@ -517,7 +517,7 @@ const handleTableDataChange = (val: any) => {
   //   ...i,
   //   nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
   // }));
-  // tableData.value = TABRef.value.tableDataVal;
+  tableData.value = val;
 };
 
 const copyItem = scope => {

@@ -297,7 +297,6 @@ import {
   nextTick,
   PropType,
   watch,
-  defineEmits,
   reactive,
   toRefs,
   onMounted,
@@ -1015,7 +1014,6 @@ const changeTextBox = async (i: any, scope: any, v) => {
       }
     }
   }
-  console.log(tableDataVal.value);
   nextTick(() => {
     emit('handleTableDataChange', tableDataVal.value);
   });

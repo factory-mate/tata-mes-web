@@ -442,7 +442,7 @@ const handleTableDataChange = (val: any) => {
   //   ...i,
   //   nReceiveQuantity: Number(i.nAccReceiveQuantity) * Number(i.nAccQuantity)
   // }));
-  // tableData.value = TABRef.value.tableDataVal;
+  tableData.value = val;
 };
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {
