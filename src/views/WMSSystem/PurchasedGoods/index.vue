@@ -735,6 +735,13 @@ const DownloadBarcode = (obj: any) => {
     });
     return;
   }
+  if (chosseData.value.find(i => i.iStatus < 3)) {
+    ElMessage({
+      type: 'info',
+      message: '只能导出审核后的数据'
+    });
+    return;
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -825,6 +832,13 @@ const PrintVouch = obj => {
     ElMessage({
       type: 'info',
       message: '请勾选要打印的数据'
+    });
+    return;
+  }
+  if (chosseData.value.find(i => i.iStatus < 3)) {
+    ElMessage({
+      type: 'info',
+      message: '只能打印审核后的数据'
     });
     return;
   }
