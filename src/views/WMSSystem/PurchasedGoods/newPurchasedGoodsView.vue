@@ -88,7 +88,7 @@
             <div>物料编码: {{ item.cInvCode }}</div>
             <div>物料名称：{{ item.cInvName }}</div>
             <div>数量：{{ item.iDefindParm13Name }}</div>
-            <div>加工尺寸: {{ item.X }}*{{ item.Y }}*{{ item.Z }}</div>
+            <div>物料规格: {{ item.X }}*{{ item.Y }}*{{ item.Z }}</div>
             <div>任务号: {{ item.cDynamicsParm08 }}</div>
             <div>生产日期: {{ item.cDynamicsParm03 }}</div>
             <div>
@@ -157,7 +157,7 @@
               </el-row>
               <div>物料规格: {{ item.cDefindParm03 }}</div>
               <div>批次号: {{ item.cDefindParm01 }}</div>
-              <div>生产日期: {{ item.cDefindParm04 }}</div>
+              <div>供应商生产日期: {{ item.cDefindParm04 }}</div>
               <div>采购订单号: {{ item.cSourceCode }}</div>
               <div>供应商: {{ item.cVendorName }}</div>
               <div style="margin-bottom: 20px">
