@@ -154,7 +154,9 @@ const tabKey = ref(0);
 const sendId = ref([]) as any;
 
 onMounted(() => {
-  getData(Route.meta.ModelCode);
+  if (Route.name === 'PatrolPlan') {
+    getData(Route.meta.ModelCode);
+  }
 });
 
 onActivated(() => {});

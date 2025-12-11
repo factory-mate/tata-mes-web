@@ -156,20 +156,22 @@ const showButton = (obj, item) => {
 };
 
 onActivated(() => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  let val = window.sessionStorage.getItem('clickSider')
-    ? JSON.parse(window.sessionStorage.getItem('clickSider'))
-    : '';
-  // if (val == Route.name) {
-  //   initType.value = false;
-  //   getData(Route.meta.ModelCode);
-  // }
-  // if (initType.value) {
-  //   getData(Route.meta.ModelCode);
-  // }
-  getData(Route.meta.ModelCode);
-  initType.value = false;
+  if (Route.name === 'HistoryPlanStatistics') {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    let val = window.sessionStorage.getItem('clickSider')
+      ? JSON.parse(window.sessionStorage.getItem('clickSider'))
+      : '';
+    // if (val == Route.name) {
+    //   initType.value = false;
+    //   getData(Route.meta.ModelCode);
+    // }
+    // if (initType.value) {
+    //   getData(Route.meta.ModelCode);
+    // }
+    getData(Route.meta.ModelCode);
+    initType.value = false;
+  }
 });
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
