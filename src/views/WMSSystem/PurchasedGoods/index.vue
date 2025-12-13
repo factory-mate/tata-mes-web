@@ -163,8 +163,10 @@
             </div>
 
             <div style="display: flex; justify-content: space-between">
-              <div style="width: 50%">收货人：{{}}</div>
-              <div style="width: 50%">收货人电话：{{}}</div>
+              <div style="width: 50%">收货人：{{ item?.cDefindParm02 }}</div>
+              <div style="width: 50%">
+                收货人电话：{{ item?.cDefindParm03 }}
+              </div>
             </div>
           </div>
 

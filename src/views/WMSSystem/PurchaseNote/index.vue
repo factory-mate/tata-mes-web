@@ -14,6 +14,7 @@
         @clickAdd="clickAdd"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @DownloadDetail="DownloadDetail"
         @Commit="Commit"
         @ItemAddOnMaterial="ItemAddOnMaterial"
       ></ButtonViem>
@@ -499,6 +500,26 @@ const handleSelectionChange = (arr: any) => {
   // })
   sendId.value = [];
   arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
+};
+const DownloadDetail = (obj: any) => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要导出的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      OrderByFileds: '',
+      conditions: `UID in (${sendId.value.join()})`
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '采购单明细');
+  ElLoading.service().close();
 };
 //按钮提交
 const Commit = (obj: any) => {

@@ -151,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watch, ref } from 'vue';
+import { watch, ref } from 'vue';
 import useStore from '@/store';
 import { ArrowDown, SuccessFilled } from '@element-plus/icons-vue';
 import {
@@ -342,7 +342,8 @@ const emits = defineEmits([
   'AddItem',
   'Verify',
   'ItemForm',
-  'ImportPush'
+  'ImportPush',
+  'DownloadDetail'
 ]);
 
 watch(
@@ -926,6 +927,9 @@ const ItemForm = (obj: any) => {
 const ImportPush = (obj: any) => {
   emits('ImportPush', obj);
 };
+const DownloadDetail = (obj: any) => {
+  emits('DownloadDetail', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1391,6 +1395,9 @@ const clickButton = (event: any) => {
       break;
     case 'ImportPush':
       ImportPush(event);
+      break;
+    case 'DownloadDetail':
+      DownloadDetail(event);
       break;
     default:
       break;
