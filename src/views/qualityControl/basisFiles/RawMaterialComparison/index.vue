@@ -13,6 +13,8 @@
         :ToolBut="But"
         @clickAdd="clickAdd"
         @clickDelete="clickDel"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -469,12 +471,13 @@ const ExportAll = async (obj: any) => {
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+        ? Conditions.value +
+          '&& cConfigTypeCode=00269 && cResourceTypeCode=00272'
+        : 'cConfigTypeCode=00269 && cResourceTypeCode=00272'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单-所有');
+  exportAnalysisHooks(data, '原材料物料对照-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -487,12 +490,13 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
+        ? Conditions.value +
+          '&& cConfigTypeCode=00269 && cResourceTypeCode=00272'
+        : 'cConfigTypeCode=00269 && cResourceTypeCode=00272'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '采购单');
+  exportAnalysisHooks(data, '原材料物料对照');
   ElLoading.service().close();
 };
 
