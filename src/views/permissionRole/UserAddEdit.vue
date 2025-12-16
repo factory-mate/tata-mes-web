@@ -407,6 +407,7 @@ const getAddUser = async () => {
 const funTable = (arr: Array<any>) => {
   UsertableColumns.value = [];
   RoletableColumns.value = [];
+  tableButton.value = [];
   arr.forEach(item => {
     // TODO
     if (
