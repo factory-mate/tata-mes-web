@@ -562,7 +562,7 @@ const ExportAll = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  exportAnalysisHooks(data, '排产计划-所有');
+  exportAnalysisHooks(data, '备注管理-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -576,7 +576,7 @@ const ExportOne = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  exportAnalysisHooks(data, '排产计划');
+  exportAnalysisHooks(data, '备注管理');
 };
 
 const data = reactive({
