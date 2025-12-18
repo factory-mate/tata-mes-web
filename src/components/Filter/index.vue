@@ -69,6 +69,7 @@
                 <el-option
                   :label="
                     val.cDictonaryName ||
+                    val.cWareHouseAreaName ||
                     val.cWareHouseName ||
                     val.cBomClassName ||
                     val.cNoPassClearName ||
@@ -76,6 +77,7 @@
                   "
                   :value="
                     val.cDictonaryCode ||
+                    val.cWareHouseAreaCode ||
                     val.cWareHouseCode ||
                     val.cBomClassCode ||
                     val.cNoPassClearCode ||
@@ -637,15 +639,38 @@ const GetTreeRoad = (item: any, value: any) => {
       });
     }
   }
-  if (
-    Route.name === 'TaskListQuery' &&
-    item.cAttributeCode === 'cVouchTypeCode'
-  ) {
-    console.log(item.selDataList, value);
-    item.treeSelectedValues = item.selDataList
-      .filter(i => value.includes(i.cDictonaryCode))
-      .map(j => j.cDictonaryCode);
+  if (Route.name === 'TaskListQuery') {
+    if (item.cAttributeCode === 'cVouchTypeCode') {
+      item.treeSelectedValues = item.selDataList
+        .filter(i => value.includes(i.cDictonaryCode))
+        .map(j => j.cDictonaryCode);
+    }
   }
+  if (
+    Route.name === 'InOutInventory' ||
+    Route.name === 'MaterielStorage' ||
+    Route.name === 'MinMaterielStorage'
+  ) {
+    if (item.cAttributeCode === 'cWareHouseCode') {
+      FilterData.value.forEach((j: any) => {
+        if (j.cAttributeCode == 'cWareHouseAreaName') {
+          let data = {
+            method: j.Resource.cHttpTypeCode,
+            url: j.Resource.cServerIP + j.Resource.cUrl,
+            data: {
+              Conditions: `cWareHouseCode=${value}`
+            }
+          };
+          DataApi(data).then((res: any) => {
+            if (res?.success) {
+              j.selDataList = res.data;
+            }
+          });
+        }
+      });
+    }
+  }
+
   // if(Route.name=='Project'){
   //     // FilterData.value.cAttributeCodeValue
   //     if(item.cAttributeCode=="cProgramTypeName"){
@@ -897,6 +922,7 @@ const resetForm = () => {
     item.cAttributeCodeValue = '';
   });
   metadata.value = {};
+  getSelectData();
   emits('resetForm', { value: FilterData.value });
 };
 defineExpose({ FilterData });
