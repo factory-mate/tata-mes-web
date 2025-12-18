@@ -329,6 +329,7 @@ const getTreeProps = () => {
     case 'PurchaseRequestNoProdEdit':
     case 'PurchaseRequestNotionsAdd':
     case 'PurchaseRequestNotionsEdit':
+    case 'MaterialConfigAllocate':
       return wmsMaterialProp;
     case 'EquipmentCheckTask':
     case 'DeviceMaintenanceTask':
