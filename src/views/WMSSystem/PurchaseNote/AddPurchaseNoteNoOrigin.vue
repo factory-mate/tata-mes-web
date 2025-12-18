@@ -407,7 +407,28 @@ const funTable = (arr: Array<any>) => {
 const handleTableDataChange = (val: any) => {
   console.log(val, 'handleTableDataChange');
   tableData.value = val;
+  tablefilter();
 };
+
+function tablefilter() {
+  tableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    tableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop]) {
+        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
+        aItem.filters = filData;
+      }
+    });
+    if (aItem.filters && aItem.filters.length) {
+      aItem.filters = aItem.filters.filter(
+        (item: { text: any }, index: any, self: any[]) => {
+          const i = self.findIndex((t: { text: any }) => t.text === item.text);
+          return i === index;
+        }
+      );
+    }
+  });
+}
 
 //表格数据查询
 const tableAxios = async () => {
@@ -442,6 +463,7 @@ const BtnDAel = (obj: any) => {
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
   TABRef.value.tableDataVal.splice(val.$index, 1);
+  tablefilter();
 };
 
 const clickHandAdd = (data: any) => {
@@ -532,7 +554,7 @@ const TtableAxios = async () => {
     if (res.status == 200) {
       TtableData.value = res.data.data;
       total.value = res.data.dataCount;
-      tablefilter();
+      Ttablefilter();
     } else {
       console.log('请求出错');
     }
@@ -542,7 +564,7 @@ const TtableAxios = async () => {
 };
 
 // table filters
-const tablefilter = () => {
+const Ttablefilter = () => {
   TtableColumns.value.forEach((aItem: any) => {
     let filData = [] as any;
     TtableData.value.forEach((bItem: any) => {

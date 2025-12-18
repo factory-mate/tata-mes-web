@@ -415,6 +415,7 @@ const tableAxios = async () => {
     if (res.status == 200) {
       tableData.value = res.data;
       ElLoading.service().close();
+      tablefilter();
     } else {
       console.log('请求出错');
       ElLoading.service().close();
@@ -423,6 +424,29 @@ const tableAxios = async () => {
     console.log(error, '程序出错');
     ElLoading.service().close();
   }
+};
+const tablefilter = () => {
+  tableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    tableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop] != null && bItem[aItem.prop] != undefined) {
+        filData.push({
+          text: bItem[aItem.prop],
+          value: bItem[aItem.prop]
+        });
+      }
+    });
+    // 数组去重
+    filData = filData.filter(
+      (i: any, index: any) =>
+        filData.findIndex((item: any) => item.value === i.value) === index
+    );
+    aItem.filters = filData;
+    aItem.filterMethod = (value: any, row: any) => {
+      return row[aItem.prop] === value;
+    };
+    aItem.filterMultiple = true;
+  });
 };
 const handleTableDataChange = (val: any) => {
   tableData.value = val.map(i => ({

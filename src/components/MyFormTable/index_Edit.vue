@@ -56,7 +56,7 @@
           filter-multiple
           :filter-method="filterMethod"
           filter-placement="top-start"
-          :filters="item?.filters"
+          :filters="item.filters"
         >
           <template #header>
             <!-- <template #header > -->

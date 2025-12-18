@@ -406,6 +406,7 @@ const tableAxios = async () => {
     const res = await ParamsApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
+      tablefilter();
       ElLoading.service().close();
     } else {
       console.log('请求出错');
@@ -425,6 +426,28 @@ const handleTableDataChange = (val: any) => {
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
   tableData.value.splice(val.$index, 1);
+};
+
+const tablefilter = () => {
+  tableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    tableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop] != null) {
+        filData.push({
+          text: bItem[aItem.prop],
+          value: bItem[aItem.prop]
+        });
+      }
+    });
+    aItem.filters = filData.filter(
+      (item: { value: any }, index: any, self: any[]) => {
+        // 利用findIndex方法找到第一个与当前元素id相等的元素索引
+        const i = self.findIndex((t: { value: any }) => t.value === item.value);
+        // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
+        return i === index;
+      }
+    );
+  });
 };
 
 const clickHandAdd = (data: any) => {
