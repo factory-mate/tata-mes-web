@@ -63,6 +63,7 @@
               clearable
               @change="(value:any)=>GetTreeRoad(item,value)"
               @visible-change="getTreeDAata"
+              :multiple="item.IsMulitChoose"
             >
               <template v-for="(val, index) in item.selDataList" :key="index">
                 <el-option
@@ -176,8 +177,6 @@ import {
   ref,
   toRefs,
   watch,
-  defineProps,
-  defineEmits,
   reactive,
   onDeactivated,
   onActivated,
@@ -637,6 +636,15 @@ const GetTreeRoad = (item: any, value: any) => {
         }
       });
     }
+  }
+  if (
+    Route.name === 'TaskListQuery' &&
+    item.cAttributeCode === 'cVouchTypeCode'
+  ) {
+    console.log(item.selDataList, value);
+    item.treeSelectedValues = item.selDataList
+      .filter(i => value.includes(i.cDictonaryCode))
+      .map(j => j.cDictonaryCode);
   }
   // if(Route.name=='Project'){
   //     // FilterData.value.cAttributeCodeValue
