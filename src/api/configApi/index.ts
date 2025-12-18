@@ -108,6 +108,21 @@ export function InventorySAPGetForPage(cSAPCode) {
   });
 }
 
+export function KnifeInventorySAPGetForPage(cSAPCode) {
+  return request({
+    url:
+      import.meta.env.VITE_TMS_API +
+      `/api/TMS_INVENTORY_PURCHASEPRICE/GetForPage`,
+    method: 'POST',
+    data: {
+      PageIndex: 1,
+      PageSize: 20,
+      OrderByFileds: '',
+      conditions: `cSAPCode = ${cSAPCode}`
+    }
+  });
+}
+
 export function InventorySAPGetForList(cInvCode) {
   return request({
     url: import.meta.env.VITE_APP_BASE_API + `/api/INENTORY_SAP/GetForList`,

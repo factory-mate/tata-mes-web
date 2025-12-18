@@ -317,6 +317,7 @@ import {
   InventoryInfoGetForPageNoOrigin,
   InventorySAPGetForPage,
   InventorySAPGetForList,
+  KnifeInventorySAPGetForPage,
   KnifeInventoryInfoGetForPage,
   getPrice,
   getKnifePrice
@@ -1104,6 +1105,24 @@ const selectDatas = (val: any) => {
     Route.name == 'KnifeAddPurchaseRequestEdit' ||
     Route.name == 'KnifeAddPurchaseRequestView'
   ) {
+    if (
+      (Route.name === 'KnifeAddPurchaseRequest' ||
+        Route.name === 'KnifeAddPurchaseRequestEdit' ||
+        Route.name === 'KnifeAddPurchaseRequestView') &&
+      AttributeCode.value == 'cDefindParm03'
+    ) {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+    }
+
     if (
       AttributeCode.value == 'cInvCode' ||
       AttributeCode.value == 'cInvName'
@@ -2005,6 +2024,39 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
       tableDataVal.value[scope.$index].cUnitCode = data[0].CG_UnitCode;
       tableDataVal.value[scope.$index].cUnitName = data[0].CG_UnitName;
+      tableDataVal.value[scope.$index].cDefindParm03 = data[0].cSAPCode;
+      tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
+      tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
+    } else {
+      // 提示错误：未找到物料
+      ElMessage.error('未找到数据');
+      tableDataVal.value[scope.$index].cInvCode = '';
+      tableDataVal.value[scope.$index].cInvName = '';
+      tableDataVal.value[scope.$index].cInvStd = '';
+      tableDataVal.value[scope.$index].cUnitCode = '';
+      tableDataVal.value[scope.$index].cUnitName = '';
+      tableDataVal.value[scope.$index].cDefindParm03 = '';
+      tableDataVal.value[scope.$index].cVendorName = '';
+      tableDataVal.value[scope.$index].cVendorCode = '';
+    }
+  }
+
+  if (
+    (Route.name === 'KnifeAddPurchaseRequest' ||
+      Route.name == 'KnifeAddPurchaseRequestEdit' ||
+      Route.name == 'KnifeAddPurchaseRequestView') &&
+    item.prop === 'cDefindParm03'
+  ) {
+    const {
+      data: { data }
+    } = await KnifeInventorySAPGetForPage(e.target.value);
+    if (data[0]) {
+      ElMessage.success('录入成功');
+      tableDataVal.value[scope.$index].cInvCode = data[0].cInvCode;
+      tableDataVal.value[scope.$index].cInvName = data[0].cInvName;
+      tableDataVal.value[scope.$index].cInvStd = data[0].cInvStd;
+      tableDataVal.value[scope.$index].cUnitCode = data[0].cUnitCode;
+      tableDataVal.value[scope.$index].cUnitName = data[0].cUnitName;
       tableDataVal.value[scope.$index].cDefindParm03 = data[0].cSAPCode;
       tableDataVal.value[scope.$index].cVendorName = data[0].cVendorName;
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
