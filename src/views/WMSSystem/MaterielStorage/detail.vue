@@ -114,6 +114,7 @@ const getTableData = async () => {
   const cWareHouseCode = row.value.cWareHouseCode;
   const cWareHouseLocationName = row.value.cWareHouseLocationName;
   const cWareHouseAreaCode = row.value.cWareHouseAreaCode;
+  const cInvStd = row.value.cInvStd;
   if (cInvCode) {
     defaultConditions.push(`cInvCode = ${cInvCode}`);
   }
@@ -127,6 +128,9 @@ const getTableData = async () => {
   }
   if (cWareHouseAreaCode) {
     defaultConditions.push(`cWareHouseAreaCode = ${cWareHouseAreaCode}`);
+  }
+  if (cInvStd) {
+    defaultConditions.push(`cInvStd = ${cInvStd}`);
   }
 
   let Conditions = '';
