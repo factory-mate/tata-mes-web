@@ -998,10 +998,11 @@ const setWidth = row => {
     case '质检':
       return 60;
     case '物料名称':
-      return 250;
-    case '订单号':
-      return 170;
+      return 150;
+    case '采购订单号':
+      return 130;
     case '规格型号':
+    case '供应商批次号':
       return 120;
     case '未到货数量':
     case '到货数量':
@@ -1009,8 +1010,20 @@ const setWidth = row => {
     case '箱数':
     case '打印状态':
     case '到货确认':
-      return 90;
+    case '长':
+    case '宽':
+    case '厚':
+    case '单号':
+    case '项号':
+      return 80;
+    case '含税单价':
+    case '含税金额':
+    case '税额':
+    case '税率':
+      return 70;
     case '单位':
+    case '不含税金额':
+    case '不含税单价':
       return 80;
     case '生产日期':
       return 150;
