@@ -27,6 +27,8 @@
         :selection="true"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        :setWidth="setWidth"
+        customWidth
       >
         <template #button>
           <el-table-column
@@ -593,6 +595,13 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    default:
+      return 100;
+  }
 };
 </script>
 
