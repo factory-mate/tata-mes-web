@@ -134,9 +134,10 @@ service.interceptors.response.use(
   (error: any) => {
     const loadingInstance = ElLoading.service();
     loadingInstance.close();
+    console.log('error', error);
     // load.hide();//在这~~~~~~~
     console.log('errorinfo', error.response);
-    const { status, msg } = error.response.data;
+    const { status, msg } = error?.response?.data ?? {};
     let isLongMessage = false;
     let errorMsg = '';
     if (msg) {
