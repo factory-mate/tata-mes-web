@@ -9,7 +9,12 @@
     ></FilterForm>
     <el-card>
       <!-- 按钮区域 -->
-      <ButtonViem :ToolBut="But" @clickAdd="clickAdd"></ButtonViem>
+      <ButtonViem
+        :ToolBut="But"
+        @clickAdd="clickAdd"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
+      ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
         ref="TabRef"
@@ -90,6 +95,7 @@ import {
   ElMessage,
   ElMessageBox
 } from 'element-plus';
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks'; //导出
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
@@ -294,6 +300,39 @@ const funTable = (arr: Array<any>) => {
       tableAxios();
     }
   });
+};
+
+//按钮导出所有
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '刀具配置-所有');
+  ElLoading.service().close();
+};
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '刀具配置');
+  ElLoading.service().close();
 };
 //页码变化
 const changPage = (val: any) => {

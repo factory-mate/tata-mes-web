@@ -11,6 +11,8 @@
       <!-- 按钮区域 -->
       <ButtonViem
         :ToolBut="But"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
         @clickAdd="clickAdd"
         @clickDelete="clickDel"
       ></ButtonViem>
@@ -216,6 +218,40 @@ const getData: any = async (val: string) => {
     console.log(error, '程序出错了');
   }
 };
+
+//按钮导出所有
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '刀具台帐-所有');
+  ElLoading.service().close();
+};
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '刀具台帐');
+  ElLoading.service().close();
+};
+
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
