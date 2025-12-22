@@ -653,7 +653,8 @@ const GetTreeRoad = (item: any, value: any) => {
   ) {
     if (item.cAttributeCode === 'cWareHouseCode') {
       FilterData.value.forEach((j: any) => {
-        if (j.cAttributeCode == 'cWareHouseAreaName') {
+        if (j.cAttributeCode == 'cWareHouseAreaCode') {
+          j.cAttributeCodeValue = '';
           let data = {
             method: j.Resource.cHttpTypeCode,
             url: j.Resource.cServerIP + j.Resource.cUrl,
