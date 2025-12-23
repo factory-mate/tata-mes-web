@@ -32,7 +32,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="250px"
+            width="320px"
             align="center"
           >
             <template #header>
@@ -59,7 +59,7 @@
               </template>
               <el-dropdown
                 style="margin-left: 10px"
-                v-if="tableButton.length > 3"
+                v-if="tableButton.length > 5"
               >
                 <el-button type="primary" size="small">
                   <el-icon>
@@ -88,6 +88,16 @@
           </el-table-column>
         </template>
       </myTable>
+      <Odialog
+        width="500px"
+        :dialogFormVisible="ZZdialogFormVisible"
+        title="编辑部门"
+        :objData="objData"
+        :disabled="false"
+        :modeCode="objModeCode"
+        :row="Trow"
+        @FmodelClose="modelClose"
+      ></Odialog>
       <pagination
         v-if="total > 0"
         :total="total"
@@ -107,8 +117,10 @@ import {
   nextTick,
   computed,
   watch,
-  onActivated
+  onActivated,
+  provide
 } from 'vue';
+import Odialog from '@/components/DialogModel/index.vue';
 import myTable from '@/components/MyTable/index.vue';
 import { ElLoading } from 'element-plus';
 import FilterForm from '@/components/Filter/index.vue';
@@ -146,8 +158,13 @@ const tabType = ref(true);
 const tabKey = ref(0);
 //启用传递的UID
 const sendId = ref([]) as any;
+const ZZdialogFormVisible = ref(false);
+const Trow = ref({});
+const objData = ref({});
+const objModeCode = ref('');
 
 const initType = ref(true);
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -171,6 +188,7 @@ $bus.on('tableUpData', (v: any) => {
     }
   }, 300);
 });
+
 //调取供应商接口
 const getData: any = async (val: string) => {
   try {
@@ -228,6 +246,9 @@ const clickTableBut = (scope: any, event: any) => {
       break;
     case 'Verify':
       clickVerify(scope, event);
+      break;
+    case 'EditDep':
+      EditDep(scope, event);
       break;
     default:
       break;
@@ -362,6 +383,18 @@ const clickDelete = (scope: any, obj: any) => {
       }
     });
   });
+};
+
+const modelClose = (v: any) => {
+  ZZdialogFormVisible.value = v.type;
+};
+
+const EditDep = (scope: any, obj: any) => {
+  Trow.value = scope.row;
+  ZZdialogFormVisible.value = true;
+  objData.value = obj;
+  console.log(obj, scope);
+  objModeCode.value = obj.cIncludeModelCode;
 };
 
 const clickVerify = (scope: any, obj: any) => {
@@ -561,6 +594,7 @@ const showButton = (obj, item) => {
     return false;
   }
 };
+provide('tableAxios', { tableAxios });
 </script>
 
 <style scoped lang="scss">

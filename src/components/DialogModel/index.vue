@@ -925,6 +925,12 @@ const selectData = (val: any) => {
           ruleForm.value.cDefindParm03 = val.value[0].cPersonCode;
         }
       }
+      if (Route.name === 'MaterialOutbound') {
+        if (titleName.value == '部门') {
+          ruleForm.value.cDepName = val.value[0].cDepName;
+          ruleForm.value.cDepCode = val.value[0].cDepCode;
+        }
+      }
       if (
         Route.name === 'MaterialConfigGroupProcess' ||
         Route.name === 'MaterialConfigRule' ||
@@ -1603,6 +1609,7 @@ const submitForm = async (formEl: FormInstance | undefined, item: any) => {
           SaveAdd(item);
           break;
         case 'SaveEdit':
+        case 'SaveEditDep':
           SaveEdit(item);
           break;
         case 'BtnOK':
