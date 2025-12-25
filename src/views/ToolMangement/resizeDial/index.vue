@@ -9,7 +9,13 @@
     ></FilterForm>
     <el-card>
       <!-- 按钮区域 -->
-      <ButtonViem :ToolBut="But" @clickAdd="clickAdd" @clickDelete="clickDel">
+      <ButtonViem
+        :ToolBut="But"
+        @clickAdd="clickAdd"
+        @clickDelete="clickDel"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
+      >
       </ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -496,6 +502,39 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+//按钮导出所有
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '刀具调拨单-所有');
+  ElLoading.service().close();
+};
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '刀具调拨单');
+  ElLoading.service().close();
 };
 </script>
 
