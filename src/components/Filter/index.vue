@@ -646,11 +646,17 @@ const GetTreeRoad = (item: any, value: any) => {
         .map(j => j.cDictonaryCode);
     }
   }
+
   if (
     Route.name === 'InOutInventory' ||
     Route.name === 'MaterielStorage' ||
     Route.name === 'MinMaterielStorage'
   ) {
+    if (item.cAttributeCode === 'cWareHouseAreaCode') {
+      item.treeSelectedValues = item.selDataList
+        .filter(i => value.includes(i.cWareHouseAreaCode))
+        .map(j => j.cWareHouseAreaCode);
+    }
     if (item.cAttributeCode === 'cWareHouseCode') {
       FilterData.value.forEach((j: any) => {
         if (j.cAttributeCode == 'cWareHouseAreaCode') {
