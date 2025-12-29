@@ -44,28 +44,8 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="true"
+        :disabled-hide="false"
       >
-        <template #button>
-          <el-table-column
-            label="操作"
-            fixed="right"
-            width="160px"
-            align="center"
-          >
-            <template #header>
-              <span>操作</span>
-            </template>
-            <template #default="scope">
-              <el-button
-                type="primary"
-                :disabled="disabled"
-                size="small"
-                @click="clickTableHandDel(scope)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </template>
       </myTable>
       <pagination
         v-if="total > 0"
