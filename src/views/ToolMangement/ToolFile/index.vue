@@ -27,12 +27,14 @@
         :selection="true"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="140px"
             align="center"
           >
             <template #header>
@@ -526,6 +528,25 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '刀具编码':
+      return 100;
+    case '刀具名称':
+      return 200;
+    case '刀具分类名称':
+    case '品牌名称':
+    case '研磨次数控制':
+    case '研磨最大数':
+    case '质保天数':
+    case '单位名称':
+    case '是否研磨':
+      return 100;
+    default:
+      return 200;
+  }
 };
 </script>
 

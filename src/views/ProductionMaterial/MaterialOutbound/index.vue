@@ -585,7 +585,10 @@ const renew = () => {
 };
 
 const showButton = (obj, item) => {
-  if (item.Resource.cAttributeName === '详情') {
+  if (
+    item.Resource.cAttributeName === '详情' ||
+    item.Resource.cAttributeName === '编辑部门'
+  ) {
     return true;
   }
   if (obj.iStatusName === '保存') {
