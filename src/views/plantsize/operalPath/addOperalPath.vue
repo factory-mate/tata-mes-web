@@ -34,7 +34,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
       >
         <template #button>
           <el-table-column
@@ -69,7 +69,7 @@
         :title="modelTitle"
         :modelCIncludeModelCode="modelCIncludeModelCode"
         :modelGridType="modelGridType"
-        :modelGrid="modelGrid"
+        :modelGrid="modelGrid.filter(i => i.cAttributeCode !== 'cCraftName')"
         @modelClose="modelClose"
         @clickHandAdd="clickHandAdd"
       ></pop-model>

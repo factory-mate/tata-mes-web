@@ -22,7 +22,7 @@
         @RoleBut="RoleBut"
       ></Head-View>
       <!-- 表格区域 -->
-      <div style="float: right; margin: 10px 0">
+      <!-- <div style="float: right; margin: 10px 0">
         <el-button
           type="primary"
           size="small"
@@ -30,14 +30,14 @@
           @click="clickTableAdd()"
           >添加</el-button
         >
-      </div>
+      </div> -->
       <myTable
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
       >
-        <template #button>
+        <!-- <template #button>
           <el-table-column
             label="操作"
             fixed="right"
@@ -57,7 +57,7 @@
               >
             </template>
           </el-table-column>
-        </template>
+        </template> -->
       </myTable>
       <pagination
         v-if="total > 0"
@@ -153,9 +153,11 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (Route.params.rowId) {

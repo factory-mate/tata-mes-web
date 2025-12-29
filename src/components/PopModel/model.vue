@@ -84,6 +84,7 @@
               v-if="item.cControlTypeCode == 'TextBoxLink'"
               v-model="ruleForm[item.Resource.cAttributeCode]"
               placeholder="请输入"
+              :disabled="disabledFun(item)"
             >
               <template #append>
                 <el-icon @click="clickModel(item, item.IsMulitChoose)">
@@ -97,6 +98,7 @@
               @change="(value:any)=>GetSelectData(item,value)"
               v-model="ruleForm[item.Resource.cAttributeCode]"
               placeholder="请输入"
+              :disabled="disabledFun(item)"
             >
               <el-option
                 v-for="(o, i) in optionData"
@@ -1059,8 +1061,10 @@ const selectData = (val: any) => {
         ruleForm.value.cCraftName = val.value[0].cCraftName;
       }
       if (AttributeCode.value == 'cProcessName') {
-        ruleForm.value.cProcessCode = val.value[0].cCraftCode;
-        ruleForm.value.cProcessName = val.value[0].cCraftName;
+        ruleForm.value.cProcessCode = val.value[0].cProcessCode;
+        ruleForm.value.cProcessName = val.value[0].cProcessName;
+        ruleForm.value.cCraftCode = val.value[0].cCraftCode;
+        ruleForm.value.cCraftName = val.value[0].cCraftName;
       }
     } else if (
       Route.name == 'addProductLineEdit' ||
