@@ -140,7 +140,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
@@ -929,26 +929,29 @@ const clickEdit = (obj: any) => {
 const setWidth = row => {
   switch (row.label) {
     case '刀具编码':
-      return 120;
+      return 100;
     case '质检':
       return 60;
     case '刀具名称':
-      return 250;
-    case '订单号':
-      return 170;
+    case '采购订单号':
+      return 140;
     case '规格型号':
-      return 120;
+    case '供应商批次号':
+      return 90;
     case '未到货数量':
-    case '到货数量':
     case '每包数量':
     case '箱数':
+    case '不含税单价':
+    case '不含税金额':
+      return 100;
+    case '单位':
+    case '数量':
+    case '到货数量':
     case '打印状态':
     case '到货确认':
-      return 90;
-    case '单位':
       return 80;
     default:
-      return 200;
+      return 80;
   }
 };
 
