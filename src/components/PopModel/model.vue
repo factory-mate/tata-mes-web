@@ -1034,8 +1034,12 @@ const selectData = (val: any) => {
     ) {
       ruleForm.value[AttributeCode.value] = val.value[0].cUnitCode;
     } else if (['addProductLine', 'addProductLineEdit'].includes(Route.name)) {
-      if (AttributeCode.value == 'cProcessName') {
-        ruleForm.value[AttributeCode.value] = val.value[0].cProcessName;
+      if (
+        AttributeCode.value == 'cProcessName' ||
+        AttributeCode.value == 'cProcessCode'
+      ) {
+        ruleForm.value.cProcessName = val.value[0].cProcessName;
+        ruleForm.value.cProcessCode = val.value[0].cProcessCode;
       }
     } else if (
       titleName.value == '换算单位名称' ||

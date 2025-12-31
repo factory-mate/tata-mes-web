@@ -165,9 +165,11 @@ onActivated(() => {
   // if(initType.value){
   //     getAddUser(Route.meta.ModelCode)
   // }
-  if (rowId.value != Route.params.rowId) {
-    getAddUser(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getAddUser(Route.meta.ModelCode);
+  // }
+  getAddUser(Route.meta.ModelCode);
+
   rowId.value = Route.params.rowId;
   initType.value = false;
   if (history.state.title == '产线档案新增' && history.state.treeVal?.length) {
