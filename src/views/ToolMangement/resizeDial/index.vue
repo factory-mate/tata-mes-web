@@ -24,7 +24,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -470,7 +470,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'dCreateTime desc'
 });
 const { Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -482,7 +482,7 @@ const ClickSearch = (val: any) => {
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'dCreateTime desc';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
