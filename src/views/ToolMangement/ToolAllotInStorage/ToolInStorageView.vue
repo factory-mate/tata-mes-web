@@ -7,7 +7,7 @@
       :row="row"
       :rowId="rowId"
       ref="headRef"
-      disabled="false"
+      :disabled="false"
       @RoleBut="RoleBut"
     ></Head-View>
     <el-card>
@@ -20,8 +20,9 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
+        size="default"
         @handleSelectionChange="handleSelectionChange"
       >
         <template #button>
