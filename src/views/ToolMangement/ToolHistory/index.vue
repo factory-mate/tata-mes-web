@@ -24,9 +24,11 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
@@ -520,6 +522,29 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '序列号':
+    case '刀具编码':
+    case '刀具名称':
+    case 'SAP编码':
+      return 120;
+    case '单号':
+    case '操作时间':
+      return 150;
+    case '单据类型':
+    case '含税金额':
+    case '含税单价':
+    case '无税金额':
+    case '无税单价':
+    case '税率':
+    case '税额':
+      return 80;
+    default:
+      return 140;
+  }
 };
 </script>
 
