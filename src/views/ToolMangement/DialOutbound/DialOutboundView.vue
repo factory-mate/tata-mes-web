@@ -44,6 +44,7 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="false"
+        size="small"
       >
         <template #button>
           <el-table-column
