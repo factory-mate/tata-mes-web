@@ -467,7 +467,7 @@ const ExportAll = async (obj: any) => {
       Conditions: ''
     }
   };
-  exportAnalysisHooks(ExcelData, '所有');
+  exportAnalysisHooks(ExcelData, '刀具履历。- 全部');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -481,7 +481,7 @@ const ExportOne = async (obj: any) => {
       Conditions: ''
     }
   };
-  exportAnalysisHooks(ExcelData, '上架记录查询');
+  exportAnalysisHooks(ExcelData, '刀具履历');
 };
 
 const data = reactive({
