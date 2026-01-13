@@ -30,6 +30,8 @@ const exportAnalysisHooks = (data: any, title: any) => {
         });
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
+      } else if (res.status == '204') {
+        ElMessage.warning('暂无数据可以导出');
       } else if (res.status == '200') {
         const blob = new Blob([res.data], {
           type: 'application/vnd.ms-excel'

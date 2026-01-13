@@ -1,5 +1,4 @@
 <template>
-  <!-- 刀具履历页面 -->
   <div class="maintain">
     <!-- 搜索区域 -->
     <FilterForm
@@ -467,7 +466,7 @@ const ExportAll = async (obj: any) => {
       Conditions: ''
     }
   };
-  exportAnalysisHooks(ExcelData, '刀具履历 - 全部');
+  exportAnalysisHooks(ExcelData, '刀具预警 - 全部');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -481,7 +480,7 @@ const ExportOne = async (obj: any) => {
       Conditions: ''
     }
   };
-  exportAnalysisHooks(ExcelData, '刀具履历');
+  exportAnalysisHooks(ExcelData, '刀具预警');
 };
 
 const data = reactive({

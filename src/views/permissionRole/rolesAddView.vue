@@ -13,14 +13,14 @@
       ></Head-View>
 
       <!-- 按钮区域 -->
-      <div class="bot-btn">
+      <!-- <div class="bot-btn">
         <ButtonViem
           :ToolBut="But"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
         ></ButtonViem>
-      </div>
+      </div> -->
       <!-- 表格区域 -->
       <myTable
         v-if="tabType"
