@@ -48,6 +48,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
+                  v-if="showButton(scope, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -227,6 +228,18 @@ const clickTableBut = (scope: any, event: any) => {
       break;
   }
 };
+
+const showButton = (scope, item) => {
+  if (item.Resource.cAttributeName === '提交') {
+    if (scope.row.iStatus === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+
 //表格数据查询
 const tableAxios = async () => {
   let data = {
