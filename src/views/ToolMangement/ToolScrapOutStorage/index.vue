@@ -493,7 +493,7 @@ const ExportOne = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: '',
+      OrderByFileds: 'dCreateTime desc',
       Conditions: ''
     }
   };
@@ -514,7 +514,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'dCreateTime desc'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
