@@ -308,6 +308,53 @@ const exportAll = async obj => {
     const { data, headers } = await ExportApi(params);
     const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
     const fileName =
+      decodeURI(headers['content-disposition'] || '计划用料 - 全部') + '.xlsx';
+    if ('download' in document.createElement('a')) {
+      const elink = document.createElement('a');
+      elink.download = fileName;
+      elink.style.display = 'none';
+      elink.href = URL.createObjectURL(blob);
+      document.body.appendChild(elink);
+      elink.click();
+      URL.revokeObjectURL(elink.href);
+      document.body.removeChild(elink);
+    } else {
+      navigator.msSaveBlob(blob, fileName);
+    }
+  } catch {
+    ElMessage.error('请求失败');
+  }
+  loading.close();
+};
+
+const downloadDetail = async obj => {
+  dPlanDateStart.value = filterRef.value.FilterData.filter(
+    i => i.cAttributeCode === 'dPlanDateStart'
+  )[0].cAttributeCodeValue;
+  if (!dPlanDateStart.value) {
+    ElMessage.error('请选择生产日期');
+    return;
+  }
+  conditions.value = filterModel(filterRef.value.FilterData);
+  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+  const params = {
+    method: obj.Resource.cHttpTypeCode,
+    url:
+      obj.Resource.cServerIP +
+      obj.Resource.cUrl +
+      '&dPlanDateStart=' +
+      dPlanDateStart.value,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: orderBy.value,
+      Conditions: conditions.value
+    }
+  };
+  try {
+    const { data, headers } = await ExportApi(params);
+    const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+    const fileName =
       decodeURI(headers['content-disposition'] || '计划用料明细') + '.xlsx';
     if ('download' in document.createElement('a')) {
       const elink = document.createElement('a');
@@ -355,7 +402,7 @@ const exportOne = async obj => {
     const { data, headers } = await ExportApi(params);
     const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
     const fileName =
-      decodeURI(headers['content-disposition'] || '计划用料明细') + '.xlsx';
+      decodeURI(headers['content-disposition'] || '计划用料') + '.xlsx';
     if ('download' in document.createElement('a')) {
       const elink = document.createElement('a');
       elink.download = fileName;
@@ -406,6 +453,7 @@ $bus.on('tableUpData', v => {
         @click-add="handleAdd"
         @export-all="exportAll"
         @export-one="exportOne"
+        @download-detail="downloadDetail"
       />
       <TableArea
         ref="tableRef"
