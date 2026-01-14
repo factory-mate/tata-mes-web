@@ -47,6 +47,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@plugin-web-update-notification/vite": "^2.0.2",
     "@types/node": "^16.11.7",
     "@types/nprogress": "^0.2.0",
     "@types/path-browserify": "^1.0.0",

@@ -10,6 +10,7 @@ import { UserConfig, ConfigEnv, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'path';
+import { webUpdateNotice } from '@plugin-web-update-notification/vite';
 
 // @see: https://gitee.com/holysheng/vite2-config-description/blob/master/vite.config.ts
 export default ({ mode }: ConfigEnv): UserConfig => {
@@ -19,6 +20,15 @@ export default ({ mode }: ConfigEnv): UserConfig => {
   return {
     plugins: [
       vue(),
+      webUpdateNotice({
+        logVersion: true,
+        notificationProps: {
+          title: '更新通知',
+          description: '网站内容有更新，请刷新页面，获取最新内容',
+          buttonText: '刷新',
+          dismissButtonText: '忽略'
+        }
+      }),
       createSvgIconsPlugin({
         // 指定需要缓存的图标文件夹
         iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
