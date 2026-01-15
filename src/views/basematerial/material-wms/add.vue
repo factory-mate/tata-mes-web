@@ -454,7 +454,11 @@ onActivated(() => {
           </el-col>
           <el-col :span="6">
             <el-form-item label="物料厚" label-width="150" prop="nMaxQuinity">
-              <el-input v-model="formData.iDefindParm13" autocomplete="off" />
+              <el-input
+                v-model="formData.iDefindParm13"
+                autocomplete="off"
+                type="number"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
