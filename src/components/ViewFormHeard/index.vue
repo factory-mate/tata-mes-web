@@ -2197,6 +2197,15 @@ const selectData = (val: any) => {
         ruleForm.value['cVendorCode'] = val.value[0].cVendorCode || '';
       }
     }
+    if (
+      Route.name === 'ToolInvCodeConfigAdd' ||
+      Route.name === 'ToolInvCodeConfigEdit'
+    ) {
+      if (AttributeCode.value === 'cInvName') {
+        ruleForm.value['cInvName'] = val.value[0].cInvName || '';
+        ruleForm.value['cInvCode'] = val.value[0].cInvCode || '';
+      }
+    }
     // 调拨单
     if (
       Route.name == 'resizeDialAdd' ||

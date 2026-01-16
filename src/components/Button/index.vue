@@ -331,6 +331,7 @@ const emits = defineEmits([
   'SetQC',
   'CancelQC',
   'EditSave',
+  'AddSave',
   'Audit_Again',
   'AddOnSourceRow',
   'PushPurcharse',
@@ -891,6 +892,9 @@ const CancelQC = obj => {
 const EditSave = obj => {
   emits('EditSave', obj);
 };
+const AddSave = obj => {
+  emits('AddSave', obj);
+};
 const Audit_Again = obj => {
   emits('Audit_Again', obj);
 };
@@ -1359,6 +1363,9 @@ const clickButton = (event: any) => {
       break;
     case 'EditSave':
       EditSave(event);
+      break;
+    case 'AddSave':
+      AddSave(event);
       break;
     case 'Audit_Again':
       Audit_Again(event);
