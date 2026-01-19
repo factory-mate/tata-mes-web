@@ -413,8 +413,7 @@ const processFilterLogic = (val, p) => {
       conditions.push('cProjectTypeCode=03');
     }
     if (p.titleName === '版本号') {
-      console.log(p.ruleForm);
-      conditions.push(`MID = ${p.ruleForm.cProjectUID}`);
+      conditions.push(`MID = 96eb51fc-681b-455d-8113-1b85e50a1041`);
     }
   }
   // if (
@@ -456,9 +455,7 @@ const processFilterLogic = (val, p) => {
       conditions.push('cProjectTypeCode=04');
     }
     if (p.titleName === '版本号') {
-      if (p.ruleForm?.projectNameUID) {
-        conditions.push(`MID=${p.ruleForm?.projectNameUID}`);
-      }
+      conditions.push(`MID = 7dbd5782-ba3e-4259-9713-4af7fdd42259`);
     }
   }
   if (filterModel(val)) {
