@@ -5,7 +5,8 @@ import {
   getInOutTypes,
   updateMaterial,
   getUnitTypes,
-  getMaterial
+  getMaterial,
+  getOrderCategories
 } from '@/api/material';
 import { ref, onActivated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -46,6 +47,7 @@ const tagOptions = ref([]);
 const cMaterialTypeOptions = ref([]);
 const inOutOptions = ref([]);
 const unitTypeOptions = ref([]);
+const orderCategoryOptions = ref([]);
 
 const cInvClassNameModalRef = ref();
 const cVendorNameModalRef = ref();
@@ -70,6 +72,15 @@ const rules = ref({
 function fetchTags() {
   getTags().then(res => {
     tagOptions.value = res.data.map(item => ({
+      label: item.cDictonaryName,
+      value: item.cDictonaryCode
+    }));
+  });
+}
+
+function fetchOrderCategories() {
+  getOrderCategories().then(res => {
+    orderCategoryOptions.value = res.data.map(item => ({
       label: item.cDictonaryName,
       value: item.cDictonaryCode
     }));
@@ -183,6 +194,12 @@ function handleUnitTypeNameChange(data) {
   )?.label;
 }
 
+function handleOrderCategoryChange(data) {
+  formData.value.cDefindParm04Name = orderCategoryOptions.value.find(
+    item => item.value == data
+  )?.label;
+}
+
 function handleClickcInvClassNameModal() {
   cInvClassNameModalRef.value.showDialog = true;
 }
@@ -273,6 +290,7 @@ onActivated(() => {
   fetchInOutTypes();
   fetchUnitTypes();
   fetchCMaterialTypes();
+  fetchOrderCategories();
   const { rowId } = route.params;
   getMaterial({ cInvCode: rowId }).then(res => {
     const infoData = res.data.iNENTORY_INFO ?? {};
@@ -421,6 +439,24 @@ onActivated(() => {
           <el-col :span="6">
             <el-form-item label="物料别名" label-width="150" prop="cReName">
               <el-input v-model="formData.cReName" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24" style="margin-top: 12px">
+          <el-col :span="6">
+            <el-form-item
+              label="采购分类"
+              label-width="150"
+              prop="cDefindParm04"
+              style="font-weight: 700"
+            >
+              <el-select-v2
+                v-model="formData.cDefindParm04"
+                placeholder="请选择"
+                style="width: 240px"
+                :options="orderCategoryOptions"
+                @change="handleOrderCategoryChange"
+              />
             </el-form-item>
           </el-col>
         </el-row>

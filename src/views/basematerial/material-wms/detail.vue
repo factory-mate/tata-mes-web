@@ -62,6 +62,12 @@ onActivated(async () => {
         <el-col :span="6"> 物料类型：{{ infoData.cMaterialTypeName }} </el-col>
         <el-col :span="6"> 物料别名：{{ infoData.cReName }} </el-col>
       </el-row>
+      <el-row
+        :gutter="24"
+        style="margin-top: 12px; font-weight: 700; font-size: 14px"
+      >
+        <el-col :span="6"> 采购分类：{{ infoData.cDefindParm04Name }} </el-col>
+      </el-row>
     </el-card>
 
     <el-card>

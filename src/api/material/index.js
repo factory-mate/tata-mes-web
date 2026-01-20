@@ -129,3 +129,14 @@ export function getMaterialForPage(data) {
     data
   });
 }
+
+export function getOrderCategories() {
+  return request({
+    url: import.meta.env.VITE_APP_BASE_API + '/api/Dictonary/GetDicType',
+    method: 'get',
+    params: {
+      cTableCode: 'FM_INENTORY_INFO_EXTEND',
+      cAttributeCode: 'cDefindParm04'
+    }
+  });
+}
