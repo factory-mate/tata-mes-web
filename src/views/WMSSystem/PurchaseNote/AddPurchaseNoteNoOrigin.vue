@@ -675,6 +675,19 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
+  let defindParm04Set = new Set<string>();
+  TABRef.value.tableDataVal.forEach((item: any) => {
+    if (item.cDefindParm04) {
+      defindParm04Set.add(item.cDefindParm04);
+    }
+  });
+  if (defindParm04Set.size > 1) {
+    ElMessage({
+      type: 'error',
+      message: '物料采购分类不同，请检查后重新保存'
+    });
+    return;
+  }
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'PurchaseNote';
   obj.tableData = TABRef.value.tableDataVal;
