@@ -28,6 +28,8 @@
         :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        custom-width
+        :setWidth="setWidth"
       >
         <template #button>
           <el-table-column
@@ -304,8 +306,7 @@ const funTable = (arr: Array<any>) => {
         slot: '',
         lock: false,
         filters: [],
-        cFormPropertyCode: item.cFormPropertyCode,
-        minwidth: '140px'
+        cFormPropertyCode: item.cFormPropertyCode
       };
       tableColumns.value.push(itemData);
     }
@@ -565,6 +566,28 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '申请单号':
+    case '采购单号':
+    case '到货单号':
+      return 130;
+    case '物料编码':
+      return 90;
+    case '项号':
+      return 60;
+    case '长':
+    case '宽':
+    case '厚':
+    case '数量':
+    case '任务号':
+    case '质检结果':
+      return 80;
+    default:
+      return 120;
+  }
 };
 provide('tableAxios', { tableAxios });
 </script>
