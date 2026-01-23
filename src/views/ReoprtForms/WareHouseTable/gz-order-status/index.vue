@@ -164,7 +164,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'GlassOrderTable') {
+    if (v.name == 'GZOrderStatus') {
       tableAxios();
     }
   }, 300);
@@ -304,8 +304,7 @@ const funTable = (arr: Array<any>) => {
         slot: '',
         lock: false,
         filters: [],
-        cFormPropertyCode: item.cFormPropertyCode,
-        minwidth: '140px'
+        cFormPropertyCode: item.cFormPropertyCode
       };
       tableColumns.value.push(itemData);
     }
@@ -384,17 +383,17 @@ const clickDel = (obj: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'WareMangeReportViewiew',
+    name: 'GZOrderStatusDetail',
     params: {
       t: Date.now(),
-      rowId: scope.row
+      rowId: scope.row.UID
     },
     state: {
       modelCode: obj.cIncludeModelCode,
       pageType: 'view',
       row: JSON.stringify(scope.row),
-      pathName: 'WareMangeReportMain',
-      title: '报表详情'
+      pathName: 'GZOrderStatus',
+      title: '柜子订单状态表'
     }
   });
 };
@@ -411,7 +410,7 @@ const ExportAll = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  exportAnalysisHooks(data, '玻璃采购统计表-所有');
+  exportAnalysisHooks(data, '柜子订单状态表-所有');
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
@@ -426,7 +425,7 @@ const ExportOne = async (obj: any) => {
       Conditions: Conditions.value
     }
   };
-  exportAnalysisHooks(data, '玻璃采购统计表-当前');
+  exportAnalysisHooks(data, '柜子订单状态表-当前');
 };
 
 const ImportIn = async (obj: any) => {
