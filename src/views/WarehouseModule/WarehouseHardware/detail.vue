@@ -26,7 +26,7 @@ const { handlePrint } = useVueToPrint({
   documentTitle: '任务单'
 });
 
-const { cache } = useStore();
+const { cache, tagsView } = useStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -108,14 +108,12 @@ const getData = async () => {
     });
   }
   if (tableQueryConfig.value.Resource) {
-    getTableData();
+    getTableData(loading);
   }
-  loading.close();
 };
 
 // 表格数据
-const getTableData = async () => {
-  const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+const getTableData = async loading => {
   const params = {
     method: tableQueryConfig.value.Resource.cHttpTypeCode,
     url:
@@ -288,10 +286,9 @@ function PrintRWQD() {
   });
 }
 
-onMounted(() => getData());
-
 onActivated(async () => {
   // if (cache.isCurrentPageInvalid()) {
+  tagsView.updateVisitedView(route);
   await getData();
   //   cache.removeCurrentPageInvalid();
   // }
