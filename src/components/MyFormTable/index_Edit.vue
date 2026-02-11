@@ -1217,6 +1217,8 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
       tableDataVal.value[IndexType.value].cDefindParm09 =
         val.value[0].cDefindParm09;
+      tableDataVal.value[IndexType.value].cDefindParm10 =
+        val.value[0].cDefindParm10;
       // 获取价格
       getPrice({
         cInvCode: tableDataVal.value[IndexType.value].cInvCode,
@@ -1352,6 +1354,8 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].list_price = val.value[0].list_price;
       tableDataVal.value[IndexType.value].cDefindParm04 =
         val.value[0].cDefindParm04;
+      tableDataVal.value[IndexType.value].cDefindParm05 =
+        val.value[0].cDefindParm05;
       tableDataVal.value[IndexType.value].cDefindParm03 =
         val.value[0]?.list_sap?.find(
           i =>
@@ -1418,6 +1422,7 @@ const selectDatas = (val: any) => {
           emptyRow.cVendorCode = val.value[i + 1].cVendorCode;
           emptyRow.list_sap = val.value[i + 1].list_sap;
           emptyRow.cDefindParm04 = val.value[i + 1].cDefindParm04;
+          emptyRow.cDefindParm05 = val.value[i + 1].cDefindParm05;
           emptyRow.cDefindParm03 =
             val.value[i + 1]?.list_sap?.find(
               j =>
@@ -1473,6 +1478,7 @@ const selectDatas = (val: any) => {
             cVendorCode: val.value[i + 1].cVendorCode,
             list_sap: val.value[i + 1].list_sap,
             cDefindParm04: val.value[i + 1].cDefindParm04,
+            cDefindParm05: val.value[i + 1].cDefindParm05,
             cDefindParm03:
               val.value[i + 1]?.list_sap?.find(
                 j =>
@@ -2132,6 +2138,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].cVendorCode = data[0].cVendorCode;
       tableDataVal.value[scope.$index].list_sap = data[0].list_sap;
       tableDataVal.value[scope.$index].cDefindParm04 = data[0].cDefindParm04;
+      tableDataVal.value[scope.$index].cDefindParm05 = data[0].cDefindParm05;
       tableDataVal.value[scope.$index].cDefindParm03 =
         data[0]?.list_sap?.find(
           i =>
@@ -2197,6 +2204,7 @@ const onKeyPressEnter = async (e, item, scope) => {
       tableDataVal.value[scope.$index].list_sap = [];
       tableDataVal.value[scope.$index].cDefindParm03 = '';
       tableDataVal.value[scope.$index].cDefindParm04 = '';
+      tableDataVal.value[scope.$index].cDefindParm05 = '';
     }
   }
 };

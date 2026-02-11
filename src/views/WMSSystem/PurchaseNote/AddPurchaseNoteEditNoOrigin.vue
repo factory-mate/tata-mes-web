@@ -638,18 +638,35 @@ const handleSelectionChange = (v: any) => {
 
 //修改保存
 const SaveEdit = (obj: any, type = false) => {
-  let defindParm04Set = new Set<string>();
-  TABRef.value.tableDataVal.forEach((item: any) => {
-    if (item.cDefindParm04) {
-      defindParm04Set.add(item.cDefindParm04);
+  const rf = headRef.value.ruleForm;
+  const first = TABRef.value.tableDataVal[0];
+  let errorRows = [];
+  // 非玻璃采购
+  if (rf.cVouchTypeCode !== '4') {
+    // 自采
+    if (first.cDefindParm04 === '2') {
+      let defindParm04Set = new Set<string>();
+
+      TABRef.value.tableDataVal.forEach((item: any, index) => {
+        if (item.cDefindParm04) {
+          defindParm04Set.add(item.cDefindParm04);
+        }
+        if (defindParm04Set.size > 1) {
+          errorRows.push(
+            `第${index + 1}行，物料采购分类不一致，请检查后重新保存`
+          );
+        }
+      });
+      if (errorRows.length > 0) {
+        errorRows.map(i =>
+          ElMessage({
+            type: 'error',
+            message: i
+          })
+        );
+        return;
+      }
     }
-  });
-  if (defindParm04Set.size > 1) {
-    ElMessage({
-      type: 'error',
-      message: '物料采购分类不同，请检查后重新保存'
-    });
-    return;
   }
   // View1val.value = obj.cIncludeModelCode;
   // obj.pathName = 'PurchaseNote';
