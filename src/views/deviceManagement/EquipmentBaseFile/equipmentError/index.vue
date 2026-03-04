@@ -2,7 +2,11 @@
   <!-- 故障档案页面 -->
   <div class="maintain">
     <el-card
-      style="height: 100vh; position: relative; margin-right: 10px"
+      style="
+        height: calc(100vh - 146px);
+        position: relative;
+        margin-right: 10px;
+      "
       :style="{
         width: showTree ? '18%' : '30px',
         overflow: showTree ? 'auto' : 'hidden'
