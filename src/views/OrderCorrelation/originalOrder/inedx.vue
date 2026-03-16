@@ -295,8 +295,8 @@ const tableAxios = async () => {
   let valDat: any = '';
   if (Route.name == 'originalOrder') {
     valDat = Conditions.value
-      ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value
-      : 'cVouchTypeCode in (0,1,2,3,4,5,10)';
+      ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value
+      : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)';
   }
   let data = {
     method: AxiosData.value.Resource.cHttpTypeCode,
@@ -424,8 +424,8 @@ const Splitting = (obj: any) => {
         PageSize: queryParams.PageSize,
         OrderByFileds: OrderByFileds.value,
         Conditions: Conditions.value
-          ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value
-          : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+          ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value
+          : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
       },
       bIsSearch: sendId.value.length ? false : true,
       // "iDs": sendId.value
@@ -491,8 +491,8 @@ const SysReview = (obj: any) => {
         PageSize: queryParams.PageSize,
         OrderByFileds: OrderByFileds.value,
         Conditions: Conditions.value
-          ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value
-          : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+          ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value
+          : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
       },
       bIsSearch: sendId.value.length ? false : true,
       // "iDs": sendId.value
@@ -551,7 +551,7 @@ const BatchInspection = (obj: any) => {
       //     "PageIndex": queryParams.PageIndex,
       //     "PageSize": queryParams.PageSize,
       //     "OrderByFileds": OrderByFileds.value,
-      //     "Conditions": Conditions.value ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+      //     "Conditions": Conditions.value ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
       // },
       // "bIsSearch":  sendId.value.length ? false : true,
       // // "iDs": sendId.value
@@ -621,7 +621,7 @@ const BatchReview = (obj: any) => {
       //     "PageIndex": queryParams.PageIndex,
       //     "PageSize": queryParams.PageSize,
       //     "OrderByFileds": OrderByFileds.value,
-      //     "Conditions": Conditions.value ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+      //     "Conditions": Conditions.value ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
       // },
       // "bIsSearch":  sendId.value.length ? false : true,
       // // "iDs": sendId.value
@@ -701,8 +701,8 @@ const Adopt = (obj: any) => {
         PageSize: queryParams.PageSize,
         OrderByFileds: OrderByFileds.value,
         Conditions: Conditions.value
-          ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value
-          : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+          ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value
+          : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
       },
       bIsSearch: false,
       iDs: sendId.value,
@@ -766,7 +766,7 @@ const Suspend = (obj: any) => {
     //         "PageIndex": queryParams.PageIndex,
     //         "PageSize": queryParams.PageSize,
     //         "OrderByFileds": OrderByFileds.value,
-    //         "Conditions": Conditions.value ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+    //         "Conditions": Conditions.value ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
     //     },
     //     "bIsSearch": false,
     //     "iDs": sendId.value,
@@ -1157,8 +1157,8 @@ const ExportAll = async (obj: any) => {
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+        ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value
+        : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
     }
   };
   ExportApi(data).then((res: any) => {
@@ -1202,8 +1202,8 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5,10) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5,10)'
+        ? 'cVouchTypeCode in (0,1,2,3,4,5,10,11) && ' + Conditions.value
+        : 'cVouchTypeCode in (0,1,2,3,4,5,10,11)'
     }
   };
   ExportApi(data).then((res: any) => {
