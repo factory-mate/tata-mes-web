@@ -15,7 +15,7 @@
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
         @DownloadDetail="DownloadDetail"
-        @Commit="Commit"
+        @Commit="CommitAction"
         @ItemAddOnMaterial="ItemAddOnMaterial"
       ></ButtonViem>
       <!-- 表格区域 -->
@@ -530,6 +530,38 @@ const DownloadDetail = (obj: any) => {
   exportAnalysisHooks(data, '采购单明细');
   ElLoading.service().close();
 };
+
+const CommitAction = (obj: any) => {
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选要提交的数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '提交成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+      ElLoading.service().close();
+    } else {
+      console.log('提交失败');
+      ElLoading.service().close();
+    }
+  });
+};
+
 //按钮提交
 const Commit = (scope, obj: any) => {
   const senid = scope.row.UID;
