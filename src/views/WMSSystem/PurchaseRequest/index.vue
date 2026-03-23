@@ -55,7 +55,12 @@
                       [0, 5].includes(scope.row.iStatus)) ||
                     (item.Resource.cAttributeCode === 'Delete' &&
                       [0, 5].includes(scope.row.iStatus)) ||
-                    !['Edit', 'Delete'].includes(item.Resource.cAttributeCode)
+                    (item.Resource.cAttributeCode === 'PushSAPByUID' &&
+                      scope.row.iStatus == 10 &&
+                      scope.row.cDefindParm01 != '1') ||
+                    !['Edit', 'Delete', 'PushSAPByUID'].includes(
+                      item.Resource.cAttributeCode
+                    )
                   "
                   type="primary"
                   size="small"
@@ -64,7 +69,7 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <el-dropdown
+              <!-- <el-dropdown
                 style="margin-left: 10px"
                 v-if="tableButton.length > 3"
               >
@@ -90,7 +95,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </template>
           </el-table-column>
         </template>
@@ -228,6 +233,9 @@ const clickTableBut = (scope: any, event: any) => {
       break;
     case 'Delete':
       clickDelete(scope, event);
+      break;
+    case 'PushSAPByUID':
+      PushSAPByUID(scope, event);
       break;
     default:
       break;
@@ -368,6 +376,30 @@ const clickEditTable = (scope: any, obj: any) => {
       row: JSON.stringify(scope.row),
       pathName: 'PurchaseRequest',
       title: '采购申请编辑'
+    }
+  });
+};
+const PushSAPByUID = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: senid
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '推送成功'
+      });
+      tableAxios();
+      ElLoading.service().close();
+    } else {
+      ElMessage.error('推送失败');
+      ElLoading.service().close();
     }
   });
 };

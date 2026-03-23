@@ -564,7 +564,7 @@ const CancelCommit = (scope: any, obj: any) => {
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: [senid]
+    data: senid
   };
 
   ElLoading.service({ lock: true, text: '加载中.....' });
