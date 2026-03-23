@@ -33,7 +33,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="280px"
             align="center"
           >
             <template #header>
@@ -46,14 +46,11 @@
             </template>
             <template #default="scope">
               <template
-                v-for="(item, idx) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="
-                    idx < (tableButton.length > 3 ? 2 : 3) &&
-                    showButton(scope.row, item)
-                  "
+                  v-if="showButton(scope.row, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -61,7 +58,7 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <el-dropdown
+              <!-- <el-dropdown
                 style="margin-left: 10px"
                 v-if="tableButton.length > 3"
               >
@@ -87,7 +84,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </template>
           </el-table-column>
         </template>
@@ -223,6 +220,12 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Edit':
       clickEditTable(scope, event);
       break;
+    case 'Commit':
+      Commit(scope, event);
+      break;
+    case 'CancelCommit':
+      CancelCommit(scope, event);
+      break;
     case 'Delete':
       clickDelete(scope, event);
       break;
@@ -234,8 +237,14 @@ const showButton = (obj, item) => {
   if (item.Resource.cAttributeName === '详情') {
     return true;
   }
-  console.log(obj);
-  if (obj.iStatusName === '提交') {
+  if (item.Resource.cAttributeName === '撤销提交') {
+    if (obj.iStatus == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  if (obj.iStatus > 0) {
     return false;
   } else {
     return true;
@@ -522,36 +531,57 @@ const DownloadDetail = (obj: any) => {
   ElLoading.service().close();
 };
 //按钮提交
-const Commit = (obj: any) => {
-  if (sendId.value.length <= 0) {
-    ElMessage({
-      type: 'info',
-      message: '请勾选要提交的数据'
-    });
-    return;
-  }
+const Commit = (scope, obj: any) => {
+  const senid = scope.row.UID;
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: sendId.value
+    data: [senid]
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
   DataApi(data).then(res => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
-        message: '提交成功'
+        message: '操作成功'
       });
       tableAxios();
       TabRef.value.handleRemoveSelectionChange();
       sendId.value = [];
       ElLoading.service().close();
     } else {
-      console.log('提交失败');
+      console.log('操作失败');
       ElLoading.service().close();
     }
   });
 };
+
+// 撤销提交
+const CancelCommit = (scope, obj: any) => {
+  const senid = scope.row.UID;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [senid]
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '操作成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+      ElLoading.service().close();
+    } else {
+      console.log('操作失败');
+      ElLoading.service().close();
+    }
+  });
+};
+
 //按钮导出所有
 const ExportAll = async (obj: any) => {
   let data = {

@@ -36,7 +36,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="280px"
             align="center"
           >
             <template #header>
@@ -57,7 +57,11 @@
                     (idx < (tableButton.length > 3 ? 2 : 3) &&
                       ['详情'].includes(item.Resource.cAttributeName)) ||
                     (scope.row.cStatusName == '保存' &&
-                      ['编辑', '删除'].includes(item.Resource.cAttributeName))
+                      ['编辑', '删除'].includes(
+                        item.Resource.cAttributeName
+                      )) ||
+                    (scope.row.iStatus > 0 &&
+                      ['驳回'].includes(item.Resource.cAttributeName))
                   "
                   type="primary"
                   size="small"
@@ -83,6 +87,15 @@
                       :key="item.Resource.cAttributeName"
                     >
                       <el-button
+                        v-if="
+                          ['详情'].includes(item.Resource.cAttributeName) ||
+                          (scope.row.cStatusName == '保存' &&
+                            ['编辑', '删除'].includes(
+                              item.Resource.cAttributeName
+                            )) ||
+                          (scope.row.iStatus > 0 &&
+                            ['驳回'].includes(item.Resource.cAttributeName))
+                        "
                         type="primary"
                         size="small"
                         @click="clickTableBut(scope, item)"
@@ -430,6 +443,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Edit':
       clickEditTable(scope, event);
       break;
+    case 'CancelCommit':
+      CancelCommit(scope, event);
+      break;
     case 'Delete':
       clickDelete(scope, event);
       break;
@@ -541,6 +557,30 @@ const changPage = (val: any) => {
   queryParams.PageIndex = val.page;
   queryParams.PageSize = val.limit;
   tableAxios();
+};
+
+const CancelCommit = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [senid]
+  };
+
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '操作成功'
+      });
+      tableAxios();
+      ElLoading.service().close();
+    } else {
+      ElMessage.error('操作失败');
+      ElLoading.service().close();
+    }
+  });
 };
 
 //表格按钮删除
