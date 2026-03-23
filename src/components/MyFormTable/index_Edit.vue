@@ -86,6 +86,17 @@
           </template>
           <template #default="scope">
             <div v-if="funEdit(item.edit)">
+              <el-switch
+                v-if="item.cControlTypeCode == 'Switch'"
+                style="margin: 0 10px"
+                v-model="scope.row[item.prop]"
+                :disabled="props.disabled"
+                @change="e => handleSwitchChange(e, item, scope)"
+                active-text="是"
+                inactive-text="否"
+                :active-value="true"
+                :inactive-value="false"
+              />
               <el-date-picker
                 v-if="item.cControlTypeCode == 'DatePicker'"
                 v-model="scope.row[item.prop]"
@@ -108,7 +119,7 @@
                 :style="
                   funShow(scope.$index, scope.row, item.prop) ? styleMain : ''
                 "
-                placeholder=""
+                placeholder="请选择"
                 @change="(value:any)=>tableSelect(value,item.prop,scope.$index,item.PullData)"
                 filterable
               >
@@ -666,6 +677,12 @@ const tableFunObj = () => {
   ) {
     obj.UID = '00000000-0000-0000-0000-000000000000';
   }
+  if (
+    Route.name === 'DeliveryWarehouseAdd' ||
+    Route.name === 'DeliveryWarehouseEdit'
+  ) {
+    obj.IsWarn = false;
+  }
   return obj;
 };
 const tableSelect = (val: any, prop: any, i: any, list: any) => {
@@ -698,6 +715,16 @@ const tableSelect = (val: any, prop: any, i: any, list: any) => {
         }
       }
     });
+  }
+  if (
+    Route.name === 'DeliveryWarehouseAdd' ||
+    Route.name === 'DeliveryWarehouseEdit'
+  ) {
+    if (prop === 'cCallTypeName') {
+      dataVal = list.filter((i: any) => i.cDictonaryCode === val);
+      tableDataVal.value[i]['cCallTypeName'] = dataVal[0].cDictonaryName;
+      tableDataVal.value[i]['cCallTypeCode'] = dataVal[0].cDictonaryCode;
+    }
   }
   if (
     Route.name === 'WorkshopStatisticsCoreOrderEdit' ||
@@ -1038,6 +1065,30 @@ const selectDatas = (val: any) => {
   if (Route.name === 'TooolInfo' || Route.name === 'EditTooolInfo') {
     if (AttributeCode.value === 'cDefindParm03') {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
+    }
+  }
+  if (
+    Route.name === 'DeliveryWarehouseAdd' ||
+    Route.name === 'DeliveryWarehouseEdit'
+  ) {
+    if (AttributeCode.value === 'cInvCode') {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvMGroupCode =
+        val.value[0].cInvClassCode;
+      tableDataVal.value[IndexType.value].cInvMGroupName =
+        val.value[0].cInvClassName;
+    }
+  }
+  if (Route.name === 'DeliveryRouteAdd' || Route.name === 'DeliveryRouteEdit') {
+    if (
+      AttributeCode.value === 'cWareHouseCode' ||
+      AttributeCode.value === 'cWareHouseName'
+    ) {
+      tableDataVal.value[IndexType.value].cWareHouseCode =
+        val.value[0].cWareHouseCode;
+      tableDataVal.value[IndexType.value].cWareHouseName =
+        val.value[0].cWareHouseName;
     }
   }
   //#region 刀具
@@ -2485,6 +2536,10 @@ const querySearchAsync = async (
   } catch {
     //
   }
+};
+
+const handleSwitchChange = (val, item, scope) => {
+  console.log(val, item, scope);
 };
 
 // 自动补全选择

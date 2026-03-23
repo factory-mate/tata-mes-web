@@ -1682,6 +1682,20 @@ const selectData = (val: any) => {
       }
     }
     if (
+      Route.name === 'DeliveryWarehouseEdit' ||
+      Route.name === 'DeliveryWarehouseAdd' ||
+      Route.name === 'DeliveryRouteAdd' ||
+      Route.name === 'DeliveryRouteEdit'
+    ) {
+      if (
+        AttributeCode.value === 'cPersonCode' ||
+        AttributeCode.value === 'cPersonName'
+      ) {
+        ruleForm.value.cPersonCode = val.value[0].cPersonCode;
+        ruleForm.value.cPersonName = val.value[0].cPersonName;
+      }
+    }
+    if (
       Route.name === 'inspectionNormeAdd' ||
       Route.name === 'inspectionNormeEdit'
     ) {
