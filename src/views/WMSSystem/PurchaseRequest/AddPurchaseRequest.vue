@@ -445,6 +445,8 @@ const setWidth = row => {
     case '长':
     case '宽':
     case '厚':
+    case '单号':
+    case '项号':
       return 100;
     case '单位':
       return 100;
