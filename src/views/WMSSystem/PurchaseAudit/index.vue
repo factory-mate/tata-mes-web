@@ -24,7 +24,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -49,7 +49,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
-                  v-if="item.iIndex < 3 && showBtn(scope, item)"
+                  v-if="showBtn(scope, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -57,7 +57,7 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <el-dropdown
+              <!-- <el-dropdown
                 style="margin-left: 10px"
                 v-if="tableButton.length > 3"
               >
@@ -84,7 +84,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </template>
           </el-table-column>
         </template>
@@ -250,6 +250,12 @@ const clickTableBut = (scope: any, event: any) => {
       break;
     case 'Edit':
       clickEditTable(scope, event);
+      break;
+    case 'Audit':
+      clickAudit(scope, event);
+      break;
+    case 'RejectForm':
+      clickReject(scope, event);
       break;
     case 'Delete':
       clickDelete(scope, event);
@@ -446,19 +452,21 @@ const handleSelectionChange = (arr: any) => {
   selectList.value = arr;
 };
 //审核
-const clickAudit = (obj: any) => {
-  if (!selectList.value.length) {
-    ElMessage.info('请选择数据');
-    return false;
-  }
-  let UIDS: any = [];
-  selectList.value.forEach((element: any) => {
-    UIDS.push(element.UID);
-  });
+const clickAudit = (scope, obj: any) => {
+  // if (!selectList.value.length) {
+  //   ElMessage.info('请选择数据');
+  //   return false;
+  // }
+  const senid = scope.row.UID;
+  // let UIDS: any = [];
+  // selectList.value.forEach((element: any) => {
+  //   UIDS.push(element.UID);
+  // });
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: UIDS
+    // data: UIDS
+    data: [senid]
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
   DataApi(data).then(res => {
@@ -482,25 +490,28 @@ const clickAudit = (obj: any) => {
 };
 //驳回
 const RejectObj = ref({});
-const clickReject = (obj: any) => {
-  RejectObj.value = obj;
+
+const clickReject = (scope, obj: any) => {
+  const senid = scope.row.UID;
+  RejectObj.value = { ...obj, rejectId: senid };
   console.log(obj);
-  if (!selectList.value.length) {
-    ElMessage.info('请选择数据');
-    return false;
-  }
+  // if (!selectList.value.length) {
+  //   ElMessage.info('请选择数据');
+  //   return false;
+  // }
   dialogFormVisible.value = true;
 };
+
 const RejectMethod = (obj: any) => {
-  let UIDS: any = [];
-  selectList.value.forEach((element: any) => {
-    UIDS.push(element.UID);
-  });
+  // let UIDS: any = [];
+  // selectList.value.forEach((element: any) => {
+  //   UIDS.push(element.UID);
+  // });
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      KeyVal: UIDS,
+      KeyVal: [obj.rejectId],
       cMemo: form.reason
     }
   };
@@ -605,6 +616,12 @@ const renew = () => {
 
 const showBtn = (scope, item) => {
   if (item.cAttributeCode === 'Edit' && scope.row.iStatus > 1) {
+    return false;
+  }
+  if (item.cAttributeCode === 'Audit' && scope.row.iStatus != 1) {
+    return false;
+  }
+  if (item.cAttributeCode === 'RejectForm' && scope.row.iStatus != 10) {
     return false;
   }
   return true;
