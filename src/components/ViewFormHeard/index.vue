@@ -2118,6 +2118,10 @@ const selectData = (val: any) => {
         ruleForm.value.cPARM07 = val.value[0].cEmployeeCode;
         ruleForm.value.cPARM08 = val.value[0].cEmployeeName;
       }
+      if (AttributeCode.value === 'cPARM10') {
+        ruleForm.value.cPARM09 = val.value[0].cWareHouseCode;
+        ruleForm.value.cPARM10 = val.value[0].cWareHouseName;
+      }
     }
     if (
       Route.name == 'AddClientClassify' ||

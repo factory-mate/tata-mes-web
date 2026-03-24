@@ -280,6 +280,11 @@ const processFilterLogic = (val, p) => {
       }
     }
   }
+  if (Route.name === 'AddDevice' || Route.name === 'EditDevice') {
+    if (p.titleName === '刀具线边仓') {
+      conditions.push(`cWareHouseTypeCode=5`);
+    }
+  }
   if (
     Route.name === 'AddPurchaseRequestEdit' ||
     Route.name === 'AddPurchaseRequest' ||
