@@ -597,7 +597,11 @@ const CancelCommit = (scope, obj: any) => {
     data: senid
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  DataApi(data).then(res => {
+  DataApi(data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
