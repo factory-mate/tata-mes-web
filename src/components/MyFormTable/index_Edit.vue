@@ -796,6 +796,7 @@ const changeTextBox = async (i: any, scope: any, v) => {
   }
   if (
     Route.name === 'newPurchasedGoods' ||
+    Route.name === 'newPurchasedGoodsEdit' ||
     Route.name === 'KnifeNewPurchasedGoods'
   ) {
     if (
