@@ -405,7 +405,7 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  obj.pathName = 'DeliveryRoute';
+  obj.pathName = 'RDRecordOut';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -421,7 +421,7 @@ const SaveEdit = (obj: any) => {
     });
     return false;
   }
-  obj.pathName = 'DeliveryRoute';
+  obj.pathName = 'RDRecordOut';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

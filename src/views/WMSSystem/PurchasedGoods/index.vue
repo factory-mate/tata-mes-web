@@ -49,13 +49,12 @@
             </template>
             <template #default="scope">
               <template
-                v-for="(item, idx) in tableButton"
+                v-for="item in tableButton"
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
                   v-if="
-                    (idx < (tableButton.length > 3 ? 2 : 3) &&
-                      ['详情'].includes(item.Resource.cAttributeName)) ||
+                    ['详情'].includes(item.Resource.cAttributeName) ||
                     (scope.row.cStatusName == '保存' &&
                       ['编辑', '删除'].includes(
                         item.Resource.cAttributeName
@@ -70,7 +69,7 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <el-dropdown
+              <!-- <el-dropdown
                 style="margin-left: 10px"
                 v-if="tableButton.length > 3"
               >
@@ -105,7 +104,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </template>
           </el-table-column>
         </template>
@@ -568,7 +567,11 @@ const CancelCommit = (scope: any, obj: any) => {
   };
 
   ElLoading.service({ lock: true, text: '加载中.....' });
-  DataApi(data).then(res => {
+  DataApi(data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
