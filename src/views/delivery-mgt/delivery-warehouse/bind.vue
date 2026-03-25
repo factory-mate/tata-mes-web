@@ -7,7 +7,7 @@
         <ButtonViem
           :ToolBut="But"
           @SaveAdd="SaveAdd"
-          @EditSave="SaveEdit"
+          @BindSave="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
         ></ButtonViem>

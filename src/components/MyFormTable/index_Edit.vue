@@ -1068,6 +1068,12 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
     }
   }
+  if(Route.name === 'DeliveryWarehouseBind'){
+    if(AttributeCode.value === 'cFactoryUnitCode' || AttributeCode.value === 'cFactoryUnitName'){
+      tableDataVal.value[IndexType.value].cFactoryUnitCode = val.value[0].cFactoryUnitCode;
+      tableDataVal.value[IndexType.value].cFactoryUnitName = val.value[0].cFactoryUnitName;
+    }
+  }
   if (
     Route.name === 'DeliveryWarehouseAdd' ||
     Route.name === 'DeliveryWarehouseEdit'

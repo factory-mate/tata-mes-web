@@ -24,7 +24,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
@@ -52,11 +52,6 @@
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
-                  v-if="
-                    (item.Resource.cAttributeCode == 'View' &&
-                      scope.row.iStatus !== 0) ||
-                    scope.row.iStatus == 0
-                  "
                 >
                   {{ item.Resource.cAttributeName }}
                 </el-button>

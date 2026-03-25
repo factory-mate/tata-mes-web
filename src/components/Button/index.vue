@@ -344,7 +344,8 @@ const emits = defineEmits([
   'Verify',
   'ItemForm',
   'ImportPush',
-  'DownloadDetail'
+  'DownloadDetail',
+  'BindSave'
 ]);
 
 watch(
@@ -934,6 +935,9 @@ const ImportPush = (obj: any) => {
 const DownloadDetail = (obj: any) => {
   emits('DownloadDetail', obj);
 };
+const BindSave = (obj: any) => {
+  emits('BindSave', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1405,6 +1409,9 @@ const clickButton = (event: any) => {
       break;
     case 'DownloadDetail':
       DownloadDetail(event);
+      break;
+    case 'BindSave':
+      BindSave(event);
       break;
     default:
       break;
