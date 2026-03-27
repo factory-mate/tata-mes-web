@@ -430,7 +430,8 @@ const PrintLabel = (obj: any) => {};
 const BtnDAel = (obj: any) => {};
 // table 按钮 集合
 const clickTableHandDel = (val: any) => {
-  TABRef.value.DelBtn(val.$index);
+  tableData.value.splice(val.$index, 1);
+  // TABRef.value.DelBtn(val.$index);
 };
 
 const clickHandAdd = (data: any) => {
