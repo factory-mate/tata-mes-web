@@ -67,6 +67,9 @@ onActivated(async () => {
         style="margin-top: 12px; font-weight: 700; font-size: 14px"
       >
         <el-col :span="6"> 采购分类：{{ infoData.cDefindParm04Name }} </el-col>
+        <el-col :span="6">
+          供应商分类：{{ infoData.cDefindParm05Name }}
+        </el-col>
       </el-row>
     </el-card>
 

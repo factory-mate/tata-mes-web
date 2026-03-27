@@ -5,7 +5,8 @@ import {
   getInOutTypes,
   addMaterial,
   getUnitTypes,
-  getOrderCategories
+  getOrderCategories,
+  getApplierCategories
 } from '@/api/material';
 import { ref, onActivated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -47,6 +48,7 @@ const cMaterialTypeOptions = ref([]);
 const inOutOptions = ref([]);
 const unitTypeOptions = ref([]);
 const orderCategoryOptions = ref([]);
+const applierCategoryOptions = ref([]);
 
 const cInvClassNameModalRef = ref();
 const cVendorNameModalRef = ref();
@@ -80,6 +82,15 @@ function fetchTags() {
 function fetchOrderCategories() {
   getOrderCategories().then(res => {
     orderCategoryOptions.value = res.data.map(item => ({
+      label: item.cDictonaryName,
+      value: item.cDictonaryCode
+    }));
+  });
+}
+
+function fetchApplierCategories() {
+  getApplierCategories().then(res => {
+    applierCategoryOptions.value = res.data.map(item => ({
       label: item.cDictonaryName,
       value: item.cDictonaryCode
     }));
@@ -214,6 +225,12 @@ function handleOrderCategoryChange(data) {
   )?.label;
 }
 
+function handleApplierCategoryChange(data) {
+  formData.value.cDefindParm05Name = applierCategoryOptions.value.find(
+    item => item.value == data
+  )?.label;
+}
+
 function handleClickcInvClassNameModal() {
   cInvClassNameModalRef.value.showDialog = true;
 }
@@ -305,6 +322,7 @@ onActivated(() => {
   fetchUnitTypes();
   fetchCMaterialTypes();
   fetchOrderCategories();
+  fetchApplierCategories();
 });
 </script>
 
@@ -461,6 +479,22 @@ onActivated(() => {
                 style="width: 240px"
                 :options="orderCategoryOptions"
                 @change="handleOrderCategoryChange"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              label="供应商分类"
+              label-width="150"
+              prop="cDefindParm05"
+              style="font-weight: 700"
+            >
+              <el-select-v2
+                v-model="formData.cDefindParm05"
+                placeholder="请选择"
+                style="width: 240px"
+                :options="applierCategoryOptions"
+                @change="handleApplierCategoryChange"
               />
             </el-form-item>
           </el-col>
