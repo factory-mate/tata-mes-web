@@ -176,7 +176,8 @@ const handleAddChildItem = node => {
 };
 
 const handleRemoveItem = node => {
-  if (lambdaData.value.length === 1) {
+  console.log(node);
+  if (lambdaData.value.length === 1 && node.level === 1) {
     ElMessage({
       message: '至少保留一个条件',
       type: 'error'
