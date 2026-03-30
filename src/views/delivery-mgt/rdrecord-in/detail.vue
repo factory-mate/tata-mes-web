@@ -6,10 +6,14 @@
       <div class="bot-btn1">
         <ButtonViem
           :ToolBut="But"
+          @Edit="clickEdit"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
+          @check="clickCheck"
+          @del="clickDelete"
+          @un-check="clickUnCheck"
         ></ButtonViem>
       </div>
       <Head-View
@@ -72,10 +76,22 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
-import { ElButton, ElCard, ElLoading, ElTableColumn } from 'element-plus';
+import {
+  ElButton,
+  ElCard,
+  ElLoading,
+  ElMessage,
+  ElMessageBox,
+  ElTableColumn
+} from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import {
+  buttonConfigApi,
+  configApi,
+  DataApi,
+  ParamsApi
+} from '@/api/configApi/index';
+import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -84,6 +100,7 @@ const { tagsView, permission } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const modelCode = ref();
+const router = useRouter();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
@@ -167,6 +184,23 @@ onActivated(() => {
   }
 });
 
+watch(
+  () => headRef.value?.ruleForm.iStatus,
+  iStatus => {
+    if (iStatus >= 0) {
+      return;
+    } else {
+      buttonConfigApi('DL_RDRECORD_IN.View', { iStatus }).then(res => {
+        console.log(res);
+        if (res.data?.[import.meta.env.VITE_APP_key].length > 0) {
+          But.value = res.data?.[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+      });
+    }
+  }
+);
 watch(
   () => headRef.value?.ruleForm?.Items,
   newVal => {
@@ -395,9 +429,131 @@ const SaveEdit = (obj: any) => {
 };
 // 编辑
 const clickEdit = (obj: any) => {
-  getAddUser(obj.cIncludeModelCode);
-  disabled.value = false;
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+  console.log(obj);
+  router.push({
+    name: 'RDRecordInEdit',
+    params: {
+      t: Date.now(),
+      rowId: rowId.value
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(row.value),
+      pathName: 'RDRecordIn',
+      title: '入库单编辑'
+    }
+  });
+  // getAddUser(obj.cIncludeModelCode);
+  // disabled.value = false;
+  // $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+};
+
+const clickCheck = (obj: any) => {
+  console.log(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value, utf: row.value.utfs }
+  };
+  ElMessageBox.confirm('确定审核数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '审核成功'
+          });
+          getAddUser(Route.meta.ModelCode);
+        } else {
+          ElMessage.error('审核失败');
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+
+const clickUnCheck = (obj: any) => {
+  console.log(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value, utf: row.value.utfs }
+  };
+  ElMessageBox.confirm('确定弃审数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '弃审成功'
+          });
+          getAddUser(Route.meta.ModelCode);
+        } else {
+          ElMessage.error('弃审失败');
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+
+const clickDelete = (obj: any) => {
+  console.log(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value }
+  };
+  ElMessageBox.confirm('确定删除数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        console.log(res);
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '删除成功'
+          });
+          router.push({
+            name: 'RDRecordIn',
+            params: { t: Date.now() },
+            state: { modelCode: modelCode.value, title: '入库单列表' }
+          });
+          closeSelectedTag(Route);
+        } else {
+          ElMessage.error('删除失败');
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+
+const closeSelectedTag = (view: any) => {
+  tagsView.delVisitedView(view).then((res: any) => {
+    console.log(res, '--res');
+    // if (isActive(view)) {
+    //     toLastView(res.visitedViews, view);
+    // }
+  });
 };
 </script>
 

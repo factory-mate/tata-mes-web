@@ -11,6 +11,16 @@ export function configApi(data: string) {
     method: 'get'
   });
 }
+
+export function buttonConfigApi(code: string, data: any) {
+  return request({
+    url:
+      import.meta.env.VITE_APP_BASE_API +
+      `/api/AuthHelper/GetFormTool?modelCode=${code}`,
+    method: 'post',
+    data
+  });
+}
 /**
  *axiosParams  get 方式
  *
