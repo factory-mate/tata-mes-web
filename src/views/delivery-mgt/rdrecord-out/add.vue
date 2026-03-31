@@ -100,7 +100,12 @@ import {
   ElTableColumn
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
+import {
+  buttonConfigApi,
+  configApi,
+  DataApi,
+  ParamsApi
+} from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
@@ -400,6 +405,7 @@ const SaveAdd = (obj: any) => {
     });
     return false;
   }
+  console.log(headRef.value.ruleForm);
   obj.pathName = 'RDRecordOut';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
