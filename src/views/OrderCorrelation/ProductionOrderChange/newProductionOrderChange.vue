@@ -44,6 +44,7 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="true"
+        max-height="calc(100vh - 255px)"
       >
         <template #button>
           <!-- <el-table-column label="操作" fixed="right" width="160px" align="center">
@@ -389,6 +390,7 @@ const clickEdit = (obj: any) => {
 
   .maintain_card {
     width: 100%;
+    height: 100%;
     margin-bottom: 20px;
 
     :deep(.el-card__body) {
