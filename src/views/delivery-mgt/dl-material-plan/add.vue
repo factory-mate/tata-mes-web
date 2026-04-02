@@ -6,14 +6,10 @@
       <div class="bot-btn1">
         <ButtonViem
           :ToolBut="But"
-          @Edit="clickEdit"
-          @SaveAdd="SaveAdd"
+          @AddSave="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
-          @check="clickCheck"
-          @del="clickDelete"
-          @un-check="clickUnCheck"
         ></ButtonViem>
       </div>
       <Head-View
@@ -48,8 +44,28 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="false"
-        :disabled-hide="false"
       >
+        <template #button>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            width="160px"
+            align="center"
+          >
+            <template #header>
+              <span>操作</span>
+            </template>
+            <template #default="scope">
+              <el-button
+                type="primary"
+                :disabled="disabled"
+                size="small"
+                @click="clickTableHandDel(scope)"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </template>
       </myTable>
       <pagination
         v-if="total > 0"
@@ -71,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated, watch } from 'vue';
+import { ref, toRefs, reactive, onActivated } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
@@ -81,17 +97,11 @@ import {
   ElCard,
   ElLoading,
   ElMessage,
-  ElMessageBox,
   ElTableColumn
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
-import {
-  buttonConfigApi,
-  configApi,
-  DataApi,
-  ParamsApi
-} from '@/api/configApi/index';
-import { useRoute, useRouter } from 'vue-router';
+import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
+import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -100,7 +110,6 @@ const { tagsView, permission } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const modelCode = ref();
-const router = useRouter();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
@@ -177,35 +186,7 @@ onActivated(() => {
     // @ts-ignore
     rowId.value = JSON.parse(history.state.row).UID;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (Route.meta.title.match(/详情/gi)) {
-    disabled.value = true;
-  }
 });
-
-watch(
-  () => headRef.value?.ruleForm.iStatus,
-  iStatus => {
-    if (typeof iStatus === 'number' && !But.value.length) {
-      buttonConfigApi(Route.meta.ModelCode, { iStatus }).then(res => {
-        console.log(res);
-        if (res.data?.[import.meta.env.VITE_APP_key].length > 0) {
-          But.value = res.data?.[import.meta.env.VITE_APP_key].sort(
-            compare('iIndex', true)
-          );
-        }
-      });
-    }
-  }
-);
-watch(
-  () => headRef.value?.ruleForm?.Items,
-  newVal => {
-    tableData.value = newVal;
-  }
-);
-
 // 权限按钮
 const RoleBut = (v: any) => {
   let ToolData = head.value.filter((BItem: any) => {
@@ -227,7 +208,6 @@ const RoleBut = (v: any) => {
   }
 };
 const getAddUser = async (code: any) => {
-  But.value = [];
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
@@ -294,7 +274,7 @@ const getComboBoxFun = async () => {
         // obj = { Conditions: "cDictonaryTypeCode=ArriveVouchcAccUnitCode" }
         obj = { Conditions: '' };
       } else {
-        obj = { Conditions: 'cDictonaryTypeCode=' + item.cAttributeCode };
+        // obj = { Conditions: 'cDictonaryTypeCode=' + item.cAttributeCode };
       }
       let data = {
         method: item.cHttpTypeCode,
@@ -319,13 +299,14 @@ const funTable = (arr: Array<any>) => {
           prop: item.Resource.cAttributeCode,
           headerSlot: false,
           slot: '',
-          edit: true,
+          edit: item.DefinedParm4 == '1' ? true : false,
           cControlTypeCode: item.cControlTypeCode,
           cIncludeModelCode: item.cIncludeModelCode,
           cHttpTypeCode: item.Resource.cHttpTypeCode,
           cServerIP: item.Resource.cServerIP,
           cUrl: item.Resource.cUrl,
-          cAttributeCode: item.Resource.cAttributeCode
+          cAttributeCode: item.Resource.cAttributeCode,
+          cDataTypeCode: item.cDataTypeCode
         };
         tableColumns.value.push(itemData);
         tableColumns.value.push({
@@ -389,6 +370,7 @@ const sortArr = (property: any) => {
 
 // table 按钮删除
 const clickTableHandDel = (val: any) => {
+  tableData.value = TABRef.value.tableDataVal;
   //调用子组件的 DelBtn方法
   tableData.value.splice(val.$index, 1);
 };
@@ -411,16 +393,24 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  obj.pathName = 'resizeDial';
+  if (!TABRef.value.tableDataVal.length) {
+    ElMessage({
+      message: '请添加表体数据',
+      type: 'error'
+    });
+    return false;
+  }
+  obj.pathName = 'DeliveryWarehouse';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
+  headRef.value.ruleForm.Items = TABRef.value.tableDataVal;
   headRef.value.validate(obj);
 };
 
 //修改保存
 const SaveEdit = (obj: any) => {
-  obj.pathName = 'resizeDial';
+  obj.pathName = 'DeliveryWarehouse';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -428,131 +418,9 @@ const SaveEdit = (obj: any) => {
 };
 // 编辑
 const clickEdit = (obj: any) => {
-  console.log(obj);
-  router.push({
-    name: 'RDRecordOutEdit',
-    params: {
-      t: Date.now(),
-      rowId: rowId.value
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      row: JSON.stringify(row.value),
-      pathName: 'RDRecordOut',
-      title: '出库单编辑'
-    }
-  });
-  // getAddUser(obj.cIncludeModelCode);
-  // disabled.value = false;
-  // $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
-};
-
-const clickCheck = (obj: any) => {
-  console.log(obj);
-  const data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: { UID: rowId.value, utf: headRef.value.ruleForm.utfs }
-  };
-  ElMessageBox.confirm('确定审核数据?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-    DataApi(data)
-      .then(res => {
-        if (res?.success) {
-          ElMessage({
-            type: 'success',
-            message: '审核成功'
-          });
-          getAddUser(Route.meta.ModelCode);
-        } else {
-          ElMessage.error('审核失败');
-        }
-      })
-      .finally(() => {
-        loading.close();
-      });
-  });
-};
-
-const clickUnCheck = (obj: any) => {
-  console.log(obj);
-  const data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: { UID: rowId.value, utf: headRef.value.ruleForm.utfs }
-  };
-  ElMessageBox.confirm('确定弃审数据?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-    DataApi(data)
-      .then(res => {
-        if (res?.success) {
-          ElMessage({
-            type: 'success',
-            message: '弃审成功'
-          });
-          getAddUser(Route.meta.ModelCode);
-        } else {
-          ElMessage.error('弃审失败');
-        }
-      })
-      .finally(() => {
-        loading.close();
-      });
-  });
-};
-
-const clickDelete = (obj: any) => {
-  console.log(obj);
-  const data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: { UID: rowId.value }
-  };
-  ElMessageBox.confirm('确定删除数据?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-    DataApi(data)
-      .then(res => {
-        console.log(res);
-        if (res?.success) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功'
-          });
-          router.push({
-            name: 'RDRecordOut',
-            params: { t: Date.now() },
-            state: { modelCode: modelCode.value, title: '出库单列表' }
-          });
-          closeSelectedTag(Route);
-        } else {
-          ElMessage.error('删除失败');
-        }
-      })
-      .finally(() => {
-        loading.close();
-      });
-  });
-};
-
-const closeSelectedTag = (view: any) => {
-  tagsView.delVisitedView(view).then((res: any) => {
-    console.log(res, '--res');
-    // if (isActive(view)) {
-    //     toLastView(res.visitedViews, view);
-    // }
-  });
+  getAddUser(obj.cIncludeModelCode);
+  disabled.value = false;
+  $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
 };
 </script>
 

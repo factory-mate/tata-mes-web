@@ -187,9 +187,7 @@ onActivated(() => {
 watch(
   () => headRef.value?.ruleForm.iStatus,
   iStatus => {
-    if (iStatus >= 0) {
-      return;
-    } else {
+    if (typeof iStatus === 'number' && !But.value.length) {
       buttonConfigApi(Route.meta.ModelCode, { iStatus }).then(res => {
         console.log(res);
         if (res.data?.[import.meta.env.VITE_APP_key].length > 0) {
@@ -229,6 +227,7 @@ const RoleBut = (v: any) => {
   }
 };
 const getAddUser = async (code: any) => {
+  But.value = [];
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
@@ -453,7 +452,7 @@ const clickCheck = (obj: any) => {
   const data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: { UID: rowId.value, utf: row.value.utfs }
+    data: { UID: rowId.value, utf: headRef.value.ruleForm.utfs }
   };
   ElMessageBox.confirm('确定审核数据?', '提示', {
     confirmButtonText: '确定',
@@ -484,7 +483,7 @@ const clickUnCheck = (obj: any) => {
   const data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    data: { UID: rowId.value, utf: row.value.utfs }
+    data: { UID: rowId.value, utf: headRef.value.ruleForm.utfs }
   };
   ElMessageBox.confirm('确定弃审数据?', '提示', {
     confirmButtonText: '确定',
