@@ -1068,7 +1068,12 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cDefindParm03 = val.value[0].cSAPCode;
     }
   }
-  if (Route.name === 'RDRecordInAdd' || Route.name === 'RDRecordInEdit') {
+  if (
+    Route.name === 'RDRecordInAdd' ||
+    Route.name === 'RDRecordInEdit' ||
+    Route.name === 'RDRecordOutAdd' ||
+    Route.name === 'RDRecordOutEdit'
+  ) {
     if (
       AttributeCode.value === 'cInvCode' ||
       AttributeCode.value === 'cInvName'

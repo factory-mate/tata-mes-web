@@ -190,7 +190,7 @@ watch(
     if (iStatus >= 0) {
       return;
     } else {
-      buttonConfigApi('DL_RDRECORD_IN.View', { iStatus }).then(res => {
+      buttonConfigApi(Route.meta.ModelCode, { iStatus }).then(res => {
         console.log(res);
         if (res.data?.[import.meta.env.VITE_APP_key].length > 0) {
           But.value = res.data?.[import.meta.env.VITE_APP_key].sort(

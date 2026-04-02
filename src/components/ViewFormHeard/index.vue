@@ -1681,7 +1681,12 @@ const selectData = (val: any) => {
         ruleForm.value.cDepCode = val.value[0].cDepCode;
       }
     }
-    if (Route.name === 'RDRecordInAdd' || Route.name === 'RDRecordInEdit') {
+    if (
+      Route.name === 'RDRecordInAdd' ||
+      Route.name === 'RDRecordInEdit' ||
+      Route.name === 'RDRecordOutAdd' ||
+      Route.name === 'RDRecordOutEdit'
+    ) {
       if (
         AttributeCode.value === 'cWareHouseCode' ||
         AttributeCode.value === 'cWareHouseName'
