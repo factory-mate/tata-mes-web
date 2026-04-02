@@ -879,9 +879,14 @@ const summaryMethod = d => {
       return;
     }
     if (
-      ['nQuantity', 'nTaxMoney', 'cDefindParm06', 'nMoney'].includes(
-        column.property
-      )
+      [
+        'nQuantity',
+        'nTaxMoney',
+        'cDefindParm06',
+        'nMoney',
+        'nSumQuantity',
+        'nReceiveQuantity'
+      ].includes(column.property)
     ) {
       const values = data.map(item =>
         Number.isNaN(Number(item[column.property]))
