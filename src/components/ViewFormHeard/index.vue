@@ -1221,6 +1221,11 @@ const treeChange = (valKey: any) => {
     )
       .map(i => i.cMenuName)
       .join();
+    console.log(AllData);
+    console.log(
+      ruleForm.value['cResourcesCodes'],
+      ruleForm.value['cResourcesName']
+    );
   }
   if (
     Route.name === 'MaterialOutboundEdit' ||

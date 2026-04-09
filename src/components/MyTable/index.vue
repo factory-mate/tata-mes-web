@@ -449,6 +449,10 @@ const calcWidth = (row: { label: any }) => {
     switch (row.label) {
       case '单据号':
         return 150;
+      case 'SAP编码':
+      case '单据类型':
+      case '单位':
+        return 80;
       default:
         break;
     }
