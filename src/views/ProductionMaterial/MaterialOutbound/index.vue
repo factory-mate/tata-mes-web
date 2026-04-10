@@ -250,6 +250,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'EditDep':
       EditDep(scope, event);
       break;
+    case 'InAgain':
+      InAgain(scope, event);
+      break;
     default:
       break;
   }
@@ -511,6 +514,29 @@ const Commit = (obj: any) => {
     }
   });
 };
+const InAgain = (scope, obj: any) => {
+  console.log(123);
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: {
+      UID: scope.row.UID
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '操作成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      sendId.value = [];
+    } else {
+      console.log('操作失败');
+    }
+  });
+};
 //按钮导出所有
 const ExportAll = async (obj: any) => {
   let data = {
@@ -590,6 +616,13 @@ const showButton = (obj, item) => {
     item.Resource.cAttributeName === '编辑部门'
   ) {
     return true;
+  }
+  if (item.Resource.cAttributeCode === 'InAgain') {
+    if (obj.iStatus != 0 && obj.cDefindParm11 != 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   if (obj.iStatusName === '保存') {
     return true;
