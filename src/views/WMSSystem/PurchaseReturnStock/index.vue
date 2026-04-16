@@ -31,7 +31,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="300px"
             align="center"
           >
             <template #header>
@@ -56,7 +56,7 @@
                   {{ item.Resource.cAttributeName }}
                 </el-button>
               </template>
-              <el-dropdown
+              <!-- <el-dropdown
                 style="margin-left: 10px"
                 v-if="tableButton.length > 3"
               >
@@ -82,7 +82,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </template>
           </el-table-column>
         </template>
@@ -211,6 +211,7 @@ const total = ref(0);
 const tableData = ref([] as any);
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
+  console.log(scope, event, '按钮事件');
   switch (event.cAttributeCode) {
     case 'View':
       clickView(scope, event);
@@ -223,6 +224,12 @@ const clickTableBut = (scope: any, event: any) => {
       break;
     case 'Commit':
       Commit(scope, event);
+      break;
+    case 'PushSAP_Bill':
+      PushSAPBill(scope, event);
+      break;
+    case 'PushSAP_UnBill':
+      PushSAPUnBill(scope, event);
       break;
     default:
       break;
@@ -382,6 +389,66 @@ const clickDelete = (scope: any, obj: any) => {
       });
       ElLoading.service().close();
     });
+};
+const PushSAPBill = (scope: any, obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: scope.row.UID,
+      IsBill: true
+    }
+  };
+  ElMessageBox.confirm('确定操作?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+const PushSAPUnBill = (scope: any, obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: scope.row.UID,
+      IsBill: false
+    }
+  };
+  ElMessageBox.confirm('确定操作?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
 };
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
