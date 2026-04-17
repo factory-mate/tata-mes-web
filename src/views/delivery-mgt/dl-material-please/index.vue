@@ -149,7 +149,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'DeliveryRoute') {
+    if (v.name == 'DLMaterialPlease') {
       tableAxios();
     }
   }, 300);
@@ -329,7 +329,7 @@ const changPage = (val: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryRouteDetail',
+    name: 'DLMaterialPleaseDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -337,15 +337,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryRoute',
-      title: '配送路线详情'
+      pathName: 'DLMaterialPlease',
+      title: '缺料申请单详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryRouteEdit',
+    name: 'DLMaterialPleaseEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -353,8 +353,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryRouteEdit',
-      title: '配送路线编辑'
+      pathName: 'DLMaterialPleaseEdit',
+      title: '缺料申请单编辑'
     }
   });
 };
@@ -398,16 +398,16 @@ const clickDelete = (scope: any, obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'DeliveryRouteAdd',
+    name: 'DLMaterialPleaseAdd',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '配送路线新增',
+      title: '缺料申请单新增',
       type: 'add',
-      pathName: 'DeliveryRoute'
+      pathName: 'DLMaterialPlease'
     }
   });
 };
@@ -512,7 +512,7 @@ const ExportAll = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '配送路线-所有');
+  exportAnalysisHooks(data, '缺料申请单-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -528,7 +528,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '配送路线');
+  exportAnalysisHooks(data, '缺料申请单');
   ElLoading.service().close();
 };
 </script>

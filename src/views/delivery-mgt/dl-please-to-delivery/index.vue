@@ -148,7 +148,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'DeliveryWarehouse') {
+    if (v.name == 'DLPleaseToDelivery') {
       tableAxios();
     }
   }, 300);
@@ -332,7 +332,7 @@ const changPage = (val: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryWarehouseDetail',
+    name: 'DLPleaseToDeliveryDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -340,15 +340,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryWarehouse',
-      title: '配送仓库详情'
+      pathName: 'DLPleaseToDelivery',
+      title: '配送单方案详情'
     }
   });
 };
 
 const clickBindTable = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryWarehouseBind',
+    name: 'DLPleaseToDeliveryBind',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -356,8 +356,8 @@ const clickBindTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryWarehouseBind',
-      title: '配送仓库绑定'
+      pathName: 'DLPleaseToDeliveryBind',
+      title: '配送单方案绑定'
     }
   });
 };
@@ -365,7 +365,7 @@ const clickBindTable = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryWarehouseEdit',
+    name: 'DLPleaseToDeliveryEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -373,8 +373,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryWarehouseEdit',
-      title: '配送仓库编辑'
+      pathName: 'DLPleaseToDeliveryEdit',
+      title: '配送单方案编辑'
     }
   });
 };
@@ -417,19 +417,44 @@ const clickDelete = (scope: any, obj: any) => {
 
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
-  router.push({
-    name: 'DeliveryWarehouseAdd',
-    params: {
-      t: Date.now(),
-      rowId: ' '
-    },
-    state: {
-      modelCode: obj.cIncludeModelCode,
-      title: '配送仓库新增',
-      type: 'add',
-      pathName: 'DeliveryWarehouse'
-    }
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl
+  };
+  ElMessageBox.confirm('确定新增?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
   });
+
+  // router.push({
+  //   name: 'DLPleaseToDeliveryAdd',
+  //   params: {
+  //     t: Date.now(),
+  //     rowId: ' '
+  //   },
+  //   state: {
+  //     modelCode: obj.cIncludeModelCode,
+  //     title: '配送单方案新增',
+  //     type: 'add',
+  //     pathName: 'DLPleaseToDelivery'
+  //   }
+  // });
 };
 //多选获取UID
 const handleSelectionChange = (arr: any) => {
@@ -532,7 +557,7 @@ const ExportAll = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '配送仓库-所有');
+  exportAnalysisHooks(data, '配送单方案-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -548,7 +573,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '配送仓库');
+  exportAnalysisHooks(data, '配送单方案');
   ElLoading.service().close();
 };
 </script>

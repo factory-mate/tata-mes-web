@@ -1690,7 +1690,9 @@ const selectData = (val: any) => {
       Route.name === 'RDRecordInAdd' ||
       Route.name === 'RDRecordInEdit' ||
       Route.name === 'RDRecordOutAdd' ||
-      Route.name === 'RDRecordOutEdit'
+      Route.name === 'RDRecordOutEdit' ||
+      Route.name === 'DLMaterialPlanAdd' ||
+      Route.name === 'DLMaterialPlanEdit'
     ) {
       if (
         AttributeCode.value === 'cWareHouseCode' ||
@@ -1698,6 +1700,18 @@ const selectData = (val: any) => {
       ) {
         ruleForm.value.cWareHouseName = val.value[0].cWareHouseName;
         ruleForm.value.cWareHouseCode = val.value[0].cWareHouseCode;
+      }
+    }
+    if (
+      Route.name === 'DLMaterialPlanAdd' ||
+      Route.name === 'DLMaterialPlanEdit'
+    ) {
+      if (
+        AttributeCode.value === 'cFactoryUnitCode' ||
+        AttributeCode.value === 'cFactoryUnitName'
+      ) {
+        ruleForm.value.cFactoryUnitName = val.value[0].cFactoryUnitName;
+        ruleForm.value.cFactoryUnitCode = val.value[0].cFactoryUnitCode;
       }
     }
     if (

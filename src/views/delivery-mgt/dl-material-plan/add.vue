@@ -400,7 +400,7 @@ const SaveAdd = (obj: any) => {
     });
     return false;
   }
-  obj.pathName = 'DeliveryWarehouse';
+  obj.pathName = 'DLMaterialPlan';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -410,7 +410,7 @@ const SaveAdd = (obj: any) => {
 
 //修改保存
 const SaveEdit = (obj: any) => {
-  obj.pathName = 'DeliveryWarehouse';
+  obj.pathName = 'DLMaterialPlan';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

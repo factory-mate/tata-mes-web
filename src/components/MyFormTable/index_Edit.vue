@@ -1114,6 +1114,45 @@ const selectDatas = (val: any) => {
     }
   }
   if (
+    Route.name === 'DLMaterialPlanAdd' ||
+    Route.name === 'DLMaterialPlanEdit'
+  ) {
+    if (AttributeCode.value === 'cInvCode') {
+      tableDataVal.value[IndexType.value].cInvCode = val.value[0].cInvCode;
+      tableDataVal.value[IndexType.value].cInvName = val.value[0].cInvName;
+      tableDataVal.value[IndexType.value].cInvMGroupCode =
+        val.value[0].cInvClassCode;
+      tableDataVal.value[IndexType.value].cInvMGroupName =
+        val.value[0].cInvClassName;
+      tableDataVal.value[IndexType.value].cInvStd = val.value[0].cInvStd;
+    }
+    if (
+      AttributeCode.value === 'cUnitCode' ||
+      AttributeCode.value === 'cUnitName'
+    ) {
+      tableDataVal.value[IndexType.value].cUnitCode = val.value[0].cUnitCode;
+      tableDataVal.value[IndexType.value].cUnitName = val.value[0].cUnitName;
+    }
+    if (
+      AttributeCode.value === 'cVendorName' ||
+      AttributeCode.value === 'cVendorCode'
+    ) {
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+    }
+    if (
+      AttributeCode.value === 'cDefindParm01' ||
+      AttributeCode.value === 'cDefindParm02'
+    ) {
+      tableDataVal.value[IndexType.value].cDefindParm01 =
+        val.value[0].cDictonaryCode;
+      tableDataVal.value[IndexType.value].cDefindParm02 =
+        val.value[0].cDictonaryName;
+    }
+  }
+  if (
     Route.name === 'DeliveryWarehouseAdd' ||
     Route.name === 'DeliveryWarehouseEdit'
   ) {

@@ -148,7 +148,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'DeliveryWarehouse') {
+    if (v.name == 'DLMaterialPlan') {
       tableAxios();
     }
   }, 300);
@@ -332,7 +332,7 @@ const changPage = (val: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryWarehouseDetail',
+    name: 'DLMaterialPlanDetail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -340,15 +340,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryWarehouse',
-      title: '配送仓库详情'
+      pathName: 'DLMaterialPlan',
+      title: '物料计划详情'
     }
   });
 };
 
 const clickBindTable = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryWarehouseBind',
+    name: 'DLMaterialPlanBind',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -356,8 +356,8 @@ const clickBindTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryWarehouseBind',
-      title: '配送仓库绑定'
+      pathName: 'DLMaterialPlanBind',
+      title: '物料计划绑定'
     }
   });
 };
@@ -365,7 +365,7 @@ const clickBindTable = (scope: any, obj: any) => {
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'DeliveryWarehouseEdit',
+    name: 'DLMaterialPlanEdit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -373,8 +373,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DeliveryWarehouseEdit',
-      title: '配送仓库编辑'
+      pathName: 'DLMaterialPlanEdit',
+      title: '物料计划编辑'
     }
   });
 };
@@ -418,16 +418,16 @@ const clickDelete = (scope: any, obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'DeliveryWarehouseAdd',
+    name: 'DLMaterialPlanAdd',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '配送仓库新增',
+      title: '物料计划新增',
       type: 'add',
-      pathName: 'DeliveryWarehouse'
+      pathName: 'DLMaterialPlan'
     }
   });
 };
@@ -532,7 +532,7 @@ const ExportAll = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '配送仓库-所有');
+  exportAnalysisHooks(data, '物料计划-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -548,7 +548,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '配送仓库');
+  exportAnalysisHooks(data, '物料计划');
   ElLoading.service().close();
 };
 </script>

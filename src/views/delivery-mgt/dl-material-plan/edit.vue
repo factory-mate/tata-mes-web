@@ -405,7 +405,7 @@ const modelClose = (val: any) => {
 };
 //新增保存
 const SaveAdd = (obj: any) => {
-  obj.pathName = 'DeliveryWarehouse';
+  obj.pathName = 'DLMaterialPlan';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -421,7 +421,7 @@ const SaveEdit = (obj: any) => {
     });
     return false;
   }
-  obj.pathName = 'DeliveryWarehouse';
+  obj.pathName = 'DLMaterialPlan';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
