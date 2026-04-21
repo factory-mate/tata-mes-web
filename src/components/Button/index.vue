@@ -250,6 +250,8 @@ const emits = defineEmits([
   'ItemAdd',
   'ItemAddOnMaterial',
   'clickPick',
+  'Pick',
+  'UnPick',
   'ChangeProductionDate',
   'cDefindParm07',
   'AddChange',
@@ -633,6 +635,12 @@ const PrintLabel = (obj: any) => {
 };
 const clickPick = (obj: any) => {
   emits('clickPick', obj);
+};
+const Pick = (obj: any) => {
+  emits('Pick', obj);
+};
+const UnPick = (obj: any) => {
+  emits('UnPick', obj);
 };
 const ChangeProductionDate = (obj: any) => {
   emits('ChangeProductionDate', obj);
@@ -1108,6 +1116,12 @@ const clickButton = (event: any) => {
       break;
     case 'pick':
       clickPick(event);
+      break;
+    case 'Pick':
+      Pick(event);
+      break;
+    case 'UnPick':
+      UnPick(event);
       break;
     case 'ChangeProductionDate':
       ChangeProductionDate(event);

@@ -6,10 +6,16 @@
       <div class="bot-btn1">
         <ButtonViem
           :ToolBut="But"
+          @Edit="clickEdit"
           @SaveAdd="SaveAdd"
           @SaveEdit="SaveEdit"
           @clickEdit="clickEdit"
           @clickAddConvert="clickAddConvert"
+          @check="clickCheck"
+          @del="clickDelete"
+          @un-check="clickUnCheck"
+          @Pick="clickPick"
+          @UnPick="clickUnPick"
         ></ButtonViem>
       </div>
       <Head-View
@@ -43,8 +49,9 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="false"
+        :selection="true"
         :disabled-hide="false"
+        @handle-selection-change="handleSelectionChange"
       >
       </myTable>
       <pagination
@@ -53,6 +60,75 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
       />
+      <div>
+        <el-dialog
+          v-model="TdialogFormVisible"
+          title="添加"
+          draggable
+          :modal="false"
+          :close-on-click-modal="false"
+          width="98%"
+        >
+          <!-- 搜索区域 -->
+
+          <FilterForm
+            :Filter="TFilter"
+            @ClickSearch="TClickSearch"
+            @resetForm="TresetForm"
+          ></FilterForm>
+
+          <myTable
+            ref="TTABRef"
+            :tableData="TtableData"
+            :tableColumns="TtableColumns"
+            :tableBorder="true"
+            :selection="true"
+            :EditType="EditType"
+            @handleSelectionChange="ThandleSelectionChange"
+            :disabledHide="false"
+            max-height="52vh"
+            custom-width
+            :show-index="false"
+          >
+            <template #button>
+              <!-- <el-table-column
+                label="操作"
+                fixed="right"
+                width="80px"
+                align="center"
+              >
+                <template #header>
+                  <span>操作</span>
+                </template>
+                <template #default="scope">
+                  <el-button
+                    type="primary"
+                    :disabled="disabled"
+                    size="small"
+                    @click="handleClose(scope)"
+                  >
+                    关闭
+                  </el-button>
+                </template>
+              </el-table-column> -->
+            </template>
+          </myTable>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="TdialogFormVisible = false">取消</el-button>
+              <el-button type="primary" @click="Tconfirm"> 确认 </el-button>
+            </span>
+          </template>
+          <pagination
+            v-if="total > 0"
+            :total="total"
+            v-model:page="queryParams.PageIndex"
+            v-model:limit="queryParams.PageSize"
+            @pagination="changPage"
+          />
+        </el-dialog>
+      </div>
+
       <pop-model
         :dialogFormVisible="dialogFormVisible"
         :title="modelTitle"
@@ -71,11 +147,23 @@ import { ref, toRefs, reactive, onActivated, watch } from 'vue';
 import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
-import { compare } from '@/utils';
-import { ElButton, ElCard, ElLoading, ElTableColumn } from 'element-plus';
+import { compare, filterModel, tableSortInit } from '@/utils';
+import {
+  ElButton,
+  ElCard,
+  ElLoading,
+  ElMessage,
+  ElMessageBox,
+  ElTableColumn
+} from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
-import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
-import { useRoute } from 'vue-router';
+import {
+  buttonConfigApi,
+  configApi,
+  DataApi,
+  ParamsApi
+} from '@/api/configApi/index';
+import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
 import useStore from '@/store';
 const { tagsView, permission } = useStore();
@@ -84,6 +172,7 @@ const { tagsView, permission } = useStore();
 const $bus: any =
   getCurrentInstance()?.appContext.config.globalProperties.mittBus; // 声明$bus
 const modelCode = ref();
+const router = useRouter();
 const row = ref();
 const rowId = ref('') as any;
 const Route = useRoute();
@@ -103,6 +192,15 @@ const tableColumns = ref(dataVal);
 const AxiosData = ref({}) as any;
 const modelGrid = ref([]) as any;
 const modelGridType = ref(true);
+const TdialogFormVisible = ref();
+const TAxiosData = ref({}) as any;
+const TtableData = ref([]) as any;
+const TtableColumns = ref([]) as any;
+const EditType = ref(false);
+const TTABRef = ref();
+const selectedItems = ref([]) as any;
+
+const TFilter = ref([]) as any;
 //分页查询参数
 const queryParams = reactive({
   PageIndex: 1,
@@ -125,7 +223,9 @@ const {
   dialogFormVisible,
   modelTitle,
   modelCIncludeModelCode,
-  treeSelData
+  treeSelData,
+  Conditions,
+  OrderByFileds
 } = toRefs(data);
 let head = ref([]) as any;
 const initType = ref(true);
@@ -168,6 +268,21 @@ onActivated(() => {
 });
 
 watch(
+  () => headRef.value?.ruleForm.iStatus,
+  iStatus => {
+    if (typeof iStatus === 'number' && !But.value.length) {
+      buttonConfigApi(Route.meta.ModelCode, { iStatus }).then(res => {
+        console.log(res);
+        if (res.data?.[import.meta.env.VITE_APP_key].length > 0) {
+          But.value = res.data?.[import.meta.env.VITE_APP_key].sort(
+            compare('iIndex', true)
+          );
+        }
+      });
+    }
+  }
+);
+watch(
   () => headRef.value?.ruleForm?.Items,
   newVal => {
     tableData.value = newVal;
@@ -195,6 +310,7 @@ const RoleBut = (v: any) => {
   }
 };
 const getAddUser = async (code: any) => {
+  But.value = [];
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await configApi(code);
@@ -395,9 +511,369 @@ const SaveEdit = (obj: any) => {
 };
 // 编辑
 const clickEdit = (obj: any) => {
-  getAddUser(obj.cIncludeModelCode);
-  disabled.value = false;
-  $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+  console.log(obj);
+  router.push({
+    name: 'RDRecordOutEdit',
+    params: {
+      t: Date.now(),
+      rowId: rowId.value
+    },
+    state: {
+      modelCode: obj.cIncludeModelCode,
+      row: JSON.stringify(row.value),
+      pathName: 'RDRecordOut',
+      title: '出库单编辑'
+    }
+  });
+  // getAddUser(obj.cIncludeModelCode);
+  // disabled.value = false;
+  // $bus.emit('TabTitleVal', { name: Route.name, title: '采购申请单编辑' });
+};
+const TToolBut = ref([]) as any;
+
+const clickPick = async obj => {
+  TdialogFormVisible.value = true;
+  try {
+    const res = await configApi(obj.cIncludeModelCode);
+    if (res.status == 200) {
+      res.data.forEach((item: any) => {
+        if (item.cPropertyClassTypeCode == 'Grid') {
+          funTables(
+            item[import.meta.env.VITE_APP_key].sort(compare('iIndex', true))
+          );
+        }
+        if (item.cPropertyClassTypeCode == 'Filter') {
+          TFilter.value = item[import.meta.env.VITE_APP_key];
+        }
+        if (item.cPropertyClassTypeCode == 'ToolBut') {
+          TToolBut.value = item[import.meta.env.VITE_APP_key]?.[0] ?? {};
+        }
+      });
+    } else {
+      console.log('请求出错');
+    }
+  } catch (error) {
+    console.log(error, '程序出错了');
+  }
+};
+
+const itemData = ref([]) as any;
+
+const handleSelectionChange = (val: any) => {
+  selectedItems.value = val;
+};
+
+//弹窗表格选中
+const ThandleSelectionChange = (val: any) => {
+  itemData.value = val;
+};
+
+//弹窗确认
+const Tconfirm = () => {
+  console.log(TToolBut.value);
+  if (!itemData.value.length) {
+    ElMessage.warning('请至少选择一条数据');
+    return;
+  }
+  DataApi({
+    method: TToolBut.value.cHttpTypeCode,
+    url: `${TToolBut.value.cServerIP}${TToolBut.value.cUrl}`,
+    data: {
+      UID: rowId.value,
+      Items: (itemData.value ?? []).map((item: any) => item.UIDs)
+    }
+  })
+    .then((res: any) => {
+      if (res?.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        TdialogFormVisible.value = false;
+      }
+    })
+    .finally(() => {
+      TTABRef.value.handleRemoveSelectionChange();
+      itemData.value = [];
+      tableFilter();
+      headRef.value.funHeadview();
+    });
+};
+
+const tableFilter = () => {
+  tableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    tableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop]) {
+        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
+        aItem.filters = filData;
+      }
+    });
+    if (aItem.filters && aItem.filters.length) {
+      aItem.filters = aItem.filters.filter(
+        (item: { text: any }, index: any, self: any[]) => {
+          const i = self.findIndex((t: { text: any }) => t.text === item.text);
+          return i === index;
+        }
+      );
+    }
+  });
+};
+
+const funTables = (arr: Array<any>) => {
+  modelGrid.value = arr;
+  arr.forEach(item => {
+    if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
+      let itemData = {
+        checkType: true,
+        label: item.cShowName ?? item.Resource.cAttributeName,
+        prop: item.Resource.cAttributeCode,
+        edit: item.DefinedParm4,
+        cControlTypeCode: item.cControlTypeCode,
+        headerSlot: false,
+        slot: ''
+      };
+      TtableColumns.value.push(itemData);
+      TtableColumns.value.push({
+        checkType: true,
+        label: '操作',
+        slotName: 'button'
+      });
+      TtableColumns.value = TtableColumns.value.filter(
+        (item: { label: any }, index: any, self: any[]) => {
+          // 利用findIndex方法找到第一个与当前元素id相等的元素索引
+          const i = self.findIndex(
+            (t: { label: any }) => t.label === item.label
+          );
+          // 如果当前索引等于当前元素在self中的最初出现位置索引，则表示元素符合要求，不是重复元素，保留
+          return i === index;
+        }
+      );
+    }
+    if (item.Resource.cAttributeTypeCode == 'binddata') {
+      TAxiosData.value = item;
+      TtableAxios();
+    }
+    // if (item.Resource.cAttributeTypeCode == 'method') {
+    //   closeBtnConfig.value = item;
+    //   console.log(closeBtnConfig.value);
+    // }
+  });
+};
+
+const TClickSearch = (val: any) => {
+  Conditions.value = filterModel(val.value);
+  TtableAxios();
+};
+const TresetForm = (val: any) => {
+  Conditions.value = '';
+  OrderByFileds.value = '';
+  tableColumns.value = tableSortInit(tableColumns.value);
+  queryParams.PageIndex = 1;
+  queryParams.PageSize = 20;
+  TtableAxios();
+  TTABRef.value.clearFilter();
+};
+
+const changPage = (val: any) => {
+  queryParams.PageIndex = val.page;
+  queryParams.PageSize = val.limit;
+  TtableAxios();
+};
+
+//表格数据查询
+const TtableAxios = async () => {
+  let data = {
+    method: TAxiosData.value.Resource.cHttpTypeCode,
+    url: TAxiosData.value.Resource.cServerIP + TAxiosData.value.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  try {
+    const res = await DataApi(data);
+    if (res.status == 200) {
+      // TtableData.value = res.data.data;
+      TtableData.value = res.data;
+      total.value = res.data.dataCount;
+      Ttablefilter();
+    } else {
+      console.log('请求出错');
+    }
+  } catch (error) {
+    console.log(error, '程序出错');
+  }
+};
+
+const Ttablefilter = () => {
+  TtableColumns.value.forEach((aItem: any) => {
+    let filData = [] as any;
+    TtableData.value.forEach((bItem: any) => {
+      if (bItem[aItem.prop]) {
+        filData.push({ text: bItem[aItem.prop], value: bItem[aItem.prop] });
+        aItem.filters = filData;
+      }
+    });
+    if (aItem.filters && aItem.filters.length) {
+      aItem.filters = aItem.filters.filter(
+        (item: { text: any }, index: any, self: any[]) => {
+          const i = self.findIndex((t: { text: any }) => t.text === item.text);
+          return i === index;
+        }
+      );
+    }
+  });
+};
+
+const clickUnPick = obj => {
+  if (!selectedItems.value.length) {
+    ElMessage.warning('请至少选择一条数据');
+    return;
+  }
+  ElMessageBox.confirm('确定要挑出吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    let url = `${obj.Resource.cServerIP}${obj.Resource.cUrl}?`;
+    url += selectedItems.value
+      .map((item: any) => `Items=${item.UIDs}`)
+      .join('&');
+
+    const data = {
+      method: obj.Resource.cHttpTypeCode,
+      url
+      // data: {
+      //   UID: rowId.value,
+      //   Items: selectedItems.value.map((item: any) => item.UID)
+      // }
+    };
+    DataApi(data)
+      .then((res: any) => {
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+        }
+      })
+      .finally(() => {
+        selectedItems.value = [];
+        tableFilter();
+        headRef.value.funHeadview();
+      });
+  });
+};
+
+const clickCheck = (obj: any) => {
+  console.log(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value }
+  };
+  ElMessageBox.confirm('确定操作数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          getAddUser(Route.meta.ModelCode);
+        } else {
+          ElMessage.error('操作失败');
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+
+const clickUnCheck = (obj: any) => {
+  console.log(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value, utf: headRef.value.ruleForm.utfs }
+  };
+  ElMessageBox.confirm('确定弃审数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '弃审成功'
+          });
+          getAddUser(Route.meta.ModelCode);
+        } else {
+          ElMessage.error('弃审失败');
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+
+const clickDelete = (obj: any) => {
+  console.log(obj);
+  const data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: { UID: rowId.value }
+  };
+  ElMessageBox.confirm('确定删除数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        console.log(res);
+        if (res?.success) {
+          ElMessage({
+            type: 'success',
+            message: '删除成功'
+          });
+          router.push({
+            name: 'RDRecordOut',
+            params: { t: Date.now() },
+            state: { modelCode: modelCode.value, title: '出库单列表' }
+          });
+          closeSelectedTag(Route);
+        } else {
+          ElMessage.error('删除失败');
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
+
+const closeSelectedTag = (view: any) => {
+  tagsView.delVisitedView(view).then((res: any) => {
+    console.log(res, '--res');
+    // if (isActive(view)) {
+    //     toLastView(res.visitedViews, view);
+    // }
+  });
 };
 </script>
 

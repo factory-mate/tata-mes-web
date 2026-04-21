@@ -3164,7 +3164,8 @@ defineExpose({
   validate,
   clearValidate,
   downFile,
-  handleChangeRuleForm
+  handleChangeRuleForm,
+  funHeadview
 });
 </script>
 
