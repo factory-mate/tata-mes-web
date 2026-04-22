@@ -515,26 +515,32 @@ const Commit = (obj: any) => {
   });
 };
 const InAgain = (scope, obj: any) => {
-  console.log(123);
-  let data = {
-    method: obj.Resource.cHttpTypeCode,
-    url: obj.Resource.cServerIP + obj.Resource.cUrl,
-    params: {
-      UID: scope.row.UID
-    }
-  };
-  DataApi(data).then(res => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '操作成功'
-      });
-      tableAxios();
-      TabRef.value.handleRemoveSelectionChange();
-      sendId.value = [];
-    } else {
-      console.log('操作失败');
-    }
+  // 添加确认弹窗
+  ElMessageBox.confirm('确定执行操作吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      params: {
+        UID: scope.row.UID
+      }
+    };
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        TabRef.value.handleRemoveSelectionChange();
+        sendId.value = [];
+      } else {
+        console.log('操作失败');
+      }
+    });
   });
 };
 //按钮导出所有
