@@ -89,6 +89,8 @@
         :selection="true"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
@@ -652,6 +654,23 @@ const newList = (val: any) => {
 // 恢复
 const renew = () => {
   getData(Route.meta.ModelCode);
+};
+const setWidth = row => {
+  switch (row.label) {
+    case '箱码':
+    case '库位':
+    case '规格型号':
+    case '批次号':
+      return 150;
+    case '物料编号':
+    case '生产日期':
+      return 90;
+    case '物料名称':
+    case 'SAP名称':
+      return 200;
+    default:
+      return 80;
+  }
 };
 //打印参数
 const frame = ref(null);

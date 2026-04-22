@@ -13,6 +13,8 @@
         :ToolBut="But"
         @clickDelete="clickDel"
         @clickAdd="clickAdd"
+        @ExportAll="ExportAll"
+        @ExportOne="ExportOne"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -133,6 +135,7 @@ import {
 import { configApi, DataApi, delApi } from '@/api/configApi/index';
 import { useRoute, useRouter } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import exportAnalysisHooks from '@/utils/exportAnalysisHooks';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const $bus: any =
@@ -517,6 +520,39 @@ const handleSelectionChange = (arr: any) => {
   } else {
     sendIdArr.value = [];
   }
+};
+
+//按钮导出所有
+const ExportAll = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: 1,
+      PageSize: 999999,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '材质档案-所有');
+  ElLoading.service().close();
+};
+//按钮导出当前页
+const ExportOne = async (obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      PageIndex: queryParams.PageIndex,
+      PageSize: queryParams.PageSize,
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  exportAnalysisHooks(data, '材质档案');
+  ElLoading.service().close();
 };
 
 const data = reactive({
