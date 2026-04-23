@@ -613,7 +613,7 @@ const tableAxios = async () => {
   } else if (tabVal.value == 'MES.PRODUCTVOUCH_LLOW.M.List') {
     //审批日志
     params = {
-      OrderByFileds: 'dCreateTime desc',
+      OrderByFileds: 'dCreateTime',
       Conditions: `Mid = ${RepairUID.value ? RepairUID.value : row.value.UID}`
     };
     // params={Conditions:'Mid = '+ RepairUID.value?RepairUID.value:row.value.UID,OrderByFileds:"utfs asc"}

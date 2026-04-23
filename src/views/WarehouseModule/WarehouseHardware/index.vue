@@ -41,7 +41,7 @@ const queryParams = reactive({
   PageSize: 20
 });
 const total = ref(0);
-const orderBy = ref('');
+const orderBy = ref('dPlanDateStart desc,WJPackageStatus');
 const conditions = ref('');
 const selectedIds = ref([]);
 
@@ -224,7 +224,7 @@ const handleChangePage = val => {
 // 重置搜索
 const resetSearchParams = () => {
   conditions.value = '';
-  orderBy.value = '';
+  orderBy.value = 'dPlanDateStart desc,WJPackageStatus';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;

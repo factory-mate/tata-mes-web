@@ -168,7 +168,7 @@ service.interceptors.response.use(
         });
       }
     }
-    return Promise.reject(error.msg);
+    return Promise.reject(error.response?.data);
     // return Promise.reject( ElMessage({
     //   message: msg ,
     //   type: 'error'
