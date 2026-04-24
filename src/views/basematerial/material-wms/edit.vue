@@ -146,7 +146,7 @@ async function handleSubmit(bCheckPosition) {
       router.push('/basematerial/WMSMaterial');
       $bus.emit('tableUpData', { name: 'WMSMaterial' });
     }
-  } catch {
+  } catch (e) {
     ElMessageBox.confirm('所选货位无货，是否继续', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',

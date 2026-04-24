@@ -160,7 +160,8 @@ async function handleSubmit(bCheckPosition) {
       router.push('/basematerial/WMSMaterial');
       $bus.emit('tableUpData', { name: 'WMSMaterial' });
     }
-  } catch {
+  } catch (e) {
+    console.log(e);
     ElMessageBox.confirm('该库位已经有物料数据，是否继续', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
