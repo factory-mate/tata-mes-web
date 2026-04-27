@@ -36,12 +36,14 @@
         :selection="true"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
@@ -853,6 +855,21 @@ const ExportOne = async (obj: any) => {
     }
   };
   exportAnalysisHooks(data, '原始订单');
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case '优化工件数量':
+    case '板材总类':
+    case '优化完成数':
+    case '优化人':
+    case '优化厂商':
+    case '是否撤销':
+    case '描述':
+      return 100;
+    default:
+      return 200;
+  }
 };
 
 const data = reactive({
