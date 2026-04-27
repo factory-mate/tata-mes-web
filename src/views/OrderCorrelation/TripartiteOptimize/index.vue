@@ -40,7 +40,7 @@
         :set-width="setWidth"
       >
         <template #button>
-          <el-table-column
+          <!-- <el-table-column
             label="操作"
             fixed="right"
             width="120px"
@@ -96,7 +96,7 @@
                 </template>
               </el-dropdown>
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </template>
       </myTable>
       <pagination
