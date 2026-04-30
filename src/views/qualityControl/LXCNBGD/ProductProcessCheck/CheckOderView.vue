@@ -36,7 +36,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         :EditType="EditType"
         @handleSelectionChange="handleSelectionChange"
         :disabled="disa"
@@ -354,15 +354,16 @@ const tableAxios = async () => {
     return false;
   }
   let data = {
-    method: AxiosData.value.Resource.cHttpTypeCode,
+    method: 'post',
     url: AxiosData.value.Resource.cServerIP + AxiosData.value.Resource.cUrl,
-    params: {
-      val: rowId.value
+    data: {
+      OrderByFileds: '',
+      Conditions: `TID=${row.value.MID}`
     }
   };
   try {
     ElLoading.service({ lock: true, text: '加载中.....' });
-    const res = await ParamsApi(data);
+    const res = await DataApi(data);
     if (res.status == 200) {
       tableData.value = res.data;
       ElLoading.service().close();

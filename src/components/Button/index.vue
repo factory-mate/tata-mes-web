@@ -349,7 +349,8 @@ const emits = defineEmits([
   'DownloadDetail',
   'BindSave',
   'Check',
-  'UnCheck'
+  'UnCheck',
+  'CancelSAP'
 ]);
 
 watch(
@@ -954,6 +955,9 @@ const Check = (obj: any) => {
 const UnCheck = (obj: any) => {
   emits('UnCheck', obj);
 };
+const CancelSAP = (obj: any) => {
+  emits('CancelSAP', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1440,6 +1444,9 @@ const clickButton = (event: any) => {
       break;
     case 'UnCheck':
       UnCheck(event);
+      break;
+    case 'CancelSAP':
+      CancelSAP(event);
       break;
     default:
       break;

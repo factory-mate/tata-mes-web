@@ -607,7 +607,7 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
-  const conditions = ['cVouchTypeCode in (1,4)'];
+  const conditions = ['cVouchTypeCode in (1,4,5)'];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }

@@ -154,7 +154,8 @@
                   v-else-if="
                     item.prop == 'cCode' &&
                     (Route.name === 'InOutInventory' ||
-                      Route.name === 'ToolHistory')
+                      Route.name === 'ToolHistory' ||
+                      Route.name === 'CheckOderView')
                   "
                   @click="navToByCode(scope.row)"
                 >
@@ -352,28 +353,27 @@ const props = defineProps({
 });
 
 const tableCellStyle = (row: any) => {
+  const underlineStyle = {
+    padding: '0',
+    height: '12px',
+    margin: '0',
+    color: 'red',
+    textDecoration: 'underline',
+    cursor: 'pointer'
+  };
   if (Route.name === 'InOutInventory') {
     if (row.column.label === '单据号') {
-      return {
-        padding: '0',
-        height: '12px',
-        margin: '0',
-        color: 'red',
-        textDecoration: 'underline',
-        cursor: 'pointer'
-      };
+      return underlineStyle;
     }
   }
   if (Route.name === 'ToolHistory') {
     if (row.column.label === '单号') {
-      return {
-        padding: '0',
-        height: '12px',
-        margin: '0',
-        color: 'red',
-        textDecoration: 'underline',
-        cursor: 'pointer'
-      };
+      return underlineStyle;
+    }
+  }
+  if (Route.name === 'CheckOderView') {
+    if (row.column.label === '内返单号') {
+      return underlineStyle;
     }
   }
   return {
@@ -831,6 +831,22 @@ const clearFilter = () => {
 };
 const navToByCode = (row: any) => {
   console.log(row);
+  if (Route.name === 'CheckOderView') {
+    router.push({
+      name: 'newinLindReturn',
+      params: {
+        t: Date.now(),
+        rowId: row.UID
+      },
+      state: {
+        modelCode: 'MES.REPAIR_VOUCH.M.View',
+        row: JSON.stringify(row),
+        pathName: 'CheckOderView',
+        title: '内返单详情'
+      }
+    });
+    return;
+  }
   if (!row.cModelCode) {
     return;
   }

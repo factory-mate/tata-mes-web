@@ -253,6 +253,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'InAgain':
       InAgain(scope, event);
       break;
+    case 'CancelSAP':
+      CancelSAP(scope, event);
+      break;
     default:
       break;
   }
@@ -512,6 +515,35 @@ const Commit = (obj: any) => {
     } else {
       console.log('提交失败');
     }
+  });
+};
+const CancelSAP = (scope, obj: any) => {
+  // 添加确认弹窗
+  ElMessageBox.confirm('确定执行操作吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    let data = {
+      method: obj.Resource.cHttpTypeCode,
+      url: obj.Resource.cServerIP + obj.Resource.cUrl,
+      params: {
+        UID: scope.row.UID
+      }
+    };
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        TabRef.value.handleRemoveSelectionChange();
+        sendId.value = [];
+      } else {
+        console.log('操作失败');
+      }
+    });
   });
 };
 const InAgain = (scope, obj: any) => {
