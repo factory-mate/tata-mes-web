@@ -111,7 +111,7 @@
         :disabledHide="false"
         :showIndex="false"
         max-height="52vh"
-        :setWidth="setWidth"
+        :setWidth="setModalWidth"
         custom-width
       >
       </myTable>
@@ -836,6 +836,22 @@ const clickEdit = (obj: any) => {
   $bus.emit('TabTitleVal', { name: Route.name, title: '到货单编辑' });
 };
 
+const setModalWidth = row => {
+  switch (row.label) {
+    case '采购类型':
+    case '物料编码':
+      return 80;
+    case '采购单号':
+    case '采购日期':
+      return 100;
+    case '物料名称':
+    case '供应商名称':
+      return 200;
+    default:
+      return 80;
+  }
+};
+
 const setWidth = row => {
   switch (row.label) {
     case '采购单号':
@@ -857,7 +873,7 @@ const setWidth = row => {
     case '每包数量':
     case '箱数':
     case '采购类型':
-      return 100;
+      return 80;
     case '剩余数量':
     case '单位':
       return 85;

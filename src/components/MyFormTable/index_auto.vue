@@ -299,8 +299,10 @@ const funWidth = (val: any, item: any) => {
         '开向',
         '合页',
         '锁孔',
+        '结构号',
         '磁吸代别',
-        '审核失败原因'
+        '审核失败原因',
+        '审核信息'
       ].includes(val)
     ) {
       return '80px';
