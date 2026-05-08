@@ -149,7 +149,7 @@ onActivated(() => {
 // 新增/编辑后的刷新
 $bus.on('tableUpData', (v: any) => {
   setTimeout(() => {
-    if (v.name == 'DLTransfer') {
+    if (v.name == 'DLTransfer01') {
       tableAxios();
     }
   }, 300);
@@ -329,7 +329,7 @@ const changPage = (val: any) => {
 // 表格按钮详情
 const clickView = (scope: any, obj: any) => {
   router.push({
-    name: 'DLTransferDetail',
+    name: 'DLTransfer01Detail',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -337,15 +337,15 @@ const clickView = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DLTransfer',
-      title: '调拨单详情'
+      pathName: 'DLTransfer01',
+      title: '退货调拨单详情'
     }
   });
 };
 //表格按钮编辑
 const clickEditTable = (scope: any, obj: any) => {
   router.push({
-    name: 'DLTransferEdit',
+    name: 'DLTransfer01Edit',
     params: {
       t: Date.now(),
       rowId: scope.row.UID
@@ -353,8 +353,8 @@ const clickEditTable = (scope: any, obj: any) => {
     state: {
       modelCode: obj.cIncludeModelCode,
       row: JSON.stringify(scope.row),
-      pathName: 'DLTransferEdit',
-      title: '调拨单编辑'
+      pathName: 'DLTransfer01Edit',
+      title: '退货调拨单编辑'
     }
   });
 };
@@ -398,16 +398,16 @@ const clickDelete = (scope: any, obj: any) => {
 //按钮新增
 const clickAdd = (obj: { cIncludeModelCode: any }) => {
   router.push({
-    name: 'DLTransferAdd',
+    name: 'DLTransfer01Add',
     params: {
       t: Date.now(),
       rowId: ' '
     },
     state: {
       modelCode: obj.cIncludeModelCode,
-      title: '调拨单新增',
+      title: '退货调拨单新增',
       type: 'add',
-      pathName: 'DLTransfer'
+      pathName: 'DLTransfer01'
     }
   });
 };
@@ -512,7 +512,7 @@ const ExportAll = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '调拨单-所有');
+  exportAnalysisHooks(data, '退货调拨单-所有');
   ElLoading.service().close();
 };
 //按钮导出当前页
@@ -528,7 +528,7 @@ const ExportOne = async (obj: any) => {
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '调拨单');
+  exportAnalysisHooks(data, '退货调拨单');
   ElLoading.service().close();
 };
 </script>
