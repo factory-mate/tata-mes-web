@@ -244,6 +244,13 @@ const showButton = (scope, item) => {
       return false;
     }
   }
+  if (item.Resource.cAttributeName === '收货') {
+    if (scope.row.cDefindParm11) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   return true;
 };
 
