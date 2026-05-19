@@ -155,9 +155,11 @@ onActivated(() => {
   //     getData(Route.meta.ModelCode)
   // }
   initType.value = false;
-  if (rowId.value != Route.params.rowId) {
-    getData(Route.meta.ModelCode);
-  }
+  // if (rowId.value != Route.params.rowId) {
+  //   getData(Route.meta.ModelCode);
+  // }
+  getData(Route.meta.ModelCode);
+
   if (Route.params.rowId) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
