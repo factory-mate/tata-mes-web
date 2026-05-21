@@ -598,13 +598,15 @@ const setWidth = row => {
   switch (row.label) {
     case '物料名称':
       return 240;
+    case '供应商':
+      return 180;
     case '数量':
     case '已购数量':
     case '单位':
     case '交货日期':
       return 100;
     default:
-      return 200;
+      return 90;
   }
 };
 </script>

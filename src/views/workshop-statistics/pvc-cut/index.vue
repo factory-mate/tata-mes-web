@@ -26,6 +26,8 @@
         :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
@@ -466,6 +468,23 @@ const ExportAll = obj => {
   loading.close();
 };
 provide('tableAxios', { tableAxios });
+
+const setWidth = row => {
+  switch (row.label) {
+    case '物料名称':
+      return 160;
+    case '供应商':
+    case '裁切时间':
+    case '大卷箱码':
+    case '小卷箱码':
+      return 130;
+    case '物料编码':
+    case '裁切单号':
+      return 90;
+    default:
+      return 70;
+  }
+};
 </script>
 
 <style scoped lang="scss">
