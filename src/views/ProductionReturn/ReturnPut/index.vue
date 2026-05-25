@@ -42,6 +42,7 @@
                 :key="item.Resource.cAttributeName"
               >
                 <el-button
+                  v-if="showButton(scope, item)"
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
@@ -182,10 +183,25 @@ const clickTableBut = (scope: any, event: any) => {
     case 'View':
       clickView(scope, event);
       break;
+    case 'PushSAP':
+      PushSAP(scope, event);
+      break;
     default:
       break;
   }
 };
+
+const showButton = (scope, item) => {
+  if (item.Resource.cAttributeCode === 'PushSAP') {
+    if (scope.row.cDefindParm09 == '1') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  return true;
+};
+
 //表格数据查询
 const tableAxios = async () => {
   let data = {
@@ -340,6 +356,36 @@ const resetForm = (val: any) => {
   queryParams.PageSize = 20;
   tableAxios();
   TabRef.value.clearFilter();
+};
+
+const PushSAP = (scope: any, obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    params: {
+      UID: scope.row.UID
+    }
+  };
+  ElMessageBox.confirm('确定操作?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
 };
 
 // 列表排序
