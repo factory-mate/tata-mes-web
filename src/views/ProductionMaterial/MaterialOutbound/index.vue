@@ -70,7 +70,7 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1)"
+                      v-for="item in tableButton.filter((v: any) => [0, 1].indexOf(v.iIndex) == -1).filter(i=> showButton(scope.row, i))"
                       :key="item.Resource.cAttributeName"
                     >
                       <el-button
@@ -657,6 +657,13 @@ const showButton = (obj, item) => {
   }
   if (item.Resource.cAttributeCode === 'InAgain') {
     if (obj.iStatus != 0 && obj.cDefindParm11 != 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  if (item.Resource.cAttributeCode === 'Verify') {
+    if (obj.iStatus == 0) {
       return true;
     } else {
       return false;
