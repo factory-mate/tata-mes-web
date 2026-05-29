@@ -2228,8 +2228,8 @@ const selectData = (val: any) => {
       Route.name == 'InventoryProductComparisonEdit'
     ) {
       if (AttributeCode.value == 'cProjectName') {
-        ruleForm.value['cProjectName'] = val.value[0].cProjectName || '';
-        ruleForm.value['cProjectCode'] = val.value[0].cProjectCode || '';
+        ruleForm.value['cProjectName'] = val.value[0].cMouldName || '';
+        ruleForm.value['cProjectCode'] = val.value[0].cMouldCode || '';
       }
     }
     //刀具档案
@@ -2565,7 +2565,9 @@ const newAdd = () => {
     Route.name == 'AddPurchaseNote' ||
     Route.name == 'AddPurchaseNoteNoOrigin' ||
     Route.name == 'KnifeAddPurchaseNote' ||
-    Route.name == 'KnifeAddPurchaseNoteNoOrigin'
+    Route.name == 'KnifeAddPurchaseNoteNoOrigin' ||
+    Route.name == 'InspectionTemplateAdd' ||
+    Route.name == 'InspectionTemplateEdit'
   ) {
     ruleForm.value.IsAuth = true;
     const items = ButObjTableData.value.map(i => ({

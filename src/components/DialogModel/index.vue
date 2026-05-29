@@ -1163,8 +1163,8 @@ const selectData = (val: any) => {
       }
       if (Route.name == 'InspectionPlanComparison') {
         if (AttributeCode.value == 'cProjectName') {
-          ruleForm.value.cProjectName = val.value[0].cProjectName;
-          ruleForm.value.cProjectCode = val.value[0].cProjectCode;
+          ruleForm.value.cProjectName = val.value[0].cMouldName;
+          ruleForm.value.cProjectCode = val.value[0].cMouldCode;
         }
         if (AttributeCode.value == 'cResourceName') {
           ruleForm.value.cResourceName = val.value[0].cProcessName;

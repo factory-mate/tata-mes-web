@@ -45,6 +45,7 @@
               'addProductLineView',
               'menuMangment',
               'inspectionSchemeEdit',
+              'InspectionTemplateEdit',
               'newproductionChangeOrder',
               'addOperalPathView',
               'addOperalPathEdit',
