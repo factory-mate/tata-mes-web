@@ -14,6 +14,8 @@
         @clickDelete="clickDel"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @ActiveBom="ActiveBom"
+        @ActiveSheet="ActiveSheet"
         @Del="clickDel"
       >
       </ButtonViem>
@@ -86,6 +88,14 @@
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
       />
+      <searchModel
+        :dialogType="showDialog"
+        titleName="选择"
+        :codeType="dialogCode"
+        :MulitChoose="false"
+        @ModelClose="closeModal"
+        @selectData="selectData"
+      ></searchModel>
     </el-card>
   </div>
 </template>
@@ -112,6 +122,7 @@ import { sessionStorage } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { getCurrentInstance } from '@vue/runtime-core'; // 引入getCurrentInstance
+import searchModel from '@/components/MultiSelect/searchModel.vue';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const $bus: any =
@@ -130,6 +141,9 @@ const tabType = ref(true);
 const sendId = ref([]) as any;
 const CheckDataList = ref([]) as any;
 const initType = ref(true);
+const showDialog = ref(false);
+const dialogCode = ref('');
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -550,6 +564,64 @@ const ExportOne = async (obj: any) => {
   ElLoading.service({ lock: true, text: '加载中.....' });
   exportAnalysisHooks(data, '物料计划');
   ElLoading.service().close();
+};
+
+const currentBtn = ref<any>({});
+
+const ActiveSheet = (obj: any) => {
+  showDialog.value = true;
+  dialogCode.value = obj.cIncludeModelCode;
+  currentBtn.value = obj;
+  tableAxios();
+};
+
+const ActiveBom = (obj: any) => {
+  showDialog.value = true;
+  dialogCode.value = obj.cIncludeModelCode;
+  currentBtn.value = obj;
+  tableAxios();
+};
+
+const closeModal = val => {
+  showDialog.value = val.type;
+};
+const selectData = val => {
+  console.log(val);
+  const submitData = [];
+  val.value
+    .filter(i => i.UID)
+    .forEach(item => {
+      submitData.push(item.UID);
+    });
+  if (!submitData.length) {
+    ElMessage({
+      type: 'info',
+      message: '请选择数据'
+    });
+    return;
+  }
+  ElMessageBox.confirm('确定操作?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    DataApi({
+      method: currentBtn.value.Resource.cHttpTypeCode,
+      url: currentBtn.value.Resource.cServerIP + currentBtn.value.Resource.cUrl,
+      data: {
+        Items: submitData
+      }
+    }).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        showDialog.value = val.type;
+      }
+    });
+  });
 };
 </script>
 

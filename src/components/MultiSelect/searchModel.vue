@@ -173,6 +173,7 @@ watch(
         PageIndex: 1,
         PageSize: 20
       };
+      metadataOptions.value = {};
     }
   },
   { deep: true }
@@ -254,6 +255,7 @@ const resetForm = (val: any) => {
     PageIndex: 1,
     PageSize: 20
   };
+  metadataOptions.value = {};
   processFilterLogic(val.value, propsData);
   if (ajaxData.value && ajaxData.value.url) {
     tableAxios_2(ajaxData.value);
@@ -265,11 +267,20 @@ const resetForm = (val: any) => {
 
 const metadataOptions = ref<any>({});
 const currentParmName = ref('');
+const currentParm = ref<any>({});
 
 const processFilterLogic = (val, p) => {
   const conditions = [];
   OrderByFileds.value = '';
   currentParmName.value = p.titleName;
+  currentParm.value = p;
+  if (Route.name === 'DLMaterialPlan') {
+    val.forEach(item => {
+      if (item.cAttributeCode === 'date') {
+        metadataOptions.value.date = item.cAttributeCodeValue;
+      }
+    });
+  }
   if (
     Route.name === 'PurchaseRequestNotionsAdd' ||
     Route.name === 'PurchaseRequestNotionsEdit'
@@ -528,6 +539,11 @@ const tableAxios = (obj: {
       Conditions: Conditions.value
     }
   };
+  if (Route.name === 'DLMaterialPlan') {
+    if (metadataOptions.value.date) {
+      data.url += `&date=${metadataOptions.value.date}`;
+    }
+  }
   if (Route.name == 'newFileContrast') {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -551,13 +567,17 @@ const tableAxios = (obj: {
       }
     };
   }
+  console.log(currentParmName.value);
   DataApi(data).then(res => {
     if (
-      (Route.name === 'AddPurchaseRequestEdit' ||
+      ((Route.name === 'AddPurchaseRequestEdit' ||
         Route.name === 'AddPurchaseRequest' ||
         Route.name === 'KnifeAddPurchaseRequestEdit' ||
         Route.name === 'KnifeAddPurchaseRequest') &&
-      currentParmName.value === '单位'
+        currentParmName.value === '单位') ||
+      (Route.name === 'DLMaterialPlan' &&
+        (currentParm.value.codeType === 'DL_MATERIAL_PLAN.SHEET' ||
+          currentParm.value.codeType === 'DL_MATERIAL_PLAN.BOM'))
     ) {
       tableData.value = res.data || [];
       total.value = 0;

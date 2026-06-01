@@ -25,6 +25,7 @@
         @clickOptimize="clickOptimize"
         @BtnClearType="BtnClearType"
         @BtnCancel="BtnCancel"
+        @chosheet="chosheet"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -399,6 +400,49 @@ const BtnCancel = (obj: any) => {
   ZZdialogFormVisible.value = true;
   butmodeCode.value = obj.cIncludeModelCode;
   objData.value = obj;
+};
+const chosheet = obj => {
+  sendId.value = [];
+  sendIdArr.value.forEach((item: any) => {
+    sendId.value.push(item.UID);
+  });
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选数据'
+    });
+    return false;
+  }
+  let dataVal = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      IsAuto: false,
+      ItemUIDs: sendId.value
+    }
+  };
+  ElMessageBox.confirm('确定操作?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    DataApi(dataVal).then(res => {
+      if (res.success) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        TabRef.value.handleRemoveSelectionChange();
+        sendId.value = [];
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '操作失败'
+        });
+      }
+    });
+  });
 };
 //拆单运算
 const Splitting = (obj: any) => {

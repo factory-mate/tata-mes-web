@@ -350,7 +350,10 @@ const emits = defineEmits([
   'BindSave',
   'Check',
   'UnCheck',
-  'CancelSAP'
+  'CancelSAP',
+  'ActiveSheet',
+  'ActiveBom',
+  'chosheet'
 ]);
 
 watch(
@@ -958,6 +961,15 @@ const UnCheck = (obj: any) => {
 const CancelSAP = (obj: any) => {
   emits('CancelSAP', obj);
 };
+const ActiveSheet = (obj: any) => {
+  emits('ActiveSheet', obj);
+};
+const ActiveBom = (obj: any) => {
+  emits('ActiveBom', obj);
+};
+const chosheet = (obj: any) => {
+  emits('chosheet', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1447,6 +1459,15 @@ const clickButton = (event: any) => {
       break;
     case 'CancelSAP':
       CancelSAP(event);
+      break;
+    case 'ActiveSheet':
+      ActiveSheet(event);
+      break;
+    case 'ActiveBom':
+      ActiveBom(event);
+      break;
+    case 'chosheet':
+      chosheet(event);
       break;
     default:
       break;
