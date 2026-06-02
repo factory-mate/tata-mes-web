@@ -92,7 +92,7 @@
         :dialogType="showDialog"
         titleName="选择"
         :codeType="dialogCode"
-        :MulitChoose="false"
+        :MulitChoose="true"
         @ModelClose="closeModal"
         @selectData="selectData"
       ></searchModel>
@@ -600,27 +600,33 @@ const selectData = val => {
     });
     return;
   }
+  let loading;
   ElMessageBox.confirm('确定操作?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
+    loading = ElLoading.service({ lock: true, text: '操作中.....' });
     DataApi({
       method: currentBtn.value.Resource.cHttpTypeCode,
       url: currentBtn.value.Resource.cServerIP + currentBtn.value.Resource.cUrl,
       data: {
         Items: submitData
       }
-    }).then(res => {
-      if (res.success) {
-        ElMessage({
-          type: 'success',
-          message: '操作成功'
-        });
-        tableAxios();
-        showDialog.value = val.type;
-      }
-    });
+    })
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+          showDialog.value = val.type;
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
   });
 };
 </script>
