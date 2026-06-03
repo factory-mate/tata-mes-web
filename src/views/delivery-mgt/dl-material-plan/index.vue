@@ -452,8 +452,8 @@ const handleSelectionChange = (arr: any) => {
 //按钮删除
 const clickDel = (obj: any) => {
   sendId.value = [];
-  CheckDataList.value.forEach((item: { cBatchCode: any }) =>
-    sendId.value.push(item.cBatchCode)
+  CheckDataList.value.forEach((item: { UID: any }) =>
+    sendId.value.push(item.UID)
   );
   if (sendId.value.length <= 0) {
     ElMessage({
@@ -589,9 +589,9 @@ const selectData = val => {
   console.log(val);
   const submitData = [];
   val.value
-    .filter(i => i.UID)
+    .filter(i => i.cBatchCode)
     .forEach(item => {
-      submitData.push(item.UID);
+      submitData.push(item.cBatchCode);
     });
   if (!submitData.length) {
     ElMessage({
@@ -623,6 +623,10 @@ const selectData = val => {
           tableAxios();
           showDialog.value = val.type;
         }
+      })
+      .catch(() => {
+        tableAxios();
+        showDialog.value = val.type;
       })
       .finally(() => {
         loading.close();
