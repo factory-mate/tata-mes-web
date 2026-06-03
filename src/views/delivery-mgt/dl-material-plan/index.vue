@@ -452,8 +452,8 @@ const handleSelectionChange = (arr: any) => {
 //按钮删除
 const clickDel = (obj: any) => {
   sendId.value = [];
-  CheckDataList.value.forEach((item: { UID: any }) =>
-    sendId.value.push(item.UID)
+  CheckDataList.value.forEach((item: { cBatchCode: any }) =>
+    sendId.value.push(item.cBatchCode)
   );
   if (sendId.value.length <= 0) {
     ElMessage({
