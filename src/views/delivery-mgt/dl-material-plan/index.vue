@@ -600,13 +600,12 @@ const selectData = val => {
     });
     return;
   }
-  let loading;
   ElMessageBox.confirm('确定操作?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    loading = ElLoading.service({ lock: true, text: '操作中.....' });
+    ElLoading.service({ lock: true, text: '操作中.....' });
     DataApi({
       method: currentBtn.value.Resource.cHttpTypeCode,
       url: currentBtn.value.Resource.cServerIP + currentBtn.value.Resource.cUrl,
@@ -627,9 +626,10 @@ const selectData = val => {
       .catch(() => {
         tableAxios();
         showDialog.value = val.type;
+        ElLoading.service().close();
       })
       .finally(() => {
-        loading.close();
+        ElLoading.service().close();
       });
   });
 };
