@@ -881,7 +881,17 @@ const changeTextBox = async (i: any, scope: any, v) => {
     console.log(p);
     if (p === 'nQuantity' || p === 'nTaxPrice') {
       if (p === 'nQuantity') {
-        const result = tableDataVal.value[i].list_price?.[0];
+        let result = tableDataVal.value[i].list_price?.[0];
+        if (
+          Route.name === 'KnifeAddPurchaseNote' ||
+          Route.name === 'KnifeAddPurchaseNoteEdit'
+        ) {
+          const res = await getKnifePrice({
+            cInvCode: row.cInvCode,
+            cVendorCode: row.cVendorCode
+          });
+          result = res.data.data[0];
+        }
         console.log(result);
         tableDataVal.value[i].nTaxPrice = result?.nTaxPrice ?? 0;
         tableDataVal.value[i].nTaxRate = result?.nTaxRate ?? 0;
