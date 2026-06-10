@@ -418,6 +418,8 @@ onActivated(async () => {
                 <el-table-column prop="cInvStd" label="规格"> </el-table-column>
                 <el-table-column prop="cPackageCode" label="包号">
                 </el-table-column>
+                <el-table-column prop="cSourcePackageCode" label="五金外包号">
+                </el-table-column>
                 <el-table-column prop="cUnitCode" label="单位">
                 </el-table-column>
                 <el-table-column prop="nQuantity" label="数量">
