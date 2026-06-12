@@ -2,6 +2,7 @@
   <!-- 刀具调拨入库单详情页面 -->
   <div class="maintain">
     <FilterForm
+      v-show="false"
       :Filter="Filter"
       @ClickSearch="ClickSearch"
       @resetForm="resetForm"
@@ -25,7 +26,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
         @tableHearData="tableHearData"
         @handleSelectionChange="handleSelectionChange"
       >
