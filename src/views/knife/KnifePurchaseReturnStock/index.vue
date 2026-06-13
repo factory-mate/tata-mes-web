@@ -223,6 +223,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'Commit':
       Commit(scope, event);
       break;
+    case 'PushSAP_UnBill':
+      PushSAP_UnBill(scope, event);
+      break;
     default:
       break;
   }
@@ -427,6 +430,31 @@ const handleSelectionChange = (arr: any) => {
   // })
   sendId.value = [];
   arr.forEach((item: { UID: any }) => sendId.value.push(item.UID));
+};
+const PushSAP_UnBill = (scope: any, obj: any) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: scope.row.UID,
+      IsBill: true
+    }
+  };
+  ElLoading.service({ lock: true, text: '加载中.....' });
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '操作成功'
+      });
+      tableAxios();
+      TabRef.value.handleRemoveSelectionChange();
+      ElLoading.service().close();
+    } else {
+      console.log('操作失败');
+      ElLoading.service().close();
+    }
+  });
 };
 //按钮提交
 const Commit = (scope: any, obj: any) => {
