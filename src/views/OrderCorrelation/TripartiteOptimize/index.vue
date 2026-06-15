@@ -426,22 +426,25 @@ const chosheet = obj => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    DataApi(dataVal).then(res => {
-      if (res.success) {
-        ElMessage({
-          type: 'success',
-          message: '操作成功'
-        });
-        tableAxios();
-        TabRef.value.handleRemoveSelectionChange();
-        sendId.value = [];
-      } else {
-        ElMessage({
-          type: 'error',
-          message: '操作失败'
-        });
-      }
-    });
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(dataVal)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功'
+          });
+          tableAxios();
+          TabRef.value.handleRemoveSelectionChange();
+          sendId.value = [];
+        } else {
+          ElMessage({
+            type: 'error',
+            message: '操作失败'
+          });
+        }
+      })
+      .finally(() => loading.close());
   });
 };
 //拆单运算
