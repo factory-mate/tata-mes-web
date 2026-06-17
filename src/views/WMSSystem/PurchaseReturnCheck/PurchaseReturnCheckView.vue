@@ -51,7 +51,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="120px"
             align="center"
           >
             <template #header>
@@ -215,6 +215,11 @@ const showBtn = (item: any) => {
   // #3898 已审核的订单不显示编辑箱码
   if (row.value.iStatus == 3) {
     if (item.cAttributeCode === 'ViewXMEdit') {
+      return false;
+    }
+  }
+  if (row.value.iStatus > 2) {
+    if (item.cAttributeCode === 'Del_Body') {
       return false;
     }
   }
@@ -626,6 +631,9 @@ const clickTableBut = (scope: any, event: any) => {
     case 'ViewXMEdit':
       clickEditXM(scope, event);
       break;
+    case 'Del_Body':
+      clickDel(scope, event);
+      break;
     default:
       break;
   }
@@ -668,6 +676,34 @@ const clickEditXM = (scope: any, obj: any) => {
       pathName: 'PurchaseReturnCheck',
       title: '箱码修改'
     }
+  });
+};
+
+const clickDel = (scope, obj) => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: scope.row.UID
+    }
+  };
+  ElMessageBox.confirm('确定删除数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data)
+      .then(res => {
+        if (res.success) {
+          ElMessage({
+            type: 'success',
+            message: '删除成功'
+          });
+          tableAxios();
+        }
+      })
+      .finally(() => loading.close());
   });
 };
 //修改保存
