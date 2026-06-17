@@ -527,21 +527,28 @@ const renew = () => {
 const setWidth = row => {
   switch (row.label) {
     case '序列号':
-    case '刀具编码':
     case '刀具名称':
+    case '规格型号':
+      return 110;
+    case '供应商':
+    case '刀具编码':
+    case '设备名称':
+    case '仓库名称':
+    case '制单人':
     case 'SAP编码':
-      return 120;
+      return 90;
     case '单号':
     case '操作时间':
-      return 150;
+      return 140;
     case '单据类型':
-    case '含税金额':
-    case '含税单价':
     case '无税金额':
     case '无税单价':
-    case '税率':
     case '税额':
-      return 80;
+    case '含税金额':
+    case '含税单价':
+      return 65;
+    case '税率':
+      return 50;
     default:
       return 140;
   }
