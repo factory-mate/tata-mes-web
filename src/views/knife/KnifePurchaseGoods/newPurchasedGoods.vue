@@ -51,7 +51,7 @@
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="140px"
             align="center"
           >
             <template #header>
@@ -804,12 +804,13 @@ const clickEdit = (obj: any) => {
 
 const setWidth = row => {
   switch (row.label) {
-    case '订单号':
-      return 160;
+    case '采购订单号':
     case '交货日期':
+    case '供应商批次号':
       return 120;
     case '采购日期':
-      return 180;
+    case '刀具名称':
+      return 160;
     case '物料编码':
       return 130;
     case '质检':
@@ -818,18 +819,32 @@ const setWidth = row => {
     //   return 200;
     case '规格型号':
       return 120;
-    case '未到货数量':
     case '到货数量':
     case '每包数量':
     case '箱数':
       return 100;
     case '剩余数量':
-    case '单位':
-      return 85;
+    case '刀具编码':
     case 'SAP物料编码':
-      return 110;
+      return 80;
     case '生产日期':
       return 150;
+    case '单据类型':
+    case '无税金额':
+    case '无税单价':
+    case '税额':
+    case '含税金额':
+    case '含税单价':
+    case '不含税金额':
+    case '不含税单价':
+    case '未到货数量':
+      return 80;
+    case '制单人':
+    case '税率':
+    case '单位':
+      return 50;
+    case '数量':
+      return 70;
     default:
       return 200;
   }
