@@ -672,13 +672,21 @@ const clickEditXM = (scope: any, obj: any) => {
 };
 //修改保存
 const SaveEdit = (obj: any) => {
+  const d = TABRef.value.tableDataVal;
   View1val.value = obj.cIncludeModelCode;
   obj.pathName = 'PurchaseReturnCheck';
-  obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  obj.tableData = d;
+  console.log(TABRef.value.tableDataVal);
+  if (d.length > 0) {
+    const targetTaxRate = d[0].nTaxRate;
+    if (!d.every(item => item.nTaxRate == targetTaxRate)) {
+      ElMessage({
+        type: 'error',
+        message: '每行税率必须相同'
+      });
+    }
+  }
   headRef.value.validate(obj);
-  // disa.value = true;
 };
 // 编辑按钮
 const clickEdit = (obj: any) => {
