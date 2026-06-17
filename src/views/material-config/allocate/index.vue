@@ -103,7 +103,7 @@
     </el-card>
     <!-- 弹窗 -->
     <Odialog
-      width="500px"
+      width="1200px"
       :dialogFormVisible="ZZdialogFormVisible"
       :title="title"
       :objData="objData"
@@ -111,6 +111,7 @@
       :modeCode="objModeCode"
       :row="Trow"
       @FmodelClose="modelClose"
+      form-inline
     ></Odialog>
   </div>
 </template>

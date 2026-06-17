@@ -19,6 +19,7 @@
         :rules="rules"
         :label-width="getLabelWidth()"
         status-icon
+        :inline="props.formInline"
       >
         <template v-for="item in FormDatas" :key="item.UID">
           <el-form-item
@@ -574,6 +575,10 @@ const props = defineProps({
   width: {
     type: String,
     default: '80%'
+  },
+  formInline: {
+    type: Boolean,
+    default: false
   }
 });
 const { tableAxios } = inject('tableAxios') as {
