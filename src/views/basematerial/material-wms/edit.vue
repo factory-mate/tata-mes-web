@@ -461,7 +461,7 @@ onActivated(() => {
           </el-col>
         </el-row>
         <el-row :gutter="24" style="margin-top: 12px">
-          <el-col :span="6">
+          <!-- <el-col :span="6">
             <el-form-item
               label="采购分类"
               label-width="150"
@@ -476,8 +476,8 @@ onActivated(() => {
                 @change="handleOrderCategoryChange"
               />
             </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          </el-col> -->
+          <!-- <el-col :span="6">
             <el-form-item
               label="供应商分类"
               label-width="150"
@@ -492,7 +492,7 @@ onActivated(() => {
                 @change="handleApplierCategoryChange"
               />
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
       </el-card>
 
