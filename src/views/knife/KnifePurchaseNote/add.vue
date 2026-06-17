@@ -44,12 +44,14 @@
         @handle-table-data-change="handleTableDataChange"
         show-summary
         :summary-method="d => summaryMethod(d)"
+        custom-width
+        :set-width="setWidth"
       >
         <template #button>
           <el-table-column
             label="操作"
             fixed="right"
-            width="200px"
+            width="80px"
             align="center"
           >
             <template #header>
@@ -105,6 +107,8 @@
         :EditType="EditType"
         @handleSelectionChange="ThandleSelectionChange"
         :disabledHide="false"
+        custom-width
+        :set-width="setDialogWidth"
       >
       </myTable>
       <template #footer>
@@ -801,6 +805,40 @@ const summaryMethod = d => {
   });
 
   return sums;
+};
+
+const setWidth = row => {
+  switch (row.label) {
+    case 'SAP编码':
+    case '刀具编号':
+    case '刀具规格':
+      return 70;
+    case '供应商':
+      return 150;
+    case '税率':
+    case '单位':
+      return 60;
+    case '数量':
+    case '单价':
+    case '含税金额':
+    case '税额':
+    case '无税金额':
+    case '无税单价':
+      return 80;
+    default:
+      return 120;
+  }
+};
+
+const setDialogWidth = row => {
+  switch (row.label) {
+    case '刀具编码':
+    case '数量':
+    case 'SAP产品编码':
+      return 60;
+    default:
+      return 100;
+  }
 };
 </script>
 

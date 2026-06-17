@@ -402,14 +402,20 @@ const setWidth = row => {
       return 200;
     case '规格型号':
       return 120;
-    case '数量':
-      return 60;
-    case '单位':
-      return 100;
     case '交货日期':
       return 100;
+    case '税率':
+    case '单位':
+      return 60;
+    case '数量':
+    case '单价':
+    case '含税金额':
+    case '税额':
+    case '无税金额':
+    case '无税单价':
+      return 80;
     default:
-      return 200;
+      return 100;
   }
 };
 </script>
