@@ -46,6 +46,7 @@
                   type="primary"
                   size="small"
                   @click="clickTableBut(scope, item)"
+                  v-if="showButton(scope.row, item)"
                 >
                   {{ item.Resource.cAttributeName }}
                 </el-button>
@@ -105,6 +106,16 @@ const tabType = ref(true);
 const sendId = ref([]) as any;
 const CheckDataList = ref([]) as any;
 const initType = ref(true);
+
+const showButton = (obj, item) => {
+  if (item.Resource.cAttributeCode === 'Delete') {
+    if (obj.cDefindParm08 === 'P010') {
+      return false;
+    }
+  }
+  return true;
+};
+
 onActivated(() => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -175,6 +186,7 @@ const total = ref(0);
 const tableData = ref([] as any);
 // table 按钮 集合
 const clickTableBut = (scope: any, event: any) => {
+  console.log(event);
   switch (event.cAttributeCode) {
     case 'View':
       clickView(scope, event);
