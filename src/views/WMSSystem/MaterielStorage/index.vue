@@ -156,9 +156,10 @@ onActivated(() => {
     }
     if (initType.value) {
       getData(Route.meta.ModelCode);
-    } else {
-      tableAxios();
     }
+    // else {
+    //   tableAxios();
+    // }
   }
   initType.value = false;
 });
