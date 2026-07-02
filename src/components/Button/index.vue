@@ -353,6 +353,7 @@ const emits = defineEmits([
   'CancelSAP',
   'ActiveSheet',
   'ActiveBom',
+  'ActiveBox',
   'chosheet'
 ]);
 
@@ -967,6 +968,9 @@ const ActiveSheet = (obj: any) => {
 const ActiveBom = (obj: any) => {
   emits('ActiveBom', obj);
 };
+const ActiveBox = (obj: any) => {
+  emits('ActiveBox', obj);
+};
 const chosheet = (obj: any) => {
   emits('chosheet', obj);
 };
@@ -1465,6 +1469,9 @@ const clickButton = (event: any) => {
       break;
     case 'ActiveBom':
       ActiveBom(event);
+      break;
+    case 'ActiveBox':
+      ActiveBox(event);
       break;
     case 'chosheet':
       chosheet(event);

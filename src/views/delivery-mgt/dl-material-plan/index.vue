@@ -16,6 +16,7 @@
         @ExportOne="ExportOne"
         @ActiveBom="ActiveBom"
         @ActiveSheet="ActiveSheet"
+        @ActiveBox="ActiveBox"
         @Del="clickDel"
       >
       </ButtonViem>
@@ -576,6 +577,13 @@ const ActiveSheet = (obj: any) => {
 };
 
 const ActiveBom = (obj: any) => {
+  showDialog.value = true;
+  dialogCode.value = obj.cIncludeModelCode;
+  currentBtn.value = obj;
+  tableAxios();
+};
+
+const ActiveBox = (obj: any) => {
   showDialog.value = true;
   dialogCode.value = obj.cIncludeModelCode;
   currentBtn.value = obj;
