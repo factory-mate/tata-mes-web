@@ -119,6 +119,7 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[20, 50, 100]"
       />
     </el-dialog>
   </div>
@@ -420,6 +421,7 @@ const clickHandAdd = (data: any) => {
   let itemData = JSON.parse(JSON.stringify(data.val));
   dialogFormVisible.value = data.type;
   tableData.value.push(itemData);
+  Conditions.value = '';
 };
 //添加t弹窗表格
 const ItemAdd = async (obj: any) => {
@@ -486,7 +488,7 @@ const funTables = (arr: Array<any>) => {
 
 //表格数据查询
 const TtableAxios = async () => {
-  const conditions = [''];
+  const conditions = [];
   if (Conditions.value) {
     conditions.push(Conditions.value);
   }
