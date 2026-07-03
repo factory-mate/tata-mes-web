@@ -43,7 +43,7 @@
         :tableData="tableData"
         :tableColumns="tableColumns"
         :tableBorder="true"
-        :selection="true"
+        :selection="false"
       >
         <template #button>
           <el-table-column
@@ -97,7 +97,8 @@ import {
   ElCard,
   ElLoading,
   ElTableColumn,
-  ElMessage
+  ElMessage,
+  ElMessageBox
 } from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
@@ -353,7 +354,11 @@ const tableAxios = async () => {
     ElLoading.service({ lock: true, text: '加载中.....' });
     const res = await ParamsApi(data);
     if (res.status == 200) {
-      tableData.value = res.data;
+      tableData.value = res.data.map(i => ({
+        ...i,
+        nTaxPrice: i.nTaxPrice ?? 0,
+        nTaxRate: i.nTaxRate ?? 0
+      }));
       ElLoading.service().close();
     } else {
       console.log('请求出错');
@@ -421,22 +426,48 @@ const SaveEdit = (obj: any) => {
     });
     return;
   }
-  // 数量 nQuantity 和含税单价 nTaxPrice 必填且大于 0
+  // 存在输入框输入税率或含税单价为空
   if (
     TABRef.value.tableDataVal.some(
-      (item: any) =>
-        !item.nQuantity ||
-        !item.nTaxPrice ||
-        item.nQuantity <= 0 ||
-        item.nTaxPrice <= 0
+      (item: any) => item.nTaxRate == '' || item.nTaxPrice == ''
     )
   ) {
     ElMessage({
       type: 'error',
-      message: '数量和含税单价必填且大于 0'
+      message: '税率和含税单价必填'
     });
     return;
   }
+  if (
+    TABRef.value.tableDataVal.some(
+      (item: any) => item.nTaxRate < 0 || item.nTaxPrice < 0
+    )
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '税率和含税单价必须大于等于0'
+    });
+    return;
+  }
+  if (
+    TABRef.value.tableDataVal.some(
+      (item: any) => item.nTaxRate == 0 || item.nTaxPrice == 0
+    )
+  ) {
+    // 确认弹窗提示
+    ElMessageBox.confirm('存在税率或含税单价为0，是否继续保存？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      editSubmit(obj);
+    });
+  } else {
+    editSubmit(obj);
+  }
+};
+
+const editSubmit = obj => {
   obj.pathName = 'GrindOrder';
   obj.tableData = TABRef.value.tableDataVal;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
