@@ -44,6 +44,7 @@
         :tableColumns="tableColumns"
         :tableBorder="true"
         :selection="false"
+        :disabledHide="false"
       >
         <template #button>
           <el-table-column
@@ -429,7 +430,7 @@ const SaveEdit = (obj: any) => {
   // 存在输入框输入税率或含税单价为空
   if (
     TABRef.value.tableDataVal.some(
-      (item: any) => item.nTaxRate == '' || item.nTaxPrice == ''
+      (item: any) => item.nTaxRate === '' || item.nTaxPrice === ''
     )
   ) {
     ElMessage({

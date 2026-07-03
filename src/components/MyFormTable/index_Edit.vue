@@ -683,6 +683,10 @@ const tableFunObj = () => {
   ) {
     obj.IsWarn = false;
   }
+  if (Route.name == 'EditGrindOrder') {
+    obj.nTaxRate = 0;
+    obj.nTaxPrice = 0;
+  }
   return obj;
 };
 const tableSelect = (val: any, prop: any, i: any, list: any) => {
