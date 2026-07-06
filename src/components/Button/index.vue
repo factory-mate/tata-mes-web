@@ -354,7 +354,8 @@ const emits = defineEmits([
   'ActiveSheet',
   'ActiveBom',
   'ActiveBox',
-  'chosheet'
+  'chosheet',
+  'PackageBOMMach'
 ]);
 
 watch(
@@ -974,6 +975,9 @@ const ActiveBox = (obj: any) => {
 const chosheet = (obj: any) => {
   emits('chosheet', obj);
 };
+const PackageBOMMach = (obj: any) => {
+  emits('PackageBOMMach', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1475,6 +1479,9 @@ const clickButton = (event: any) => {
       break;
     case 'chosheet':
       chosheet(event);
+      break;
+    case 'PackageBOMMach':
+      PackageBOMMach(event);
       break;
     default:
       break;

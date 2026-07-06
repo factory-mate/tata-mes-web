@@ -23,6 +23,7 @@
         @ImportPick="ImportPick"
         @HangUp="HangUp"
         @MakeMaterial="MakeMaterial"
+        @PackageBOMMach="PackageBOMMach"
       ></ButtonViem>
       <!-- 表格区域 -->
       <myTable
@@ -737,6 +738,50 @@ const MakeMaterial = (obj: any) => {
     data: sendId.value
   };
   ElMessageBox.confirm('确定执行?', '物料匹配', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.status == 200) {
+        tableAxios();
+        ElMessage({
+          type: 'success',
+          message: res.msg || '成功'
+        });
+        TabRefss.value.handleRemoveSelectionChange();
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res.msg || '失败'
+        });
+        console.log('出错了');
+      }
+      ElLoading.service().close();
+    });
+  });
+};
+
+const PackageBOMMach = (obj: any) => {
+  sendId.value = [];
+  CheckDataList.value.forEach((item: any) => {
+    sendId.value.push(item.UID);
+  });
+
+  if (sendId.value.length <= 0) {
+    ElMessage({
+      type: 'info',
+      message: '请勾选数据'
+    });
+    return;
+  }
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: sendId.value
+  };
+  ElMessageBox.confirm('确定执行?', '包装匹配', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
