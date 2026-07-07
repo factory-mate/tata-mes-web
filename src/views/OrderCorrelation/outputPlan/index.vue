@@ -273,6 +273,8 @@ const clickTableBut = (scope: any, event: any) => {
 };
 //表格数据查询
 const tableAxios = async () => {
+  sendId.value = [];
+  TabRef.value.handleRemoveSelectionChange();
   const conditions = ['cVouchTypeCode = 02'];
   // && iStatus != 3'];
   if (Conditions.value) {
@@ -454,8 +456,6 @@ const MaterialChange = obj => {
           message: '操作成功'
         });
         tableAxios();
-        sendId.value = [];
-        TabRef.value.handleRemoveSelectionChange();
       }
     });
   });
@@ -491,8 +491,6 @@ const MaterialChangeRollBack = obj => {
           message: '操作成功'
         });
         tableAxios();
-        sendId.value = [];
-        TabRef.value.handleRemoveSelectionChange();
       }
     });
   });
@@ -525,8 +523,6 @@ const SendPlan = obj => {
           message: '操作成功'
         });
         tableAxios();
-        sendId.value = [];
-        TabRef.value.handleRemoveSelectionChange();
       }
     });
   });
@@ -562,8 +558,6 @@ const SendPlanRollBack = obj => {
           message: '操作成功'
         });
         tableAxios();
-        sendId.value = [];
-        TabRef.value.handleRemoveSelectionChange();
       }
     });
   });
@@ -623,8 +617,6 @@ const PushGlass = (obj: any) => {
           message: '操作成功'
         });
         tableAxios();
-        sendId.value = [];
-        TabRef.value.handleRemoveSelectionChange();
       } else {
         ElMessage.error(res.msg || '失败');
       }
@@ -663,8 +655,6 @@ const Sync = (obj: any) => {
           message: '同步成功'
         });
         tableAxios();
-        sendId.value = [];
-        TabRef.value.handleRemoveSelectionChange();
       } else {
         ElMessage.error('失败');
       }
@@ -773,6 +763,7 @@ const clickRevoke = (scope: any, obj: any) => {
           message: '撤销排产'
         });
         tableAxios();
+        sendId.value = [];
       } else {
         ElMessage.error('失败');
       }
