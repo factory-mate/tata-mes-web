@@ -452,7 +452,19 @@ const ExportAll = obj => {
     }
   };
   const loading = ElLoading.service({ lock: true, text: '加载中.....' });
-  exportAnalysisHooks(data, '点检保养完成统计');
+  let title = '点检保养完成统计';
+  filterRef.value.FilterData.forEach(i => {
+    console.log(i);
+    if (i.cAttributeCode === 'ProgramVouchType') {
+      (i?.selDataList ?? []).forEach(si => {
+        if (si.cDictonaryCode === i.cAttributeCodeValue) {
+          title = si.cDictonaryName;
+        }
+      });
+    }
+  });
+
+  exportAnalysisHooks(data, title);
   loading.close();
 };
 provide('tableAxios', { tableAxios });
