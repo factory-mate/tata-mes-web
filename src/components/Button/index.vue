@@ -355,7 +355,8 @@ const emits = defineEmits([
   'ActiveBom',
   'ActiveBox',
   'chosheet',
-  'PackageBOMMach'
+  'PackageBOMMach',
+  'Download_UnProcessEnd_Total'
 ]);
 
 watch(
@@ -978,6 +979,9 @@ const chosheet = (obj: any) => {
 const PackageBOMMach = (obj: any) => {
   emits('PackageBOMMach', obj);
 };
+const Download_UnProcessEnd_Total = (obj: any) => {
+  emits('Download_UnProcessEnd_Total', obj);
+};
 const HandExport = (command: any, event: any) => {
   switch (command) {
     case 'ExportOne':
@@ -1482,6 +1486,9 @@ const clickButton = (event: any) => {
       break;
     case 'PackageBOMMach':
       PackageBOMMach(event);
+      break;
+    case 'Download_UnProcessEnd_Total':
+      Download_UnProcessEnd_Total(event);
       break;
     default:
       break;

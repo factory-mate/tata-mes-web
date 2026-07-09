@@ -15,6 +15,7 @@
         @clickAdd="clickAdd"
         @ExportAll="ExportAll"
         @ExportOne="ExportOne"
+        @Download_UnProcessEnd_Total="Download_UnProcessEnd_Total"
         @Commit="Commit"
       >
       </ButtonViem>
@@ -453,6 +454,18 @@ const ExportOne = async (obj: any) => {
     }
   };
   exportAnalysisHooks(data, '任务查询');
+};
+const Download_UnProcessEnd_Total = async (obj: any) => {
+  Conditions.value = filterModel(filterRef.value.FilterData);
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      OrderByFileds: OrderByFileds.value,
+      Conditions: Conditions.value
+    }
+  };
+  exportAnalysisHooks(data, '工序未完工统计');
 };
 
 const data = reactive({
