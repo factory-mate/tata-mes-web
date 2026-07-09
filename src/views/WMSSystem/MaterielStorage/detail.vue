@@ -421,6 +421,7 @@ $bus.on('tableUpData', v => {
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="handleChangePage"
+        :page-sizes="[20, 50, 100]"
       />
     </el-card>
   </div>
