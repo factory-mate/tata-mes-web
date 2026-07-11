@@ -791,7 +791,7 @@ const DownloadBarcode = (obj: any) => {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
     data: {
-      OrderByFileds: 'iIndex,cBarCode',
+      OrderByFileds: 'cCode,iIndex,cBarCode',
       Conditions: `cCode in (${barCodeList.join()})`
     }
   };
