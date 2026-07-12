@@ -286,9 +286,7 @@ const tableAxios = async () => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value
-        ? OrderByFileds.value + 'dCreateTime desc'
-        : 'dCreateTime desc',
+      OrderByFileds: OrderByFileds.value,
       Conditions: conditions.join(' && ')
     }
   };
@@ -914,9 +912,7 @@ const ExportAll = async (obj: any) => {
     data: {
       PageIndex: 1,
       PageSize: 999999,
-      OrderByFileds: OrderByFileds.value
-        ? OrderByFileds.value + 'dCreateTime desc'
-        : 'dCreateTime desc',
+      OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
   };
@@ -930,9 +926,7 @@ const ExportOne = async (obj: any) => {
     data: {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
-      OrderByFileds: OrderByFileds.value
-        ? OrderByFileds.value + 'dCreateTime desc'
-        : 'dCreateTime desc',
+      OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
     }
   };
@@ -944,7 +938,7 @@ const data = reactive({
   dialogV: false,
   dialogTitle: '编辑',
   Conditions: '',
-  OrderByFileds: ''
+  OrderByFileds: 'cBatch,dCreateTime desc'
 });
 const { dialogV, dialogTitle, Conditions, OrderByFileds } = toRefs(data);
 // 搜索
@@ -957,7 +951,7 @@ const ClickSearch = (val: any) => {
 // 重置
 const resetForm = (val: any) => {
   Conditions.value = '';
-  OrderByFileds.value = '';
+  OrderByFileds.value = 'cBatch,dCreateTime desc';
   tableColumns.value = tableSortInit(tableColumns.value);
   queryParams.PageIndex = 1;
   queryParams.PageSize = 20;
