@@ -280,6 +280,10 @@ const processFilterLogic = (val, p) => {
         metadataOptions.value.date = item.cAttributeCodeValue;
       }
     });
+    if (p.titleName === '生产单元编码') {
+      conditions.push('cNodeTypeCode=Point');
+      OrderByFileds.value = 'cFactoryUnitCode';
+    }
   }
   if (
     Route.name === 'PurchaseRequestNotionsAdd' ||
@@ -577,7 +581,8 @@ const tableAxios = (obj: {
         currentParmName.value === '单位') ||
       (Route.name === 'DLMaterialPlan' &&
         (currentParm.value.codeType === 'DL_MATERIAL_PLAN.SHEET' ||
-          currentParm.value.codeType === 'DL_MATERIAL_PLAN.BOM'))
+          currentParm.value.codeType === 'DL_MATERIAL_PLAN.BOM' ||
+          currentParm.value.codeType === 'DL_MATERIAL_PLAN.BOX'))
     ) {
       tableData.value = res.data || [];
       total.value = 0;

@@ -512,8 +512,11 @@ const selectData = (val: any) => {
       }
 
       if (titleName.value === item.Resource.cAttributeName) {
-        if (Route.name === 'EquipmentCheckTask') {
-          if (item.Resource.cAttributeName === '实际点检人名称') {
+        if (
+          Route.name === 'EquipmentCheckTask' ||
+          Route.name === 'ProfessionEquipCheckTask'
+        ) {
+          if (item.Resource.cAttributeName === '实际点检人') {
             item.cAttributeCodeValue = val.value[0]?.cEmployeeName;
           }
         }
