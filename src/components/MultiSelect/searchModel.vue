@@ -280,7 +280,14 @@ const processFilterLogic = (val, p) => {
         metadataOptions.value.date = item.cAttributeCodeValue;
       }
     });
-    if (p.titleName === '生产单元编码') {
+  }
+  if (
+    Route.name === 'DLMaterialPlease' ||
+    Route.name === 'DLMaterialPlan' ||
+    Route.name === 'DLMaterialPlanAdd' ||
+    Route.name === 'DLMaterialPlanEdit'
+  ) {
+    if (p.titleName === '生产单元编码' || p.titleName === '生产单元名称') {
       conditions.push('cNodeTypeCode=Point');
       OrderByFileds.value = 'cFactoryUnitCode';
     }
