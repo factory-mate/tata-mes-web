@@ -19,7 +19,7 @@ echo "🚚 [3/3] 正在上传..."
 
 scp -P ${SERVER_PORT} ./dist.zip ${SERVER_USER}@${SERVER_IP}:${TARGET_DIR}/dist.zip
 
-ssh -v -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_IP} "powershell -Command \"
+ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_IP} "powershell -Command \"
     cd '${TARGET_DIR}';
     if (Test-Path 'dist.zip') {
         Expand-Archive -Path 'dist.zip' -DestinationPath '${TARGET_DIR}' -Force;
