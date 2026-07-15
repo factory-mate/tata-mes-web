@@ -83,18 +83,28 @@
         @refetch-list="handleRefetchList"
         :selected-ids="selList"
       />
+      <Odialog
+        width="500"
+        :dialogFormVisible="showDialog"
+        title="生码执行"
+        :objData="currentBtn"
+        :disabled="false"
+        :modeCode="dialogCode"
+        @FmodelClose="closeModal"
+      ></Odialog>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, reactive, onActivated, h } from 'vue';
+import { ref, toRefs, reactive, onActivated, h, provide } from 'vue';
 import FilterForm from '@/components/Filter/index.vue';
 import myTable from '@/components/MyFormTable/index.vue';
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { ElButton, ElCard, ElTableColumn, ElTooltip } from 'element-plus';
+import Odialog from '@/components/DialogModel/index.vue';
 import ProcessDialog from '@/components/ProgressDialog/index.vue';
 import PopModel from '@/components/PopModel/model.vue';
 import Modal from './components/Modal.vue';
@@ -163,6 +173,9 @@ let head = ref([]) as any;
 const initType = ref(true);
 
 const loading = ref(false);
+const showDialog = ref(false);
+const dialogCode = ref('');
+const currentBtn = ref<any>({});
 
 onActivated(() => {
   modelCode.value = history.state.modelCode
@@ -550,28 +563,21 @@ const BarcodeRevoke = (obj: any) => {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
-    })
-      .then(() => {
-        // ElLoading.service({ lock: true, text: '加载中.....' });
-        ParamsApi(data).then(res => {
-          if (res.status === 200) {
-            ElMessage({
-              type: 'success',
-              message: '成功'
-            });
-            // tableAxios();
-          } else {
-            ElMessage.error('失败');
-          }
-          // ElLoading.service().close();
-        });
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '取消'
-        });
+    }).then(() => {
+      // ElLoading.service({ lock: true, text: '加载中.....' });
+      ParamsApi(data).then(res => {
+        if (res.status === 200) {
+          ElMessage({
+            type: 'success',
+            message: '成功'
+          });
+          // tableAxios();
+        } else {
+          ElMessage.error('失败');
+        }
+        // ElLoading.service().close();
       });
+    });
   }
 };
 
@@ -605,40 +611,31 @@ const BarcodeStatus = (obj: any) => {
 };
 
 const BarcodeMake = (obj: any) => {
-  if (obj.Resource.cServerIP || obj.Resource.cUrl) {
-    let data = {
-      method: obj.Resource.cHttpTypeCode,
-      url: obj.Resource.cServerIP + obj.Resource.cUrl,
-      data: { UID: rowId.value }
-    };
-    ElMessageBox.confirm('生码执行?', '生码执行', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-      .then(() => {
-        ElLoading.service({ lock: true, text: '加载中.....' });
-        DataApi(data).then(res => {
-          if (res.status === 200) {
-            ElMessage({
-              type: 'success',
-              message: '成功'
-            });
-            tableAxios();
-          } else {
-            ElMessage.error('失败');
-          }
-          ElLoading.service().close();
-        });
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '取消'
-        });
-      });
+  if (!selList.value.length) {
+    ElMessage({
+      type: 'error',
+      message: '请选择数据！'
+    });
+    return false;
   }
+  if (selList.value.length > 1) {
+    ElMessage({
+      type: 'error',
+      message: '最多选择一条数据！'
+    });
+    return false;
+  }
+  showDialog.value = true;
+  dialogCode.value = obj.cIncludeModelCode;
+  currentBtn.value = { ...obj, UID: selList.value[0].UID };
+  selList.value = [];
 };
+
+const closeModal = () => {
+  showDialog.value = false;
+};
+
+const selectData = val => {};
 
 const selList = ref([]) as any;
 const handleSelectionChange = (val: any) => {
@@ -911,6 +908,8 @@ const handleRefetchList = () => {
   tableAxios();
   tableRef.value.clearSelectedRowKeys();
 };
+
+provide('tableAxios', { tableAxios });
 </script>
 
 <style scoped lang="scss">

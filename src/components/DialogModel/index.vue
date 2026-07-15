@@ -924,6 +924,12 @@ const selectData = (val: any) => {
       if (item.Resource.cAttributeName == titleName.value) {
         ruleForm.value[AttributeCode.value] = val.value[0][AttributeCode.value];
       }
+      if (Route.name == 'newOutputPlanView') {
+        if (AttributeCode.value == 'ProjectName') {
+          ruleForm.value.ProjectName = val.value[0].cProjectName;
+          ruleForm.value.cProjectCode = val.value[0].cProjectCode;
+        }
+      }
       if (Route.name === 'ProductLinePerson') {
         if (AttributeCode.value == 'cDefindParm04') {
           ruleForm.value.cDefindParm04 = val.value[0].cPersonName;
@@ -1659,6 +1665,9 @@ const submitForm = async (formEl: FormInstance | undefined, item: any) => {
           break;
         case 'Reject':
           handleReject(item);
+          break;
+        case 'BarcodeMake':
+          BarcodeMake(item);
           break;
         default:
           break;
@@ -2524,6 +2533,29 @@ const handleReject = obj => {
       $bus.emit('tableUpData', { name: 'PurchaseAudit' });
     } else {
       ElMessage.error('驳回失败');
+    }
+  });
+};
+
+const BarcodeMake = obj => {
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: {
+      UID: props.objData.UID,
+      cProjectCode: ruleForm.value.cProjectCode,
+      cVersion: ruleForm.value.cVersion
+    }
+  };
+  DataApi(data).then(res => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '操作成功'
+      });
+      $bus.emit('tableUpData', { name: 'newOutputPlanView' });
+    } else {
+      ElMessage.error('操作失败');
     }
   });
 };
