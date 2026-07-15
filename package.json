@@ -6,6 +6,7 @@
     "build:staging": "vite build --mode staging",
     "build:prod": "vite build --mode production",
     "build:all": "pnpm build:staging && pnpm build:prod",
+    "deploy:staging": "./deploy.sh",
     "serve": "vite preview",
     "lint": "eslint src/**/*.{ts,js,vue} --fix --cache",
     "prettier": "prettier --write ."

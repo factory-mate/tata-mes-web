@@ -1138,6 +1138,22 @@ const selectData = (val: any) => {
           ruleForm.value.cInvCode = val.value[0].cInvCode;
         }
       }
+      if (Route.name == 'PositionDevice') {
+        if (AttributeCode.value == 'cPositionName') {
+          ruleForm.value.cPositionName = val.value[0].cPositionName;
+          ruleForm.value.cPositionCode = val.value[0].cPositionCode;
+        }
+        if (AttributeCode.value == 'cDeviceName') {
+          ruleForm.value.cDeviceName = val.value[0].cDeviceName;
+          ruleForm.value.cDeviceCode = val.value[0].cDeviceCode;
+        }
+        if (AttributeCode.value == 'cWareHouseLocationName') {
+          ruleForm.value.cWareHouseLocationName =
+            val.value[0].cWareHouseLocationName;
+          ruleForm.value.cWareHouseLocationCode =
+            val.value[0].cWareHouseLocationCode;
+        }
+      }
       if (Route.name == 'ProcReleaseCaseCompaire') {
         if (val.value[0].cInvName) {
           ruleForm.value.cResourceName = val.value[0].cInvName;
@@ -1454,6 +1470,7 @@ const getViewData = () => {
     Route.name == 'LogisticsCityComparison' ||
     Route.name == 'MaterialSupplier' ||
     Route.name == 'Texture' ||
+    Route.name == 'PositionDevice' ||
     Route.name == 'ProductTag' ||
     Route.name == 'ProcessRouteLine' ||
     Route.name == 'PartFiles' ||
