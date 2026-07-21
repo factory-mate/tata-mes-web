@@ -1115,6 +1115,12 @@ const selectDatas = (val: any) => {
       tableDataVal.value[IndexType.value].cDefindParm02 =
         val.value[0].cDictonaryName;
     }
+    if (AttributeCode.value === 'cVendorCode') {
+      tableDataVal.value[IndexType.value].cVendorCode =
+        val.value[0].cVendorCode;
+      tableDataVal.value[IndexType.value].cVendorName =
+        val.value[0].cVendorName;
+    }
   }
   if (Route.name === 'DeliveryWarehouseBind') {
     if (
