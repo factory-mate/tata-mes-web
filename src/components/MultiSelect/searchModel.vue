@@ -282,6 +282,12 @@ const processFilterLogic = (val, p) => {
     });
   }
   if (
+    Route.name === 'FinishedSubPartComparisonAdd' ||
+    Route.name === 'FinishedSubPartComparisonEdit'
+  ) {
+    OrderByFileds.value = 'cDictonaryCode';
+  }
+  if (
     Route.name === 'DLMaterialPlease' ||
     Route.name === 'DLMaterialPlan' ||
     Route.name === 'DLMaterialPlanAdd' ||
