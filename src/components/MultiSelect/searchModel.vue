@@ -281,6 +281,11 @@ const processFilterLogic = (val, p) => {
       }
     });
   }
+  if (Route.name === 'FirstAndLastCheck') {
+    if (p.titleName === '模板名称') {
+      conditions.push('cMouldType = 3');
+    }
+  }
   if (
     Route.name === 'FinishedSubPartComparisonAdd' ||
     Route.name === 'FinishedSubPartComparisonEdit'

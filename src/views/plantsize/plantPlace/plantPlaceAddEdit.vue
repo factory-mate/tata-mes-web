@@ -394,7 +394,7 @@ const deleteItem = (obj, item) => {
     let data = {
       method: item.Resource.cHttpTypeCode,
       url: item.Resource.cServerIP + item.Resource.cUrl,
-      data: [obj.row.UID]
+      data: [obj.row.ResourceUID]
     };
     delApi(data).then((res: any) => {
       if (res.status == 200) {

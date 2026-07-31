@@ -39,9 +39,7 @@
           :width="funWidth(item.label, item)"
         >
           <template #header v-if="item?.headerSlot">
-            <span>
-              {{ item.label }}
-            </span>
+            <span> {{ item.label }} </span>
           </template>
           <template #default="scope">
             <span
@@ -58,9 +56,9 @@
                   (item.label == '订单号' && item.prop == 'cCode'))
               "
             >
-              <span style="color: red" @click="clickCode(scope, item)">{{
-                scope.row[item.prop]
-              }}</span>
+              <span style="color: red" @click="clickCode(scope, item)">
+                {{ scope.row[item.prop] }}
+              </span>
             </span>
           </template>
         </el-table-column>
@@ -283,7 +281,7 @@ const funWidth = (val: any, item: any) => {
         '数量'
       ].includes(val)
     ) {
-      return '50px';
+      return '45px';
     }
     if (['名称'].includes(val)) {
       return '200px';
@@ -302,7 +300,8 @@ const funWidth = (val: any, item: any) => {
         '结构号',
         '磁吸代别',
         '审核失败原因',
-        '审核信息'
+        '审核信息',
+        '备注'
       ].includes(val)
     ) {
       return '80px';

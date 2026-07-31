@@ -1180,12 +1180,12 @@ const selectData = (val: any) => {
       }
       if (Route.name == 'FirstAndLastCheck') {
         if (AttributeCode.value == 'cResourceName') {
-          ruleForm.value.cResourceName = val.value[0].cInvName;
-          ruleForm.value.cResourceCode = val.value[0].cInvCode;
+          ruleForm.value.cResourceName = val.value[0].cProcessName;
+          ruleForm.value.cResourceCode = val.value[0].cProcessCode;
         }
         if (AttributeCode.value == 'cProjectName') {
-          ruleForm.value.cProjectName = val.value[0].cProjectName;
-          ruleForm.value.cProjectCode = val.value[0].cProjectCode;
+          ruleForm.value.cProjectName = val.value[0].cMouldName;
+          ruleForm.value.cProjectCode = val.value[0].cMouldCode;
         }
       }
       if (Route.name == 'InspectionPlanComparison') {
