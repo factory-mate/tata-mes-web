@@ -6,7 +6,7 @@
       :title="title"
       @close="resetForm(ruleFormRef)"
       draggable
-      :modal="false"
+      :modal="true"
       :close-on-click-modal="false"
       @open="open"
       @opened="openModel"
