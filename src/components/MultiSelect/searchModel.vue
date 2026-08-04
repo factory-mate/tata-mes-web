@@ -496,6 +496,14 @@ const processFilterLogic = (val, p) => {
       conditions.push(`MID = 7dbd5782-ba3e-4259-9713-4af7fdd42259`);
     }
   }
+  if (Route.name === 'newOutputPlanView') {
+    if (p.titleName === '方案') {
+      conditions.push('cProjectTypeCode=07');
+    }
+    if (p.titleName === '版本') {
+      conditions.push(`MID = f05df115-cd50-4e64-a768-48e5282b592f`);
+    }
+  }
   if (filterModel(val)) {
     conditions.push(filterModel(val));
   }

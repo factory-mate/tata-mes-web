@@ -611,24 +611,24 @@ const BarcodeStatus = (obj: any) => {
 };
 
 const BarcodeMake = (obj: any) => {
-  if (!selList.value.length) {
-    ElMessage({
-      type: 'error',
-      message: '请选择数据！'
-    });
-    return false;
-  }
-  if (selList.value.length > 1) {
-    ElMessage({
-      type: 'error',
-      message: '最多选择一条数据！'
-    });
-    return false;
-  }
+  // if (!selList.value.length) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '请选择数据！'
+  //   });
+  //   return false;
+  // }
+  // if (selList.value.length > 1) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '最多选择一条数据！'
+  //   });
+  //   return false;
+  // }
   showDialog.value = true;
   dialogCode.value = obj.cIncludeModelCode;
-  currentBtn.value = { ...obj, UID: selList.value[0].UID };
-  selList.value = [];
+  currentBtn.value = { ...obj, UID: rowId.value };
+  // selList.value = [];
 };
 
 const closeModal = () => {
@@ -908,6 +908,15 @@ const handleRefetchList = () => {
   tableAxios();
   tableRef.value.clearSelectedRowKeys();
 };
+
+// 新增/编辑后的刷新
+$bus.on('tableUpData', (v: any) => {
+  setTimeout(() => {
+    if (v.name == 'newOutputPlanView') {
+      showDialog.value = false;
+    }
+  }, 300);
+});
 
 provide('tableAxios', { tableAxios });
 </script>
