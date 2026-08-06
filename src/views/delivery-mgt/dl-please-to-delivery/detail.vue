@@ -738,18 +738,12 @@ const clickUnPick = obj => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    let url = `${obj.Resource.cServerIP}${obj.Resource.cUrl}?`;
-    url += selectedItems.value
-      .map((item: any) => `Items=${item.UIDs}`)
-      .join('&');
-
     const data = {
       method: obj.Resource.cHttpTypeCode,
-      url
-      // data: {
-      //   UID: rowId.value,
-      //   Items: selectedItems.value.map((item: any) => item.UID)
-      // }
+      url: `${obj.Resource.cServerIP}${obj.Resource.cUrl}`,
+      data: {
+        Items: selectedItems.value.map((item: any) => item.UIDs)
+      }
     };
     DataApi(data)
       .then((res: any) => {
