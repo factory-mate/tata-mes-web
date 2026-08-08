@@ -290,7 +290,9 @@ const processFilterLogic = (val, p) => {
     Route.name === 'FinishedSubPartComparisonAdd' ||
     Route.name === 'FinishedSubPartComparisonEdit'
   ) {
-    OrderByFileds.value = 'cDictonaryCode';
+    if (p.titleName === '结构编码') {
+      OrderByFileds.value = 'cDictonaryCode';
+    }
   }
   if (
     Route.name === 'DLMaterialPlease' ||
