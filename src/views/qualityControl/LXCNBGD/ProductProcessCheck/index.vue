@@ -462,6 +462,12 @@ const Commit = (obj: any) => {
 };
 //按钮导出所有
 const ExportAll = async (obj: any) => {
+  const conditions = 'cVouchTypeCode=6';
+  if (Conditions.value) {
+    Conditions.value = conditions + ' && ' + Conditions.value;
+  } else {
+    Conditions.value = conditions;
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -470,8 +476,6 @@ const ExportAll = async (obj: any) => {
       PageSize: 999999,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });
@@ -480,6 +484,12 @@ const ExportAll = async (obj: any) => {
 };
 //按钮导出当前页
 const ExportOne = async (obj: any) => {
+  const conditions = 'cVouchTypeCode=6';
+  if (Conditions.value) {
+    Conditions.value = conditions + ' && ' + Conditions.value;
+  } else {
+    Conditions.value = conditions;
+  }
   let data = {
     method: obj.Resource.cHttpTypeCode,
     url: obj.Resource.cServerIP + obj.Resource.cUrl,
@@ -488,8 +498,6 @@ const ExportOne = async (obj: any) => {
       PageSize: queryParams.PageSize,
       OrderByFileds: OrderByFileds.value,
       Conditions: Conditions.value
-        ? 'cVouchTypeCode in (0,1,2,3,4,5) && ' + Conditions.value
-        : 'cVouchTypeCode in (0,1,2,3,4,5)'
     }
   };
   ElLoading.service({ lock: true, text: '加载中.....' });

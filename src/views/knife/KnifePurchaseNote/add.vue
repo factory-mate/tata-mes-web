@@ -123,6 +123,7 @@
         v-model:page="queryParams.PageIndex"
         v-model:limit="queryParams.PageSize"
         @pagination="changPage"
+        :page-sizes="[10, 20, 50]"
       />
     </el-dialog>
   </div>
