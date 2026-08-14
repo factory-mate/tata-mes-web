@@ -110,6 +110,32 @@
         custom-width
         :set-width="setDialogWidth"
       >
+        <template #button>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            width="120px"
+            align="center"
+          >
+            <template #header>
+              <span>操作</span>
+            </template>
+            <template #default="scope">
+              <template
+                v-for="item in tableButton"
+                :key="item.Resource.cAttributeName"
+              >
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="clickTableBut(scope, item)"
+                >
+                  {{ item.Resource.cAttributeName }}
+                </el-button>
+              </template>
+            </template>
+          </el-table-column>
+        </template>
       </myTable>
       <template #footer>
         <span class="dialog-footer">
@@ -186,6 +212,7 @@ const total = ref(0);
 const disa = ref(false);
 let dataVal = ref([] as any[]);
 const tableColumns = ref(dataVal);
+const tableButton = ref([]) as any;
 const AxiosData = ref({}) as any;
 const modelGrid = ref([]) as any;
 const selectArr = ref([]) as any;
@@ -261,6 +288,47 @@ const clickView = (val: any) => {
   getAddUser(View1val.value);
   $bus.emit('TabTitleVal', { name: Route.name, title: '采购单详情' });
 };
+
+const clickTableBut = (scope: any, event: any) => {
+  console.log(scope, event);
+  switch (event.cAttributeCode) {
+    case 'RowClose':
+      rowClose(scope, event);
+      break;
+    default:
+      break;
+  }
+};
+
+const rowClose = (scope: any, obj: any) => {
+  const senid = scope.row.UID;
+  let data = {
+    method: obj.Resource.cHttpTypeCode,
+    url: obj.Resource.cServerIP + obj.Resource.cUrl,
+    data: [senid]
+  };
+  ElMessageBox.confirm('确定操作数据?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    const loading = ElLoading.service({ lock: true, text: '加载中.....' });
+    DataApi(data).then(res => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '操作成功'
+        });
+        tableAxios();
+        loading.close();
+      } else {
+        ElMessage.error('操作失败');
+        loading.close();
+      }
+    });
+  });
+};
+
 // 权限按钮
 const RoleBut = (v: any) => {
   let ToolData = head.value.filter((BItem: any) => {
@@ -474,11 +542,11 @@ const funTables = (arr: Array<any>) => {
         slot: ''
       };
       TtableColumns.value.push(itemData);
-      TtableColumns.value.push({
-        checkType: true,
-        label: '操作',
-        slotName: 'button'
-      });
+    }
+    if (item.Resource.cAttributeTypeCode == 'method') {
+      let itemData = { checkType: true, label: '操作', slotName: 'button' };
+      tableButton.value.push(item);
+      TtableColumns.value.push(itemData);
       TtableColumns.value = TtableColumns.value.filter(
         (item: { label: any }, index: any, self: any[]) => {
           // 利用findIndex方法找到第一个与当前元素id相等的元素索引
