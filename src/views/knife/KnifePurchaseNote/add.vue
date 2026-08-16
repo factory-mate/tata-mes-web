@@ -530,6 +530,7 @@ const ItemAdd = async (obj: any) => {
 // TTTtable 数据整合
 const funTables = (arr: Array<any>) => {
   modelGrid.value = arr;
+  tableButton.value = [];
   arr.forEach(item => {
     if (item.Resource.cAttributeTypeCode == 'property' && item.IsShow) {
       let itemData = {
