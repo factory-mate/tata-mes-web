@@ -464,7 +464,7 @@ const ExportAll = async (obj: any) => {
       PageIndex: 1,
       PageSize: 999999,
       OrderByFileds: 'dCreateTime desc',
-      Conditions: OrderByFileds.value
+      Conditions: Conditions.value
     }
   };
   exportAnalysisHooks(ExcelData, '刀具履历 - 全部');
@@ -478,7 +478,7 @@ const ExportOne = async (obj: any) => {
       PageIndex: queryParams.PageIndex,
       PageSize: queryParams.PageSize,
       OrderByFileds: 'dCreateTime desc',
-      Conditions: ''
+      Conditions: Conditions.value
     }
   };
   exportAnalysisHooks(ExcelData, '刀具履历');

@@ -92,7 +92,13 @@ import myTable from '@/components/MyFormTable/index_Edit.vue';
 import HeadView from '@/components/ViewFormHeard/index.vue';
 import ButtonViem from '@/components/Button/index.vue';
 import { compare } from '@/utils';
-import { ElButton, ElCard, ElLoading, ElTableColumn } from 'element-plus';
+import {
+  ElButton,
+  ElCard,
+  ElLoading,
+  ElTableColumn,
+  ElMessage
+} from 'element-plus';
 import PopModel from '@/components/PopModel/model.vue';
 import { configApi, DataApi, ParamsApi } from '@/api/configApi/index';
 import { useRoute } from 'vue-router';
@@ -399,8 +405,24 @@ const SaveAdd = (obj: any) => {
 const SaveEdit = (obj: any) => {
   obj.pathName = 'ToolFile';
   obj.tableData = TABRef.value.tableDataVal;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  if (headRef.value.ruleForm.IsRepair) {
+    if (!TABRef.value.tableDataVal.length) {
+      ElMessage({
+        message: '请添加行数据',
+        type: 'error'
+      });
+      return;
+    }
+    if (
+      headRef.value.ruleForm.iRepairCount !== TABRef.value.tableDataVal.length
+    ) {
+      ElMessage({
+        message: '研磨列表条目数与研磨次数必须一致',
+        type: 'error'
+      });
+      return;
+    }
+  }
   headRef.value.validate(obj);
 };
 // 编辑
